@@ -22,7 +22,10 @@ chosen, that one prompt covers every profile you chose. With one profile,
 it is one prompt for that profile. The password request is named
 **Blowhorn**: it is this install, and it writes Chrome's policy file once
 so Chrome installs the extension, turned on, in every profile you chose.
-Cancelling it writes nothing, and setup stops there and says why. Chrome
+Cancelling it writes nothing, and setup stops there and says why.
+Before it asks, Getting ready tells you the request is coming and waits
+for your Continue, so the prompt never appears over a screen that has
+not warned you about it yet. Chrome
 shows **Managed by your organization**; that is the install working, not
 a problem. There is nothing to click in each profile.
 
@@ -144,7 +147,10 @@ blowhorn chrome extension-install --profile kate --dry-run
 each profile starts, with no click in that profile. That is every Chrome
 profile on this computer, including ones no Blowhorn profile uses. Chrome
 shows **Managed by your organization**. macOS asks for an administrator
-password once. Cancelling that dialog writes nothing.
+password once. Cancelling that dialog writes nothing. The policy is your
+own macOS user's (`/Library/Managed Preferences/<you>/com.google.Chrome.plist`),
+never the computer's, so the Chrome of another macOS user on this Mac is
+left alone.
 
 macOS names the process that asks, so the name on that dialog depends on
 how Blowhorn was started. In the Blowhorn app, the app's bundled

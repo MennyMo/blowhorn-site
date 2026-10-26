@@ -19,10 +19,12 @@ CSV history the report reads.
 
 `blowhorn analytics` collects into the repository-root `data/analytics/`
 directory and records the readings beside the exports, so a later
-collection reads as change, not as a fresh claim. `blowhorn report`
-summarizes the exports already sitting there into
-`analytics_report.html`; it reads local files only, so stale exports
-give a stale report and it says which exports it read. The analytics
+collection reads as change, not as a fresh claim. The exports also land
+in the store on import - the daily series as well as the summary
+readings - and `blowhorn report` builds `analytics_report.html` from
+those stored rows, falling back to the exports on disk when the store
+cannot answer; either way stale figures give a stale report and it says
+which exports its figures came from. The analytics
 screen states each number's freshness in its header for the same
 reason: a count without a date is decoration.
 

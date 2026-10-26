@@ -1031,6 +1031,7 @@ html[data-theme="signal"] #platforms .logo-tile img[src*="github-invertocat-blac
 .signal-roles a.card-link > .role-art { padding-right: 0; }
 .usecases { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; margin-top: var(--space-8); }
 .usecases .label { margin: 0 var(--space-2) 0 0; }
+.usecases + .usecases { margin-top: var(--space-3); }
 .usecases a {
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-pill);

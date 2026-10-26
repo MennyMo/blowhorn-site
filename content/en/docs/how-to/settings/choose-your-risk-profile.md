@@ -8,12 +8,12 @@ Your Risk Profile is one choice for how risky and how fast Blowhorn
 runs: cautious, standard (the default) or brisk. It sets pace, pointer
 movement, caps, spacing, quiet hours, outreach, the pause after a
 sign-in challenge, retries and how much runs at once, together. The
-headline is ownership-first — "Your pace. Your risk. Your call." — and
+headline is ownership-first - "Your pace. Your risk. Your call." - and
 the formal name stays Risk Profile: the tradeoff really is detection
 and ban risk against speed, and it is the same term the CLI, the config
 file and the reference use.
 
-Choose it in the app with the slider at the top of Settings — a
+Choose it in the app with the slider at the top of Settings - a
 colour-graded track from cautious (slow end) to brisk (fast end), with
 a consequence readout under it, one row per dial, each row's info
 button linking to that dial's anchor. The same mode shows on Home as
@@ -58,7 +58,7 @@ you will not be watching.
 - **After a challenge:** if a platform shows a CAPTCHA, checkpoint or
   restriction page, that profile on that platform is held for 72 hours
   from the last such record.
-- **Outreach:** off entirely — no connects, invites or follows.
+- **Outreach:** off entirely - no connects, invites or follows.
 - **At once:** at most 1 run, and one profile at a time on a platform.
   A second run is refused and names your Cautious profile; its
   activities stay queued.
@@ -91,12 +91,12 @@ Pick brisk for an established account you are watching, when you want
 the most throughput and accept the most exposure.
 
 - **Between actions:** no minimum spacing, and the fast pace.
-- **How much per day:** the full built-in ceiling, same as standard —
+- **How much per day:** the full built-in ceiling, same as standard -
   brisk does not raise any ceiling, it only removes cautious's
   quarter-share, quiet hours, spacing and outreach limits.
 - **Nights:** no preset quiet hours.
 - **After a challenge:** the profile on that platform is held for 12
-  hours — the shortest pause, so a challenge is the place brisk costs
+  hours - the shortest pause, so a challenge is the place brisk costs
   you the most caution.
 - **Outreach:** on everywhere, including platforms still being built.
 - **At once:** different profiles may share a platform, and no preset
@@ -108,7 +108,7 @@ the most throughput and accept the most exposure.
 ## A new profile warms up cautious, whatever you chose
 
 A new profile or a new Mac runs cautious for scheduled jobs until it
-has history — 14 days, whatever preset you picked. Its caps ramp over
+has history - 14 days, whatever preset you picked. Its caps ramp over
 those 14 days, from about a quarter of cautious's caps on day one
 (about 1 LinkedIn post a day) to cautious's full caps by day 14, and
 only then does your chosen preset take over. A profile idle longer
@@ -123,7 +123,7 @@ chosen preset's caps, quiet hours and outreach.
 - Established account, you are watching, and you want the most done
   today: brisk.
 - One account needs to be slower than the rest: set that profile or
-  platform cautious, and leave the rest alone — the choice is per
+  platform cautious, and leave the rest alone - the choice is per
   profile and per platform, not only computer-wide.
 
 ## One activity on its own preset

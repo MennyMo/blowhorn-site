@@ -22,6 +22,7 @@ reads a workspace session only from its sign-in pages:
 - `x.com`, `twitter.com`
 - `linkedin.com`, `www.linkedin.com`
 - `reddit.com`, `www.reddit.com`
+- `facebook.com`, `www.facebook.com`
 - `news.ycombinator.com`
 - `mentorship.lfx.linuxfoundation.org`, `sso.linuxfoundation.org`
 - `*.slack.com`

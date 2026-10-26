@@ -24,13 +24,25 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   the waiting screen stops the wait right away - you never have to wait
   it out - and **Open it again** ends the old attempt and starts a fresh
   one. See [Create a Blowhorn account](/docs/how-to/set-up/create-an-account/).
+- **Blowhorn's Chrome profile:** before the list of Chrome profiles, one
+  screen explains how Blowhorn works in Chrome. It works in a Chrome
+  profile set aside for it, never the one you browse in, so your own
+  windows, tabs and sign-ins stay as you left them while it posts, likes
+  and connects for you. Chrome's main profile, the one Chrome made first,
+  stays yours: Blowhorn can't work from it. If it is the only profile you
+  have, the next screen asks you to add one for Blowhorn in Chrome (your
+  profile picture, then **Add**), sign in there to the sites Blowhorn
+  should use, then choose **Check again**. Nothing is read or saved on
+  this screen; **Show my Chrome profiles** moves on.
 - **Assign troops:** Blowhorn shows what it found in each Chrome
   profile: the Google account, and the platform accounts signed in or
   saved there. Mark each Chrome profile and each account **in use** or
   **not in use**. For a profile that isn't in Blowhorn yet, confirm the
   name it will be created under. The profiles you mark in use are the ones
   the next step installs into, and a profile you mark not in use is left
-  alone. On **Confirm**, Blowhorn creates the profiles you marked in use,
+  alone. Chrome's main profile is listed as yours, with no **Use with
+  Blowhorn** switch; a main profile an earlier setup already mapped keeps
+  its switch. On **Confirm**, Blowhorn creates the profiles you marked in use,
   saves the handles (and a GitHub token or Bluesky app password you type
   on the activity), and maps each of those Chrome profiles. A profile you mark
   not in use is recorded that way: its mapping on this computer is
@@ -71,7 +83,7 @@ If you run guided setup again and leave out a profile that an earlier
 setup already put the extension in, this setup cannot take the extension
 out of that one profile. Both routes Chrome gives Blowhorn for adding an
 extension - the policy file and the external-extensions file - are one
-file for the whole computer, never one per Chrome profile, so neither can
+file for all your Chrome profiles, never one per Chrome profile, so neither can
 be removed for a single profile. The extension stays in that profile
 until you remove it there yourself (in that profile, open
 `chrome://extensions` and remove Blowhorn). This setup never adds it

@@ -1,0 +1,5 @@
+{{- /* /solutions/: the hub for every cast page, grouped as the Solutions menu
+  is (by role, by use case, by category). */ -}}
+{{ define "main" }}
+    {{- partial "cast-index.html" (dict "page" . "titleId" "solutions-title" "groups" (partial "solution-groups.html" .)) }}
+{{- end }}

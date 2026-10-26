@@ -1,5 +1,5 @@
 {{- /* Cards linking pages in .section, by weight; "current" is skipped.
-  .kind (role | use-case) selects labelPrefix from cast-kind.html. */ -}}
+  .kind (role | use-case | solution) selects labelPrefix from cast-kind.html. */ -}}
 {{- $cur := .current -}}
 {{- $kind := .kind -}}
 {{- $meta := partial "cast-kind.html" (dict "kind" $kind) -}}

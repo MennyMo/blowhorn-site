@@ -54,7 +54,7 @@
 {{- end -}}
 <style>
 .prose:has(> [data-cmp-block]) { max-width: none; }
-.prose:has(> [data-cmp-block]) > :not([data-cmp-block]) { max-width: var(--text-measure); }
+.prose:has(> [data-cmp-block]) > :not([data-cmp-block], .cmp-dialog, .cmp-tip) { max-width: var(--text-measure); }
 .page .cmp { padding: 0; border-radius: 0; }
 .page .cmp table { max-width: none; }
 .cmp th { white-space: normal; vertical-align: bottom; }

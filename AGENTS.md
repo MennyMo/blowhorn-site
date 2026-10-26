@@ -32,13 +32,18 @@ Platform docs pages render actions through `{{< supported-actions "id" >}}` (`la
 The central action matrix (`/integrations/actions/`, `layouts/action-matrix.html`) and the docs all-actions table (`{{< all-actions >}}`, `layouts/_partials/action-table.html`) both render from `layouts/_partials/action-matrix.html`: rows are `data/actions.json` (grouped by its `groups`), columns are `data/integrations.json` platforms, page copy is `data/integrations.json` `matrix`. Status is shown by exception: no "Supported" label or check anywhere; a supported cell is a neutral dot, a coming-soon platform gets one clock on its logo. `make check-action-matrix` fails drift or a dead `#action-<id>` link.
 The Signal hero demo is `data/hero_demo.json`.
 
-Role pages (`/for/<slug>/`) and use-case pages (`/use-cases/<slug>/`) are
-schema-driven from `data/roles.json` and `data/use_cases.json`. Shared
-`line`/`text`/`card` types live in `schemas/defs/cast-page.schema.json`
-(`make check-schemas` loads it with ajv `-r`). Kind labels live in
-`cast-kind.html`; lookups go through `role-data.html` / `role-list.html`.
-Pages share `layouts/_partials/cast-page.html` and the role-page CSS.
-Do not duplicate those.
+Role pages (`/for/<slug>/`), use-case pages (`/use-cases/<slug>/`) and
+solution pages (`/solutions/<slug>/`, one per category of tool replaced) are
+schema-driven from `data/roles.json`, `data/use_cases.json` and
+`data/solutions.json`. Shared `line`/`text`/`card` types live in
+`schemas/defs/cast-page.schema.json` (`make check-schemas` loads it with ajv
+`-r`). Kind labels live in `cast-kind.html`; lookups go through
+`role-data.html` / `role-list.html`. Pages share
+`layouts/_partials/cast-page.html` and the role-page CSS. A solution's
+`compare` list renders the `/compare/` tiles (`versus-grid.html` `pages`)
+instead of repeating their tables. `/solutions/` is the hub for all three
+kinds (`solution-groups.html`, in the Solutions menu's order). Do not
+duplicate those.
 
 ## Rules the site holds
 

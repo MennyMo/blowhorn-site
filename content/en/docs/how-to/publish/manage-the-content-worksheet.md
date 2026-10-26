@@ -47,6 +47,16 @@ rules that make an activity pending for a post run:
   a warning.
 - `unsupported`: a `Platform` `blowhorn post` cannot publish to.
 
+## Approve a waiting activity
+
+An activity whose `Approved?` is not `yes` waits, and no run picks it up.
+In the app it reads **waiting for approval**, with an **approve** control
+beside it in the list and in its editor. Approving is a person's act: the
+control runs the same `blowhorn content approve` as the command below,
+and records who approved it and when in `Approved by`. An agent caller
+is refused by that verb in every approval mode (see
+[Configuration](/docs/reference/configuration/)).
+
 ## From the command line
 
 ```bash

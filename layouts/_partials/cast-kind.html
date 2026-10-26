@@ -1,4 +1,4 @@
-{{- /* Maps kind (role | use-case) to the data file, collection and labels.
+{{- /* Maps kind (role | use-case | solution) to the data file, collection and labels.
   Call with dict "kind" and optional "name" (the item name, so the gets
   title can be filled in). */ -}}
 {{- $kind := .kind -}}
@@ -28,6 +28,17 @@
     "titleId" "use-case-title"
     "moreTitle" "Other use cases"
     "getsTitle" "How Blowhorn runs it"
+  -}}
+{{- else if eq $kind "solution" -}}
+  {{- $out = dict
+    "kind" "solution"
+    "kindName" "solution"
+    "file" "data/solutions.json"
+    "collection" site.Data.solutions.solutions
+    "labelPrefix" ""
+    "titleId" "solution-title"
+    "moreTitle" "Other solutions"
+    "getsTitle" "What Blowhorn does instead"
   -}}
 {{- else -}}
   {{ errorf "unknown kind %q" $kind }}

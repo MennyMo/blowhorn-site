@@ -44,6 +44,26 @@ sweep manifest naming them. A mode that fails is recorded in its own
 package and in the manifest, and the sweep goes on: the comparison
 between modes is the finding, so a partial sweep is still evidence.
 
+## Compare a competitor tool's report
+
+Run the competitor tool against the live tells page on your own
+computer, export the page's raw report JSON, and import it:
+
+```bash
+blowhorn diagnostics import-tells --file browser-use-report.json --tool browser-use --json
+```
+
+The report is stored verbatim, wrapped in the same tells-run envelope
+a run Blowhorn drove itself writes, so `diagnostics reports` lists it
+and `diagnostics report` reads it back beside Blowhorn's own runs. The
+package says what it is: its mode is `external`, its profile column
+names the tool (there is no Blowhorn profile behind it), and it is
+never a member of a sweep. Nothing is uploaded, and no audit event is
+recorded for an import. A file that is not a Tells report is refused
+and nothing is written. The benchmark runs themselves -- same Mac, same
+Chrome version, terms checked per tool -- are still Mac work; this
+command is only the import half, for a report someone already captured.
+
 ## Read what you saved
 
 ```bash

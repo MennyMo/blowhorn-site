@@ -44,6 +44,15 @@ and it runs beside your open daily Chrome without contending for its lock.
 Each automation profile starts empty, so sign it in once with `--headed`
 before a real run.
 
+The launched window is a normal window placed off to the side (2500,60),
+never minimized and never hidden, with the previous app re-activated so it
+takes no focus. A minimized or app-hidden window puts the page into
+`visibilityState: 'hidden'` with timers throttled to about one second, which
+is what a site's own scripts see while a flow waits for them;
+the visible posture is what keeps a flow's waits running at pace. A
+`--headless` request becomes this window, and the unattended argv does not
+change.
+
 ## Attach to the Chrome you have open
 
 ```bash
@@ -69,9 +78,13 @@ and not your daily one. Mac only.
 
 **What you are trading.** That Chrome's debugging port has no password and
 asks for no Allow. It is bound to `127.0.0.1`, so nothing off this computer can
-reach it, but any program running as you on this computer can drive that Chrome
-and read its cookies, for every account signed in there. Sign it in only to
-the accounts Blowhorn posts from, never your personal email or bank.
+reach it, but `127.0.0.1` is shared by every macOS user on this Mac: any
+program running as you, **or as any other user signed in on this Mac**, can
+drive that Chrome and read its cookies, for every account signed in there. That
+is why this route is off by default: `start` and `install-agent` refuse unless
+you pass `--allow-other-users`. Do not use it on a Mac other people sign in to.
+Sign it in only to the accounts Blowhorn posts from, never your personal email
+or bank.
 
 ### 1. Sign in once, with no debugging {#section-1-sign-in-once-with-no-debugging}
 
@@ -88,7 +101,7 @@ the sign-ins are saved. They carry over to the next step.
 ### 2. Start it with the port open, and map it {#section-2-start-it-with-the-port-open-and-map-it}
 
 ```bash
-blowhorn chrome attach-chrome start
+blowhorn chrome attach-chrome start --allow-other-users
 blowhorn config set defaults.chrome.data_dir ~/.blowhorn/attach-chrome
 blowhorn chrome profiles
 blowhorn chrome map ada 'Default'
@@ -116,7 +129,7 @@ proof depends on it.
 ### 3. Keep it up for scheduled jobs {#section-3-keep-it-up-for-scheduled-jobs}
 
 ```bash
-blowhorn chrome attach-chrome install-agent
+blowhorn chrome attach-chrome install-agent --allow-other-users
 blowhorn config set defaults.chrome.launch_mode cdp
 ```
 
@@ -191,9 +204,9 @@ argv, each job resolves its own driver.
 | `chrome's 'Allow remote debugging?' dialog was not answered within 120 s; …` (20 s for a scheduled job) | click cancel in the dialog still open in Chrome, run again and click allow in the new one, or run with `--chrome-launch persistent` |
 | `profile ada on linkedin is in use by blowhorn process <pid>; …` | another run is acting as that profile: wait for it, or stop it |
 | `… is google chrome's own data directory; …` | the dedicated tree must never be Chrome's own default directory |
-| `… is open in a chrome without remote debugging (pid <n>) …` | quit the `signin` window (Cmd-Q), then `attach-chrome start` |
+| `… is open in a chrome without remote debugging (pid <n>) …` | quit the `signin` window (Cmd-Q), then `attach-chrome start --allow-other-users` |
 | `port <n> is listened on by pid <m>, not by the chrome holding …` | another program has that port: `attach-chrome stop`, then `start` |
-| `no live chrome holds … so port <n> recorded there is left over …` | `blowhorn chrome attach-chrome start` |
+| `no live chrome holds … so port <n> recorded there is left over …` | `blowhorn chrome attach-chrome start --allow-other-users` |
 
 ## Related
 

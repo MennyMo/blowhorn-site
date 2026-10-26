@@ -16,7 +16,7 @@
 .cmp .has-note::after { content: ""; position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); border: 1.5px solid var(--surface); }
 .cmp td .noted { text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
 .cmp-tip { position: fixed; z-index: 2000; max-width: 26em; padding: var(--space-2) var(--space-3); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: var(--surface-raised); color: var(--ink); box-shadow: 0 8px 24px rgb(0 0 0 / 0.25); font-size: 0.85rem; line-height: 1.45; white-space: pre-line; pointer-events: none; }
-.cmp-dialog { width: min(97vw, 2400px); height: 92vh; max-width: none; max-height: none; padding: 0; border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface); color: var(--ink); }
+.cmp-dialog { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: var(--surface); color: var(--ink); }
 .cmp-dialog::backdrop { background: rgb(0 0 0 / 0.55); }
 .cmp-dialog-inner { display: flex; flex-direction: column; height: 100%; background: var(--surface); }
 .cmp-dialog-inner:fullscreen { height: 100%; }
@@ -25,6 +25,7 @@
 .cmp-dialog-actions { display: flex; gap: var(--space-2); }
 .cmp-dialog-body { flex: 1; overflow: auto; padding: var(--space-4); }
 .cmp-dialog-body .compare-scroll { overflow: visible; max-height: none; }
+.cmp-dialog-body .compare-scroll table { width: 100%; }
 </style>
 <dialog class="cmp-dialog" id="cmp-dialog" aria-label="Expanded table view">
   <div class="cmp-dialog-inner" id="cmp-dialog-inner">

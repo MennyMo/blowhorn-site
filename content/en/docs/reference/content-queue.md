@@ -46,7 +46,10 @@ payload asked, and waits like any other draft. A run never picks it up:
 else - `no`, blank, anything - as not approved.
 
 `blowhorn content approve <activity>` is the person's door: it sets
-`Approved?` and writes the `Approved by` record - the approver's signed-in
+`Approved?` and writes the `Approved by` record. The desktop app's
+Content screen runs the same verb from the approve control beside a
+waiting activity - the app's calls run as the person at it, so the
+record is the same either way. The record names the approver's signed-in
 identity from the cloud session cache when there is one, else the local
 user name, with the time. The record is a record, not a claim: no payload
 can set it, editing an approved activity keeps it, un-approving an

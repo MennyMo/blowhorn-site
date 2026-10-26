@@ -150,27 +150,38 @@ Approval mode is the control built for this case. Set
 `defaults.approval.mode` to `agent` and an agent can draft and queue all
 day, but it cannot make anything publish on its own: activities it
 writes are stored unapproved whatever it asked for, and actions that
-publish without an activity - a one-off `follow`, a `post --message`, a
-confirmed Slack send - are refused with a sentence pointing at the
-queue. You approve from the queue with `blowhorn content approve
-<activity>`, which records your name and the time in the activity's
-`Approved by` column. An agent cannot approve its own work: `content
-approve` refuses an agent caller outright, in every mode. Set the mode
-to `all` and the same holding applies to every writer, you included;
-leave it `off` and the queue works the way it always has, with
-`Approved?` as the writer's own word. Blowhorn counts a caller as an
-agent when it is marked `BLOWHORN_ACTOR=agent`, when the run is the
-scheduler's, or when no terminal is attached; you at a terminal, or in
-the app, count as a person. Jobs you schedule are your standing
-instructions and run as you set them up - which is why creating one is
-held to the same rule: a job that publishes on its own (a follow, a
-comment carrying its target and message, a post set to amplify) cannot
-be created by an agent under `agent`, or by anyone under `all`. Give
+publish without an activity - a one-off `follow`, an invitation, a
+connection request, an acceptance, a `post --message`, a confirmed
+Slack send - are refused with a sentence pointing at the queue. You approve from the
+queue with `blowhorn content approve <activity>`, or with the approve
+control beside a waiting activity in the app, which runs the same verb;
+either way it records your name and the time in the activity's
+`Approved by` column. An agent cannot approve its own work: `content approve` refuses an agent caller
+outright, in every mode. Set the mode to `all` and the same holding
+applies to every writer, you included; leave it `off` and the queue
+works the way it always has, with `Approved?` as the writer's own word.
+Blowhorn counts a caller as an agent when it is marked
+`BLOWHORN_ACTOR=agent`, when the run is the scheduler's, or when no
+terminal is attached; you at a terminal, or in the app, count as a
+person. Jobs you schedule are your standing instructions and run as you
+set them up - which is why creating one is held to the same rule: a job
+that publishes on its own (a follow, an invitation, a connection
+request, an acceptance, a comment carrying its target and message, a
+post set to amplify) cannot be created by an agent under `agent`, or by
+anyone under `all`, and neither can a change to such a job's profile,
+platform or timing. Give
 the agent a job that works the queue instead; its activities still
 wait for your approval. Give the agent dry run first,
 and pause any scope the moment something looks off. Lifting a pause
 takes `blowhorn schedule resume`, or an explicit `--ignore-pause` on a
 single run.
+
+An agent that connects over MCP gets the same dry-run-first rule from
+the server itself: the [MCP server](/docs/reference/mcp-server/) runs
+every changing tool with `--dry-run` unless the call confirms it, and
+it marks its calls as agent calls, so the approval mode above applies
+to them. A confirmed MCP call is still an agent call, not a person's
+approval in the app: it cannot approve its own queued work.
 
 <!-- Video placeholder: "Handing approval to an AI agent". An agent queues activities, dry-runs them, and a pause stops the next claim. -->
 

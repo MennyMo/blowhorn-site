@@ -1,0 +1,446 @@
+{
+  "$schema": "../schemas/solutions.schema.json",
+  "solutions": [
+    {
+      "slug": "developer-distribution",
+      "name": "Developer distribution",
+      "title": "Blowhorn for developer distribution",
+      "weight": 10,
+      "headline": "Post where developers actually talk.",
+      "lead": "Hacker News, GitHub, Reddit and Slack, plus LinkedIn, X and Bluesky, from one queue. Posted as you, at a human pace.",
+      "description": "One queue for the networks technical companies use: Hacker News, GitHub, Reddit and Slack, plus LinkedIn, X and Bluesky, posted as you from your own Chrome.",
+      "art": {
+        "src": "assets/brand/cast/major-6-hat-left-horn.webp",
+        "alt": "Major Blowhorn, a teal rooster drill sergeant in a campaign hat, pointing and shouting through his gold bullhorn, Caribbean Green sound waves pouring out of it"
+      },
+      "pains": [
+        {
+          "t": "Schedulers skip where developers talk",
+          "b": "None of the schedulers we checked support Hacker News. GitHub and Slack stay a pile of tabs."
+        },
+        {
+          "t": "Developers spot a bot",
+          "b": "Votes, blast posts and \"sent via\" badges cost the trust you came to earn."
+        },
+        {
+          "t": "A Slack app nobody can install",
+          "b": "Assistants that act as themselves need an app in the workspace. A free workspace at its app limit has no room."
+        }
+      ],
+      "gets": [
+        {
+          "t": "Every developer network, one queue",
+          "b": "Hacker News submit and comment, GitHub follow and react, Slack messages, plus LinkedIn, X, Reddit and Bluesky."
+        },
+        {
+          "t": "Never votes on Hacker News",
+          "b": "It submits stories and comments, nothing else, with at most 2 link submissions per profile per day."
+        },
+        {
+          "t": "No Blowhorn app in your Slack",
+          "b": "Blowhorn works through your own Slack sign-in and posts as you. No app to install, no bot user to invite."
+        },
+        {
+          "t": "Human-paced by design",
+          "b": "Types key by key in your own Chrome, caps itself, and hands every CAPTCHA and 2FA prompt to you."
+        }
+      ],
+      "prompt": "Submit the launch post to Hacker News, react on the GitHub release issue, tell #general in Slack, then --dry-run the rest.",
+      "major": "Front page or bust, soldier. Every channel, one voice: yours.",
+      "compare": [
+        "/compare/buffer",
+        "/compare/hootsuite",
+        "/compare/typefully",
+        "/compare/postiz"
+      ],
+      "faq": [
+        {
+          "q": "Does it vote on Hacker News?",
+          "a": "Never. It submits stories and comments, nothing else. Link submissions are capped at 2 per profile per day."
+        },
+        {
+          "q": "Does Blowhorn install a Slack app?",
+          "a": "No. Blowhorn works on Slack through Slack's API and sends as you, with your Slack session linked through the Blowhorn extension or a Slack token you add."
+        },
+        {
+          "q": "How does it post to each network?",
+          "a": "LinkedIn, X, Reddit and Hacker News: Blowhorn types in your own Chrome, signed in as you. Slack, Bluesky and GitHub go through their APIs."
+        },
+        {
+          "q": "What about Instagram, TikTok, Facebook and YouTube?",
+          "a": "Coming soon."
+        }
+      ],
+      "related": [
+        {
+          "label": "Blowhorn for DevRel",
+          "page": "/for/devrel"
+        },
+        {
+          "label": "Open source release",
+          "page": "/use-cases/open-source-release"
+        },
+        {
+          "label": "Post to Hacker News",
+          "page": "/docs/how-to/publish/post-to-hacker-news"
+        },
+        {
+          "label": "Every platform",
+          "page": "/docs/reference/platforms"
+        }
+      ]
+    },
+    {
+      "slug": "employee-advocacy",
+      "name": "Employee advocacy",
+      "title": "Blowhorn for employee advocacy",
+      "weight": 20,
+      "headline": "Advocacy for the rest of us.",
+      "lead": "Real teammates, posting as themselves, from one coordinated queue. No 100-seat minimum.",
+      "description": "Employee advocacy for small teams: real people amplifying one post as themselves, from one coordinated queue, without a 100-seat minimum.",
+      "art": {
+        "src": "assets/brand/cast/platoon-private-base.webp",
+        "alt": "Platoon Private, an orange chicken in a charcoal cap with a coral rank stripe, holding one bayonet rifle"
+      },
+      "pains": [
+        {
+          "t": "The hundred-seat fortress",
+          "b": "Advocacy suites sell to big companies: quote pricing and seat minimums, like Haiilo's 100 seats."
+        },
+        {
+          "t": "A library nobody opens",
+          "b": "Teammates get an email with a post to share. By the time they do, the first hour is gone."
+        },
+        {
+          "t": "Built around LinkedIn and X",
+          "b": "Suites center LinkedIn and X. Your audience is also on Hacker News, Reddit, GitHub and Slack."
+        }
+      ],
+      "gets": [
+        {
+          "t": "A sound wave from your team",
+          "b": "Schedule one post and every profile you add amplifies it at the moment you pick, each posting as itself."
+        },
+        {
+          "t": "Teammates bring their own profiles",
+          "b": "Teammates and supporters add their own profiles to your account today. Team invites: Coming soon."
+        },
+        {
+          "t": "Sent once, from one computer",
+          "b": "Coordinated so the same post isn't sent from two computers, however many your team runs."
+        },
+        {
+          "t": "One pause for the whole wave",
+          "b": "Pause one action, one computer or every computer at once. Resume, and due times carry forward."
+        }
+      ],
+      "prompt": "Schedule the announcement for 9:00, have every profile amplify it in the first hour, then --dry-run the wave.",
+      "major": "Fall in, platoon. One post, every voice, first hour.",
+      "compare": [
+        "/compare/everyonesocial",
+        "/compare/dsmn8",
+        "/compare/haiilo",
+        "/compare/sociabble"
+      ],
+      "faq": [
+        {
+          "q": "Does Blowhorn post for teammates without them?",
+          "a": "No. A teammate adds their own profile to your account, and Blowhorn posts as that person, never as a bot."
+        },
+        {
+          "q": "Can I invite my team?",
+          "a": "Team invites are Coming soon. Today teammates and supporters add their own profiles to your account."
+        },
+        {
+          "q": "Will the same post go out twice?",
+          "a": "Your computers coordinate through one queue, so the same post isn't sent from two of them."
+        }
+      ],
+      "related": [
+        {
+          "label": "Blowhorn for marketing managers",
+          "page": "/for/marketing"
+        },
+        {
+          "label": "Launch day",
+          "page": "/use-cases/launch-day"
+        },
+        {
+          "label": "How amplification works",
+          "page": "/docs/how-to/publish/amplify-a-post"
+        },
+        {
+          "label": "Pricing",
+          "page": "/pricing"
+        }
+      ]
+    },
+    {
+      "slug": "social-scheduling",
+      "name": "Social scheduling",
+      "title": "Blowhorn for social scheduling",
+      "weight": 30,
+      "headline": "A scheduler that posts as you.",
+      "lead": "Queue it once, like any scheduler. The difference is who presses Post: their servers, or your computers.",
+      "description": "Schedule posts like any cloud scheduler, but your own computers press Post, as you, and Hacker News, GitHub and Slack join the same queue.",
+      "art": {
+        "src": "assets/brand/cast/drill-instructor-base.webp",
+        "alt": "Drill Instructor, a stocky turkey in a campaign hat with a whistle, holding the weekly schedule on a clipboard"
+      },
+      "pains": [
+        {
+          "t": "Their app, your name",
+          "b": "Cloud schedulers post through the vendor's app. You hand over access and they press Post."
+        },
+        {
+          "t": "Half the channels by hand",
+          "b": "Hacker News, GitHub and Slack still happen in tabs, outside the calendar."
+        },
+        {
+          "t": "Posted once, then quiet",
+          "b": "Most schedulers publish one post. The profiles that would amplify it are left to remember."
+        }
+      ],
+      "gets": [
+        {
+          "t": "Your computers press Post",
+          "b": "Every action runs on one of your computers, in your Chrome or through the platform's API. Your account keeps them in sync and never posts."
+        },
+        {
+          "t": "Every developer channel, one queue",
+          "b": "Hacker News, GitHub and Slack join LinkedIn, X, Reddit and Bluesky in one queue."
+        },
+        {
+          "t": "Amplify from your profiles",
+          "b": "Schedule a post, then have every profile you run amplify it at the moment you pick."
+        },
+        {
+          "t": "Any awake computer covers it",
+          "b": "Close your laptop. Another computer set up for that profile picks it up, as long as one of them is awake."
+        }
+      ],
+      "prompt": "Move next week's posts into Blowhorn, add the Hacker News submission and the Slack note, then --dry-run.",
+      "major": "Oh-nine-hundred means oh-nine-hundred. Your computers, your post.",
+      "compare": [
+        "/compare/buffer",
+        "/compare/hootsuite",
+        "/compare/sprout-social",
+        "/compare/later",
+        "/compare/publer",
+        "/compare/socialbee",
+        "/compare/metricool",
+        "/compare/typefully",
+        "/compare/postiz"
+      ],
+      "faq": [
+        {
+          "q": "Does a computer have to be awake?",
+          "a": "One set up for the profile does. As long as one of your computers is awake, it covers the schedule. Each checks the queue about every 10 minutes."
+        },
+        {
+          "q": "Where does the schedule live?",
+          "a": "In your Blowhorn account, so every computer you sign in on works from the same queue. Your account coordinates; it never posts."
+        },
+        {
+          "q": "What about Instagram, TikTok, Facebook and YouTube?",
+          "a": "Coming soon."
+        }
+      ],
+      "related": [
+        {
+          "label": "How scheduling works",
+          "page": "/docs/explanation/scheduling"
+        },
+        {
+          "label": "How amplification works",
+          "page": "/docs/how-to/publish/amplify-a-post"
+        },
+        {
+          "label": "Launch day",
+          "page": "/use-cases/launch-day"
+        },
+        {
+          "label": "Pricing",
+          "page": "/pricing"
+        }
+      ]
+    },
+    {
+      "slug": "linkedin-automation",
+      "name": "LinkedIn automation",
+      "title": "Blowhorn for LinkedIn automation",
+      "weight": 40,
+      "headline": "LinkedIn automation without handing over your login.",
+      "lead": "Blowhorn works LinkedIn in your own Chrome, signed in as you, at a human pace. No server logs in as you.",
+      "description": "LinkedIn posting and careful outreach from your own Chrome, signed in as you: no password, 2FA secret or session cookie handed to a vendor's server.",
+      "art": {
+        "src": "assets/brand/cast/trench-trooper-base.webp",
+        "alt": "Trench Trooper, a muddy pig in a helmet holding a rifle with a teal tab bayonet and a gold periscope"
+      },
+      "pains": [
+        {
+          "t": "Your login on their server",
+          "b": "Growth tools ask for your password, your 2FA secret or your session cookie, then sign in as you from their cloud."
+        },
+        {
+          "t": "\"Bypass the limits\"",
+          "b": "Some outreach tools sell going past LinkedIn's limits. Your account carries the risk."
+        },
+        {
+          "t": "A sequencer you don't need",
+          "b": "You want careful LinkedIn hygiene, not a high-volume outbound funnel."
+        }
+      ],
+      "gets": [
+        {
+          "t": "Your Chrome, as you",
+          "b": "Blowhorn does the typing and clicking in your own Chrome profile. No vendor server logs in as you."
+        },
+        {
+          "t": "Human-paced by design",
+          "b": "Types key by key, pauses between actions and caps itself. CAPTCHA and 2FA always come to you."
+        },
+        {
+          "t": "Careful outreach",
+          "b": "Invite to your page, connect, accept invitations and withdraw stale ones. Flagged invitations are never auto-accepted."
+        },
+        {
+          "t": "Posts and amplify too",
+          "b": "Publish, reply and amplify on LinkedIn from the same queue as X, Reddit, Hacker News and the rest."
+        }
+      ],
+      "prompt": "Withdraw LinkedIn invitations older than a month, accept the safe ones, then --dry-run invite for our page.",
+      "major": "Hold the line, soldier. Your login stays in your Chrome.",
+      "compare": [
+        "/compare/expandi",
+        "/compare/waalaxy",
+        "/compare/dripify",
+        "/compare/phantombuster",
+        "/compare/taplio",
+        "/compare/linked-helper"
+      ],
+      "faq": [
+        {
+          "q": "Is it ban-proof?",
+          "a": "No tool is. Blowhorn moves like a careful person, caps itself and stops for any challenge. Nobody can promise LinkedIn won't flag an account."
+        },
+        {
+          "q": "Is it an outbound sequencer?",
+          "a": "No, and it doesn't pretend to be. It covers careful outreach: invite to your page, connect, accept and withdraw."
+        },
+        {
+          "q": "Who signs in to LinkedIn?",
+          "a": "You do, in your own Chrome. Blowhorn types and clicks there, and LinkedIn's session cookies stay in Chrome on each computer."
+        }
+      ],
+      "related": [
+        {
+          "label": "Why flagged invitations are skipped",
+          "page": "/docs/explanation/invitation-safety"
+        },
+        {
+          "label": "Why your own Chrome",
+          "page": "/docs/explanation/your-own-chrome"
+        },
+        {
+          "label": "Reliability and anti-bot design",
+          "page": "/docs/explanation/reliability-and-anti-bot-design"
+        },
+        {
+          "label": "Blowhorn for founders",
+          "page": "/for/founders"
+        }
+      ]
+    },
+    {
+      "slug": "multi-profile",
+      "name": "Multi-profile",
+      "title": "Blowhorn for many profiles",
+      "weight": 50,
+      "headline": "Many profiles. Real Chrome. No disguises.",
+      "lead": "Every brand, founder and project you speak for, from one menu bar. Each profile runs in its own real Chrome profile, signed in as itself.",
+      "description": "Run many brand, founder and project profiles from one desk: each in its own real Chrome profile, no fake fingerprints, from one coordinated queue.",
+      "art": {
+        "src": "assets/brand/cast/mouse-marine-base.webp",
+        "alt": "Mouse Marine, a mallard in a green beret riding a gold trackball on a small tank through teal water, cursor spear raised"
+      },
+      "pains": [
+        {
+          "t": "Fingerprint tricks",
+          "b": "Antidetect browsers fake a fingerprint per profile. That's a disguise, and a hard one to explain."
+        },
+        {
+          "t": "One computer, one copy",
+          "b": "Profiles live on one computer. Close it, or move to another, and the plan stays behind."
+        },
+        {
+          "t": "Juggling, not posting",
+          "b": "You still post by hand in every profile. There's no queue, no schedule and no amplify."
+        }
+      ],
+      "gets": [
+        {
+          "t": "Real Chrome, real you",
+          "b": "Each Blowhorn profile maps to its own Chrome profile on each computer. No fake fingerprints."
+        },
+        {
+          "t": "One automation at a time",
+          "b": "One profile, one automation per platform, at a time. A second run waits rather than fighting the first."
+        },
+        {
+          "t": "One queue across your computers",
+          "b": "Every computer you set up works from the same queue, coordinated so the same post isn't sent from two of them."
+        },
+        {
+          "t": "Schedule, amplify, pause",
+          "b": "Schedule posts, amplify from every profile and dry-run first. Pause one action, one computer or all of them."
+        }
+      ],
+      "prompt": "Queue this announcement for every brand profile on Thursday 10:00, have the founder profiles amplify it, then --dry-run.",
+      "major": "One soldier, many uniforms. Every one of them real.",
+      "compare": [
+        "/compare/multilogin",
+        "/compare/gologin",
+        "/compare/adspower",
+        "/compare/mokumokuren",
+        "/compare/social-browser"
+      ],
+      "faq": [
+        {
+          "q": "Is this an antidetect browser?",
+          "a": "No. Blowhorn is real Chrome, signed in as each profile. It does the typing and clicking.",
+          "link": {
+            "href": "https://tells.blowhorn.ai/",
+            "label": "See what sites can read about your browser"
+          }
+        },
+        {
+          "q": "Can two automations use one profile at once?",
+          "a": "Not on the same platform. While one run holds a profile's LinkedIn session, a second one waits. Different platforms can run side by side."
+        },
+        {
+          "q": "Windows or Linux?",
+          "a": "Not today. Blowhorn runs on macOS 13 or newer, as the desktop app or the Python CLI."
+        }
+      ],
+      "related": [
+        {
+          "label": "Blowhorn for agencies and consultants",
+          "page": "/for/agencies"
+        },
+        {
+          "label": "Profiles",
+          "page": "/docs/reference/profiles"
+        },
+        {
+          "label": "Map Chrome profiles",
+          "page": "/docs/how-to/set-up/map-chrome-profiles"
+        },
+        {
+          "label": "Pause and resume",
+          "page": "/docs/how-to/schedule/pause"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{{- /* "Edit this page" for internal pages, rendered at the foot of
+  layouts/docs/internal.html. The pages are mounted from the private blowhorn
+  repository (config/internal/hugo.toml), so the link goes to that repository's
+  GitHub editor, built the way Docsy's page-meta-links.html builds its own:
+  repo + /edit/ + branch + the file's path in that repository, with the
+  `from`/`to` rewrite standing in for Docsy's path_base_for_github_subdir. The
+  label reuses Docsy's i18n strings. Nothing renders without
+  internal_edit_repo (the public build sets none), for a page without a source
+  file or one outside the mounted folders, or for a generated page that sets `edit_link: false`: editing its
+  output would be overwritten by the generator. */ -}}
+{{- $repo := site.Params.internal_edit_repo -}}
+{{- $base := site.Params.internal_edit_path_base -}}
+{{- /* Only a file under a mounted source folder matches `from`; the section
+  scaffold this repository tracks (content/en/internal/_index.md) does not, and
+  gets no link rather than one into the wrong repository. */ -}}
+{{- if and $repo $base .File (ne .Params.edit_link false) (findRE $base.from .File.Filename) -}}
+  {{- $branch := site.Params.internal_edit_branch | default "master" -}}
+  {{- $path := replaceRE $base.from $base.to .File.Filename -}}
+  <footer class="docs-page-meta">
+    <a href="{{ printf "%s/edit/%s/%s" $repo $branch $path }}" class="docs-page-meta-edit" target="_blank" rel="noopener noreferrer">{{ T "post_edit_this" }}</a>
+    <a href="{{ printf "%s/blob/%s/%s" $repo $branch $path }}" class="docs-page-meta-view" target="_blank" rel="noopener noreferrer">{{ T "post_view_this" }}</a>
+  </footer>
+{{- end -}}

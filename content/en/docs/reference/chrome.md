@@ -137,9 +137,20 @@ How the run reaches Chrome once the mapping holds:
   happy path.
 - Attach (`cdp`): the run attaches to the Chrome you have open over the
   debugging protocol. Needs a window open and the Allow dialog
-  approved; a scheduled pass gets a short Allow window.
+  approved; a scheduled pass gets a short Allow window. Attach is never
+  the default (the extension driver is). It is also the one mode that
+  interrupts once per profile: opening Blowhorn's tab hands the running
+  Chrome a new window through `open -na`, which brings Chrome forward
+  once per profile, and the refocus afterwards is best effort, because
+  since macOS 14 activation is a request the system may refuse. A
+  scheduled `cdp` pass pays that interrupt once per profile too.
 - Launch (`persistent`): the run launches Blowhorn's own Chrome from
-  the automation directory, minimized in the background.
+  the automation directory, in a normal window placed off to the side
+  (2500,60), never minimized and never hidden, with the previous app
+  re-activated so it takes no focus. A minimized or app-hidden window
+  puts the page into `visibilityState: 'hidden'` with timers throttled to
+  about one second; the visible
+  posture is what keeps a flow's waits running at pace.
 
 Chrome is never launched headless and never replaced with bundled
 Chromium: a headless run would announce itself to every site.
@@ -194,9 +205,14 @@ its own (`~/.blowhorn/attach-chrome`), open to remote debugging, so
 Chrome 136 and later ignore the debugging switch on the default data
 directory, which is why this is never your daily Chrome.
 
-The port is bound to `127.0.0.1` and has no password: any program
-running as you on this computer can drive that Chrome and read its
-cookies. Sign it in only to the accounts Blowhorn posts from.
+The port is bound to `127.0.0.1` and has no password, and `127.0.0.1`
+is shared by every macOS user on this Mac: any program running as you,
+or as any other user signed in here, can drive that Chrome and read its
+cookies. So the route is off by default: `start` and `install-agent`
+refuse unless you pass `--allow-other-users`, and print that warning
+when they run. Sign it in only to the accounts Blowhorn posts from. The
+desktop app does not offer it. The tree and every folder Blowhorn
+creates under `~/.blowhorn` are owner-only (`0700`).
 
 A debugging port, and Playwright's `--remote-debugging-pipe`, each make
 Chrome report `navigator.webdriver` as `true`. `start` and launch mode
@@ -208,9 +224,9 @@ unsupported-flag infobar off.
 | --- | --- |
 | `status` (default) | reads the tree's `Local State`, `DevToolsActivePort` and `SingletonLock`; opens nothing |
 | `signin` | opens the tree with no debugging switch, for the one-time sign-in; quit it after |
-| `start` | launches Chrome detached with `--remote-debugging-port=0 --remote-debugging-address=127.0.0.1 --disable-blink-features=AutomationControlled --test-type`, then prints the setup steps |
+| `start --allow-other-users` | launches Chrome detached with `--remote-debugging-port=0 --remote-debugging-address=127.0.0.1 --disable-blink-features=AutomationControlled --test-type`, then prints the setup steps |
 | `stop` | DevTools `Browser.close`, waits, then `SIGTERM`; signals only the tree's own Chrome, never `SIGKILL` |
-| `install-agent` | writes and loads `~/Library/LaunchAgents/ai.blowhorn.attach-chrome.plist`, which runs `start` at each login and logs to `data/logs/attach-chrome-agent.*.log` (or `--log-dir`) |
+| `install-agent --allow-other-users` | writes and loads `~/Library/LaunchAgents/ai.blowhorn.attach-chrome.plist`, which runs `start` at each login and logs to `data/logs/attach-chrome-agent.*.log` (or `--log-dir`) |
 | `uninstall-agent` | unloads and removes that LaunchAgent; Chrome keeps running |
 
 Off macOS every action but `status` is refused by name, and nothing is
@@ -238,10 +254,11 @@ Your own user agent, on every driver. The extension and attach drivers
 run inside your installed Chrome, so sites see the same agent string
 your ordinary browsing sends. The launch driver starts that same
 installed Chrome, never bundled Chromium, which would announce itself
-as HeadlessChrome. A `--headless` request becomes the minimized
+as HeadlessChrome. A `--headless` request becomes the visible
 background window for exactly this reason: headless Chrome sends
 `HeadlessChrome` in every request while its hints still claim Google
-Chrome.
+Chrome. Visible, not minimized: a minimized window puts the page into
+`visibilityState: 'hidden'` with timers throttled.
 
 The launched window emulates nothing: the page reads the real screen, the real GPU and
 your own permission state. A viewport override, a GPU switch or a blanket permission grant
@@ -285,6 +302,41 @@ account setting: collapsed (the default) or open, saved as `chromeGroup` in
 the same Blowhorn preferences, so it follows you to every computer. Set it on
 Settings, Chrome extension, or with `blowhorn chrome extension-mode --group
 open` (`default` clears it). A run reads it once when it starts.
+
+## Blowhorn's desktop (Spaces)
+
+If Blowhorn's Chrome work lives on its own macOS desktop instead of beside
+your tabs, setup finds or makes that desktop for you, so you never have to
+open Mission Control and create one yourself. Setup runs only when you
+start it, never during a run, and it works in this order:
+
+1. **Reuse.** If a second desktop or display already exists, setup
+   offers it. This is a read-only check and asks nothing of you.
+2. **One-click create.** With Accessibility granted at that click, the
+   helper opens Mission Control, presses its "+" button for the display
+   you chose, closes Mission Control, and confirms exactly one new
+   desktop. Mission Control is on screen for a moment, and the desktop
+   you were on and the app in front stay unchanged. It refuses when
+   Mission Control is busy or the display already has 16 desktops.
+3. **Guided click.** If Accessibility is declined or the press fails,
+   Blowhorn opens Mission Control and points at "+". You click once,
+   and Blowhorn detects the new desktop. It gives up quietly after
+   60 seconds with no click.
+4. **Beside.** Otherwise, the background tab next to your tabs, as
+   always.
+
+You can also set setup to guided-only (never touch Accessibility) or to
+never (never create, never open Mission Control). If the desktop is
+later deleted, runs never recreate it: they fall back to beside and
+post one notification whose button re-runs setup. Where setup's choice
+lives is per computer, not per account: a desktop belongs to the
+computer it was made on, so it is recorded there and never synced.
+
+Automatic creation needs one Accessibility grant. Without it, the floor
+is one click by you in a Mission Control Blowhorn opens for you. A
+window on a desktop you are not looking at still reads as hidden to
+the page, so a desktop is a place to keep the work, not a way to hide
+it from detection.
 
 `BLOWHORN_EXTENSION_ROLLBACK=1` still swaps the driver for Blowhorn's own
 Chrome as before; it says nothing about the mode. `0`, `false` and `off` read

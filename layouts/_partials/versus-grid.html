@@ -1,10 +1,25 @@
 {{- /* Comparison pages as glass tiles. Context: dict "cur" (page to skip, or
-  nil) and "group" (only that group, or "" for every page). */ -}}
+  nil) and "group" (only that group, or "" for every page); or "pages", a
+  list of /compare/ page paths shown in that order (a solution page's
+  compare list), which fails the build on a path that is not a page. */ -}}
 {{- $cur := .cur -}}
-{{- $group := .group -}}
+{{- $group := .group | default "" -}}
+{{- $pages := slice -}}
+{{- with .pages -}}
+  {{- range . -}}
+    {{- $pg := site.GetPage . -}}
+    {{- if not $pg }}{{ errorf "versus-grid: %q is not a page" . }}{{ end -}}
+    {{- $pages = $pages | append $pg -}}
+  {{- end -}}
+{{- else -}}
+  {{- range (site.GetPage "/compare").Pages.ByWeight -}}
+    {{- if and (or (not $cur) (ne .RelPermalink $cur.RelPermalink)) (or (eq $group "") (eq .Params.group $group)) -}}
+      {{- $pages = $pages | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 <ul class="agent-grid">
-  {{- range (site.GetPage "/compare").Pages.ByWeight }}
-  {{- if and (or (not $cur) (ne .RelPermalink $cur.RelPermalink)) (or (eq $group "") (eq .Params.group $group)) }}
+  {{- range $pages }}
   <li>
     <a class="agent-tile glass" href="{{ .RelPermalink }}">
       <span class="agent-mark" aria-hidden="true">{{ .Params.mark }}</span>
@@ -14,6 +29,5 @@
       </span>
     </a>
   </li>
-  {{- end }}
   {{- end }}
 </ul>

@@ -135,6 +135,15 @@ clicks, reactions, comments, reposts and engagement rate. The backfill for
 exports already on disk is an operator step (`make store-ingest-linkedin-exports`);
 it reads the same files and is safe to re-run.
 
+Three rules govern those daily figures. A figure is never negative: the
+store refuses one on every backend, the way the Cloud constructs bound
+figures at zero. A blank cell in a later export leaves the stored figure
+alone -- an export that did not report a figure did not report a zero,
+and did not report that the figure became unknown -- while a blank on a
+day no export has reported reads back as no figure. And two rows for one
+day in one batch combine their figures rather than the last row winning
+outright.
+
 ## Read the HTML report
 
 ```bash
@@ -142,9 +151,11 @@ blowhorn report
 blowhorn report --no-open
 ```
 
-`report` builds `data/analytics/analytics_report.html` from the exports already on
-disk and opens it; `--no-open` writes the file and leaves it closed. Collect
-first when you want fresh numbers: the report reads local files only.
+`report` builds `data/analytics/analytics_report.html` and opens it;
+`--no-open` writes the file and leaves it closed. Its LinkedIn figures come
+from the store - the daily series and totals the exports landed on import -
+so collect first when you want fresh numbers. When the store cannot be
+reached, or holds nothing yet, the report falls back to the exports on disk.
 
 ## Related
 

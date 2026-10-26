@@ -18,6 +18,9 @@
 .internal-contents > li { margin-block: 0.35rem; }
 .internal-contents .internal-contents { margin-top: 0.35rem; }
 .internal-contents-desc { color: var(--ink-muted); }
+.docs-page-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line, currentColor); font-size: 0.875rem; }
+.docs-page-meta a { color: var(--ink-muted); }
+.docs-page-meta a:hover { color: inherit; }
 @media (min-width: 1280px) {
   .docs-wrap:not(:has(#TableOfContents)) { grid-template-columns: 15rem minmax(0, 1fr); }
   .docs-wrap:not(:has(#TableOfContents)) > .docs-toc { display: none; }
@@ -39,6 +42,7 @@
   <h2 class="h2">Files</h2>
   <ul>{{ range . }}<li><a href="{{ .RelPermalink }}">{{ path.Base .Name }}</a></li>{{ end }}</ul>
   {{- end }}
+  {{ partial "page-edit-link.html" . }}
 </div>
 {{ partial "pager.html" . -}}
 {{ end -}}

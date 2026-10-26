@@ -1,0 +1,7 @@
+{{- /* The /solutions/ hub's groups, in the Solutions menu's order. Each is
+  a section of cast pages and the kind that reads its data. */ -}}
+{{- return slice
+  (dict "section" (site.GetPage "/for") "kind" "role" "title" "By role" "id" "by-role-title")
+  (dict "section" (site.GetPage "/use-cases") "kind" "use-case" "title" "By use case" "id" "by-use-case-title")
+  (dict "section" . "kind" "solution" "title" "By category" "id" "by-category-title")
+-}}

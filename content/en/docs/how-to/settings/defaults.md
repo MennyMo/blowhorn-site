@@ -57,6 +57,21 @@ override the standing per-platform paces. `blowhorn config show --json`
 reports the effective pace for every platform and which setting supplied
 it.
 
+In the app, Settings shows the same per-platform paces as rows under the
+pace setting: pick a pace for one platform there, or clear it to run at
+the pace again.
+
+## Cap a day's actions
+
+Every platform and action has a built-in daily ceiling. Settings shows the
+same caps as rows under the pacing settings, one per platform and action:
+type a lower cap of your own there, or clear it to go back to the ceiling.
+A cap of your own can only lower the ceiling, never raise it.
+
+```bash
+blowhorn config set defaults.caps.x.post_per_day 3
+```
+
 To read one option and learn which document holds it:
 
 ```bash

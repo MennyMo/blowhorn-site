@@ -30,6 +30,11 @@ downloads the Playwright Chromium runtime, and writes an `blowhorn` launcher to
 before writing the Chrome native host, and lists what is left for you; answer
 no for now if you only want this tutorial.
 
+A checkout's data (profiles, logs, the scheduler's state) lives in its own
+`data/` folder, which Blowhorn keeps readable by you alone. Each macOS user
+on a Mac needs a checkout of their own: Blowhorn refuses to run from a
+checkout another user owns.
+
 Confirm it worked:
 
 ```bash

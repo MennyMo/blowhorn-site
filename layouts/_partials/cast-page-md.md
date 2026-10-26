@@ -1,4 +1,4 @@
-{{- /* Markdown output for a role or use-case page. Kind selects the gets
+{{- /* Markdown output for a role, use-case or solution page. Kind selects the gets
   section title through cast-kind.html. */ -}}
 {{- $item := .item -}}
 {{- $meta := partial "cast-kind.html" (dict "kind" .kind "name" $item.name) -}}
@@ -15,7 +15,12 @@
 {{ range $item.gets }}
 - **{{ .t }}.** {{ .b }}
 {{- end }}
-{{ with $item.prompt }}
+{{ with $item.compare }}
+## Compare product by product
+{{ range . }}{{ $pg := site.GetPage . }}
+- [{{ $pg.Title }}]({{ $pg.Permalink }})
+{{- end }}
+{{ end }}{{ with $item.prompt }}
 ## Or tell your agent
 
 "{{ . }}"

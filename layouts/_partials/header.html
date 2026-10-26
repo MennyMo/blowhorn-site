@@ -9,6 +9,7 @@
   home page's sections. */ -}}
 {{- $home := cond .IsHome "" ("" | relURL) -}}
 {{- $useCases := site.Data.use_cases.use_cases -}}
+{{- $solutions := site.Data.solutions.solutions -}}
 {{- $compare := site.GetPage "/compare" -}}
 {{- $agents := site.GetPage "/agents" -}}
 {{- define "_partials/mm-link.html" -}}
@@ -101,6 +102,14 @@
                   <ul class="mm-links">
                     {{- range sort $useCases "weight" }}
                     {{- partial "mm-link.html" (dict "href" (printf "use-cases/%s/" .slug | relURL) "title" .name) }}
+                    {{- end }}
+                  </ul>
+                </div>
+                <div class="mm-group">
+                  <p class="mm-group-title"><a href="{{ "solutions/" | relURL }}">By category</a></p>
+                  <ul class="mm-links">
+                    {{- range sort $solutions "weight" }}
+                    {{- partial "mm-link.html" (dict "href" (printf "solutions/%s/" .slug | relURL) "title" .name) }}
                     {{- end }}
                   </ul>
                 </div>

@@ -9,7 +9,11 @@ weight: 36
 through a dry run of the first post, and Create account on its own. It uses the app you just built
 (`desktop/out`), a local stand-in for the Blowhorn service, and a throwaway Chrome
 profile. It does not sign in to a social platform, and it does not open your
-own Chrome profile.
+own Chrome profile. The throwaway Chrome has two profiles, as a person's now
+does: Chrome's main profile, started once and left empty, and a second profile
+set aside for Blowhorn, which gets the extension and any planted logins. The
+walk passes the Chrome profile intro and checks that the main profile is listed
+with no **Use with Blowhorn** switch.
 
 The throwaway home is seeded from the same `.blowhorn.yaml` a packaged app
 seeds, then given a `postgres` backend. That is the file an older install

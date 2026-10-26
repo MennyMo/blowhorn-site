@@ -448,7 +448,7 @@ blowhorn chrome status --json
 blowhorn chrome suggest
 blowhorn chrome map your-profile 'Profile 12'
 blowhorn chrome unmap your-profile
-blowhorn chrome attach-chrome start --dry-run
+blowhorn chrome attach-chrome start --allow-other-users --dry-run
 blowhorn chrome attach-chrome signin
 blowhorn chrome attach-chrome stop
 blowhorn profile status --chrome

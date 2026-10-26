@@ -1,0 +1,10 @@
+{{- /* One /solutions/<slug>/ page. Adapter: content/en/solutions/_content.gotmpl. */ -}}
+{{ define "head" }}
+    {{- partial "cast-page-head.html" (dict "page" . "item" (partial "role-data.html" (dict "page" . "kind" "solution"))) }}
+{{- end }}
+{{ define "main" }}
+    {{- partial "cast-page.html" (dict "page" . "item" (partial "role-data.html" (dict "page" . "kind" "solution")) "kind" "solution") }}
+{{- end }}
+{{ define "sprite" }}
+    {{ partial "sprite.html" . }}
+{{- end }}

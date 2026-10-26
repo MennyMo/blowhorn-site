@@ -93,7 +93,7 @@ activity, is locked. Once you are signed in, the account button stays usable. Se
 | Screen | Shows | Acts |
 |---|---|---|
 | Home | Whether Blowhorn is working, what runs next ("Next: Accept LinkedIn invitations, tomorrow at 9:00 AM", from your enabled routines, and nothing while a pause holds), and whether it needs you; a pause names which pause holds - this computer, all computers, or both; "Your draft was saved" once after setup, until you dismiss it or leave Home | Turn off the pause it names (one button per pause while both hold); reconnect an account; **Connect an account** opens a step for your own profile: each platform, how to sign in to it in your Chrome profile, and **Check again**, with connected ones ticked; finish setting up |
-| Activity › Upcoming | Your posts with their status - "ready", "scheduled", "partly sent", "sent", "draft", "needs you" - and clicked-but-unread ones; an opened post's editor shows its result: delivery per profile and platform, reception where it was collected, and the follower change since | Add or edit a post; clearing a clicked post's "Date Promoted" queues it again |
+| Activity › Upcoming | Your posts with their status - "ready", "scheduled", "partly sent", "sent", "draft", "needs you" - and clicked-but-unread ones; an opened post's editor shows its result: delivery per profile and platform, reception where it was collected, and the follower change since. On the all and scheduled filters, the schedule's routines follow below the posts, each labelled by what it does; a routine names no post, so selecting one opens it on Routines | Add or edit a post; clearing a clicked post's "Date Promoted" queues it again |
 | Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the next check; a drawer for one item; a preview of sample routines | Add an item, from "schedule something" or by clicking a free time; move an item's next time by dragging it; edit, pause or resume one item; "do it now"; add the sample routines |
 | Activity › History | Everything Blowhorn did, newest first, with each one's detailed log under the log directory's `scheduler/` folder; a picked run's detail shows its activity's result above the log: delivery per profile and platform, reception where it was collected, and the follower change since | "try again" on a failure |
 | Profiles | Every profile, its Chrome mapping, its per-platform sessions; for LinkedIn, X and Reddit, which Chrome profile to sign in to - never a password field | Add a profile; map or unmap its Chrome profile; open a platform's sign-in page in that Chrome profile and **Check again**; enter a token or app password for the platforms that take one |
@@ -136,12 +136,15 @@ reads and saves them as the lowercase name every command resolves them to.
 Setup is the engine checklist the app opens on while its engine is not
 ready (otherwise the first run is the guided setup; see
 [Set up Blowhorn the first time](/docs/how-to/set-up/first-run-setup/)),
-five rows read from this computer:
-"Blowhorn folder", "helper tools", "organization connection", "chrome profiles",
-and "this computer on watch". The first two check the engine bundled in the
+five rows read from this computer: the engine rows ("blowhorn engine" and
+"bundled engine" in the installed app; "Blowhorn folder" and "helper tools" in
+a source build), "organization connection", "chrome profiles", and
+"this computer on watch". The first two check the engine bundled in the
 app, the only engine the installed app runs
-([Install the app](/docs/how-to/set-up/install-the-app/#first-run)); it
-never needs a clone or an install, so those rows offer neither. An app run from its disk image says to move it to Applications
+([Install the app](/docs/how-to/set-up/install-the-app/#first-run)).
+Setup itself never clones or installs: a source build with no engine is
+told to clone the repository and run `./tools/install.sh` in Terminal.
+An app run from its disk image says to move it to Applications
 instead. Each row reports ok, warn, or off with the
 one fix that clears it. The "map chrome profiles" panel and the
 "this computer on watch" row act directly: mapping a profile and

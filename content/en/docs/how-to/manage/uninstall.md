@@ -100,6 +100,25 @@ connection shows `127.0.0.1` (for example `postgresql://127.0.0.1:9432`), that
 is the local tunnel Blowhorn opens to your account's database, not a database
 on this computer.
 
+## Uninstall from the app
+
+In Settings, **uninstall Blowhorn…** opens a confirm dialog and quits the
+app; a helper the app leaves behind then runs the same command above,
+once the app is gone (the command refuses while the app is running, so
+the helper waits for it to quit first). It runs the engine the app
+carries, not the `blowhorn` command on your `PATH`, so it works for an
+install from the disk image even when that command was never set up.
+
+By default your local data stays, exactly as with the plain command.
+Turn on **also remove the local data** in the dialog for the `--purge`
+scope instead. The shared store is never touched, under either choice.
+
+If the run refuses - a scheduled pass still running, or run records
+still waiting for the shared store - it removes nothing, and the reason
+is written to `~/Library/Logs/Blowhorn/uninstall.log`. The app is still
+installed then, so open it again once the run it named has finished, or
+send the records first as in [When it refuses](#when-it-refuses).
+
 ## Remove the local data too
 
 ```bash
@@ -170,8 +189,10 @@ and takes the same flags:
 
 The real run removes nothing while any of these is running, and names it (a
 dry run names them too, above its preview): a scheduler tick, a pass of the background service, a run
-holding the extension bridge, the desktop app, or run records still waiting
-in the local spool for your account. Send those records first:
+holding the extension bridge, the desktop app (yours, or another macOS
+user's on this Mac: `/Applications/Blowhorn.app` is one app for every user),
+another macOS user's background service (it runs from the same app),
+or run records still waiting in the local spool for your account. Send those records first:
 
 ```bash
 blowhorn store --replay-spool --log-dir <log-dir>

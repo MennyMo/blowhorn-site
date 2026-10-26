@@ -1,7 +1,9 @@
-{{- /* Shared body for a /for/<slug>/ role page or a /use-cases/<slug>/ use-case
-  page. Copy comes from the data entry (.item); chrome is the agent-page
-  components (agent-hero, agent-section, card, bubble, major-says, agent-faq,
-  agent-cta). Kind labels come from cast-kind.html. Plan: blowhorn-site#82. */ -}}
+{{- /* Shared body for a /for/<slug>/ role page, a /use-cases/<slug>/ use-case
+  page or a /solutions/<slug>/ solution page. Copy comes from the data entry
+  (.item); chrome is the agent-page components (agent-hero, agent-section,
+  card, bubble, major-says, agent-faq, agent-cta). A solution's compare list
+  renders as the /compare/ tiles. Kind labels come from cast-kind.html.
+  Plan: blowhorn-site#82. */ -}}
 {{- $p := .page -}}
 {{- $item := .item -}}
 {{- $meta := partial "cast-kind.html" (dict "kind" .kind "name" $item.name) -}}
@@ -44,6 +46,13 @@
           </ul>
         </section>
 
+        {{- with $item.compare }}
+        <section class="agent-section" aria-labelledby="compare-title">
+          <div class="section-head"><h2 id="compare-title" class="h2">Compare product by product</h2></div>
+          {{ partial "versus-grid.html" (dict "pages" .) }}
+        </section>
+        {{- end }}
+
         {{- with $item.prompt }}
         <section class="agent-section" aria-labelledby="prompt-title">
           <div class="section-head"><h2 id="prompt-title" class="h2">Or tell your agent</h2></div>
@@ -79,9 +88,11 @@
           </p>
         </section>
 
+        {{- if gt (len $section.Pages) 1 }}
         <section class="agent-section" aria-labelledby="more-title">
           <div class="section-head"><h2 id="more-title" class="h2">{{ $meta.moreTitle }}</h2></div>
           {{ partial "role-list.html" (dict "section" $section "current" $p "kind" $meta.kind) }}
         </section>
+        {{- end }}
       </div>
     </main>

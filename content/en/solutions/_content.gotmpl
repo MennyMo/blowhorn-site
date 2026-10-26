@@ -1,0 +1,12 @@
+{{- /* One /solutions/<slug>/ page per category in data/solutions.json (schema:
+  schemas/solutions.schema.json). The copy lives in the data file;
+  layouts/solution.html renders it through the shared cast-page partial. */ -}}
+{{- range site.Data.solutions.solutions }}
+  {{- $.AddPage (dict
+      "kind" "page"
+      "path" .slug
+      "title" .title
+      "weight" .weight
+      "params" (dict "slug" .slug "description" .description)
+    ) }}
+{{- end }}

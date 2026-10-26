@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Shared line/text/card types: a bad card fails for both role and
-use-case data, and a use case without title fails.
+"""Shared line/text/card types: a bad card fails for role, use-case and
+solution data; a use case without title fails; a solution's compare list
+takes only /compare/ pages.
 
 Run with `make test-scripts` (CI runs it too).
 """
@@ -66,6 +67,7 @@ class CastPageSchemaTest(unittest.TestCase):
         cases = (
             ("schemas/roles.schema.json", "data/roles.json", "roles"),
             ("schemas/use_cases.schema.json", "data/use_cases.json", "use_cases"),
+            ("schemas/solutions.schema.json", "data/solutions.json", "solutions"),
         )
         for schema, data, key in cases:
             with self.subTest(data=data):
@@ -84,6 +86,27 @@ class CastPageSchemaTest(unittest.TestCase):
                     self.assertTrue(
                         combined.strip(),
                         f"{data}: ajv should report why the card failed",
+                    )
+                finally:
+                    tmp_path.unlink(missing_ok=True)
+
+    def test_solution_data_passes(self):
+        result = ajv(ROOT / "schemas/solutions.schema.json", ROOT / "data/solutions.json")
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+
+    def test_solution_compare_takes_only_compare_pages(self):
+        payload = json.loads((ROOT / "data/solutions.json").read_text(encoding="utf-8"))
+        for bad in ([], ["/for/devrel"], ["/compare/buffer", "/compare/buffer"]):
+            with self.subTest(compare=bad):
+                broken = copy.deepcopy(payload)
+                broken["solutions"][0]["compare"] = bad
+                tmp_path = write_tmp(broken)
+                try:
+                    result = ajv(ROOT / "schemas/solutions.schema.json", tmp_path)
+                    self.assertNotEqual(
+                        result.returncode,
+                        0,
+                        f"compare {bad!r} should fail validation",
                     )
                 finally:
                     tmp_path.unlink(missing_ok=True)

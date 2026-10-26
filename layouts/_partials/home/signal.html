@@ -129,6 +129,13 @@
             <a href="{{ printf "use-cases/%s/" .slug | relURL }}">{{ .name }}</a>
             {{- end }}
           </p>
+          <p class="usecases">
+            <span class="label">Solutions</span>
+            {{- range sort site.Data.solutions.solutions "weight" }}
+            <a href="{{ printf "solutions/%s/" .slug | relURL }}">{{ .name }}</a>
+            {{- end }}
+            <a href="{{ "solutions/" | relURL }}">All solutions</a>
+          </p>
         </div>
       </section>
 

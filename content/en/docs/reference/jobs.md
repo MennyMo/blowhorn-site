@@ -64,6 +64,19 @@ job, outranking your account setting; a tick forced to `extension` with
 `--chrome-launch` keeps that mode. A job pinned to a driver that
 cannot do the work is refused by name before anything opens.
 
+## Risk Profile
+
+An activity may carry its own Risk Profile: set the `Risk Profile`
+column to `cautious`, `standard` or `brisk` (or write
+`risk_profile=cautious` in its Params), and that activity runs that
+preset end to end (pace, caps, quiet hours and the pause after a
+sign-in challenge) while the same profile on the same platform runs
+its usual preset everywhere else. Leave it blank and the activity
+inherits the profile's preset, exactly as before. A hold or a run
+report names the source as `schedule` when the activity's own setting
+decided it. `blowhorn schedule list` shows each activity's own setting,
+the preset it effectively runs and where that preset came from.
+
 ## Pause scopes
 
 An activity is claimed only when none of the three scopes says paused:

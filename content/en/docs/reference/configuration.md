@@ -149,7 +149,7 @@ A new profile or a new Mac runs cautious for scheduled jobs until it has history
 
 ### Concurrency
 
-How much may run at once, in two parts. Runs sharing a platform: cautious and standard `platform` (one profile at a time on a platform), brisk `profile` (different profiles may share a platform; one profile is still held to one run on it). Runs at once overall: cautious at most 1, standard and brisk no limit. Both parts are enforced at the run gates since #1007, with the layering environment, explicit file value, preset, built-in, per key; a refusal under a preset cap names the preset. The session lock and the scheduler pass slot follow the same values, so `risk show` and observed enforcement agree with no explicit concurrency value set.
+How much may run at once, in two parts. Runs sharing a platform: cautious and standard `platform` (one profile at a time on a platform), brisk `profile` (different profiles may share a platform; one profile is still held to one run on it). Runs at once overall: cautious at most 1, standard and brisk no limit. Both parts are enforced at the run gates, with the layering environment, explicit file value, preset, built-in, per key; a refusal under a preset cap names the preset. The session lock and the scheduler pass slot follow the same values, so `risk show` and observed enforcement agree with no explicit concurrency value set.
 
 ## Typing and pointer timing
 
@@ -184,26 +184,46 @@ How long a click stays held (`defaults.pointer_click_hold_min_ms` to `defaults.p
 `off` - the built-in - is the behaviour Blowhorn has always had: whoever
 writes a content activity sets its `Approved?`, and actions that publish
 without an activity (`post --amplify`, `post --message`, `follow`, an
-ad-hoc `comment`, a confirmed `slack send`) publish as run. `agent` keeps
-that for a person, but holds an agent's work: a caller marked with
-`BLOWHORN_ACTOR=agent`, a scheduler run, or any run with no terminal
-attached has its activities stored unapproved whatever the payload asked,
-and its ad-hoc actions are refused with a sentence pointing at the queue.
-`all` holds every activity and every ad-hoc action, whoever wrote it.
-You at a terminal, or in the app, count as a person for writing activities (approving is `blowhorn content approve` at a terminal); under `all` the
-app's own writes wait too, and the CLI is the door.
+invitation, a connection request, an acceptance, an ad-hoc `comment`, a
+confirmed `slack send`) publish as run. `agent` keeps that for a person, but holds
+an agent's work: a caller marked with `BLOWHORN_ACTOR=agent`, a scheduler
+run, or any run with no terminal attached has its activities stored
+unapproved whatever the payload asked, and its ad-hoc actions are refused
+with a sentence pointing at the queue. `all` holds every activity and
+every ad-hoc action, whoever wrote it. You at a terminal, or in the app,
+count as a person for writing activities; under `all` the app's own
+writes wait too, and approval is the separate act either way.
 
-A schedule job that would publish on its own - `follow`, `comment`
-with a target and a message, `post` with `amplify` - is a standing
-instruction to publish unapproved, so creating one, or changing what
-an existing one would publish, is refused for the same callers: an
-agent under `agent`, anyone under `all`. A job that works the queue
-is never refused, and a job already scheduled is not re-judged when
-the mode changes: it runs as its creator's standing instruction.
+A schedule job that would publish on its own - a `follow`, an invitation,
+a connection request, an acceptance, a `comment` with a target and a
+message, a `post` with `amplify` - is a standing instruction to publish
+unapproved, so
+creating one is refused for the same callers: an agent under `agent`,
+anyone under `all`. So is changing what an existing one would publish,
+who it publishes as, where, or when: its command, its params, its
+profile, its platform, or its timing (Run At, Next Run At, Recurrence).
+A job that works the queue is never refused, and a job already scheduled
+is not re-judged when the mode changes: it runs as its creator's
+standing instruction.
+
+Approval mode is a guard, not a sandbox. Who counts as an agent is read
+from signals, and the signals are environment variables, set by whoever
+launches the process - so a caller that can set its own environment can
+claim to be a person, and no ordering of those claims prevents that.
+The one case precedence does settle is the scheduler: a tick is
+unattended, so a scheduler run counts as an agent whatever
+`BLOWHORN_ACTOR` says. `BLOWHORN_ACTOR=human` still lets a
+non-interactive human script count as the person, and is forgeable by
+exactly the caller it lets through; a proof no environment claim gives -
+the app proving itself over a channel only it holds, or a tick proven
+by its parent process - is future work, not this mode.
 
 The door is `blowhorn content approve <activity>`: it sets `Approved?`
 and records who approved and when in the activity's `Approved by` column
-(see [Content queue](/docs/reference/content-queue/)). Approving is a person's act, so
+(see [Content queue](/docs/reference/content-queue/)). The app's Content screen is the
+same door: a waiting activity carries an approve control, and the app's
+calls run as you, so the control runs this verb and the record is the
+same. Approving is a person's act, so
 an agent-signalled caller is refused by `content approve` itself, in
 every mode - an agent cannot approve its own work. An unknown mode is
 refused by name before anything runs.

@@ -10,6 +10,22 @@
 # ["public", "internal"]: public's excludes would drop /internal/.
 renderSegments = ["internal"]
 
+# "Edit this page" on internal pages (layouts/_partials/page-edit-link.html).
+# The pages are mounted from the private blowhorn repository, so the link
+# targets that repository, not this one: github_repo (site-level, the public
+# repository) is deliberately left alone, as the public header, footer and 404
+# link to its releases. These keys follow Docsy's repository-links naming
+# (github_repo, github_branch, path_base_for_github_subdir). A mounted file's
+# path is its absolute path in whichever clone the build runs in, so the
+# regex keeps from the repository-relative source folder (the hugo/ folders
+# in the mount table below) onward, wherever the clone sits.
+[params]
+  internal_edit_repo = "https://github.com/leecalcote/blowhorn"
+  internal_edit_branch = "master"
+  [params.internal_edit_path_base]
+    from = '^.*?/((?:marketing/strategy|internal/[a-z-]+)/hugo/.*)$'
+    to = '$1'
+
 # Only this environment mounts static-internal/ (see [module] below): its
 # index.html is the root redirect to /internal/, so the build's root is
 # not a dead end.

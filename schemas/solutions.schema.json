@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/solutions.schema.json",
+  "title": "Solution pages",
+  "description": "data/solutions.json: one /solutions/<slug>/ page per category of tool Blowhorn replaces, built by content/en/solutions/_content.gotmpl through layouts/solution.html (shared cast-page partials with the role and use-case pages). Each page links the per-product /compare/ pages rather than repeating their tables. Public marketing copy only: every claim comes from Blowhorn's canonical differentiators in their wording rules. Plain text, hyphens never em dashes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "solutions"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "solutions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/solution"
+      }
+    }
+  },
+  "definitions": {
+    "line": {
+      "$ref": "https://blowhorn.ai/schemas/defs/cast-page.schema.json#/definitions/line"
+    },
+    "text": {
+      "$ref": "https://blowhorn.ai/schemas/defs/cast-page.schema.json#/definitions/text"
+    },
+    "card": {
+      "$ref": "https://blowhorn.ai/schemas/defs/cast-page.schema.json#/definitions/card"
+    },
+    "solution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "name",
+        "title",
+        "weight",
+        "headline",
+        "lead",
+        "description",
+        "art",
+        "pains",
+        "gets",
+        "major",
+        "compare",
+        "faq",
+        "related"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "URL segment: /solutions/<slug>/."
+        },
+        "name": {
+          "$ref": "#/definitions/line",
+          "description": "The category on the page (\"Developer distribution\", \"Employee advocacy\")."
+        },
+        "title": {
+          "$ref": "#/definitions/line",
+          "description": "Document title (\"Blowhorn for developer distribution\")."
+        },
+        "weight": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Order in the menu and index."
+        },
+        "headline": {
+          "$ref": "#/definitions/line"
+        },
+        "lead": {
+          "$ref": "#/definitions/text"
+        },
+        "description": {
+          "$ref": "#/definitions/text",
+          "description": "Meta and Open Graph description."
+        },
+        "art": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "src",
+            "alt"
+          ],
+          "description": "Locked-6 cast art on its black ground; must carry Keppel #00B39F or Caribbean Green #00D3A9.",
+          "properties": {
+            "src": {
+              "type": "string",
+              "pattern": "^assets/brand/cast/[a-z0-9-]+\\.webp$"
+            },
+            "alt": {
+              "$ref": "#/definitions/text"
+            }
+          }
+        },
+        "pains": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/definitions/card"
+          }
+        },
+        "gets": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/definitions/card"
+          }
+        },
+        "prompt": {
+          "type": "string",
+          "maxLength": 200,
+          "not": {
+            "pattern": "—"
+          },
+          "description": "Optional thing to say to your coding agent; empty for none."
+        },
+        "major": {
+          "$ref": "#/definitions/line",
+          "description": "One Major Blowhorn line (The Major says)."
+        },
+        "compare": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 9,
+          "uniqueItems": true,
+          "description": "The per-product /compare/ pages for this category, in display order. The build fails if one doesn't resolve.",
+          "items": {
+            "type": "string",
+            "pattern": "^/compare/[a-z0-9]+(-[a-z0-9]+)*$"
+          }
+        },
+        "faq": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "q",
+              "a"
+            ],
+            "properties": {
+              "q": {
+                "$ref": "#/definitions/line"
+              },
+              "a": {
+                "$ref": "#/definitions/text"
+              },
+              "link": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "href",
+                  "label"
+                ],
+                "description": "Optional link after the answer, for a page outside this site (a site page goes in related).",
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "pattern": "^https://"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/line"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "related": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "label",
+              "page"
+            ],
+            "properties": {
+              "label": {
+                "$ref": "#/definitions/line"
+              },
+              "page": {
+                "type": "string",
+                "pattern": "^/[a-z0-9/-]*$",
+                "description": "Site page path; the build fails if it doesn't resolve."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

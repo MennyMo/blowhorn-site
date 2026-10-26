@@ -469,7 +469,7 @@ pre code { background: none; padding: 0; }
     0 0 0 1px var(--glass-edge),
     var(--glass-shadow);
 }
-.mm-panel-wide { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.mm-panel-wide { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .site-header:not(.is-enhanced) .mm-item:hover > .mm-panel,
 .site-header:not(.is-enhanced) .mm-item:focus-within > .mm-panel,
 .mm-item.is-open > .mm-panel { display: grid; }
@@ -2381,6 +2381,9 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 .agent-faq details p { margin-top: var(--space-3); color: var(--ink-muted); }
 .agent-cta { padding: clamp(24px, 4vw, 48px); border-radius: var(--radius-lg); text-align: center; }
 .agent-cta > * + * { margin-top: var(--space-3); }
+/* Related-page labels come from data and can outrun a 320px screen: let
+   them wrap instead of the global .button nowrap scrolling the page. */
+.agent-cta .button { white-space: normal; max-width: 100%; text-align: center; }
 .agent-grid { list-style: none; padding: 0; display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 .agent-tile {
   display: flex; gap: var(--space-4); align-items: center; height: 100%;
@@ -3330,7 +3333,7 @@ a.docs-card.platform-card[href$="/instagram/"]::before { background-image: url("
 a.docs-card.platform-card[href$="/tiktok/"]::before { background-image: url("/assets/platforms/tiktok-simple-icons.svg"); background-size: 22px 22px; }
 a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/assets/platforms/facebook-simple-icons.svg"); background-size: 22px 22px; }
 
-/* ---------- Role and use-case pages (/for/<slug>/, /use-cases/<slug>/)
+/* ---------- Cast pages (/for/<slug>/, /use-cases/<slug>/, /solutions/<slug>/)
    Shared layout (layouts/_partials/cast-page.html) reuses these classes.
    Locked-6 cast art keeps its black ground: a rounded frame, no recolouring. */
 .role-art { margin: 0; }
@@ -3343,7 +3346,15 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
   border-radius: var(--radius-lg);
   background: var(--near-black);
 }
-.role-card { display: flex; flex-direction: column; gap: var(--space-3); height: 100%; }
+/* .role-list a.role-card, not .role-card: a.card-link's display: block
+   (0,1,1) otherwise wins and the label and headline spans run together on
+   one line. The card-link margins space the children, so no gap on top of
+   them. The home page's role cards (home-signal.css) keep block layout. */
+.role-list a.role-card { display: flex; flex-direction: column; height: 100%; }
+/* The arrow chip's room (a.card-link > :first-child padding) would paint as a
+   dark strip beside the art, since the image's background is near-black. The
+   chip sits over the art's corner instead, as on the home page's role cards. */
+.role-list a.role-card > img:first-child { padding-right: 0; }
 .role-page .grid { list-style: none; padding: 0; }
 
 /* ---------- Cookie notice (layouts/_partials/consent.html) ----------
