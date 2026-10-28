@@ -1,7 +1,10 @@
 {{- /* The download page at /download/ (content/en/download/_index.md). The
   button goes to /download/thanks/, which starts the disk image download and
   walks through setup, so it works without script. assets/js/download.js fills
-  in the version, size, date and release notes from the newest GitHub release. */ -}}
+  in the version, size, date and release notes from the newest GitHub release.
+  Each card states its own minimum (.download-req), matching the requirements
+  block below it. The Windows card is a placeholder: no link, a disabled
+  button, and a decorative hanging "Coming soon" sign. */ -}}
 {{ define "sprite" }}
     {{ partial "sprite.html" . }}
 {{- end }}
@@ -20,6 +23,7 @@
             <img class="download-icon" src="{{ "assets/brand/logo/blowhorn-app-icon.svg" | relURL }}" alt="" width="72" height="72">
             <h2 class="h3">Blowhorn for Mac</h2>
             <p>The Mac app runs your activities and installs the Blowhorn command.</p>
+            <p class="download-req caption">Requires macOS 13 or newer</p>
             <p class="actions">
               <a class="button button-primary button-pop" href="{{ $thanks }}">
                 <svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#glyph-download"></use></svg>
@@ -33,6 +37,7 @@
             <img class="download-icon" src="{{ "assets/platforms/google-chrome-logo.svg" | relURL }}" alt="Google Chrome logo" width="72" height="72">
             <h2 class="h3">The Blowhorn Chrome extension</h2>
             <p>Blowhorn posts from your own signed-in Google Chrome through its extension. Add it to each Chrome profile you post from.</p>
+            <p class="download-req caption">Requires Google Chrome 142 or newer</p>
             <p class="actions"><a class="button button-primary" href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">Add to Chrome</a></p>
             <p class="meta caption"><a href="{{ "docs/how-to/set-up/install-the-chrome-extension/" | relURL }}">Install guide</a></p>
           </div>
@@ -42,6 +47,21 @@
             <p>The Mac app installs the Blowhorn command, so there is nothing else to download. Set it up from the install guide.</p>
             <p class="actions"><a class="button button-primary" href="{{ "docs/how-to/set-up/install-the-app/#the-blowhorn-command" | relURL }}">Install the CLI</a></p>
             <p class="meta caption"><a href="{{ "docs/reference/cli/" | relURL }}">CLI reference</a></p>
+          </div>
+          <div class="download-card download-card-soon" aria-disabled="true" aria-labelledby="windows-title">
+            <svg class="soon-sign" viewBox="0 0 200 100" aria-hidden="true" focusable="false">
+              <path class="soon-sign-string" d="M100 9 22 52M100 9l78 43" />
+              <rect class="soon-sign-edge" x="6" y="44" width="188" height="52" rx="12" />
+              <rect class="soon-sign-face" x="6" y="40" width="188" height="50" rx="12" />
+              <rect class="soon-sign-rim" x="11" y="45" width="178" height="40" rx="8" />
+              <text class="soon-sign-text" x="100" y="66" text-anchor="middle" dominant-baseline="middle">COMING SOON</text>
+              <circle class="soon-sign-nail" cx="100" cy="9" r="6" />
+              <circle class="soon-sign-glint" cx="98" cy="7" r="2" />
+            </svg>
+            <img class="download-icon" src="{{ "assets/brand/logo/blowhorn-app-icon.svg" | relURL }}" alt="" width="72" height="72">
+            <h2 id="windows-title" class="h3">Blowhorn for Windows<span class="visually-hidden">, coming soon</span></h2>
+            <p>We're working on it. Really.</p>
+            <p class="actions"><button class="button button-primary" type="button" disabled>Coming soon</button></p>
           </div>
         </div>
         <aside class="download-requirements" aria-labelledby="requirements-title">

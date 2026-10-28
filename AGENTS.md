@@ -81,7 +81,10 @@ regenerate them. Claims on every page come from the product repository's
   extension", never Mac or Google Chrome; a requirement note links to System requirements.
   Download and install pages (`/download`, `/download/thanks`, `docs/reference/requirements`,
   `docs/how-to/set-up/`) state the exact requirement: "Requires macOS 13 or newer and Google
-  Chrome 142 or newer" (142 is the engine's `MINIMUM_CHROME_MAJOR`), never "for now". Docs about
+  Chrome 142 or newer" (142 is the engine's `MINIMUM_CHROME_MAJOR`), never "for now". On
+  `/download` each card also repeats its own minimum (`.download-req`; `download.js` keeps it
+  when it refills the Mac card), so a floor change touches the cards, the requirements block
+  and `/download/thanks`. Docs about
   using the app or CLI name Google Chrome and "Chrome profile", matching the app's labels ("Add to
   Chrome", "Show my Chrome profiles"). Competitor facts, Chrome Web Store, code, commands and URLs
   stay as they are. `check_naming.py` fails a "for now" requirement and "browser profile" or

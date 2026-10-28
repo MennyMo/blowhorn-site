@@ -76,6 +76,7 @@
     // Keep the page's own button (it goes to the thanks page, which starts the
     // download); only the label, file size and details below it change.
     var icon = card.querySelector(".download-icon");
+    var requirement = card.querySelector(".download-req");
     var actions = card.querySelector(".actions");
     var size = actions && actions.querySelector(".caption");
     if (size) {
@@ -83,7 +84,7 @@
     }
     var title = el("h2", "Blowhorn " + version + " for Mac", { class: "h3" });
     var body = el("p", "The Mac app runs your activities and installs the Blowhorn command.");
-    var children = (icon ? [icon] : []).concat([title, body, actions]);
+    var children = (icon ? [icon] : []).concat([title, body], requirement ? [requirement] : [], [actions]);
 
     var meta = el("p", null, { class: "meta caption" });
     var date = release.published_at ? publishedOn(release.published_at) : null;

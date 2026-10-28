@@ -70,6 +70,10 @@
   --line-strong: #7A878C;
   --on-teal: #1E2117;
   --on-yellow: #1E2117;
+  /* The "Coming soon" sign on /download/ (Lee's reference art). Sign art only,
+     like coral for the rooster: never a UI state, button or text colour. */
+  --sign-red: #D32A00;
+  --sign-red-shade: #B32700;
 
   /* Light theme */
   --surface: #FFFFFF;
@@ -1285,20 +1289,21 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 .download-card {
   background: var(--surface-raised);
   border-radius: var(--radius-lg);
-  padding: var(--space-6);
+  padding: var(--card-pad);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 .download-card .h3 { margin: 0; }
+.download-card .download-req { margin: 0; color: var(--ink-wordmark); }
 .download-card .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; margin-top: auto; }
 .download-card .meta { color: var(--ink-muted); }
 .download-card .meta span + span::before { content: "\00b7"; margin-inline: var(--space-2); }
 .download-requirements {
   display: grid;
   gap: var(--space-4);
-  margin-top: var(--space-6);
-  padding-block: var(--space-5);
+  margin-top: var(--grid-gap);
+  padding-block: var(--space-6);
   border-block: var(--stroke-hairline) solid var(--line);
 }
 .download-requirements .label { margin-bottom: var(--space-2); }
@@ -1319,8 +1324,50 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 .download-requirements-list span { color: var(--ink-muted); }
 .download-verify a { color: var(--ink-muted); }
 .download-verify a:hover { color: var(--link); }
+/* Windows is not out yet: a muted card with no link, a disabled button and a
+   red sign hung from a nail on the card's top edge. The sign sits beside the
+   icon, clear of the title, and swings once on load (never under reduced motion). */
+.download-card-soon { position: relative; cursor: default; }
+.download-card-soon .download-icon { filter: grayscale(1) drop-shadow(0 10px 18px rgba(30, 33, 23, 0.16)); opacity: 0.5; }
+.download-card-soon .h3,
+.download-card-soon p { color: var(--ink-muted); }
+.soon-sign {
+  position: absolute;
+  top: calc(-1 * var(--space-3));
+  right: var(--card-pad);
+  width: 168px;
+  height: auto;
+  overflow: visible;
+  transform-origin: 50% 9%;
+  filter: drop-shadow(0 6px 10px rgba(30, 33, 23, 0.22));
+  animation: soon-sign-swing 2.4s ease-out 0.4s both;
+}
+.soon-sign-string { fill: none; stroke: var(--sign-red); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.soon-sign-edge { fill: var(--sign-red-shade); }
+.soon-sign-face { fill: var(--sign-red); }
+.soon-sign-rim { fill: none; stroke: var(--white); stroke-opacity: 0.18; stroke-width: 1.5; }
+.soon-sign-text { fill: var(--white); font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: 0.06em; }
+.soon-sign-nail { fill: var(--charcoal); }
+.soon-sign-glint { fill: var(--white); fill-opacity: 0.55; }
+@keyframes soon-sign-swing {
+  0% { transform: rotate(-6deg); }
+  30% { transform: rotate(4deg); }
+  55% { transform: rotate(-2deg); }
+  78% { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+@media (prefers-color-scheme: dark) {
+  .soon-sign { filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5)); }
+  .soon-sign-nail { fill: var(--line-strong); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .soon-sign { animation: none; }
+}
+.download-grid { display: grid; gap: var(--grid-gap); }
+@media (min-width: 720px) {
+  .download-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (min-width: 900px) {
-  .download-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
   .download-requirements { grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 2fr); align-items: center; }
   .download-requirements-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
@@ -1626,6 +1673,17 @@ body { background: var(--surface); }
   box-shadow: inset 0 1px 0 0 var(--glass-specular), inset 0 0 0 1px var(--line-strong), var(--glass-shadow);
 }
 .button-secondary:hover { background: var(--glass-fill-strong); }
+/* A disabled button reads as unavailable: flat, muted, no hover, no lift. */
+.button:disabled,
+.button:disabled:hover {
+  cursor: not-allowed;
+  background: var(--surface-raised);
+  background-image: none;
+  border-color: var(--line);
+  color: var(--ink-muted);
+  box-shadow: none;
+  transform: none;
+}
 
 /* Whole-card links lift on hover; the glass edge brightens with them. */
 a.card-link:hover, a.platform:hover, a.docs-card:hover,

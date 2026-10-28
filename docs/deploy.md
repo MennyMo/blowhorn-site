@@ -295,6 +295,14 @@ chrome-devtools-axi screenshot /path/to/evidence/home-390-dark.png --full-page
 chrome-devtools-axi eval 'document.documentElement.scrollWidth > document.documentElement.clientWidth'   # must be false
 ```
 
+Two capture gotchas. Headless Chrome will not shrink a window below 500 px, so
+`resize 390 844` silently shoots at 500: use
+`emulate --viewport "390x844x2,mobile"` for phone widths and check
+`innerWidth`. The ambient background is a `position: fixed` layer, so a
+`--full-page` shot taller than the viewport shows a hard seam where the layer
+ends; set the viewport height to `document.documentElement.scrollHeight`
+before shooting instead.
+
 ## Internal section (Hugo segments and module mounts)
 
 `/internal/` is the internal Blowhorn site. Its source never enters this
