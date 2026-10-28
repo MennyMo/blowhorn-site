@@ -52,7 +52,7 @@ The newest run on `master` should show both jobs green. The deployment is live
 at the Pages URL within a minute of the `deploy` job finishing:
 
 - <https://blowhorn.ai/> once DNS points at GitHub Pages (below).
-- <https://layer5io.github.io/blowhorn-site/> is the project URL. Because the
+- <https://blowhorn-ai.github.io/blowhorn-site/> is the project URL. Because the
   custom domain is already set on Pages, GitHub redirects this URL to
   `https://blowhorn.ai/`, so nothing is reachable there until the DNS records
   below are in place. The artifact itself deploys fine either way.
@@ -98,7 +98,7 @@ Form A, a flattened CNAME (Cloudflare resolves it to GitHub's addresses itself):
 
 | Type | Name | Target | Proxy |
 |---|---|---|---|
-| CNAME | `@` | `layer5io.github.io` | DNS only |
+| CNAME | `@` | `blowhorn-ai.github.io` | DNS only |
 
 Form B, GitHub Pages' fixed addresses:
 
@@ -142,13 +142,13 @@ it stalls, the usual cause is the Cloudflare proxy being on for the record.
 
 | Type | Name | Target | Proxy |
 |---|---|---|---|
-| CNAME | `www` | `layer5io.github.io` | DNS only |
+| CNAME | `www` | `blowhorn-ai.github.io` | DNS only |
 
 With `blowhorn.ai` as the Pages custom domain and this record in place, GitHub
 answers `www.blowhorn.ai` with a redirect to `https://blowhorn.ai/`.
 
 ```bash
-dig +short CNAME www.blowhorn.ai   # expect: layer5io.github.io.
+dig +short CNAME www.blowhorn.ai   # expect: blowhorn-ai.github.io.
 curl -sI https://www.blowhorn.ai   # expect 301 to https://blowhorn.ai/
 ```
 
@@ -160,7 +160,7 @@ Every page and asset reference is root-relative (`/css/site.<hash>.css`,
 path, nested ones included. A build with a different base URL
 (`make site-build BASE_URL=...` or `make build-preview`) prefixes every
 reference with that URL's path. The project URL
-`layer5io.github.io/blowhorn-site/` redirects to blowhorn.ai, so nothing is
+`blowhorn-ai.github.io/blowhorn-site/` redirects to blowhorn.ai, so nothing is
 served under that path in production.
 
 The public URLs are a contract, checked by `make site-check`:
