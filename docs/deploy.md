@@ -496,7 +496,11 @@ From a blowhorn-ai/blowhorn clone (or here): `make site-internal-deploy`
 not wait). It runs `.github/workflows/internal-site.yml` by
 `workflow_dispatch`; other workflows in this repository can call the same file
 with `workflow_call` and `secrets: inherit`. Ship after a change to the
-internal documents (`marketing/strategy/**`, the comparison CSVs) merges.
+internal documents (`marketing/strategy/**`, `marketing/brand/**` including
+the asset catalog, the comparison CSVs, or
+`internal/{engineering,design,specs,plans,research}/**`) merges. There is
+no push or merge trigger: a human (or `make site-internal-deploy`) must
+start the workflow.
 
 The workflow, in order (each step is a make target):
 
