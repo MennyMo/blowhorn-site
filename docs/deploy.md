@@ -450,11 +450,12 @@ is each page's `weight`. The public build never renders any of it.
 
 ### Where the internal build runs
 
-blowhorn's `.github/workflows/internal-site.yml` checks out both
-repositories side by side, runs `make site-internal-build` from the blowhorn
-clone and uploads `public-internal/` as a private workflow artifact. There
-is no private host. It never runs in this repository's Actions, whose
-artifacts and logs are public.
+The internal build and Worker deploy run in this repository's Actions
+(`.github/workflows/internal-site.yml`), started by hand, by
+`internal-site-auto.yml`, or by `repository_dispatch`. The private product
+checkout is sparse, never uploaded, and removed before the job ends; build
+and wrangler output stay suppressed because this repository is public. There
+is no private host and no artifact of `public-internal/`.
 
 ### Footguns
 
@@ -491,16 +492,50 @@ tree on every build. Locally, `make site-internal` still redirects `/` to
 
 ### Shipping an update
 
-From a blowhorn-ai/blowhorn clone (or here): `make site-internal-deploy`
-(`REF=<branch|tag|sha>` to build something other than master, `WATCH=0` to
-not wait). It runs `.github/workflows/internal-site.yml` by
-`workflow_dispatch`; other workflows in this repository can call the same file
-with `workflow_call` and `secrets: inherit`. Ship after a change to the
-internal documents (`marketing/strategy/**`, `marketing/brand/**` including
-the asset catalog, the comparison CSVs, or
-`internal/{engineering,design,specs,plans,research}/**`) merges. There is
-no push or merge trigger: a human (or `make site-internal-deploy`) must
-start the workflow.
+`.github/workflows/internal-site.yml` builds and deploys. It redeploys on its
+own after a change to anything the internal build is made from:
+
+- **Site side (this repository).** `.github/workflows/internal-site-auto.yml`
+  calls it on every push to `master` that touches `config/internal/**`,
+  `internal-worker/**`, `static-internal/**`, `layouts/**`, `assets/**`,
+  `.github/scripts/internal*`, either internal workflow, the `Makefile`, or
+  the toolchain (`package.json`, `package-lock.json`, `.nvmrc`, `go.mod`,
+  `go.sum`, `hugo.toml`, `postcss.config.js`).
+- **Product side (blowhorn-ai/blowhorn), polled.** Every 15 minutes the same
+  workflow runs `make site-internal-poll`, which asks the GitHub API, with
+  `DMG_SOURCE_TOKEN`, whether blowhorn `master` has a commit in the last 30
+  minutes under a mounted path (`marketing/strategy/**`,
+  `marketing/capability-comparison/**`, `marketing/brand/**` including the
+  asset catalog, `marketing/assets.manifest.json`, or
+  `internal/{engineering,design,specs,plans,research}/**`). If so it deploys
+  that `master` SHA. The run fails, rather than skipping, when
+  `DMG_SOURCE_TOKEN` is missing or cannot read the repository. Polling keeps
+  the work on this public repository's free minutes; the private repository
+  spends none. A change is redeployed on each poll for about 30 minutes, which
+  rides out one delayed or dropped scheduled run without eight repeats.
+- **Product side, pushed.** A client with a token that can dispatch on this
+  repository sends `repository_dispatch` with event type
+  `deploy-internal-site` and optional
+  `client_payload: {"blowhorn_ref": "<sha-or-master>"}`:
+
+  ```sh
+  gh api repos/blowhorn-ai/blowhorn-site/dispatches \
+    -f event_type=deploy-internal-site -f 'client_payload[blowhorn_ref]=master'
+  ```
+
+  blowhorn's `.github/workflows/internal-site-dispatch.yml` does this on a
+  merge under the mounted paths, with the repository secret
+  `SITE_DISPATCH_TOKEN` (a token with Contents: write on
+  blowhorn-ai/blowhorn-site, which `repository_dispatch` requires). Without
+  that hook, the poll still picks the change up within about 15-45 minutes.
+- **By hand.** From a blowhorn-ai/blowhorn clone (or here):
+  `make site-internal-deploy` (`REF=<branch|tag|sha>` to build something other
+  than master, `WATCH=0` to not wait) runs the workflow by
+  `workflow_dispatch`. Actions > Internal site (auto) > Run workflow runs the
+  auto path by hand.
+
+Deploys queue on the workflow's `internal-site` concurrency group, so an
+automatic deploy waits for a running one instead of cancelling it.
 
 The workflow, in order (each step is a make target):
 
@@ -512,7 +547,8 @@ The workflow, in order (each step is a make target):
    managed default-deny pair. This runs before any private content reaches
    the runner.
 4. Checks out blowhorn-ai/blowhorn (sparse: `marketing/strategy`,
-   `marketing/capability-comparison`, `internal/engineering`,
+   `marketing/capability-comparison`, `marketing/brand`,
+   `marketing/assets.manifest.json`, `internal/engineering`,
    `internal/design`, `internal/specs`, `internal/plans`,
    `internal/research`) with the read-only deploy key.
 5. `site-internal-build` with `BASE_URL=https://internal.blowhorn.ai/`, output
@@ -544,11 +580,17 @@ checkout after building. Keep it that way in any change to the workflow or
   added read-only to blowhorn-ai/blowhorn. It can read that one repository and
   cannot write to it or reach any other. Rotate it by adding a new deploy key
   and replacing the secret; revoke it by deleting the deploy key.
+- `DMG_SOURCE_TOKEN` (repository secret, shared with `publish-dmg.yml`,
+  `sync-docs.yml` and `product-ci.yml`): read access to blowhorn-ai/blowhorn.
+  `internal-site-auto.yml` passes it only to the scheduled poll, which sends
+  it only to the GitHub API.
+- `SITE_DISPATCH_TOKEN` (secret on blowhorn-ai/blowhorn, not here): lets the
+  product repository send `deploy-internal-site`.
 
 ### Changing who can read it
 
 Edit `allowed_emails` in `internal-worker/access.json` in a pull request (so
-the change is reviewed), merge, and run `make site-internal-deploy`. The
+the change is reviewed) and merge; the push to `master` redeploys. The
 workflow updates the Access policy and the Worker's list together. Do not edit
 the policy in the Cloudflare dashboard: the next deploy resets it, and a
 mismatch fails verification.

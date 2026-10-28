@@ -63,6 +63,8 @@ include .github/build/Makefile.show-help.mk
 #                      Run internal-site.yml (build, Cloudflare Access, Worker
 #                      deploy at internal.blowhorn.ai, verify) and watch it:
 #                      make site-internal-deploy [REF=<blowhorn ref>] [WATCH=0].
+#   site-internal-poll Decide whether internal-site-auto.yml deploys (see
+#                      .github/scripts/internal-poll.sh).
 #   site-internal-access, site-internal-access-check, site-internal-worker-deploy,
 #   site-internal-verify
 #                      The steps of internal-site.yml (see docs/deploy.md).
@@ -98,7 +100,7 @@ BIN_DIR ?= .bin
 # actionlint from PATH when installed; otherwise a pinned copy is downloaded into $(BIN_DIR).
 ACTIONLINT ?= $(shell command -v actionlint 2>/dev/null)
 # Workflows owned by this repo. Template workflows (labeler and friends) are left as-is.
-WORKFLOWS ?= .github/workflows/site.yml .github/workflows/publish-dmg.yml .github/workflows/sync-docs.yml .github/workflows/cloud-auth-smoke.yml .github/workflows/product-ci.yml .github/workflows/internal-site.yml
+WORKFLOWS ?= .github/workflows/site.yml .github/workflows/publish-dmg.yml .github/workflows/sync-docs.yml .github/workflows/cloud-auth-smoke.yml .github/workflows/product-ci.yml .github/workflows/internal-site.yml .github/workflows/internal-site-auto.yml
 # A blowhorn checkout for `make docs-sync` (the sync-docs.yml
 # workflow checks the product repo out at this path).
 SOURCE_DIR ?= product
@@ -207,6 +209,10 @@ site-internal-deploy:
 		echo "Watching run $$run_id"; \
 		gh run watch "$$run_id" -R $(INTERNAL_SITE_REPO) --exit-status; \
 	fi
+
+## Decide whether internal-site-auto.yml deploys: always on push or dispatch; on schedule, only when blowhorn master changed a mounted path in the last 2 hours (needs DMG_SOURCE_TOKEN).
+site-internal-poll:
+	.github/scripts/internal-poll.sh
 
 ## Read-only: confirm CLOUDFLARE_API_TOKEN can read Zero Trust, Access applications and policies, and Workers.
 site-internal-access-check:

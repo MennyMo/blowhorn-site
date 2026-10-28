@@ -62,7 +62,7 @@ Every CI step that runs repository logic is a make target, and the workflow call
 | Target | What it runs | Run by |
 |---|---|---|
 | `setup-ci` | `npm ci` (the locked dependencies) | `site.yml` |
-| `workflow-check` | actionlint on `site.yml`, `publish-dmg.yml`, `sync-docs.yml`, `cloud-auth-smoke.yml` and `product-ci.yml` | `site.yml` |
+| `workflow-check` | actionlint on `site.yml`, `publish-dmg.yml`, `sync-docs.yml`, `cloud-auth-smoke.yml`, `product-ci.yml`, `internal-site.yml` and `internal-site-auto.yml` | `site.yml` |
 | `test-scripts` | unit tests for the check scripts in `.github/scripts/` | `site.yml` |
 | `site-check` | one production build, then the checks below | `site.yml` |
 | `check-schemas` | `data/hero.json`, `data/roles.json`, `data/use_cases.json`, `data/solutions.json`, `data/themes.json`, `data/integrations.json`, `data/hero_demo.json`, `data/actions.json` and `data/action_examples.json` validate against `schemas/`; role, use-case and solution schemas `$ref` shared `line`/`text`/`card` types in `schemas/defs/cast-page.schema.json` (ajv `-r`) ([docs/hero-variants.md](docs/hero-variants.md)). Every supported YAML action must have an example ([docs/action-examples.md](docs/action-examples.md)). Every action group in `data/actions.json` exists and holds an action (`check_action_matrix.py --source`) | `site-check` |
@@ -81,6 +81,7 @@ Every CI step that runs repository logic is a make target, and the workflow call
 | `docs-sync-base` | check out the `docs-sync` branch on the open sync PR's head, or on `master` when none is open ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
 | `docs-sync-start-checks` | start `site.yml` on the `docs-sync` branch after a sync ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
 | `docs-sync-merge` | merge the sync pull request once its site checks pass, then start the `master` site run that deploys ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
+| `site-internal-poll` | decide whether to redeploy internal.blowhorn.ai: always on push or manual run; on schedule, only when blowhorn `master` changed a path the internal build mounts in the last 2 hours ([docs/deploy.md](docs/deploy.md#shipping-an-update)) | `internal-site-auto.yml` |
 | `product-ci SUITE=python\|desktop` | run the private product repo's CI on a checkout of it, printing only step results and pass/fail counts (output stays in a private log; public logs never show product code) | `product-ci.yml` |
 
 Each check target builds for production first, so it also runs on its own. `labeler.yml`, `label-commenter.yml` and `slack.yml` only call third-party actions and run no repository logic, so they have no target.
@@ -104,6 +105,8 @@ The site also publishes [`/llms.txt`](https://blowhorn.ai/llms.txt), [`/llms-ful
 | [`site.yml`](.github/workflows/site.yml) | Pull requests, pushes to `master`, manual runs | Lints the workflows, runs the check-script unit tests, builds the site with the pinned Hugo, Go and Node.js, runs `make site-check` and uploads the Pages artifact. On `master` it deploys the artifact to GitHub Pages. |
 | [`publish-dmg.yml`](.github/workflows/publish-dmg.yml) | Manual, or `repository_dispatch` (`publish-dmg`) from product CI | Downloads a built DMG over HTTPS, checks it, verifies signing and notarization on a macOS runner (required for any public release), then creates the release with versioned assets, the `Blowhorn-mac.dmg` alias and checksums. Drafts by default; never overwrites. |
 | [`sync-docs.yml`](.github/workflows/sync-docs.yml) | Manual, or `repository_dispatch` (`sync-docs`) from product CI | Checks out the product docs at the requested ref, opens or updates the `docs-sync` pull request (`docs: sync from <ref>`), starts the site checks on it itself (`gh workflow run site.yml`), merges it once those checks pass, and starts the `master` run that deploys. |
+| [`internal-site.yml`](.github/workflows/internal-site.yml) | Manual (`make site-internal-deploy`), `repository_dispatch` (`deploy-internal-site`) from the product repo, or called by `internal-site-auto.yml` | Builds the internal site from a read-only checkout of the product repo and deploys it to internal.blowhorn.ai behind Cloudflare Access ([docs/deploy.md](docs/deploy.md#internal-site-hosting-internalblowhornai-cloudflare-access)). |
+| [`internal-site-auto.yml`](.github/workflows/internal-site-auto.yml) | Pushes to `master` on the internal build's paths, every 15 minutes, manual runs | Calls `internal-site.yml` on a site-side push, or when its poll finds a product-repo change under the internal mounts. |
 
 <div>&nbsp;</div>
 
