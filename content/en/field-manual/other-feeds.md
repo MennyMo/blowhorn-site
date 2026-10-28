@@ -8,8 +8,8 @@ lead: "Intelligence from fronts the Major doesn't march on. Useful anywhere you 
 notice: "**Blowhorn doesn't post to these platforms.** This page is general education. Blowhorn works with LinkedIn, X, Reddit, Hacker News, Bluesky, Slack and GitHub, on macOS 13 or newer."
 layout: field-manual
 weight: 60
-checked: 13 October 2026
-lastmod: 2026-10-13
+checked: 28 October 2026
+lastmod: 2026-10-28
 ---
 
 ## YouTube
@@ -22,12 +22,15 @@ lastmod: 2026-10-13
 
 - **Ranks on your interactions** and adjusts for what you say you're not interested in ([TikTok Newsroom](https://newsroom.tiktok.com/en-us/how-tiktok-recommends-videos-for-you)).
 - **Reduces repeats and spam.** "We also don't recommend duplicated content, content you've already seen before, or any content that's considered spam," and "spam content such as videos seeking to artificially increase traffic" may be ineligible for For You (same source).
+- <span class="hypothesis">Hypothesis:</span> TikTok tests a video in stages, showing it to a small group first; early response matters, but reach can build over days. Widely reported; TikTok's page above describes ranking on interactions, not a timeline ([Won or lost in the first hour](/resources/articles/won-or-lost-in-the-first-hour/)).
 - **Wants originality.** Content "is also ineligible for the FYF if it includes unoriginal or reused material without anything new" ([TikTok Community Guidelines](https://www.tiktok.com/community-guidelines/en/integrity-authenticity)).
 
 ## Instagram
 
 - **Three signals lead.** Instagram's head, Adam Mosseri, said in January 2025: "The top three signals that matter most for ranking are watch time, likes and sends," with likes counting slightly more with followers and sends slightly more with new audiences (as reported by [Social Samosa, 23 Jan 2025](https://www.socialsamosa.com/news-2/instagram-reveals-key-factors-for-boosting-reach-8646916)).
 - **Penalizes reposting others' work.** Accounts that mostly repost lose recommendations; Instagram extended this to photos and carousels in 2026 (as reported by [Creatorflow](https://creatorflow.so/blog/instagram-algorithm-2026/)). <span class="hypothesis">Hypothesis</span> until you read Instagram's own creator pages: we couldn't open them from our tools.
+
+- <span class="hypothesis">Hypothesis:</span> early performance strongly predicts a post's or Reel's reach, though it can keep gaining later. Commonly reported; Instagram hasn't published a window ([Won or lost in the first hour](/resources/articles/won-or-lost-in-the-first-hour/)).
 
 ## Facebook
 

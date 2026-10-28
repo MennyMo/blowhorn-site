@@ -7,8 +7,8 @@ description: What X's For You feed rewards (replies, conversations, time spent, 
 lead: "Most generals hide their maps. X put its ranking code on GitHub. The Major read every line so you don't have to."
 layout: field-manual
 weight: 20
-checked: 13 October 2026
-lastmod: 2026-10-13
+checked: 28 October 2026
+lastmod: 2026-10-28
 ---
 
 ## Roll call of the fallen
@@ -80,6 +80,7 @@ X has published its For You ranking twice. In 2023 Twitter released its "heavy r
 Not from X. Treat as hunches until your own analytics agree.
 
 - <span class="hypothesis">Hypothesis:</span> posts with an outside link reach fewer people than posts without one. Widely reported by users. The 2026 code counts link clicks as a positive action, and we found no link penalty in the parts of the code we read. Test it yourself.
+- <span class="hypothesis">Hypothesis:</span> the first 30 to 60 minutes decide a post's reach, and a post that stalls early rarely recovers. Commonly reported; X hasn't published a window. What X has published is the weight on replies, quoted under [Conversation beats applause](#what-xs-ranking-rewards). Together they say: post when you can answer the first replies yourself ([Won or lost in the first hour](/resources/articles/won-or-lost-in-the-first-hour/)).
 - <span class="hypothesis">Hypothesis:</span> paid X Premium accounts get extra reach. Common belief; we didn't confirm it in the published code.
 
 ## What Blowhorn does on X
