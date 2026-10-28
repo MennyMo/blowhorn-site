@@ -101,6 +101,8 @@ jobs:
           sparse-checkout: |
             marketing/strategy
             marketing/capability-comparison
+            marketing/brand
+            marketing/assets.manifest.json
             internal/engineering
             internal/design
             internal/specs
