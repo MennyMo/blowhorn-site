@@ -61,7 +61,7 @@ X has published its For You ranking twice. In 2023 Twitter released its "heavy r
 
 ## Do's
 
-- **Ask a real question, then answer the replies.** The reply the author engages with was the heaviest positive weight X ever published.
+- **Ask a real question, then answer the replies.** In X's 2023 published weights, the reply the author engages with ranked among the heaviest positive weights.
 - **Write posts worth stopping for.** Dwell is in the model; a skim is a negative.
 - **Give people something to send.** Share by DM and copy link are counted actions.
 - **Space your posts out.** The author diversity decay means your own posts compete with each other.
