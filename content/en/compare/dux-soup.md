@@ -18,7 +18,7 @@
   ],
   "us": [
     "You want careful LinkedIn hygiene, not volume prospecting",
-    "No vendor server should log in as you; Blowhorn acts from your own signed-in Chrome",
+    "No vendor server should log in as you; Blowhorn acts from your own signed-in browser",
     "You also speak on X, Reddit, Hacker News, GitHub, Bluesky and Slack, and want your people amplifying"
   ],
   "price_them": "Turbo $55 per month ($41.25 annually); Cloud $99 ($74.17 annually)",
@@ -32,7 +32,7 @@
     {
       "f": "Where it acts",
       "t": "A Chrome extension in your session, or Dux-Soup's cloud on the Cloud tier",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "LinkedIn outreach",

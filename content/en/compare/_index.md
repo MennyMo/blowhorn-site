@@ -103,7 +103,7 @@ rows:
     local: { level: partial, text: "Any site, by hand" }
 why:
   - title: It's you, not a bot
-    body: Blowhorn drives the Chrome you already sign in to. No server logs in with your password, session cookie or 2FA secret.
+    body: Blowhorn drives the browser you already sign in to. No server logs in with your password, session cookie or 2FA secret.
     link: /docs/explanation/your-own-chrome/
   - title: One queue, every computer
     body: Add computers for coverage. Each action is claimed by one computer, and whichever computer is awake keeps the schedule.

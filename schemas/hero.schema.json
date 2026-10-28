@@ -151,7 +151,7 @@
           }
         },
         "art": {
-          "description": "The illustration beside the copy, a partial in layouts/_partials/hero-art/: stage is Major Blowhorn barking into your own Chrome, fan is one message fanning out to every platform. Defaults to stage.",
+          "description": "The illustration beside the copy, a partial in layouts/_partials/hero-art/: stage is Major Blowhorn barking into your own browser, fan is one message fanning out to every platform. Defaults to stage.",
           "type": "string",
           "enum": ["stage", "fan"]
         },

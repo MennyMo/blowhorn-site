@@ -42,7 +42,7 @@ These were hard-won battles. This manual passes along that value so you can clai
 
 Blowhorn was built around these lessons. It types at human speed with random pauses, clicks a public action once and never retries it on a guess, hands every CAPTCHA and two-factor prompt to you, and skips LinkedIn invitations that LinkedIn flags as risky ([How Blowhorn paces itself](/docs/explanation/reliability-and-anti-bot-design/), [Why flagged invitations are skipped](/docs/explanation/invitation-safety/)).
 
-None of that makes a behavior allowed. The rules govern what an account does, not which software clicks. Running in your own Chrome keeps your passwords on your computer; it doesn't make a pod a good idea. The [action matrix](/field-manual/action-matrix/) shows which Blowhorn actions are safe, which need care and which are risky on each platform.
+None of that makes a behavior allowed. The rules govern what an account does, not which software clicks. Running in your own browser keeps your passwords on your computer; it doesn't make a pod a good idea. The [action matrix](/field-manual/action-matrix/) shows which Blowhorn actions are safe, which need care and which are risky on each platform.
 
 Curious what sites can see about your browser? Run the free check at [Blowhorn Tells](https://tells.blowhorn.ai/). It shows what a page can read, not what a platform will decide.
 

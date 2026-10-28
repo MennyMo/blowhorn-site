@@ -5,7 +5,7 @@ description: "What Blowhorn can do on X (Twitter), and how each action behaves t
 weight: 226
 ---
 
-Blowhorn works on X in your own signed-in Chrome, through the Blowhorn extension. Sign in to X there once, by hand. The credential Blowhorn checks is `X_USERNAME`, kept in your account.
+Blowhorn works on X in your own signed-in browser, through the Blowhorn extension. Sign in to X there once, by hand. The credential Blowhorn checks is `X_USERNAME`, kept in your account.
 
 Posts from an activity; a message past 274 characters goes out as a thread.
 Replies go through a post activity that targets the conversation. Amplifies
@@ -31,7 +31,7 @@ command. There is no comment flow for X under `blowhorn comment`.
 - [Content queue columns and activity states](/docs/reference/content-queue/) - every column each platform reads.
 - [Messages and exit codes](/docs/reference/messages/) - what a refusal means.
 - [Who can post as whom](/docs/explanation/eligibility/) - why a credential is permission.
-- [Why Blowhorn uses your own Chrome](/docs/explanation/your-own-chrome/) - browser versus API.
+- [Why Blowhorn uses your own browser](/docs/explanation/your-own-chrome/) - browser versus API.
 - [You're in control](/docs/explanation/youre-in-control/) - every safety control in one place.
 - [Field Manual: X](https://blowhorn.ai/field-manual/x/) - what the X feed rewards and what it penalizes.
 - [Platform action matrix](https://blowhorn.ai/field-manual/action-matrix/) - safe versus risky actions, per platform.

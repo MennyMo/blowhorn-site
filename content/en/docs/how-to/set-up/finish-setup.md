@@ -1,6 +1,6 @@
 ---
 title: "Finish setup on this computer"
-description: "Run blowhorn setup to check this computer, write the Chrome native host, and see what is left."
+description: "Run blowhorn setup to check this computer, write the browser native host, and see what is left."
 weight: 35
 ---
 
@@ -9,7 +9,7 @@ weight: 35
 what is missing or out of date, and lists what is left for you to do. It is
 safe to run as often as you like.
 
-It never starts, opens or attaches to Chrome, and it installs no extension.
+It never starts, opens or attaches to your browser, and it installs no extension.
 
 ## See what would change
 
@@ -37,11 +37,11 @@ blowhorn setup
 It checks, in order:
 
 1. `cli` - that `blowhorn` is on your `PATH`.
-2. `chrome-profiles` - your Chrome profiles, read from Chrome's `Local State`
+2. `chrome-profiles` - your browser profiles, read from the browser's `Local State`
    file.
-3. `native-host` - the small file that lets the Blowhorn Chrome extension talk
-   to Blowhorn. When it is missing or out of date, setup says which Chrome
-   profiles it reaches - every Chrome profile you use on this computer, now
+3. `native-host` - the small file that lets the Blowhorn browser extension talk
+   to Blowhorn. When it is missing or out of date, setup says which browser
+   profiles it reaches - every browser profile you use on this computer, now
    and later, naming the ones it found today - and asks before writing it.
 4. `cloud-account` - whether you are signed in to Blowhorn.
 
@@ -74,5 +74,5 @@ directory, so a root run on behalf of another user is refused and reported
 
 ## Related
 
-- [Install the Chrome extension](/docs/how-to/set-up/install-the-chrome-extension/)
+- [Install the browser extension](/docs/how-to/set-up/install-the-chrome-extension/)
 - [Command-line reference](/docs/reference/cli/)

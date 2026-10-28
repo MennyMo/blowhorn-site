@@ -15,14 +15,14 @@ Typing arrives keystroke by keystroke, and how the gaps between keys
 are shaped depends on the path. Where Blowhorn types through the
 page's own keyboard, each entry follows a plan: a computed delay
 between keys, short hesitations, a longer pause every so often, and
-an occasional typo typed and corrected. Through the Chrome
+an occasional typo typed and corrected. Through the browser
 extension, the default driver, typing is one character per message
 with a shaped delay between characters: each gap is drawn from a
 right-skewed distribution around the computed delay and stretches
 after a word or a sentence ends. The extension path does not insert
 the plan's extra pauses and does not type-and-correct typos. In
 background mode those same per-character messages are sent as real
-key events through Chrome's debugger, on that same cadence, and the
+key events through the browser's debugger, on that same cadence, and the
 field is read back afterwards; in classic mode the extension writes
 each character into the field directly, which is why the flows that
 read a page's own input handling (X posting and sign-in among them)

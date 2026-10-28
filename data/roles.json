@@ -6,7 +6,7 @@
       "name": "DevRel",
       "weight": 10,
       "headline": "Ship the release. Announce it everywhere, as you.",
-      "lead": "LinkedIn, X, Reddit, Hacker News, Bluesky, GitHub and Slack in one queue, posted from your own Chrome, signed in as you. Your agent drafts and dry-runs; you hold the switch.",
+      "lead": "LinkedIn, X, Reddit, Hacker News, Bluesky, GitHub and Slack in one queue, posted from your own browser, signed in as you. Your agent drafts and dry-runs; you hold the switch.",
       "platforms": [
         "linkedin",
         "x",
@@ -16,7 +16,7 @@
         "bluesky",
         "github"
       ],
-      "description": "Blowhorn for developer relations: one queue for the networks developers use, including Hacker News and GitHub, posted as you from your own Chrome.",
+      "description": "Blowhorn for developer relations: one queue for the networks developers use, including Hacker News and GitHub, posted as you from your own browser.",
       "art": {
         "src": "assets/brand/cast/keyboard-warrior-base.webp",
         "alt": "Keyboard Warrior, a gold rooster in a teal helmet holding a keyboard with green keys like a shield"
@@ -42,7 +42,7 @@
         },
         {
           "t": "Posted as you",
-          "b": "Blowhorn does the typing and clicking in your own Chrome. No vendor server logs in as you, and nothing is branded \"sent via Blowhorn\"."
+          "b": "Blowhorn does the typing and clicking in your own browser. No vendor server logs in as you, and nothing is branded \"sent via Blowhorn\"."
         },
         {
           "t": "Your agent drives, you approve",
@@ -87,7 +87,7 @@
           "page": "/agents"
         },
         {
-          "label": "Why your own Chrome",
+          "label": "Why your own browser",
           "page": "/docs/explanation/your-own-chrome"
         }
       ]
@@ -134,7 +134,7 @@
         },
         {
           "t": "Their sessions stay theirs",
-          "b": "Each teammate's browser session stays in their own Chrome; Blowhorn acts as them there."
+          "b": "Each teammate's sessions stay in their own browser; Blowhorn acts as them there."
         },
         {
           "t": "One pause for the whole wave",
@@ -150,7 +150,7 @@
       "faq": [
         {
           "q": "Do teammates hand over their passwords?",
-          "a": "No. Their browser sessions stay in their own Chrome, and Blowhorn acts as them there."
+          "a": "No. Their sessions stay in their own browser, and Blowhorn acts as them there."
         },
         {
           "q": "Can I invite my team?",
@@ -189,7 +189,7 @@
       "name": "Founders",
       "weight": 30,
       "headline": "You're the company's voice. Keep its keys.",
-      "lead": "Every launch, across your personal, company and project profiles, from one queue on computers you own. Blowhorn does the typing and clicking in your own Chrome, so nobody else holds the sign-ins that are your company.",
+      "lead": "Every launch, across your personal, company and project profiles, from one queue on computers you own. Blowhorn does the typing and clicking in your own browser, so nobody else holds the sign-ins that are your company.",
       "platforms": [
         "linkedin",
         "x",
@@ -199,7 +199,7 @@
         "bluesky",
         "github"
       ],
-      "description": "Blowhorn for founders: every profile you speak for, from one queue on your own computers, posted as you from your own Chrome.",
+      "description": "Blowhorn for founders: every profile you speak for, from one queue on your own computers, posted as you from your own browser.",
       "art": {
         "src": "assets/brand/cast/major-6-hat-left-horn.webp",
         "alt": "Major Blowhorn, a teal rooster drill sergeant in a campaign hat, pointing and shouting through his gold bullhorn, Caribbean Green sound waves pouring out of it"
@@ -221,7 +221,7 @@
       "gets": [
         {
           "t": "Many profiles, one desk",
-          "b": "Every brand, founder and project profile you speak for, from one menu bar app, each in its own Chrome profile."
+          "b": "Every brand, founder and project profile you speak for, from one menu bar app, each in its own browser profile."
         },
         {
           "t": "Your computers act",
@@ -241,7 +241,7 @@
       "faq": [
         {
           "q": "What lives in my account?",
-          "a": "Your queue, schedule, profiles, run history and analytics, so every computer stays in sync. Browser cookies stay in Chrome on each computer, and your account never posts."
+          "a": "Your queue, schedule, profiles, run history and analytics, so every computer stays in sync. Cookies stay in the browser on each computer, and your account never posts."
         },
         {
           "q": "Will it post twice?",
@@ -413,7 +413,7 @@
       "faq": [
         {
           "q": "Does a supporter give me their password?",
-          "a": "No. A supporter adds their own profile, signed in from their own Chrome."
+          "a": "No. A supporter adds their own profile, signed in from their own browser."
         },
         {
           "q": "Does Blowhorn install a Slack app?",
@@ -438,7 +438,7 @@
           "page": "/docs/how-to/publish/amplify-a-post"
         },
         {
-          "label": "Why your own Chrome",
+          "label": "Why your own browser",
           "page": "/docs/explanation/your-own-chrome"
         }
       ]
@@ -448,7 +448,7 @@
       "name": "Agencies and consultants",
       "weight": 60,
       "headline": "Show the client the dry-run. Then send it once.",
-      "lead": "Run several clients' profiles from one desk, in real Chrome profiles on your own computer. Dry-run every action, pause one client instantly, and never hand a vendor a client's 2FA secret.",
+      "lead": "Run several clients' profiles from one desk, in real browser profiles on your own computer. Dry-run every action, pause one client instantly, and never hand a vendor a client's 2FA secret.",
       "platforms": [
         "linkedin",
         "x",
@@ -458,7 +458,7 @@
         "bluesky",
         "github"
       ],
-      "description": "Blowhorn for agencies and consultants: client profiles in real Chrome on your own computer, with dry-run and pause on every action.",
+      "description": "Blowhorn for agencies and consultants: client profiles in a real browser on your own computer, with dry-run and pause on every action.",
       "art": {
         "src": "assets/brand/cast/mouse-marine-salute.webp",
         "alt": "Mouse Marine, a mallard in a green beret saluting from a gold trackball on a small tank, cursor spear in hand"
@@ -487,8 +487,8 @@
           "b": "Pause one action while everything else keeps running, or pause every computer at once."
         },
         {
-          "t": "Real Chrome profiles",
-          "b": "Each Blowhorn profile maps to its own Chrome profile on each computer. No fake fingerprints."
+          "t": "Real browser profiles",
+          "b": "Each Blowhorn profile maps to its own browser profile on each computer. No fake fingerprints."
         },
         {
           "t": "One automation per profile",
@@ -504,11 +504,11 @@
         },
         {
           "q": "Where do client credentials live?",
-          "a": "Browser cookies stay in Chrome on each computer. GitHub, Hacker News and Slack credentials sync from your account."
+          "a": "Cookies stay in the browser on each computer. GitHub, Hacker News and Slack credentials sync from your account."
         },
         {
           "q": "Is this an antidetect browser?",
-          "a": "No. Blowhorn is real Chrome, signed in as each profile. Want to see what sites can read about your browser?",
+          "a": "No. Blowhorn is a real browser, signed in as each profile. Want to see what sites can read about your browser?",
           "link": {
             "href": "https://tells.blowhorn.ai/",
             "label": "Run the free check at Blowhorn Tells"

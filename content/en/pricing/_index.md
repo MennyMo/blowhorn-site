@@ -2,7 +2,7 @@
 title: Pricing
 seo_title: Blowhorn pricing - plans for one voice or a whole team
 description: Start free. Solo is $19 a month, Pro is $39 a month for 10 profiles, Team is $35 a seat a month. Pay yearly and get two months free.
-lead: Start free, upgrade when you need more profiles or more platforms. Every plan posts from your own Chrome, as you, without handing anyone your password.
+lead: Start free, upgrade when you need more profiles or more platforms. Every plan posts from your own browser, as you, without handing anyone your password.
 layout: pricing
 lastmod: 2026-10-13
 sitemap:
@@ -22,7 +22,7 @@ tiers:
     features:
       - 1 profile
       - LinkedIn and X
-      - Posts from your own Chrome
+      - Posts from your own browser
       - 1 computer
   - name: Solo
     blurb: For one person running a company's voice.
@@ -73,7 +73,7 @@ tiers:
       - Up to 3 computers per seat
 included:
   - title: No passwords handed over
-    body: Blowhorn posts from your own signed-in Chrome. We never ask for your password, cookies or two-factor codes.
+    body: Blowhorn posts from your own signed-in browser. We never ask for your password, cookies or two-factor codes.
   - title: No license keys
     body: Your plan lives in your account. Sign in on a computer and it just knows what you have.
   - title: Keeps going offline
@@ -94,5 +94,5 @@ faq:
   - q: Can I change plans later?
     a: Yes. Upgrades start right away and you only pay the difference for the rest of your term. A switch from yearly to monthly starts at your next renewal.
   - q: Do I need a computer?
-    a: Yes. Blowhorn runs on your computer, Apple silicon or Intel, together with a small Chrome extension.
+    a: Yes. Blowhorn runs on your computer, Apple silicon or Intel, together with a small browser extension.
 ---

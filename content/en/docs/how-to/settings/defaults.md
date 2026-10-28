@@ -108,7 +108,7 @@ judged by the date in the file name. Nothing else in the directory is pruned.
 
 ## Related
 
-- [Choose how Blowhorn reaches Chrome](/docs/how-to/settings/launch-mode/) - the launch and driver settings these defaults sit above
+- [Choose how Blowhorn reaches your browser](/docs/how-to/settings/launch-mode/) - the launch and driver settings these defaults sit above
 - [Schedule a job](/docs/how-to/schedule/schedule-a-job/) - per-job parameters that beat these defaults
 - [Review what ran](/docs/how-to/measure/review-runs/) - read the logs these settings keep
 - [Choose your Risk Profile](/docs/how-to/settings/choose-your-risk-profile/) - the preset these dials start from, and the Safety screen

@@ -4,7 +4,7 @@
 
 ## How it works
 
-1. Install Blowhorn for Mac and the Blowhorn Chrome extension.
+1. Install Blowhorn for Mac and the Blowhorn browser extension.
 2. {{ .Params.wire_title }}: {{ .Params.wire_body }}
 3. Say what you want. {{ .Params.tool }} turns it into blowhorn commands, and you approve what publishes.
 

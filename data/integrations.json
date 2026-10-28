@@ -1,7 +1,7 @@
 {
   "$schema": "../schemas/integrations.schema.json",
   "headline": "One queue. Every network that matters.",
-  "lede": "One queue for every network your audience reads. LinkedIn, X, Reddit and Hacker News go through your own Chrome with the Blowhorn extension. Slack and Bluesky use their APIs. On GitHub, Blowhorn rallies reactions on the issue, it does not post.",
+  "lede": "One queue for every network your audience reads. LinkedIn, X, Reddit and Hacker News go through your own browser with the Blowhorn extension. Slack and Bluesky use their APIs. On GitHub, Blowhorn rallies reactions on the issue, it does not post.",
   "major": {
     "headline": "Write it once. Deploy to every front.",
     "supporting": "You give the order. Major Blowhorn takes it to %s and the rest."
@@ -48,7 +48,7 @@
   "categories": [
     {
       "id": "chrome",
-      "name": "Your Chrome",
+      "name": "Your browser",
       "summary": "Blowhorn types and clicks in your own signed-in browser.",
       "platforms": ["linkedin", "x", "reddit", "hacker-news"]
     },
@@ -75,38 +75,38 @@
     {
       "id": "linkedin",
       "status": "supported",
-      "viaLabel": "Your Chrome",
+      "viaLabel": "Your browser",
       "posts": true,
       "docs": "/docs/reference/platforms/linkedin/",
       "exampleLink": "linkedin.com/feed/update/urn:li:activity:...",
-      "demoMeta": "via your Chrome, as you"
+      "demoMeta": "via your browser, as you"
     },
     {
       "id": "x",
       "status": "supported",
-      "viaLabel": "Your Chrome",
+      "viaLabel": "Your browser",
       "posts": true,
       "docs": "/docs/reference/platforms/x/",
       "exampleLink": "x.com/you/status/...",
-      "demoMeta": "via your Chrome, as you"
+      "demoMeta": "via your browser, as you"
     },
     {
       "id": "reddit",
       "status": "supported",
-      "viaLabel": "Your Chrome",
+      "viaLabel": "Your browser",
       "posts": true,
       "docs": "/docs/reference/platforms/reddit/",
       "exampleLink": "reddit.com/r/devops/comments/...",
-      "demoMeta": "via your Chrome, as you"
+      "demoMeta": "via your browser, as you"
     },
     {
       "id": "hacker-news",
       "status": "supported",
-      "viaLabel": "Your Chrome",
+      "viaLabel": "Your browser",
       "posts": true,
       "docs": "/docs/reference/platforms/hacker-news/",
       "exampleLink": "news.ycombinator.com/item?id=...",
-      "demoMeta": "via your Chrome, as you"
+      "demoMeta": "via your browser, as you"
     },
     {
       "id": "slack",

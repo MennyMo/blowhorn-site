@@ -2,7 +2,7 @@
   "title": "Blowhorn vs PhantomBuster",
   "linkTitle": "PhantomBuster",
   "seo_title": "Blowhorn vs PhantomBuster: honest comparison",
-  "description": "PhantomBuster is a powerful data and outreach automation platform across 15+ sites. Blowhorn is narrower on purpose: careful actions and real-person amplification, from your own Chrome.",
+  "description": "PhantomBuster is a powerful data and outreach automation platform across 15+ sites. Blowhorn is narrower on purpose: careful actions and real-person amplification, from your own browser.",
   "layout": "versus",
   "weight": 22,
   "lastmod": "2026-10-13",
@@ -10,7 +10,7 @@
   "mark": "Ph",
   "site_url": "https://phantombuster.com/",
   "group": "LinkedIn growth tools",
-  "verdict": "PhantomBuster is a powerful data and outreach automation platform across 15+ sites. Blowhorn is narrower on purpose: careful actions and real-person amplification, from your own Chrome.",
+  "verdict": "PhantomBuster is a powerful data and outreach automation platform across 15+ sites. Blowhorn is narrower on purpose: careful actions and real-person amplification, from your own browser.",
   "them": [
     "You need lead lists, enrichment and scraping across many sites",
     "You want outreach campaigns that run with your browser closed",
@@ -18,7 +18,7 @@
   ],
   "us": [
     "You want careful LinkedIn hygiene, not volume prospecting",
-    "No vendor server should log in as you; Blowhorn acts from your own signed-in Chrome",
+    "No vendor server should log in as you; Blowhorn acts from your own signed-in browser",
     "You also speak on X, Reddit, Hacker News, GitHub, Bluesky and Slack, and want your people amplifying"
   ],
   "price_them": "Start $56, Grow $128, Scale $352 a month, billed annually",
@@ -32,7 +32,7 @@
     {
       "f": "Where it acts",
       "t": "PhantomBuster's cloud, through your accounts, with your browser closed",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "Data extraction and enrichment",
@@ -69,7 +69,7 @@
   "faq": [
     {
       "q": "Is PhantomBuster better than Blowhorn?",
-      "a": "For data extraction, enrichment and outreach at scale, yes. For acting as yourself from your own Chrome and amplifying through real people, we think Blowhorn is the better fit."
+      "a": "For data extraction, enrichment and outreach at scale, yes. For acting as yourself from your own browser and amplifying through real people, we think Blowhorn is the better fit."
     }
   ],
   "major": "Phantoms work in the dark. I prefer a horn you can hear.",

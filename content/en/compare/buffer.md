@@ -19,7 +19,7 @@
   "us": [
     "Your audience lives on Hacker News, Reddit, GitHub, Slack, LinkedIn and X",
     "One post should be amplified by your founders, your team and your supporters, not just published once",
-    "You want posting to happen from your own Chrome, as you, on your own computers"
+    "You want posting to happen from your own browser, as you, on your own computers"
   ],
   "price_them": "Free (10 posts a channel); Essentials $5 a channel, Team $10 a channel a month, billed annually",
   "price_src": "https://buffer.com/pricing",
@@ -27,7 +27,7 @@
     {
       "f": "Where it acts",
       "t": "Buffer's cloud, through each network's official app",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "Networks",

@@ -2,7 +2,7 @@
   "title": "Blowhorn vs Expandi",
   "linkTitle": "Expandi",
   "seo_title": "Blowhorn vs Expandi: honest comparison",
-  "description": "Expandi is a serious outbound machine: LinkedIn and email sequences, InMails and personalization at volume. Blowhorn is not a sequencer. It's for careful outreach and real-person amplification, from your own Chrome.",
+  "description": "Expandi is a serious outbound machine: LinkedIn and email sequences, InMails and personalization at volume. Blowhorn is not a sequencer. It's for careful outreach and real-person amplification, from your own browser.",
   "layout": "versus",
   "weight": 21,
   "lastmod": "2026-10-26",
@@ -10,7 +10,7 @@
   "mark": "Ex",
   "site_url": "https://expandi.io/",
   "group": "LinkedIn growth tools",
-  "verdict": "Expandi is a serious outbound machine: LinkedIn and email sequences, InMails and personalization at volume. Blowhorn is not a sequencer. It's for careful outreach and real-person amplification, from your own Chrome.",
+  "verdict": "Expandi is a serious outbound machine: LinkedIn and email sequences, InMails and personalization at volume. Blowhorn is not a sequencer. It's for careful outreach and real-person amplification, from your own browser.",
   "them": [
     "You run outbound sales and need multi-step LinkedIn and email sequences",
     "You want A/B tests, personalization and agency white label",
@@ -18,7 +18,7 @@
   ],
   "us": [
     "You want careful LinkedIn hygiene, not volume prospecting",
-    "No vendor server should log in as you; Blowhorn acts from your own signed-in Chrome",
+    "No vendor server should log in as you; Blowhorn acts from your own signed-in browser",
     "You also speak on X, Reddit, Hacker News, GitHub, Bluesky and Slack, and want your people amplifying"
   ],
   "price_them": "$99 a seat a month, or $79 a seat billed annually",
@@ -32,7 +32,7 @@
     {
       "f": "Where it acts",
       "t": "Expandi's cloud, from a dedicated IP",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "IP address each post comes from",
@@ -74,7 +74,7 @@
   "faq": [
     {
       "q": "Is Expandi better than Blowhorn?",
-      "a": "For outbound sequences at volume, yes, and Blowhorn won't pretend otherwise. For careful outreach from your own Chrome plus publishing and amplification across many networks, we think Blowhorn is the better fit."
+      "a": "For outbound sequences at volume, yes, and Blowhorn won't pretend otherwise. For careful outreach from your own browser plus publishing and amplification across many networks, we think Blowhorn is the better fit."
     }
   ],
   "major": "Carpet-bombing inboxes is not a strategy. It's a noise complaint.",

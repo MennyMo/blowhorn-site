@@ -32,7 +32,7 @@
     {
       "f": "Where it acts",
       "t": "A Chrome extension links your LinkedIn session to Taplio",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "AI writing and inspiration",
@@ -75,7 +75,7 @@
   "wins": [
     "Posts to LinkedIn, X, Reddit, Hacker News, GitHub, Bluesky and Slack, not just LinkedIn",
     "Your own profiles amplify a post while it is still fresh",
-    "Your LinkedIn session stays in your own Chrome on your own computer"
+    "Your LinkedIn session stays in your own browser on your own computer"
   ],
   "loses": [
     "Taplio writes LinkedIn posts for you with AI. Blowhorn does not write for you",

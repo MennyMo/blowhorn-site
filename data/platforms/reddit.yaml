@@ -4,7 +4,7 @@ name: Reddit
 weight: 3
 logo: assets/platforms/reddit-logo.png
 docs: /docs/reference/platforms/reddit/
-reach: Your own signed-in Chrome, through the Blowhorn extension
+reach: Your own signed-in browser, through the Blowhorn extension
 actions:
   - id: post
     behavior: Publishes your post to the subreddit you name, as r/<name>.

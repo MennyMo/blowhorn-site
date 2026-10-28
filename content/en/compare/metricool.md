@@ -19,7 +19,7 @@
   "us": [
     "You need many real profiles to lift one post",
     "Hacker News, Reddit, GitHub and Slack matter",
-    "You want everything to run from your own Chrome on your own computers"
+    "You want everything to run from your own browser on your own computers"
   ],
   "price_them": "Free plan; Starter from $20 per month, Advanced from $53 per month",
   "price_src": "https://metricool.com/pricing/",
@@ -27,7 +27,7 @@
     {
       "f": "Where it acts",
       "t": "Metricool's cloud",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "Analytics and ads reporting",

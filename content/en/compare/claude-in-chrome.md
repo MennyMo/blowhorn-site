@@ -32,7 +32,7 @@
     {
       "f": "Where it acts",
       "t": "Your Chrome and your logins",
-      "b": "Your computers, in your own signed-in Chrome or platform APIs"
+      "b": "Your computers, in your own signed-in browser or platform APIs"
     },
     {
       "f": "Queue, schedule, profiles",

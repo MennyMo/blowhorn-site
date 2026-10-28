@@ -75,6 +75,11 @@ regenerate them. Claims on every page come from the product repository's
   (`scripts/brand/build-brand-kit.py`, output in `marketing/brand/kit/`); copy them over unchanged.
 - **The product name is Blowhorn.** "Outbox" is the product's old internal name; never put
   it on a public page.
+- **Say "browser", not "Chrome".** Blowhorn will not stay Chrome-only, so copy says "your own
+  browser", "browser profile" and "browser extension". "Google Chrome" appears only where a reader
+  must know today's requirement ("Google Chrome is required for now"), in competitor facts, and in
+  proper names (Chrome Web Store, Claude in Chrome), code, commands and URLs. Docs copy changes
+  in the product repository's `docs/`, then syncs here.
 - **The product repository is private.** Never link its files, issues or pull requests
   from a page; every reader would get a 404.
 - **Every Hugo run cleans its destination.** Each `hugo` invocation in `package.json`

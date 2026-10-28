@@ -1,7 +1,7 @@
 ---
 title: "blowhorn chrome"
 linkTitle: "chrome"
-description: "blowhorn chrome: attach-chrome, confirm, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap."
+description: "blowhorn chrome: attach-chrome, confirm, create-profile, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap."
 weight: 103
 ---
 
@@ -13,6 +13,7 @@ The `blowhorn chrome` commands. Each one's `--help` prints the same text.
 | --- | --- |
 | [`chrome attach-chrome`](#blowhorn-chrome-attach-chrome) | Start or report a dedicated Chrome that is open to remote debugging with no Allow dialog, so `--chrome-launch cdp` can attach to a real Chrome unattended. |
 | [`chrome confirm`](#blowhorn-chrome-confirm) | Apply the confirm screen's confirmed choices. |
+| [`chrome create-profile`](#blowhorn-chrome-create-profile) | Give Blowhorn a Google Chrome profile of its own, for a Chrome that has only its main profile. |
 | [`chrome discover`](#blowhorn-chrome-discover) | Report, for every Chrome profile, the platform accounts discovery can see there -- the read behind onboarding's confirm screen. |
 | [`chrome extension-enable`](#blowhorn-chrome-extension-enable) | Open the Blowhorn extension's Chrome Web Store page in each Chrome profile you name, so you can turn the extension on there with one click. |
 | [`chrome extension-install`](#blowhorn-chrome-extension-install) | Write the native-messaging host manifest Chrome launches for the Blowhorn Chrome extension, and print where the unpacked extension lives so you can load it. |
@@ -94,6 +95,32 @@ Examples:
 ```bash
 cat assignments.json | blowhorn chrome confirm --payload-stdin --json
 cat assignments.json | blowhorn chrome confirm --payload-stdin --dry-run --json
+```
+
+Output: json with `--json`, text otherwise.
+
+## blowhorn chrome create-profile
+
+Give Blowhorn a Google Chrome profile of its own, for a Chrome that has only its main profile. Asks Chrome to open a new window in the profile directory `Blowhorn`. Chrome is expected to create that profile the first time and open it again every time after, so running this twice should never make a second one; Chrome picks the new profile's name. Sign in there to LinkedIn, X and the other sites Blowhorn should use, then `blowhorn chrome discover` finds the profile and its accounts. Reads Local State only to say whether the profile was already listed; writes nothing, maps nothing, and drives nothing in the window. If no Chrome is running, Chrome starts to open the window and is left running. Your own profiles, windows and tabs are left as they are.
+
+```text
+blowhorn chrome create-profile [OPTIONS]
+```
+
+| Flag | Type | Default | Description |
+| --- | --- | --- | --- |
+| `--json` | boolean | `false` | Emit the report as JSON with a stable shape, for a script or the desktop app |
+| `--platform` | string |  | Accepted and ignored by `blowhorn chrome`: this command never acts on a platform, so `--platform` has no effect here -- including a value inherited from `BLOWHORN_PLATFORM` or defaults.platform in .blowhorn.yaml |
+| `--pace` | string |  | Accepted by `blowhorn chrome create-profile` because `--pace` is a global flag, but this command does no paced work -- it sleeps between nothing -- so the value changes nothing about how it runs and appears only in the Pace column of the -v summary. Resolved as CLI flag, then `BLOWHORN_PACE`, then defaults.pace in .blowhorn.yaml (normal when none is set); an unrecognized value is rejected before anything runs |
+| `--risk-profile` | string |  | Accepted by `blowhorn chrome create-profile` because `--risk-profile` is a global flag, but this command does no gated work -- no Risk Profile hold, cap or pace applies to it -- so the value changes nothing about how it runs. A value after the command word wins over one before it; an unrecognized value is rejected before anything runs |
+
+Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `--log-dir`, `--profile`, `--exclude`, `--headless`, `--chrome-launch`, `--headed`, `--dry-run`, `--verbose`.
+
+Examples:
+
+```bash
+blowhorn chrome create-profile
+blowhorn chrome create-profile --json
 ```
 
 Output: json with `--json`, text otherwise.

@@ -4,7 +4,7 @@ name: X (Twitter)
 weight: 2
 logo: assets/platforms/x-logo-black.png
 docs: /docs/reference/platforms/x/
-reach: Your own signed-in Chrome, through the Blowhorn extension
+reach: Your own signed-in browser, through the Blowhorn extension
 actions:
   - id: post
     behavior: Publishes your message, with an image if you add one. A message longer than 274 characters goes out as a thread.

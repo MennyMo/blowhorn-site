@@ -54,7 +54,7 @@
         },
         {
           "q": "How does it post?",
-          "a": "LinkedIn, X, Reddit and Hacker News: Blowhorn types in your own Chrome, signed in as you. Slack, Bluesky and GitHub go through their APIs. The desktop app and the Python CLI share the same queue."
+          "a": "LinkedIn, X, Reddit and Hacker News: Blowhorn types in your own browser, signed in as you. Slack, Bluesky and GitHub go through their APIs. The desktop app and the Python CLI share the same queue."
         },
         {
           "q": "Will the same post go out twice?",
@@ -121,7 +121,7 @@
         },
         {
           "t": "Human-paced by design",
-          "b": "Types key by key in your own Chrome for LinkedIn, X, Reddit and Hacker News. Caps itself. CAPTCHA and 2FA stay with you."
+          "b": "Types key by key in your own browser for LinkedIn, X, Reddit and Hacker News. Caps itself. CAPTCHA and 2FA stay with you."
         }
       ],
       "prompt": "Draft the release posts from CHANGELOG.md, react on the GitHub issue, submit to Hacker News, then --dry-run the rest.",
@@ -200,7 +200,7 @@
         },
         {
           "t": "Reply without seven tabs",
-          "b": "Send comments and replies from the same queue you posted from. LinkedIn, X, Reddit and Hacker News run in your own Chrome."
+          "b": "Send comments and replies from the same queue you posted from. LinkedIn, X, Reddit and Hacker News run in your own browser."
         }
       ],
       "prompt": "Queue pre-event, day-of and follow-up posts for the talk, then --dry-run.",

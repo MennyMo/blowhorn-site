@@ -2,7 +2,7 @@
   "title": "Blowhorn vs Waalaxy",
   "linkTitle": "Waalaxy",
   "seo_title": "Blowhorn vs Waalaxy: honest comparison",
-  "description": "Waalaxy makes LinkedIn and email prospecting approachable for small teams, fully in the cloud. Blowhorn keeps actions in your own Chrome and adds publishing and amplification across many networks.",
+  "description": "Waalaxy makes LinkedIn and email prospecting approachable for small teams, fully in the cloud. Blowhorn keeps actions in your own browser and adds publishing and amplification across many networks.",
   "layout": "versus",
   "weight": 23,
   "lastmod": "2026-10-12",
@@ -10,7 +10,7 @@
   "mark": "Wx",
   "site_url": "https://www.waalaxy.com/",
   "group": "LinkedIn growth tools",
-  "verdict": "Waalaxy makes LinkedIn and email prospecting approachable for small teams, fully in the cloud. Blowhorn keeps actions in your own Chrome and adds publishing and amplification across many networks.",
+  "verdict": "Waalaxy makes LinkedIn and email prospecting approachable for small teams, fully in the cloud. Blowhorn keeps actions in your own browser and adds publishing and amplification across many networks.",
   "them": [
     "You want simple LinkedIn plus email prospecting campaigns",
     "Running in the cloud, with nothing on your computer, suits you",
@@ -18,7 +18,7 @@
   ],
   "us": [
     "You want careful LinkedIn hygiene, not volume prospecting",
-    "No vendor server should log in as you; Blowhorn acts from your own signed-in Chrome",
+    "No vendor server should log in as you; Blowhorn acts from your own signed-in browser",
     "You also speak on X, Reddit, Hacker News, GitHub, Bluesky and Slack, and want your people amplifying"
   ],
   "price_them": "Pro €19, Advanced €49, Business €69 per user per month",
@@ -32,7 +32,7 @@
     {
       "f": "Where it acts",
       "t": "Waalaxy's cloud",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "LinkedIn outreach",
@@ -64,7 +64,7 @@
   "faq": [
     {
       "q": "Is Waalaxy better than Blowhorn?",
-      "a": "For straightforward prospecting campaigns, yes. For careful outreach from your own Chrome plus multi-network publishing and amplification, we think Blowhorn is the better fit."
+      "a": "For straightforward prospecting campaigns, yes. For careful outreach from your own browser plus multi-network publishing and amplification, we think Blowhorn is the better fit."
     }
   ],
   "major": "Launching invites into orbit is fun. Getting a reply back to base is the mission.",

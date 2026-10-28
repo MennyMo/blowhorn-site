@@ -33,9 +33,9 @@ that and no way to turn it on.
    blowhorn profile get your-profile
    ```
 
-2. **Map the profile to a Chrome profile**, if it is not mapped already.
+2. **Map the profile to a browser profile**, if it is not mapped already.
    Hacker News is driven through a browser, like LinkedIn, X, and Reddit.
-   See [Map Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/).
+   See [Map Blowhorn profiles to browser profiles](/docs/how-to/set-up/map-chrome-profiles/).
 
 If a named profile has no Hacker News login stored,
 `blowhorn post --profile your-profile --platform hn` says so by name and exits

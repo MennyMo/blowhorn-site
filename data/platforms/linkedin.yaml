@@ -10,7 +10,7 @@ name: LinkedIn
 weight: 1
 logo: assets/platforms/linkedin-in-bug.png
 docs: /docs/reference/platforms/linkedin/
-reach: Your own signed-in Chrome, through the Blowhorn extension
+reach: Your own signed-in browser, through the Blowhorn extension
 actions:
   - id: post
     behavior: Publishes your message to your LinkedIn feed, to a group, or to a Page you manage, with an image or link preview when you add one.

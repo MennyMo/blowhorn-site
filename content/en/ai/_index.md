@@ -15,7 +15,7 @@ cards:
   - t: Your limits, every time
     b: The risk limits you set for each profile apply to every agent action. An agent can't post more, or faster, than you allow.
   - t: Runs on your computer
-    b: Agents drive Blowhorn on your own computer, from your own Chrome. Your passwords never leave your computer.
+    b: Agents drive Blowhorn on your own computer, from your own browser. Your passwords never leave your computer.
 ways_title: Two ways in for agents
 ways:
   - path: /ai/blowhorn-axi

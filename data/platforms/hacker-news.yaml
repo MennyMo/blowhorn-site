@@ -4,7 +4,7 @@ name: Hacker News
 weight: 4
 logo: assets/platforms/hacker-news-y18.svg
 docs: /docs/reference/platforms/hacker-news/
-reach: Your own Chrome, through the Blowhorn extension
+reach: Your own browser, through the Blowhorn extension
 actions:
   - id: post
     behavior: Submits a link or a text post. Titles hold up to 80 characters; a longer title is refused, never cut short, because a submission can't be edited once it's up.

@@ -27,7 +27,7 @@
     {
       "f": "Where it acts",
       "t": "Local browser sessions, you send",
-      "b": "Your computers, in your own signed-in Chrome or platform APIs"
+      "b": "Your computers, in your own signed-in browser or platform APIs"
     },
     {
       "f": "Networks",

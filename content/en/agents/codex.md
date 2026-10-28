@@ -7,7 +7,7 @@
   "lead": "Codex follows AGENTS.md and asks before it acts outside its lane. Point it at Blowhorn and keep your finger on approve.",
   "hook": "AGENTS.md, codex exec and approvals",
   "wire_title": "Rules in AGENTS.md, approvals in Codex",
-  "wire_body": "Codex reads AGENTS.md from your repo. Blowhorn needs the network and your Chrome, so sandboxed Codex asks before running it. That's a feature: approve reads, think twice before publishing.",
+  "wire_body": "Codex reads AGENTS.md from your repo. Blowhorn needs the network and your browser, so sandboxed Codex asks before running it. That's a feature: approve reads, think twice before publishing.",
   "wire_file": "AGENTS.md",
   "wire_lang": "markdown",
   "wire_code": "## Social posting\n\nTool: blowhorn (on PATH). JSON output: add --json.\n1. Read: blowhorn schedule list --json, blowhorn content list --pending --json\n2. Propose changes as a payload and show me\n3. Write with --expected-fingerprint so you never overwrite a newer edit\n4. Stop switch: blowhorn schedule pause --all --reason \"<why>\"",
@@ -38,7 +38,7 @@
   "faq": [
     {
       "q": "Why does Codex ask before running blowhorn?",
-      "a": "Blowhorn reaches the network and your Chrome. Approving it per command is the sensible default."
+      "a": "Blowhorn reaches the network and your browser. Approving it per command is the sensible default."
     },
     {
       "q": "Will two computers post the same row?",
@@ -46,7 +46,7 @@
     },
     {
       "q": "Does my agent see my social passwords?",
-      "a": "No. Blowhorn posts through your own signed-in Chrome; the agent only runs commands and reads their output. Review what you allow it to run, as with any tool that acts on your accounts."
+      "a": "No. Blowhorn posts through your own signed-in browser; the agent only runs commands and reads their output. Review what you allow it to run, as with any tool that acts on your accounts."
     }
   ],
   "major": "Codex asks permission before it fires. Good. The last recruit who did not is still explaining himself to LinkedIn.",

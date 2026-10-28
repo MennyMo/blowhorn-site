@@ -32,7 +32,7 @@
     {
       "f": "Where it acts",
       "t": "The vendor's cloud; employees connect their accounts",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "Content library, approvals, gamification",

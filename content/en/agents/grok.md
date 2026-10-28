@@ -32,7 +32,7 @@
     },
     {
       "t": "In your voice",
-      "b": "Posts go out from your own accounts in your own Chrome, not from a bot account."
+      "b": "Posts go out from your own accounts in your own browser, not from a bot account."
     }
   ],
   "faq": [
@@ -46,7 +46,7 @@
     },
     {
       "q": "Does my agent see my social passwords?",
-      "a": "No. Blowhorn posts through your own signed-in Chrome; the agent only runs commands and reads their output. Review what you allow it to run, as with any tool that acts on your accounts."
+      "a": "No. Blowhorn posts through your own signed-in browser; the agent only runs commands and reads their output. Review what you allow it to run, as with any tool that acts on your accounts."
     }
   ],
   "major": "A post with no amplification is a bugle in an empty barracks. Grok, sound the call.",

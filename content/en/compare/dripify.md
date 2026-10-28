@@ -2,7 +2,7 @@
   "title": "Blowhorn vs Dripify",
   "linkTitle": "Dripify",
   "seo_title": "Blowhorn vs Dripify: honest comparison",
-  "description": "Dripify is a capable LinkedIn and email drip campaign tool for sales teams. Blowhorn is for careful outreach and real-person amplification, from your own Chrome.",
+  "description": "Dripify is a capable LinkedIn and email drip campaign tool for sales teams. Blowhorn is for careful outreach and real-person amplification, from your own browser.",
   "layout": "versus",
   "weight": 24,
   "lastmod": "2026-10-26",
@@ -10,7 +10,7 @@
   "mark": "Dr",
   "site_url": "https://dripify.io/",
   "group": "LinkedIn growth tools",
-  "verdict": "Dripify is a capable LinkedIn and email drip campaign tool for sales teams. Blowhorn is for careful outreach and real-person amplification, from your own Chrome.",
+  "verdict": "Dripify is a capable LinkedIn and email drip campaign tool for sales teams. Blowhorn is for careful outreach and real-person amplification, from your own browser.",
   "them": [
     "Your sales team runs drip sequences on LinkedIn and email",
     "You want team management and campaign analytics",
@@ -18,7 +18,7 @@
   ],
   "us": [
     "You want careful LinkedIn hygiene, not volume prospecting",
-    "No vendor server should log in as you; Blowhorn acts from your own signed-in Chrome",
+    "No vendor server should log in as you; Blowhorn acts from your own signed-in browser",
     "You also speak on X, Reddit, Hacker News, GitHub, Bluesky and Slack, and want your people amplifying"
   ],
   "price_them": "Pro $59 and Advanced $79 per user per month, billed annually",
@@ -32,7 +32,7 @@
     {
       "f": "Where it acts",
       "t": "Dripify's cloud",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "IP address each post comes from",
@@ -69,7 +69,7 @@
   "faq": [
     {
       "q": "Is Dripify better than Blowhorn?",
-      "a": "For sales drip sequences, yes. For publishing and amplifying across many networks from your own Chrome, we think Blowhorn is the better fit."
+      "a": "For sales drip sequences, yes. For publishing and amplifying across many networks from your own browser, we think Blowhorn is the better fit."
     }
   ],
   "major": "Drip, drip, drip. Or one honest blast of brass.",

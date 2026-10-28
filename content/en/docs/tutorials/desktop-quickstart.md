@@ -1,6 +1,6 @@
 ---
 title: "Getting started with the desktop app"
-description: "Install the app, connect Chrome, and preview your first post without publishing."
+description: "Install the app, connect your browser, and preview your first post without publishing."
 weight: 20
 draft: true
 ---
@@ -20,7 +20,7 @@ The app ships as one universal DMG that runs on Apple silicon and Intel Macs.
 
 1. Open the [download page at blowhorn.ai](https://blowhorn.ai/download/)
    in your browser.
-2. Download `Blowhorn-<version>-mac-universal.dmg`, the newest release.
+2. Download `Blowhorn-mac.dmg`, the newest release.
 3. Open the DMG and drag `Blowhorn.app` to `/Applications`.
 
 The release is Developer ID signed and notarized, so the first time you open

@@ -2,7 +2,7 @@
   "title": "Blowhorn vs Perplexity Comet",
   "linkTitle": "Perplexity Comet",
   "seo_title": "Blowhorn vs Perplexity Comet: honest comparison",
-  "description": "Comet is an AI browser with an assistant that can act on pages for you. Blowhorn is a dedicated social tool, scripted and scheduled, that works from your Chrome across many profiles and computers.",
+  "description": "Comet is an AI browser with an assistant that can act on pages for you. Blowhorn is a dedicated social tool, scripted and scheduled, that works from your own browser across many profiles and computers.",
   "layout": "versus",
   "weight": 52,
   "lastmod": "2026-10-12",
@@ -10,7 +10,7 @@
   "mark": "Co",
   "site_url": "https://www.perplexity.ai/comet",
   "group": "AI-native agent tools",
-  "verdict": "Comet is an AI browser with an assistant that can act on pages for you. Blowhorn is a dedicated social tool, scripted and scheduled, that works from your Chrome across many profiles and computers.",
+  "verdict": "Comet is an AI browser with an assistant that can act on pages for you. Blowhorn is a dedicated social tool, scripted and scheduled, that works from your own browser across many profiles and computers.",
   "them": [
     "You want an AI-first browser for research and everyday tasks",
     "Occasional posting is enough",
@@ -27,7 +27,7 @@
     {
       "f": "What it is",
       "t": "An AI browser",
-      "b": "A dedicated social tool for your own Chrome"
+      "b": "A dedicated social tool for your own browser"
     },
     {
       "f": "Queue, schedule, profiles",

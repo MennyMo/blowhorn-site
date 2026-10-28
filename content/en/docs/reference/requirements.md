@@ -1,6 +1,6 @@
 ---
 title: "System requirements"
-description: "What your computer needs to run Blowhorn: macOS version, Chrome, and a Blowhorn account."
+description: "What your computer needs to run Blowhorn: macOS version, browser, and a Blowhorn account."
 weight: 210
 ---
 
@@ -10,7 +10,7 @@ What your computer needs before you install Blowhorn.
 | Need | Requirement | Checked by |
 |---|---|---|
 | macOS | 13 or newer, Apple silicon or Intel (one universal build) | The build declares the floor; Setup checks the rest |
-| Browser | Google Chrome, installed and signed in | Setup, "chrome profiles" row; `blowhorn chrome status` |
+| Browser | Google Chrome, installed and signed in (required for now) | Setup, "chrome profiles" row; `blowhorn chrome status` |
 | Engine | Bundled in the app, with its own Python; nothing to install | Setup, "Blowhorn folder" and "helper tools" rows |
 | Account | A Blowhorn account your profile belongs to | Setup, "organization connection" row; `blowhorn store` |
 | Background runs | The background service, registered from the app | Setup, "this computer on watch" row |
@@ -21,11 +21,14 @@ macOS 13 is the floor the desktop build declares
 The engine underneath also runs on Linux; the desktop app needs a Mac.
 Windows is not supported.
 
-Chrome must be the real Google Chrome, not Chromium and not a headless
-build. Blowhorn drives the Chrome profiles you already use, so install
-Chrome the normal way and sign in before you map anything. The extension
-needs Chrome profiles to attach to; without Chrome every browser run
-refuses before it acts.
+Browser: Google Chrome is required for now. Support for more browsers is
+planned.
+
+It must be the real Google Chrome, not Chromium and not a headless
+build. Blowhorn drives the browser profiles you already use, so install
+Google Chrome the normal way and sign in before you map anything. The
+extension needs browser profiles to attach to; without them every
+browser run refuses before it acts.
 
 The app carries its engine and Python, so your computer needs no git and no
 Python. A contributor running the engine from a checkout instead needs
@@ -33,7 +36,7 @@ Python 3.14, the floor `tools/install.sh` enforces and the only supported
 version. Either way the Setup screen checks the engine, so a broken engine
 or interpreter shows up there first, not mid-run.
 
-Network access to your account is required for the content queue, the schedule, profiles, and run history. Your account keeps those in sync; your computer holds the app, the engine, and your Chrome sessions.
+Network access to your account is required for the content queue, the schedule, profiles, and run history. Your account keeps those in sync; your computer holds the app, the engine, and your browser sessions.
 Offline behavior is a plans question, not a requirements one: see
 [Plans and limits](/docs/reference/plans/).
 

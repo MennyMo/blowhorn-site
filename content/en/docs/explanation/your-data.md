@@ -11,9 +11,9 @@ Nothing here is a step; for the sharing behind it see
 
 On your computer: the app with the engine it carries, the engine's folder
 (`~/Library/Application Support/Blowhorn/home`, or a contributor's checkout),
-and your Chrome sessions.
-Browser sessions, meaning the cookies Chrome keeps for LinkedIn, X,
-Reddit and Hacker News, live in your Chrome profiles, where you made
+and your browser sessions.
+Browser sessions, meaning the cookies your browser keeps for LinkedIn, X,
+Reddit and Hacker News, live in your browser profiles, where you made
 them; Blowhorn reads them there and copies none of them elsewhere, with
 one exception: a Slack workspace session you capture is kept in your account, below. Every
 password, token and app password a run signs in with is a credential in
@@ -34,9 +34,9 @@ isn't sent from two of them, and your analytics cover every computer. Your accou
 passwords, and Slack tokens and captured sessions. For profiles set up
 before October 2026, it also holds the LinkedIn, X, Reddit and Bluesky
 passwords copied in when those profiles moved to your account. It records
-which Chrome profile each Blowhorn profile uses on each computer: the computer's
-name, the Chrome profile's folder and display name, and the Google
-account signed in to that Chrome profile. A computer that isn't signed in to your account runs nothing.
+which browser profile each Blowhorn profile uses on each computer: the computer's
+name, the browser profile's folder and display name, and the Google
+account signed in to that browser profile. A computer that isn't signed in to your account runs nothing.
 
 On the platforms: whatever Blowhorn published, amplified, or followed
 as you, under your name, subject to each destination's own retention.
@@ -46,7 +46,7 @@ the outcome, not the content's master.
 The extension queries tabs only on the supported sites and reads
 cookies there only when the app asks, handing both to the Blowhorn app
 on your computer. Every action Blowhorn takes is executed on one of your computers,
-through your Chrome profile or a platform's API; your account keeps the
+through your browser profile or a platform's API; your account keeps the
 queue and results in sync and does not act for you from a server. The
 one browser session the app keeps in your account is your Slack workspace
 session, saved as that profile's Slack credential.
@@ -60,7 +60,7 @@ follows it, and the privacy page wins on any difference.
 
 What never belongs in a report, an issue, or a chat message:
 credentials, session files, the sign-in (`cloud.yaml`, the `cloud-token` file), and anything
-from your Chrome profile directories. A refusal sentence and an exit
+from your browser profile directories. A refusal sentence and an exit
 code are enough to diagnose with.
 
 ## Failure reports
@@ -81,7 +81,7 @@ your operating system (name, version and architecture), the failure
 message, and how many scheduler ticks it skipped), the schema
 contract versions this build speaks, and - only while you are signed
 in - the installation id for your account. It never carries a config
-file, a log, Chrome data, a platform account name, a profile name, a
+file, a log, browser data, a platform account name, a profile name, a
 path, a token, or an email. Host names in the message are reduced to
 "cloud" or "custom" before anything is queued.
 
@@ -120,4 +120,4 @@ To change it, see
 - [Get help](/docs/reference/support/) - report a problem without secrets.
 - [The Blowhorn app, screen by screen](/docs/reference/use-the-desktop-app/) - the log directory listing.
 - [Profile reference](/docs/reference/profiles/) - which secrets live where.
-- [Chrome extension permissions](/docs/reference/extension-permissions/) - what the extension may read.
+- [Browser extension permissions](/docs/reference/extension-permissions/) - what the extension may read.

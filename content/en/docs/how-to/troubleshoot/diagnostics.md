@@ -20,13 +20,13 @@ blowhorn diagnostics tells-run --profile alex --json
 
 This drives the profile to the live [tells.blowhorn.ai](https://tells.blowhorn.ai/),
 waits for its inspection to finish, and saves the report it renders as one
-package on this computer. `--mode` chooses how Blowhorn reaches Chrome:
+package on this computer. `--mode` chooses how Blowhorn reaches your browser:
 
 - `extension-background` -- the default: the extension driver in
   background mode, the way Blowhorn normally runs.
 - `extension-classic` -- the extension driver in classic mode.
-- `cdp` -- attach to the Chrome you already have open.
-- `persistent` -- Blowhorn launches its own Chrome.
+- `cdp` -- attach to the browser you already have open.
+- `persistent` -- Blowhorn launches its own browser.
 
 `--anonymous` uses a fresh throwaway profile labelled `anonymous` instead
 of a named profile. The extension modes are refused for it by name: a
@@ -61,7 +61,7 @@ names the tool (there is no Blowhorn profile behind it), and it is
 never a member of a sweep. Nothing is uploaded, and no audit event is
 recorded for an import. A file that is not a Tells report is refused
 and nothing is written. The benchmark runs themselves -- same Mac, same
-Chrome version, terms checked per tool -- are still Mac work; this
+browser version, terms checked per tool -- are still Mac work; this
 command is only the import half, for a report someone already captured.
 
 ## Read what you saved
@@ -73,7 +73,7 @@ blowhorn diagnostics report --id <id> --json
 
 Packages live on this computer only, under
 `data/cache/diagnostics/tells` (or `BLOWHORN_DIAGNOSTICS_DIR` when set).
-Nothing is uploaded. Each package names the Blowhorn and Chrome
+Nothing is uploaded. Each package names the Blowhorn and browser
 versions, the mode and its driver, the profile and whether it was
 anonymous, and the report exactly as the page produced it -- or why the
 run failed.

@@ -44,5 +44,5 @@ breaks, with media on the first post only.
 
 - [Settle something Blowhorn could not confirm](/docs/how-to/troubleshoot/clicked-not-confirmed/) - the held-activity procedure
 - [Fix a sign-in that stopped working](/docs/how-to/troubleshoot/sign-in-problems/) - expired X sessions
-- [Choose how Blowhorn reaches Chrome](/docs/how-to/settings/launch-mode/) - run X under another mode
+- [Choose how Blowhorn reaches your browser](/docs/how-to/settings/launch-mode/) - run X under another mode
 - [Troubleshooting](/docs/how-to/troubleshoot/troubleshooting/) - start from a symptom instead

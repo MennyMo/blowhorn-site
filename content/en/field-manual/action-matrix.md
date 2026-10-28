@@ -23,7 +23,7 @@ actions:
 matrix:
   - platform: LinkedIn
     page: /field-manual/linkedin
-    via: Your Chrome, through the extension
+    via: Your browser, through the extension
     post: { risk: care, text: "No bait, no recycled posts [1][2]" }
     comment: { risk: risky, text: "LinkedIn bans automated comments [3]" }
     amplify: { risk: risky, text: "Repost plus like from many profiles looks like a pod [3][4]" }
@@ -31,20 +31,20 @@ matrix:
     accept: { risk: safe, text: "Flagged invitations are always skipped [6]" }
   - platform: X
     page: /field-manual/x
-    via: Your Chrome, through the extension
+    via: Your browser, through the extension
     post: { risk: care, text: "Never the same text from two accounts [7]" }
     comment: { risk: safe, text: "Replies are what the ranking rewards most [8]" }
     amplify: { risk: risky, text: "Several owned accounts reposting one post is named in X's rules [9]" }
     follow: { risk: care, text: "Name a target: with --limit 0, follow the target itself; with a positive limit, follow up to that many of the target's followers, never the target. Capped at 400 a day, 15 per 15 minutes [10]" }
   - platform: Reddit
     page: /field-manual/reddit
-    via: Your Chrome, through the extension
+    via: Your browser, through the extension
     post: { risk: care, text: "Mostly not promotion; subreddit rules first [11]" }
     comment: { risk: care, text: "Never the same comment twice [11]" }
     amplify: { risk: risky, text: "Upvotes from several accounts are vote manipulation [12]" }
   - platform: Hacker News
     page: /field-manual/hacker-news
-    via: Your Chrome, through the extension
+    via: Your browser, through the extension
     post: { risk: care, text: "2 link submissions a day at most, never edited [10][13]" }
     comment: { risk: care, text: "Your own words only [13]" }
     amplify: { risk: none, text: "Blowhorn never votes on Hacker News" }

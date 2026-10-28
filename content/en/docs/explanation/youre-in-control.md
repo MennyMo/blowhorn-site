@@ -33,7 +33,7 @@ Here is how that is enforced today:
   the same profile on the same platform is refused with "profile ... is
   in use by another blowhorn process; wait for it to finish or stop it",
   and its activities stay in the queue for the next pass. The lock is the same
-  whichever way Blowhorn reaches Chrome.
+  whichever way Blowhorn reaches your browser.
 - **Scheduled work runs one job at a time.** The background service runs
   one pass at a time, and a pass works through its jobs one after
   another, never side by side.
@@ -204,7 +204,7 @@ approval in the app: it cannot approve its own queued work.
 | Excluded profiles | Leaves profiles out of `--profile all` | `--exclude`; `defaults.exclude`; Settings in the app | [Change your defaults](/docs/how-to/settings/defaults/) |
 | Rate caps | Built-in daily caps per action on every platform (2 Hacker News link submissions, 50 X posts, 400 X follows per profile a day), counted from your account's run ledger so they hold across computers; you can set lower caps of your own per platform and action, and for one profile only. X follows also pause at 15 in 15 minutes on the computer that runs them | Built in; your own in `defaults.caps` and a profile's `Daily Caps` attribute | [Platforms](/docs/reference/platforms/), [Configuration](/docs/reference/configuration/#daily-caps) |
 | No blind retries | Within a run, Blowhorn doesn't retry a failed post; it moves on to the next item. If a post goes out but Blowhorn can't record it, it stops that profile's queue rather than risk posting twice. Scheduled jobs only re-run a failure if you turn on retries, and they're off by default. | Built in; scheduled-job retries are opt-in | [How Blowhorn paces itself](/docs/explanation/reliability-and-anti-bot-design/) |
-| One automation per platform per profile | A second run for the same profile and platform on this computer is refused | Built in | [Chrome reference](/docs/reference/chrome/) |
+| One automation per platform per profile | A second run for the same profile and platform on this computer is refused | Built in | [Browser reference](/docs/reference/chrome/) |
 | One automation per platform across profiles | Only one run at a time uses a platform on this computer, whichever profile it is for | Built in (the default; your Risk Profile keeps it under cautious and standard, brisk loosens it, and `defaults.concurrency.per_platform` set to `profile` loosens it whatever the preset); Safety in the app | [Configuration](/docs/reference/configuration/) |
 | Runs at once | Caps how many automations run at the same time on this computer, across the app, the command line, an agent and the background service; a run over the limit is refused and its activities stay queued | Your Risk Profile (cautious: at most 1; standard and brisk: no limit), or `defaults.concurrency.max_runs` / `BLOWHORN_CONCURRENCY_MAX_RUNS` when you set one; Safety in the app | [Configuration](/docs/reference/configuration/) |
 | One send per action | The send control is clicked once; an unread outcome is held for you | Built in | [How Blowhorn avoids repeat posts](/docs/explanation/never-twice/) |

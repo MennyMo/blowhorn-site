@@ -1303,6 +1303,7 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 }
 .download-requirements .label { margin-bottom: var(--space-2); }
 .download-requirements .h3 { margin: 0; }
+.download-browser-note { margin: var(--space-2) 0 0; }
 .download-requirements-list {
   display: grid;
   gap: var(--space-3);

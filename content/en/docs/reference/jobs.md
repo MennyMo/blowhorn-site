@@ -21,7 +21,7 @@ and an activity whose lease lapsed is reclaimable by the next pass.
 | Platforms | Activity filter, not a posting target: which activities the command reads |
 | Profiles | Which profiles the run acts as |
 | Recurrence | When the activity comes due again |
-| Driver mode | How the run reaches Chrome: `default`, `extension`, `extension-classic`, `extension-background`, `cdp`, or `persistent` |
+| Driver mode | How the run reaches the browser: `default`, `extension`, `extension-classic`, `extension-background`, `cdp`, or `persistent` |
 | Status | Where the activity stands; `running` is a lease, never a lock |
 
 `blowhorn schedule list` shows each activity and whether it is due.

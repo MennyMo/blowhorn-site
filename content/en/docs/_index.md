@@ -9,7 +9,7 @@ cascade:
 
 <p class="label">Docs</p>
 
-# One queue. Every profile. Posted as you, from your own Chrome.
+# One queue. Every profile. Posted as you, from your own browser.
 
 <div class="docs-banner" role="note">
 

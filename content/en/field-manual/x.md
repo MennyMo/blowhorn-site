@@ -85,4 +85,4 @@ Not from X. Treat as hunches until your own analytics agree.
 
 ## What Blowhorn does on X
 
-Blowhorn posts (threads past 274 characters), replies, reposts or quotes for amplify, follows, and records follower trends, all from your own Chrome ([Platforms](/docs/reference/platforms/)). Follows are capped at 400 per profile a day and 15 in any 15 minutes; those are Blowhorn's limits, not numbers X guarantees. Sessions on X break more often than on other platforms; Blowhorn hands sign-in back to you. Keep amplify to a couple of profiles you really run, spread out in time, and never send copies.
+Blowhorn posts (threads past 274 characters), replies, reposts or quotes for amplify, follows, and records follower trends, all from your own browser ([Platforms](/docs/reference/platforms/)). Follows are capped at 400 per profile a day and 15 in any 15 minutes; those are Blowhorn's limits, not numbers X guarantees. Sessions on X break more often than on other platforms; Blowhorn hands sign-in back to you. Keep amplify to a couple of profiles you really run, spread out in time, and never send copies.
