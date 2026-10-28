@@ -17,7 +17,7 @@ code:
     lang: text
     copy: false
     code: "count: 2\nprofiles[2]{name,ready}:\n  ana,yes\n  sam,no\nhelp[1]:\n  Run `blowhorn-axi profile status --profile sam`\n"
-code_note: Needs macOS, Node.js 18 or later and the Blowhorn app. Run it once with npx, nothing to install first.
+code_note: Needs Node.js 18 or later and the Blowhorn app. Run it once with npx, nothing to install first.
 cards_title: What makes it agent friendly
 cards:
   - t: Short answers agents can read

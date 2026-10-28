@@ -24,7 +24,7 @@ Every release carries a `SHA256SUMS.txt`. Check the image before you open it:
 shasum -a 256 -c SHA256SUMS.txt
 ```
 
-The browser extension ships through the Chrome Web Store, not from this repository.
+The Chrome extension ships through the Chrome Web Store, not from this repository.
 
 ## Where things live
 

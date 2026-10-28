@@ -1,6 +1,6 @@
 ---
 title: "Getting started with the desktop app"
-description: "Install the app, connect your browser, and preview your first post without publishing."
+description: "Install the app, connect Chrome, and preview your first post without publishing."
 weight: 20
 draft: true
 ---

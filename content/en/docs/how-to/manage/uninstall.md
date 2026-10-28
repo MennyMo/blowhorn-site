@@ -6,7 +6,7 @@ aliases: [/docs/how-to/uninstall/]
 ---
 
 
-Remove Blowhorn from your computer: the background service, the browser native host,
+Remove Blowhorn from your computer: the background service, the Chrome native host,
 the launchers, the desktop app and the checkout's build products. The sign-in
 on this computer goes with the app. Your other data stays unless you ask for it
 to go. The account on the shared store is never touched.
@@ -47,11 +47,11 @@ present`, `not unregistered` or `failed`:
    and waited for, then its file under `~/Library/LaunchAgents` is removed. A
    label the app registered as its login item is booted out the same way; its
    Login Items entry is unregistered by the app itself in step 5. The attach
-   browser's login agent, `ai.blowhorn.attach-chrome` (written by
+   Chrome's login agent, `ai.blowhorn.attach-chrome` (written by
    `blowhorn chrome attach-chrome install-agent`), is booted out and its file
-   removed the same way, as `uninstall-agent` does; a browser it started keeps
+   removed the same way, as `uninstall-agent` does; a Chrome it started keeps
    running.
-2. **The browser native host.** The manifest under the browser's
+2. **The Chrome native host.** The manifest under Chrome's
    `NativeMessagingHosts`, the launcher and the bridge socket beside it.
 3. **The every-profile install entries.** The external-extensions file and
    Blowhorn's own entry in the managed policy, removed with the same
@@ -87,7 +87,7 @@ Kept at the end, and named: the store connection file an older version
 wrote (`~/.config/blowhorn/store.yaml`; Blowhorn no longer reads it), the rest of the app's state
 under `~/Library/Application Support/Blowhorn` (its preferences, its engine
 record and, for the engine the app carries, that engine's folder `home/`),
-Blowhorn's own browser trees, the per-user Library state, the checkout's
+Blowhorn's own Chrome trees, the per-user Library state, the checkout's
 `data/cache/` (which holds each profile's runtime state on this computer), and
 the scheduler pause file. A `data/profiles/` folder left by an older version is
 never named and never touched: your profiles live in your Blowhorn account.
@@ -153,8 +153,8 @@ remove everything. Opening the trashed app instead offers the same finish.
 
 If you empty the Trash before running the command, the engine is gone with
 the app. The launcher then removes the files it can still reach (itself,
-the shell startup block, the background service and attach-browser agent
-files, the browser native host entry) and names what it could not: the
+the shell startup block, the background service and attach-Chrome agent
+files, the Chrome native host entry) and names what it could not: the
 sign-in in your Keychain and the account token's revocation, which only
 the full command can do.
 
@@ -251,5 +251,5 @@ blowhorn auth logout
 ## Related
 
 - [Keep posting when the app is closed](/docs/how-to/schedule/background-service/) - stop the service before removing it
-- [Fix the browser extension connection](/docs/how-to/troubleshoot/extension-connection/) - check what is running first
+- [Fix the Chrome extension connection](/docs/how-to/troubleshoot/extension-connection/) - check what is running first
 - [Change your defaults](/docs/how-to/settings/defaults/) - log directories the dry run reports on

@@ -87,7 +87,7 @@ blowhorn analytics activity 42 --profile ada --json
 platform the activity is addressed to:
 
 - **Delivery** (measured): whether it went out and when, the link to the live
-  item, the computer and browser profile that ran it, and for a failed attempt
+  item, the computer and Chrome profile that ran it, and for a failed attempt
   the error and the fix to try next. An activity that is due but has not run
   yet reads as pending. One whose sending click was made but never read back
   reads as unconfirmed, with no link: check the platform before assuming it

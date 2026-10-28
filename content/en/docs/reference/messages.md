@@ -31,7 +31,7 @@ an unknown `BLOWHORN_ENTITLEMENT` value is refused by name rather than
 read as off. Dry runs are never refused: they publish nothing. See
 [Plans and limits](/docs/reference/plans/).
 
-## The browser and the extension {#chrome-and-the-extension}
+## Chrome and the extension {#chrome-and-the-extension}
 
 `another blowhorn run holds the Chrome extension bridge (pid ...)`: two runs want
 the extension at once, and the message names the holding run's pid.
@@ -40,22 +40,22 @@ that stops sending its heartbeat is released automatically after
 30 seconds.
 
 `chrome refused the connection (Allow was declined ...)`: the attach
-handshake did not complete. Keep a browser window open, approve the
+handshake did not complete. Keep a Chrome window open, approve the
 Allow dialog, and run again. In a scheduled pass the Allow window is
 short; prefer the extension default.
 
 `extension_outdated` with two versions: the installed extension is older
 than the run needs. Reload or update the extension and run again.
 
-A profile with no browser mapping on this computer, a mapped directory
-the browser no longer has, or an identity that drifted since binding is
+A profile with no Chrome mapping on this computer, a mapped directory
+Chrome no longer has, or an identity that drifted since binding is
 refused by name before anything opens, with the command that re-maps
 it. There is never a fallback to another profile.
 
 ## Sign-in
 
 `X session expired ... redirected to login page` and `Reddit session
-expired ... redirected to login page`: sign in again in that browser
+expired ... redirected to login page`: sign in again in that Chrome
 profile, by hand, then run again. `X rejected the credentials for
 @...`: the stored username or password is wrong; fix it and run again.
 A CAPTCHA or second-factor challenge always hands back to you; an

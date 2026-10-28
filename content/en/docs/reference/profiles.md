@@ -34,7 +34,7 @@ a profile exists.
 ## Identity and name
 
 A profile's **id** is its identity, and its **name** is what you type.
-Renaming a profile keeps its id, so its browser mapping and its content
+Renaming a profile keeps its id, so its Chrome mapping and its content
 items stay with it. What names a profile by its name changes with the
 rename: `--profile` on the command line, a routine's profile, and the
 excluded list (`--exclude`, `defaults.exclude`).
@@ -102,7 +102,7 @@ back; create a new one.
 
 Eligibility is credential existence: a profile may post on a platform
 exactly when the secret for that platform exists. Handles, sessions in
-the browser, and follower counts grant nothing.
+Chrome, and follower counts grant nothing.
 
 | Platform | Keys |
 |---|---|
@@ -124,11 +124,11 @@ account; no Slack app install is needed. `blowhorn profile auth --platform
 bluesky` logs in with a handle and app password and stores them only when
 Bluesky accepts them.
 
-LinkedIn and Hacker News also accept a **confirmed browser session**
+LinkedIn and Hacker News also accept a **confirmed Chrome session**
 instead of a password: `LI_CHROME_SESSION` and `HN_CHROME_SESSION` name
-the browser profile directory whose signed-in session the person
+the Chrome profile directory whose signed-in session the person
 confirmed on setup's Confirm troops step. The run then works through
-that profile's live session in its mapped browser profile. If the session
+that profile's live session in its mapped Chrome profile. If the session
 has signed out and no password is stored, the run says so and stops for
 that platform. The session counts toward eligibility only because the
 credential row exists - a browser that merely happens to be signed in
@@ -140,9 +140,9 @@ quietly.
 
 ## The Chrome column
 
-The Chrome column says which real browser profile a Blowhorn profile acts
+The Chrome column says which real Chrome profile a Blowhorn profile acts
 in on this computer. It is kept on this computer for your macOS user only,
-keyed by the profile's id, because a browser profile exists on one computer and
+keyed by the profile's id, because a Chrome profile exists on one Mac and
 nowhere else. `blowhorn chrome map` writes it; `blowhorn chrome unmap`
 clears it. A browser run with no mapping for its profile refuses
 before anything opens, and never falls back to another profile. The
@@ -151,8 +151,8 @@ what it may do.
 
 ## Related
 
-- [Map Blowhorn profiles to browser profiles](/docs/how-to/set-up/map-chrome-profiles/) - write the Chrome column.
+- [Map Blowhorn profiles to Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/) - write the Chrome column.
 - [Platforms](/docs/reference/platforms/) - what each platform acts with.
-- [Browser reference](/docs/reference/chrome/) - the mapping commands and their shapes.
+- [Chrome reference](/docs/reference/chrome/) - the mapping commands and their shapes.
 - [`blowhorn org`](/docs/reference/cli/org/) - the members a profile can represent.
 - [Who can post as whom](/docs/explanation/eligibility/) - why a credential is permission.

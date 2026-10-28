@@ -1,5 +1,5 @@
 ---
-title: "Package the browser extension"
+title: "Package the Chrome extension"
 description: "Build the store zip locally; submission happens at release time."
 weight: 200
 draft: true
@@ -10,7 +10,7 @@ aliases: [/docs/how-to/package-the-chrome-extension/]
 Build the zip for the Chrome Web Store. `make extension-package` only
 builds it. The desktop release submits it when this extension, or the
 native-messaging contract it has to match, changed. Submitting does not skip
-Google's review, and it does not open the browser.
+Google's review, and it does not open Chrome.
 
 ```bash
 make extension-package
@@ -50,7 +50,7 @@ make extension-assets-build   # rewrites every image in marketing/chrome-store-a
 `make extension-assets-build` runs `tools/scripts/brand/build-store-assets.py`. It
 rebuilds the desktop app, launches it against a showcase engine - a stand-in
 checkout that answers the console's reads from the desktop's own contract
-fixtures, so no account, profile, browser or real person is involved - and
+fixtures, so no account, profile, Chrome or real person is involved - and
 captures four console screens at the default 1104 x 900 window, scaled to
 1280 x 800. It then draws the platform gallery, the promo tile and the marquee
 from `marketing/brand/` with Playwright's Chromium. The app window opens on your screen
@@ -67,14 +67,14 @@ dashboard's **Store listing** tab and use **Save draft**; the listing goes to
 Google only when someone submits it for review. `tests/test_store_assets.py`
 checks that every file the table names exists at its exact size.
 
-## Update an installed browser extension {#update-an-installed-chrome-extension}
+## Update an installed Chrome extension {#update-an-installed-chrome-extension}
 
-A Blowhorn release does not reinstall the browser extension in each browser profile.
+A Blowhorn release does not reinstall the Chrome extension in each Chrome profile.
 
-- Unpacked (Load unpacked on `extension/`): after you upgrade Blowhorn, open `chrome://extensions` and reload the Blowhorn extension. The browser then runs the files in the checkout.
-- Chrome Web Store: the installed copy updates after Google accepts a submitted package. `make desktop-release` packages `dist/blowhorn-extension.zip` and submits it to the existing store item when the content of `extension/` changed since the previous `desktop-v*` tag, or when the content of the native-messaging contract changed (`engine/blowhorn/browser/extension_host.py`, `engine/blowhorn/browser/drivers/extension.py`, `engine/blowhorn/browser/extension_install.py`); a comment-only or blank-line edit is not a content change. The desktop app does not implement that contract; it runs that Python. An unrelated desktop change does not submit a new item. The version is the desktop version with any prerelease suffix dropped. A dry run packages the zip and does not upload it. Credentials stay in the environment on the computer that cuts the release: `CHROME_EXTENSION_ID` (always `fcflpiagmpcfifgknledeknedfopnapf`; any other value is refused before upload), `CHROME_PUBLISHER_ID`, and a service-account credential, `CHROME_ACCESS_TOKEN` or `CHROME_SERVICE_ACCOUNT_KEY_FILE` (Publish the Chrome extension with a service account). The legacy `CHROME_CLIENT_ID`, `CHROME_CLIENT_SECRET`, and `CHROME_REFRESH_TOKEN` still work when no service-account credential is set. If those are missing, or the upload fails, the DMG stays published. Resume with `VERSION=<version> make extension-publish` (same version you just cut). That retries the upload without rebuilding the DMG. Automation submits the package; Google review still has to pass before the browser updates the installed copy.
+- Unpacked (Load unpacked on `extension/`): after you upgrade Blowhorn, open `chrome://extensions` and reload the Blowhorn extension. Chrome then runs the files in the checkout.
+- Chrome Web Store: the installed copy updates after Google accepts a submitted package. `make desktop-release` packages `dist/blowhorn-extension.zip` and submits it to the existing store item when the content of `extension/` changed since the previous `desktop-v*` tag, or when the content of the native-messaging contract changed (`engine/blowhorn/browser/extension_host.py`, `engine/blowhorn/browser/drivers/extension.py`, `engine/blowhorn/browser/extension_install.py`); a comment-only or blank-line edit is not a content change. The desktop app does not implement that contract; it runs that Python. An unrelated desktop change does not submit a new item. The version is the desktop version with any prerelease suffix dropped. A dry run packages the zip and does not upload it. Credentials stay in the environment on the computer that cuts the release: `CHROME_EXTENSION_ID` (always `fcflpiagmpcfifgknledeknedfopnapf`; any other value is refused before upload), `CHROME_PUBLISHER_ID`, and a service-account credential, `CHROME_ACCESS_TOKEN` or `CHROME_SERVICE_ACCOUNT_KEY_FILE` (Publish the Chrome extension with a service account). The legacy `CHROME_CLIENT_ID`, `CHROME_CLIENT_SECRET`, and `CHROME_REFRESH_TOKEN` still work when no service-account credential is set. If those are missing, or the upload fails, the DMG stays published. Resume with `VERSION=<version> make extension-publish` (same version you just cut). That retries the upload without rebuilding the DMG. Automation submits the package; Google review still has to pass before Chrome updates the installed copy.
 
-The desktop release sets `extension/manifest.json`'s version to that desktop version in the same cases, so the two copies can be told apart. A prerelease suffix is not part of the browser extension version. Until you reload, or the store update lands, a run stops before it acts. A hello that omits `trusted_input` stops as `extension_outdated` and names the installed and required versions ([The extension default](/docs/reference/chrome/#the-extension-default)). A hello that does not report this Blowhorn's version or the verbs it sends stops with:
+The desktop release sets `extension/manifest.json`'s version to that desktop version in the same cases, so the two copies can be told apart. A prerelease suffix is not part of the Chrome extension version. Until you reload, or the store update lands, a run stops before it acts. A hello that omits `trusted_input` stops as `extension_outdated` and names the installed and required versions ([The extension default](/docs/reference/chrome/#the-extension-default)). A hello that does not report this Blowhorn's version or the verbs it sends stops with:
 
 ```text
 your Chrome extension is <reported>, this Blowhorn needs <version>: reload it in chrome://extensions or update it

@@ -75,11 +75,18 @@ regenerate them. Claims on every page come from the product repository's
   (`scripts/brand/build-brand-kit.py`, output in `marketing/brand/kit/`); copy them over unchanged.
 - **The product name is Blowhorn.** "Outbox" is the product's old internal name; never put
   it on a public page.
-- **Say "browser", not "Chrome".** Blowhorn will not stay Chrome-only, so copy says "your own
-  browser", "browser profile" and "browser extension". "Google Chrome" appears only where a reader
-  must know today's requirement ("Google Chrome is required for now"), in competitor facts, and in
-  proper names (Chrome Web Store, Claude in Chrome), code, commands and URLs. Docs copy changes
-  in the product repository's `docs/`, then syncs here.
+- **Browser wording depends on the page.** Marketing and value pages (home, `/for`, `/ai`,
+  `/agents`, `/pricing`, `/major`, `/welcome`, `/integrations`, their data files, and compare
+  pages' descriptions of Blowhorn) stay general: "your own browser", "browser profile", "browser
+  extension", never Mac or Google Chrome; a requirement note links to System requirements.
+  Download and install pages (`/download`, `/download/thanks`, `docs/reference/requirements`,
+  `docs/how-to/set-up/`) state the exact requirement: "Requires macOS 13 or newer and Google
+  Chrome 142 or newer" (142 is the engine's `MINIMUM_CHROME_MAJOR`), never "for now". Docs about
+  using the app or CLI name Google Chrome and "Chrome profile", matching the app's labels ("Add to
+  Chrome", "Show my Chrome profiles"). Competitor facts, Chrome Web Store, code, commands and URLs
+  stay as they are. `check_naming.py` fails a "for now" requirement and "browser profile" or
+  "browser extension" in the docs. Docs copy is synced from the product repository's `docs/`:
+  change it there, then sync.
 - **The product repository is private.** Never link its files, issues or pull requests
   from a page; every reader would get a 404.
 - **Every Hugo run cleans its destination.** Each `hugo` invocation in `package.json`

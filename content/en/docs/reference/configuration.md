@@ -48,9 +48,9 @@ environment variables.
 | `defaults.logs.directory` | `BLOWHORN_LOG_DIR` | `data/logs/` in the checkout | Where daily logs go |
 | `defaults.logs.retention_days` | `BLOWHORN_LOG_RETENTION_DAYS` | 30 | Days of daily logs kept; 0 keeps all |
 | `defaults.diagnostics.enabled` | `BLOWHORN_DIAGNOSTICS_ENABLED` | on | Queue and send anonymous failure reports (see [Failure reports](/docs/explanation/your-data/#failure-reports)); off means nothing is queued or sent, and the desktop Settings row is the same choice |
-| `defaults.chrome.launch_mode` | `BLOWHORN_CHROME_LAUNCH` | `extension` | How a run reaches the browser |
-| `defaults.chrome.automation_data_dir` | `BLOWHORN_CHROME_AUTOMATION_DATA_DIR` | Blowhorn's own directory | Where a launched browser keeps its session |
-| `defaults.chrome.data_dir` | `BLOWHORN_CHROME_DATA_DIR` | Your real browser directory | Where the installed browser is read from |
+| `defaults.chrome.launch_mode` | `BLOWHORN_CHROME_LAUNCH` | `extension` | How a run reaches Chrome |
+| `defaults.chrome.automation_data_dir` | `BLOWHORN_CHROME_AUTOMATION_DATA_DIR` | Blowhorn's own directory | Where a launched Chrome keeps its session |
+| `defaults.chrome.data_dir` | `BLOWHORN_CHROME_DATA_DIR` | Your real Chrome directory | Where the installed Chrome is read from |
 | `defaults.slack.auth_mode` | `BLOWHORN_SLACK_AUTH` | your captured session first | Which Slack credential may send: session, user-token, bot-token, or a list tried in order |
 | (flag only) | `BLOWHORN_TEE_STDOUT` | off | Flush the stdout copy per write for a supervising wrapper |
 | `defaults.store.organization` | `BLOWHORN_STORE_ORGANIZATION` | none; Blowhorn uses the organization you signed in to | The organization Blowhorn uses when the sign-in did not choose one |
@@ -325,7 +325,7 @@ per-command flag.
 ## Related
 
 - [Change your defaults](/docs/how-to/settings/defaults/) - change the defaults.
-- [Choose how Blowhorn reaches your browser](/docs/how-to/settings/launch-mode/) - the launch-mode option in practice.
+- [Choose how Blowhorn reaches Chrome](/docs/how-to/settings/launch-mode/) - the launch-mode option in practice.
 - [The Blowhorn app, screen by screen](/docs/reference/use-the-desktop-app/) - the Settings screen.
 - [Messages and exit codes](/docs/reference/messages/) - what a bad value reports.
 - [How scheduling works](/docs/explanation/scheduling/) - what the heartbeat and per-job logs are for.

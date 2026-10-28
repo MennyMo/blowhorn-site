@@ -25,13 +25,12 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   the waiting screen stops the wait right away - you never have to wait
   it out - and **Open it again** ends the old attempt and starts a fresh
   one. See [Create a Blowhorn account](/docs/how-to/set-up/create-an-account/).
-- **Google Chrome first:** Blowhorn works with Google Chrome today, so right
-  after your account is set up, Blowhorn checks for it. With no Google
-  Chrome on this computer, the next screen is **Blowhorn needs Google
-  Chrome**: **Get Google Chrome** opens
+- **Google Chrome first:** right after your account is set up, Blowhorn
+  checks Google Chrome. With no Google Chrome on this computer, the next
+  screen is **Blowhorn needs Google Chrome**: **Get Google Chrome** opens
   Google's download page, and once it is installed the app notices by
   itself when you come back to its window (or choose **Check again**).
-  A Google Chrome older than Blowhorn needs, or one that has never been
+  A Google Chrome older than Blowhorn needs (142), or one that has never been
   opened, gets its own screen the same way. Google Chrome is found in
   your computer's Applications folder or in your own `~/Applications`.
   **Check again** on these screens, and on Getting ready, reads
@@ -42,23 +41,23 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   Coming back to the window checks quietly and only speaks when
   something changed.
 - **Blowhorn's own window:** one screen says Blowhorn deploys in its own
-  browser window, so you keep working in yours while it posts,
+  Google Chrome window, so you keep working in yours while it posts,
   likes and connects for you. **What's a Google Chrome profile?** explains
   the rest if you want it. If another browser, such as Safari, is your
   default, the screen says it stays your default: there is nothing to
   change. **Show my Chrome profiles** moves on.
-- **Assign troops:** Blowhorn shows what it found in each browser
+- **Assign troops:** Blowhorn shows what it found in each Chrome
   profile: the Google account, and the platform accounts signed in or
-  saved there. Mark each browser profile and each account **in use** or
+  saved there. Mark each Chrome profile and each account **in use** or
   **not in use**. For a profile that isn't in Blowhorn yet, confirm the
   name it will be created under. The profiles you mark in use are the ones
   the next step installs into, and a profile you mark not in use is left
-  alone. The browser's main profile is listed as yours, with no **Use with
+  alone. Chrome's main profile is listed as yours, with no **Use with
   Blowhorn** switch; a main profile an earlier setup already mapped keeps
   its switch. If the main profile is the only one you have, the screen
   reads **Blowhorn will set up its own profile**: choose **Set up
-  Blowhorn's profile**, and the browser is asked to open a new window
-  in a profile of Blowhorn's own (the browser should make the profile the
+  Blowhorn's profile**, and Google Chrome is asked to open a new window
+  in a profile of Blowhorn's own (Chrome should make the profile the
   first time, and open the same one after). Your main profile is left
   untouched. Sign in there once to LinkedIn, X and the rest, then come
   back: the app looks again by itself, or choose **Continue**. You can
@@ -66,7 +65,7 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   Rather add a profile yourself? The steps are under **What's a Google
   Chrome profile?** on that screen. On **Confirm**, Blowhorn creates the profiles you marked in use,
   saves the handles (and a GitHub token or Bluesky app password you type
-  on the activity), and maps each of those browser profiles. A profile you mark
+  on the activity), and maps each of those Chrome profiles. A profile you mark
   not in use is recorded that way: its mapping on this computer is
   removed, and a run of every profile skips it. A profile you had already
   excluded stays excluded. Marking it in use again removes that skip only
@@ -74,29 +73,29 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   stay. An account you mark not in use is skipped on this computer, and
   its saved sign-in stays too. Nothing is created or
   installed until you confirm. See
-  [Map Blowhorn profiles to browser profiles](/docs/how-to/set-up/map-chrome-profiles/).
-- **Getting ready:** Blowhorn finds your browser profiles and adds its
+  [Map Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/).
+- **Getting ready:** Blowhorn finds your Chrome profiles and adds its
   extension only to the ones you marked in use on Confirm troops. If that
-  is all of them, it uses the browser's policy route: macOS asks for your
-  administrator password once, and the browser turns the extension on in every
+  is all of them, it uses Chrome's policy route: macOS asks for your
+  administrator password once, and Chrome turns the extension on in every
   profile and shows it as **Managed by your organization**. If you left
   some profiles out, there is no administrator prompt; each profile you
   chose gets an **Enable in** button instead: one click there, then
-  **Enable now** (or **Add to Chrome**) in the browser. Each step shows as it
+  **Enable now** (or **Add to Chrome**) in Chrome. Each step shows as it
   runs, with the time left, and **Start again** appears if it takes
   longer than usual. A computer that already has the extension from an
   earlier setup keeps that setup's route; there, each profile you chose
   gets an **Enable in** button the same way. One ready profile you chose
-  is enough to go on. If the browser is on this computer but has never
+  is enough to go on. If Google Chrome is on this computer but has never
   been opened, setup stops on its own screen (before Blowhorn's window
-  screen, and again here if that changed) and asks you to open the
-  browser once, then check again: the browser creates its profile list on that
+  screen, and again here if that changed) and asks you to open Google
+  Chrome once, then check again: Chrome creates its profile list on that
   first open, and there is no list for Blowhorn to read before it. The
   same screen appears when you reopen Blowhorn already signed in, or come
   back to a setup you left. If a step
   does stop with something wrong, its screen says what stopped in one
   sentence, and **Copy details** keeps the full details for support. See
-  [Install the browser extension](/docs/how-to/set-up/install-the-chrome-extension/).
+  [Install the Chrome extension](/docs/how-to/set-up/install-the-chrome-extension/).
 - **First post:** write a post and pick where it goes. It lands in your queue
   as a draft, and nothing is posted until you approve it in Content. You can
   also skip this: **Skip for now** finishes guided setup, and Home won't ask
@@ -105,17 +104,17 @@ when a new version of Blowhorn needs something your earlier setup did not do.
 - **Home:** you're done. Connect your platform accounts any time. See
   [Platform accounts](/docs/how-to/set-up/platform-accounts/).
 
-## Leaving a browser profile out {#leaving-a-chrome-profile-out}
+## Leaving a Chrome profile out {#leaving-a-chrome-profile-out}
 
-A browser profile you leave unchecked on Confirm troops is not in use, and
+A Chrome profile you leave unchecked on Confirm troops is not in use, and
 guided setup leaves it alone: it gets no extension from this setup, no
 Blowhorn profile and no mapping.
 
 If you run guided setup again and leave out a profile that an earlier
 setup already put the extension in, this setup cannot take the extension
-out of that one profile. Both routes the browser gives Blowhorn for adding an
+out of that one profile. Both routes Chrome gives Blowhorn for adding an
 extension - the policy file and the external-extensions file - are one
-file for all your browser profiles, never one per browser profile, so neither can
+file for all your Chrome profiles, never one per Chrome profile, so neither can
 be removed for a single profile. The extension stays in that profile
 until you remove it there yourself (in that profile, open
 `chrome://extensions` and remove Blowhorn). This setup never adds it
@@ -142,9 +141,9 @@ nothing here.
 - **It checks for real:** the lock reads your actual sign-in and extension
   state each time you come back to the window, so signing out later locks it
   again until you sign back in. The extension counts as ready once it's
-  turned on in at least one browser profile, set to install by your
+  turned on in at least one Chrome profile, set to install by your
   organization's policy, or answering. Getting ready never adds the
-  extension twice: once the browser is set to add it, it writes nothing again.
+  extension twice: once Chrome is set to add it, it writes nothing again.
 - **Open it again any time:** choose **guided setup** at the bottom of
   Settings.
 - **Missing tools come first:** if Blowhorn's own tools aren't set up on this
@@ -154,7 +153,7 @@ nothing here.
 ## Going back and forward is safe
 
 - **Next checks first:** each step checks that its work is really done (you're
-  signed in, the extension is ready in at least one browser profile you marked
+  signed in, the extension is ready in at least one Chrome profile you marked
   in use, your choices are saved) before it lets you go on. If it isn't, the
   step says why, right under the button.
 - **Back never redoes harmful work:** going back and forward again skips what's

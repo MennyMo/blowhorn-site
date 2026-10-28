@@ -16,7 +16,7 @@ This page stays a draft until it is.
 
 A profile has three things you set: its **name**, what you type after
 `--profile`; an optional **description**; and **who it represents**. Its
-accounts on each platform are not part of the form: browser profile
+accounts on each platform are not part of the form: Chrome profile
 discovery finds the ones you are signed in to, and each platform card
 connects the rest. What a profile holds is in the
 [Profile reference](/docs/reference/profiles/).
@@ -38,7 +38,7 @@ connects the rest. What a profile holds is in the
 4. Click **create profile**.
 
 Then give the profile its accounts: open **chrome profiles** to map the
-browser profile it posts from and attach the accounts signed in there, and
+Chrome profile it posts from and attach the accounts signed in there, and
 use a platform card for anything else, such as a GitHub token.
 
 A profile you create for someone else is listed for them too, so their own
@@ -64,7 +64,7 @@ profile?** are editable; the represented person's name and email are shown
 from their member record and are changed in your Blowhorn account, not here. Click
 **save**. Renaming a profile changes what you type after `--profile`, and
 any routine or excluded-profiles entry that names the old name needs the new
-one. Its browser mapping and its content items follow the profile, because
+one. Its Chrome mapping and its content items follow the profile, because
 they hold its id.
 
 ## From the command line
@@ -121,8 +121,8 @@ the delete is refused and nothing changes.
 ## Related
 
 - [Sign in](/docs/how-to/set-up/sign-in/) - sign in before profiles mean anything.
-- [Map Blowhorn profiles to browser profiles](/docs/how-to/set-up/map-chrome-profiles/) - give
-  the profile its browser profile and the accounts signed in there.
+- [Map Blowhorn profiles to Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/) - give
+  the profile its Chrome and the accounts signed in there.
 - [Sign a profile in to each platform](/docs/how-to/set-up/platform-accounts/) - the sessions
   and credentials each platform needs.
 - [Profile reference](/docs/reference/profiles/) - what a profile holds.

@@ -14,7 +14,7 @@ are in the [MCP server reference](/docs/reference/mcp-server/).
 
 Before you connect anything, finish Blowhorn's own setup: [install
 the app](/docs/how-to/set-up/install-the-app/), [sign a profile in to each
-platform](/docs/how-to/set-up/platform-accounts/), and [map each profile to its browser
+platform](/docs/how-to/set-up/platform-accounts/), and [map each profile to its Chrome
 profile](/docs/how-to/set-up/map-chrome-profiles/). The server takes its credentials the way the CLI takes them,
 from your existing Blowhorn config and environment, so there is no
 second sign-in and nothing new to paste into a client config. If a

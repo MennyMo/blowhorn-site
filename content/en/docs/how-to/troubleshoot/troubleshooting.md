@@ -20,7 +20,7 @@ Start from what you saw. Each symptom names its fix page.
 ## Sign-in problems
 
 - **LinkedIn, X or Reddit says the session expired.** Sign in again in your
-  mapped browser profile, or run `blowhorn profile auth` for that platform. See
+  mapped Chrome profile, or run `blowhorn profile auth` for that platform. See
   [Fix a sign-in that stopped working](/docs/how-to/troubleshoot/sign-in-problems/).
 - **A CAPTCHA or second factor appears mid-run.** The run stops and hands the
   browser back to you. Complete the challenge by hand, then run again. See
@@ -28,7 +28,7 @@ Start from what you saw. Each symptom names its fix page.
 - **X sign-in under the extension driver stops at once.** The extension's
   typing does not reach X's form either. Sign in by hand in the tab, or run
   with `--chrome-launch cdp`. See [Fix a sign-in that stopped working](/docs/how-to/troubleshoot/sign-in-problems/).
-- **Challenges keep coming back in one browser profile.** Curious what sites
+- **Challenges keep coming back in one Chrome profile.** Curious what sites
   can see about that browser? Open the free check at [Blowhorn
   Tells](https://tells.blowhorn.ai/) in that profile. See [Fix a sign-in that
   stopped working](/docs/how-to/troubleshoot/sign-in-problems/#captcha-and-second-factors).
@@ -45,18 +45,18 @@ Start from what you saw. Each symptom names its fix page.
 - **An update sits on one step, or says it stalled.** See [Update
   Blowhorn](/docs/how-to/manage/update-blowhorn/#if-an-update-stalls).
 
-## The browser and the extension {#chrome-and-the-extension}
+## Chrome and the extension {#chrome-and-the-extension}
 
 - **The extension says not connected, or the versions mismatch.** Re-approve
   the connection after an update, or check which install route is on disk with
-  `blowhorn chrome extension-status`. See [Fix the browser extension
+  `blowhorn chrome extension-status`. See [Fix the Chrome extension
   connection](/docs/how-to/troubleshoot/extension-connection/).
 - **Another run holds the bridge or the profile.** Wait for it, or stop it;
-  your activities stay queued. See [Fix the browser extension
+  your activities stay queued. See [Fix the Chrome extension
   connection](/docs/how-to/troubleshoot/extension-connection/).
 - **A run refuses an unmapped profile, or asks for an allow dialog you cannot
   see.** Check the mapping, or switch mode for that run. See [Choose how
-  Blowhorn reaches your browser](/docs/how-to/settings/launch-mode/).
+  Blowhorn reaches Chrome](/docs/how-to/settings/launch-mode/).
 
 ## Schedule and store
 

@@ -43,10 +43,10 @@ The card names each step as it happens:
 2. **installing**. The new app is copied into Applications and swapped in.
    If anything fails, your current version is put back.
 3. **finishing setup**. Blowhorn runs `blowhorn setup --yes` to refresh its
-   browser connection for the new version: the native host file
+   Chrome connection for the new version: the native host file
    (`com.blowhorn.chrome_extension.json`) and the small launcher it names,
-   rewritten only if they are out of date. Nothing else changes: the browser is not
-   opened, and your browser profiles, other apps' hosts, sign-in and Blowhorn
+   rewritten only if they are out of date. Nothing else changes: Chrome is not
+   opened, and your Chrome profiles, other apps' hosts, sign-in and Blowhorn
    settings are left alone. If you installed `blowhorn-axi` globally, it is
    updated too. This usually takes a few seconds. If it fails, your current
    version is put back.

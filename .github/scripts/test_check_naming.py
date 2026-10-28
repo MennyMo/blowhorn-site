@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Users see Blowhorn: never Layer5 Cloud or Blowhorn Cloud, and Layer5 only
 in the footer and on the legal pages. Every page says computers, never
-machines; marketing copy never says Macs or your Mac.
+machines; marketing copy never says Macs or your Mac. The Google Chrome
+requirement is stated with versions, never "for now", and the docs say
+Chrome profile and Chrome extension.
 
 Run with `make test-scripts` (CI runs it too).
 """
@@ -139,6 +141,36 @@ class TheServiceIsBlowhorn(unittest.TestCase):
     def test_the_generated_cli_reference_passes(self):
         failures = self.build({"docs/reference/cli/store/index.html": page(
             "<p>Report whether this machine can reach the Blowhorn database.</p>")})
+        self.assertEqual(failures, [])
+
+    def test_a_vague_chrome_requirement_fails_on_every_page(self):
+        failures = self.build({
+            "download/index.html": page("<p>Google Chrome is required for now. Support for more browsers is planned.</p>"),
+            "index.html": page("<p><span>Google Chrome, for now</span></p>"),
+        })
+        self.assertEqual(len(failures), 3)
+        self.assertTrue(all("with versions" in f for f in failures))
+
+    def test_the_exact_chrome_requirement_and_skip_for_now_pass(self):
+        failures = self.build({
+            "download/index.html": page("<p>Requires macOS 13 or newer and Google Chrome 142 or newer.</p>"),
+            "docs/how-to/set-up/first-muster-setup/index.html": page(
+                "<p><strong>Skip for now</strong> finishes guided setup.</p>"),
+        })
+        self.assertEqual(failures, [])
+
+    def test_docs_say_chrome_profile_and_chrome_extension(self):
+        failures = self.build({"docs/how-to/set-up/map-chrome-profiles/index.html": page(
+            "<p>Map each browser profile.</p><p>Install the browser extension.</p>"
+            "<p>Sign-in opens your browser.</p><p>Run <code>blowhorn chrome profiles</code>.</p>")})
+        self.assertEqual(len(failures), 2)
+        self.assertIn("Chrome profile or Chrome extension", failures[0])
+
+    def test_marketing_and_the_cli_reference_may_say_browser_extension(self):
+        failures = self.build({
+            "index.html": page("<p>Add the browser extension to each browser profile.</p>"),
+            "docs/reference/cli/chrome/index.html": page("<p>Checks the browser profile.</p>"),
+        })
         self.assertEqual(failures, [])
 
     def test_main_fails_on_macs(self):

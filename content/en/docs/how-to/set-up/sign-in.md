@@ -67,7 +67,7 @@ Keychain asks once whether `python` may use the saved sign-in. Choose
 
 ## From the app
 
-Open `blowhorn://signin`, the link the Blowhorn browser extension's **Sign in**
+Open `blowhorn://signin`, the link the Blowhorn Chrome extension's **Sign in**
 offers. The app opens [Blowhorn](https://cloud.blowhorn.ai) in your browser; sign in there, or create
 an account, then choose **Allow**. `blowhorn://signup` starts the same sign-in for a new account
 (see [Create a Blowhorn account](/docs/how-to/set-up/create-an-account/)). The sign-in sends its

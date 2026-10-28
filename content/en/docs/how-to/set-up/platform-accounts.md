@@ -6,23 +6,23 @@ weight: 65
 
 
 One section per platform. LinkedIn, X, and Reddit sign in by hand in your
-browser; Bluesky takes a handle and an app password; GitHub takes a token;
-Hacker News takes a username and password, or a confirmed browser session;
+Chrome; Bluesky takes a handle and an app password; GitHub takes a token;
+Hacker News takes a username and password, or a confirmed Chrome session;
 Slack takes a captured session.
 
 Do the mapping first
-([Map Blowhorn profiles to browser profiles](/docs/how-to/set-up/map-chrome-profiles/)):
-every browser sign-in below opens in the profile's mapped browser profile.
+([Map Blowhorn profiles to Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/)):
+every browser sign-in below opens in the profile's mapped Chrome.
 
 ## LinkedIn, X, Reddit
 
 Blowhorn never asks for these passwords. The account is your own sign-in,
-in the browser profile your Blowhorn profile is mapped to.
+in the Chrome profile your Blowhorn profile is mapped to.
 
 In the desktop app, open **Profiles**, pick the profile, and find the
-platform's card. It says which browser profile to use ("Sign in to LinkedIn
+platform's card. It says which Chrome profile to use ("Sign in to LinkedIn
 in the Chrome profile Work"). Choose **Open LinkedIn sign-in** to open that
-browser profile on LinkedIn's sign-in page, sign in there, then choose
+Chrome profile on LinkedIn's sign-in page, sign in there, then choose
 **Check again**. Once Blowhorn sees the sign-in, it records it as the
 profile's account in your Blowhorn account, and the card says
 **Connected**. Home's **Connect an account** button opens the same steps
@@ -31,12 +31,12 @@ sign-in** and **Check again**: it has no fields to fill in and never asks
 for a password. An account Blowhorn should sign in to for you with a stored
 username and password is set up from Terminal only (below).
 
-**Check again** reads **Checking…** while Blowhorn reads your browser
-profiles, then says what it found: the platforms it found in each browser
+**Check again** reads **Checking…** while Blowhorn reads your Chrome
+profiles, then says what it found: the platforms it found in each Chrome
 profile, which are new since your last check and which are no longer
 signed in (Blowhorn then marks that account disconnected), **Nothing new
-found**, or why it couldn't read the browser. Setup's browser profiles step and **Profiles ›
-chrome profiles** answer the same way. The browser saves a new sign-in to disk
+found**, or why it couldn't read Chrome. Setup's Chrome profiles step and **Profiles ›
+chrome profiles** answer the same way. Chrome saves a new sign-in to disk
 about 30 seconds after you sign in, so if you signed in a moment ago and
 see **Nothing new found**, wait a little and check again.
 
@@ -65,12 +65,12 @@ the automated login is attempted; the manual fallback is skipped. A
 CAPTCHA or second-factor challenge always hands back to you: unattended
 runs never wait for a person.
 
-LinkedIn can also work from a **confirmed browser session** instead of a
+LinkedIn can also work from a **confirmed Chrome session** instead of a
 stored password: when setup's Confirm troops step found you signed in to
-LinkedIn in a browser profile and you confirmed it, the profile holds
-`LI_CHROME_SESSION` naming that browser profile, and runs use the session
-in the mapped browser profile. If that session signs out, sign in again in
-the browser; there is no password for Blowhorn to fall back to unless you store
+LinkedIn in a Chrome profile and you confirmed it, the profile holds
+`LI_CHROME_SESSION` naming that Chrome profile, and runs use the session
+in the mapped Chrome profile. If that session signs out, sign in again in
+Chrome; there is no password for Blowhorn to fall back to unless you store
 one too.
 
 ### Record your LinkedIn page
@@ -132,11 +132,11 @@ read from your account:
 blowhorn profile set ada HN_USERNAME=<account> HN_PASSWORD=<password>
 ```
 
-Or work from a **confirmed browser session**: if setup's Confirm troops
-step found you signed in to Hacker News in a browser profile and you
-confirmed it, the profile holds `HN_CHROME_SESSION` naming that browser
+Or work from a **confirmed Chrome session**: if setup's Confirm troops
+step found you signed in to Hacker News in a Chrome profile and you
+confirmed it, the profile holds `HN_CHROME_SESSION` naming that Chrome
 profile instead of a password, and runs use that session. If it signs
-out, sign back in in the browser, or store a password as above.
+out, sign back in in Chrome, or store a password as above.
 
 Check it landed, with the password shown only as set or not set:
 
@@ -165,7 +165,7 @@ Omit `--workspace` to refresh every workspace already listed under
 
 ## Related
 
-- [Map Blowhorn profiles to browser profiles](/docs/how-to/set-up/map-chrome-profiles/) - the
+- [Map Blowhorn profiles to Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/) - the
   mapping every browser sign-in opens in.
 - [Post content](/docs/how-to/publish/post-content/) - publish once every platform
   is signed in.

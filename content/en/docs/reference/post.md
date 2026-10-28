@@ -27,7 +27,7 @@ nothing, and never retried by the run. See
 
 ## Platform behavior
 
-LinkedIn, X, Reddit, and Hacker News drive your browser through the
+LinkedIn, X, Reddit, and Hacker News drive your Chrome through the
 extension. Slack, Bluesky, and GitHub post through their APIs. Reddit
 activities need their subreddit as `r/<name>` in "Destination" or "Amplify";
 without one the activity is skipped. A "Comment on" activity addressed to a

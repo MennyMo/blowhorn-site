@@ -24,7 +24,7 @@ per run.
 - [Content queue columns and activity states](/docs/reference/content-queue/) - every column each platform reads.
 - [Messages and exit codes](/docs/reference/messages/) - what a refusal means.
 - [Who can post as whom](/docs/explanation/eligibility/) - why a credential is permission.
-- [Why Blowhorn uses your own browser](/docs/explanation/your-own-chrome/) - browser versus API.
+- [Why Blowhorn uses your own Chrome](/docs/explanation/your-own-chrome/) - browser versus API.
 - [You're in control](/docs/explanation/youre-in-control/) - every safety control in one place.
 - [Field Manual: Bluesky](https://blowhorn.ai/field-manual/bluesky/) - what the Bluesky feed rewards and what it penalizes.
 - [Platform action matrix](https://blowhorn.ai/field-manual/action-matrix/) - safe versus risky actions, per platform.

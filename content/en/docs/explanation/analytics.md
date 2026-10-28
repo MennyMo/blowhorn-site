@@ -35,7 +35,7 @@ would be inventing numbers the platform never showed.
 
 An activity's result keeps the same line. Its delivery is measured: the
 recorded promotion stamp and link, and the run that ended just after the
-stamp, which names the computer and browser profile. Its reception is
+stamp, which names the computer and Chrome profile. Its reception is
 measured too, read from the "All posts" sheet of the page's content export
 and dated by that export. A post the export lists but no content activity links
 to is kept and marked unmatched rather than dropped. The comparison to the

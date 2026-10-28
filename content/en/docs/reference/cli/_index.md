@@ -50,13 +50,13 @@ Global flags (available on all commands):
 `all` is a reserved alias, not a real profile name. When you use `--profile all`, Blowhorn expands to all configured profiles and then removes any names passed via `--exclude` / `--e`.
 Use `--exclude none` when you want to clear configured default exclusions for a single run.
 When you pass explicit profile names with `--profile your-profile,second-profile`, those named profiles are processed even if they appear in the configured exclusion list.
-The browser is never run headless. With `--headless`, Google Chrome puts `HeadlessChrome/<version>` in the `User-Agent` header of every request while its client hints still say Google Chrome, which tells every site the run is automated. So `--headless` now means *unattended*: the browser opens as a background window (minimized, kept out of the foreground, the same window a flagless run opens), and no one is waited for at a sign-in or challenge. Use `--headed` when you want the window visible and in front so you can finish a sign-in yourself. `blowhorn schedule tick` runs its jobs unattended but never forces visibility onto them - each job resolves its own from its params, then the environment, then Settings - so scheduled jobs never wait for someone who is not there whatever the window does. `trigger-now` runs its one activity attended, so it may wait for you.
+Chrome is never run headless. With `--headless`, Chrome puts `HeadlessChrome/<version>` in the `User-Agent` header of every request while its client hints still say Google Chrome, which tells every site the run is automated. So `--headless` now means *unattended*: the browser opens as a background window (minimized, kept out of the foreground, the same window a flagless run opens), and no one is waited for at a sign-in or challenge. Use `--headed` when you want the window visible and in front so you can finish a sign-in yourself. `blowhorn schedule tick` runs its jobs unattended but never forces visibility onto them - each job resolves its own from its params, then the environment, then Settings - so scheduled jobs never wait for someone who is not there whatever the window does. `trigger-now` runs its one activity attended, so it may wait for you.
 
 `--headed` and `--headless` are one choice with two spellings, so exactly one of them survives resolution. `--headed` wins a tie, but only from an equal or higher-precedence layer: `defaults.headed: true` in `.blowhorn.yaml` does **not** cancel a `--headless` typed on the command line or set through `BLOWHORN_HEADLESS`. A run that passes `--headless` opens the background window whatever the file says.
 
 Blowhorn drives only the installed Google Chrome: `/Applications/Google Chrome.app` or `~/Applications/Google Chrome.app` on macOS, `google-chrome` or `google-chrome-stable` on `PATH` or `/opt/google/chrome/chrome` on Linux ([Linux](/docs/reference/chrome/#linux); Chromium is not supported yet). When it is missing, every browser-backed command refuses with one sentence instead of starting Playwright's bundled Chromium, whose user agent and client-hint brands both read `HeadlessChrome`. The refusal comes before the browser driver is started and ends the command with exit 1: a `--profile all` run stops there rather than repeating the sentence for every profile and platform and finishing as if it had run.
 
-`--chrome-launch <auto|cdp|persistent|extension>` says how this run reaches that browser, for one run: `extension` (the default) drives the browser through the [Blowhorn browser extension](/docs/reference/chrome/#the-extension-default) and starts no Playwright browser; `persistent` launches Blowhorn's own browser from `chrome.automation_data_dir` with the mapped browser profile directory inside it, `cdp` attaches to a browser that is already open (it must be `ready` per `blowhorn chrome status`; your daily browser asks you to Allow the first connection of the run, a [dedicated attach browser](/docs/reference/chrome/#a-dedicated-attach-chrome-no-allow-dialog) does not, and the run works in its own visible window), and `auto` attaches when the browser is ready and launches otherwise, saying `using blowhorn chrome (persistent): <next step>` once on stderr when it falls back. Resolved as the flag, then `BLOWHORN_CHROME_LAUNCH`, then `BLOWHORN_BROWSER_DRIVER`, then `defaults.chrome.launch_mode` in `.blowhorn.yaml`, then the built-in `extension`; `BLOWHORN_EXTENSION_ROLLBACK=1` selects `persistent` in place of `BLOWHORN_BROWSER_DRIVER=extension`, the file's value or the built-in; any other value is refused before anything runs, naming the four. Every browser run needs the profile mapped with `blowhorn chrome map` first, in either mode: an unmapped profile you named is `ERROR` and exit 1, one reached through `--profile all` is one `WARNING` line and the walk continues. A job `blowhorn schedule tick` or `trigger-now` runs resolves its own driver: the job's driver mode, then `BLOWHORN_BROWSER_DRIVER`, then `defaults.chrome.launch_mode`, then the built-in `extension`, with `BLOWHORN_EXTENSION_ROLLBACK=1` beating a job's `extension` as it beats `BLOWHORN_BROWSER_DRIVER=extension`, the file's value and the built-in; `blowhorn schedule tick` and `trigger-now` hand their `--chrome-launch` to every job they run, and a `tick` with none of its own leaves the launch mode unset so each job resolves its own; an explicit `--chrome-launch` on the tick still wins. `trigger-now` keeps a launch mode only when `--chrome-launch` or `BLOWHORN_CHROME_LAUNCH` chose it; otherwise its job resolves its own mode the same way. A forced `cdp` against a browser that is not ready is refused with `chrome status`'s next-step sentence; the run tells you to click Allow before it connects and waits up to 120 seconds for it; a connection still unanswered then is refused by name. A job `schedule tick` runs is unattended: it is told nothing and waits 20 seconds, so it fails by name rather than hangs. `trigger-now` is attended and gets the 120-second window and the notice. `blowhorn chrome status` shows the mode a run would use right now; see [Launch modes](/docs/reference/chrome/#launch-modes) and [Choose how Blowhorn reaches your browser](/docs/how-to/settings/launch-mode/).
+`--chrome-launch <auto|cdp|persistent|extension>` says how this run reaches that Chrome, for one run: `extension` (the default) drives Chrome through the [Blowhorn Chrome extension](/docs/reference/chrome/#the-extension-default) and starts no Playwright Chrome; `persistent` launches Blowhorn's own Chrome from `chrome.automation_data_dir` with the mapped Chrome profile directory inside it, `cdp` attaches to a Chrome that is already open (it must be `ready` per `blowhorn chrome status`; your daily Chrome asks you to Allow the first connection of the run, a [dedicated attach Chrome](/docs/reference/chrome/#a-dedicated-attach-chrome-no-allow-dialog) does not, and the run works in its own visible window), and `auto` attaches when Chrome is ready and launches otherwise, saying `using blowhorn chrome (persistent): <next step>` once on stderr when it falls back. Resolved as the flag, then `BLOWHORN_CHROME_LAUNCH`, then `BLOWHORN_BROWSER_DRIVER`, then `defaults.chrome.launch_mode` in `.blowhorn.yaml`, then the built-in `extension`; `BLOWHORN_EXTENSION_ROLLBACK=1` selects `persistent` in place of `BLOWHORN_BROWSER_DRIVER=extension`, the file's value or the built-in; any other value is refused before anything runs, naming the four. Every browser run needs the profile mapped with `blowhorn chrome map` first, in either mode: an unmapped profile you named is `ERROR` and exit 1, one reached through `--profile all` is one `WARNING` line and the walk continues. A job `blowhorn schedule tick` or `trigger-now` runs resolves its own driver: the job's driver mode, then `BLOWHORN_BROWSER_DRIVER`, then `defaults.chrome.launch_mode`, then the built-in `extension`, with `BLOWHORN_EXTENSION_ROLLBACK=1` beating a job's `extension` as it beats `BLOWHORN_BROWSER_DRIVER=extension`, the file's value and the built-in; `blowhorn schedule tick` and `trigger-now` hand their `--chrome-launch` to every job they run, and a `tick` with none of its own leaves the launch mode unset so each job resolves its own; an explicit `--chrome-launch` on the tick still wins. `trigger-now` keeps a launch mode only when `--chrome-launch` or `BLOWHORN_CHROME_LAUNCH` chose it; otherwise its job resolves its own mode the same way. A forced `cdp` against a Chrome that is not ready is refused with `chrome status`'s next-step sentence; the run tells you to click Allow before it connects and waits up to 120 seconds for it; a connection still unanswered then is refused by name. A job `schedule tick` runs is unattended: it is told nothing and waits 20 seconds, so it fails by name rather than hangs. `trigger-now` is attended and gets the 120-second window and the notice. `blowhorn chrome status` shows the mode a run would use right now; see [Launch modes](/docs/reference/chrome/#launch-modes) and [Choose how Blowhorn reaches Chrome](/docs/how-to/settings/launch-mode/).
 
 `--pace` controls the speed of randomised delays between actions. Use a preset name (`fast` = 0.5×, `normal` = 1.0×, `slow` = 2.0×) or any positive number as a multiplier (e.g. `--pace 0.25` for quarter-speed delays, `--pace 3` for triple). The default is `normal`. Can also be set via the `BLOWHORN_PACE` env var or the `pace` key in `.blowhorn.yaml` defaults; the precedence is always the flag, then the env var, then the config key.
 
@@ -122,7 +122,7 @@ address instead of opening it, and `--json` opens nothing either, its first line
 which is how the desktop app runs it; `BLOWHORN_CLOUD_TOKEN` still wins when set);
 `auth logout` revokes the saved API token on Blowhorn, then forgets it,
 the account in `cloud.yaml` and the local attestation cache
-(a `cloud.yaml` written for another macOS user on this computer is ignored, so you read as signed out until you sign in);
+(a `cloud.yaml` written for another macOS user on this Mac is ignored, so you read as signed out until you sign in);
 `auth switch-organization` switches the signed-in account to another of its organizations in place
 ([auth switch-organization](/docs/reference/cli/auth/#blowhorn-auth-switch-organization)).
 
@@ -135,8 +135,8 @@ maps each cause to its fix. There is no local or self-hosted store to connect
 to. `blowhorn config get <key>` reads one option and says which document holds it.
 
 `blowhorn setup` is a single command: it checks that `blowhorn` is on `PATH`,
-reads your browser profiles from the browser's `Local State` file, writes the browser
-native host when it is missing or stale - after saying which browser profiles it
+reads your Chrome profiles from Chrome's `Local State` file, writes the Chrome
+native host when it is missing or stale - after saying which Chrome profiles it
 reaches and asking - and checks the Blowhorn sign-in, then lists the steps
 left for you. Each step reports `ok`, `changed`, `planned`, `declined`, `todo`
 or `failed`, so a re-run is safe and says what it changed. `--dry-run` writes
@@ -147,7 +147,7 @@ It exits 1 when a step failed. See
 
 `blowhorn uninstall` is a single command: it removes Blowhorn from this
 machine, in order - the background service (`ai.blowhorn.service`, booted out
-and its LaunchAgent file removed), the browser native host (the
+and its LaunchAgent file removed), the Chrome native host (the
 `com.blowhorn.chrome_extension` manifest, its launcher under
 `~/Library/Application Support/Blowhorn`, and the every-profile install entries
 `chrome extension-install --all-profiles` wrote), the `~/.local/bin/blowhorn`
@@ -169,16 +169,16 @@ The sign-in on this machine (the Keychain item `ai.blowhorn.cloud-token`, the
 entitlement cache `ai.blowhorn.entitlement.v2`, `cloud.yaml` and the `cloud-token`
 file) is removed on every uninstall. Local data is kept and named (the store
 connection file an older version wrote, which Blowhorn no longer reads, the
-desktop app's state, Blowhorn's own browser trees under `~/.blowhorn`, the app's
+desktop app's state, Blowhorn's own Chrome trees under `~/.blowhorn`, the app's
 per-user Library state and the checkout's `data/cache/`, which holds each
 profile's runtime state); `--purge` removes it after you type `purge` at the prompt, or with
 `--yes` when there is no terminal (`--json --purge` needs `--yes` outside a dry
 run, and `--yes` without `--purge` or `--discard-unsynced-runs` is refused). Your Blowhorn account is never touched.
 Dragging the app to the Trash does not run this command. After this version has recorded the bundle once, the next launch of a different copy signs out, unless that copy is a genuine Blowhorn signed by Blowhorn's own developer team (another macOS user on this Mac reinstalling Blowhorn does not sign you out). An in-app update keeps the sign-in. The first launch of this version keeps it.
-Nothing under a browser profile is read or written. It is refused by name, in a
+Nothing under a Chrome profile is read or written. It is refused by name, in a
 dry run too, while a scheduler tick, a service pass, an extension run,
 `Blowhorn.app`, a desktop app started from this checkout or, with `--purge`,
-a browser on `~/.blowhorn` is running, and in every mode while a
+a Chrome on `~/.blowhorn` is running, and in every mode while a
 write-back spool (`runs/pending-store.ndjson`) this run removes - under the
 checkout's `data/logs/`, or the app's state under `--purge` - holds run records that
 have not reached your account - run `blowhorn store --replay-spool` first,
@@ -199,56 +199,56 @@ itself. macOS only; Linux and any other platform are refused by name.
 `blowhorn chrome` is a group of eight: `chrome profiles` lists the profiles the
 installed Google Chrome knows (directory, display name, signed-in account, the
 last-used one marked, and the Blowhorn profile each is mapped to on this
-machine), `chrome status` reports whether the browser is installed, running and open
+machine), `chrome status` reports whether Chrome is installed, running and open
 to remote debugging with one next-step line when something is off, `chrome
 suggest` prints a name-matched mapping proposal and applies nothing,
 `chrome map <profile> <directory>` / `chrome unmap <profile>` are the mapping's
 only writers, `chrome attach-chrome [status|start|signin|stop|install-agent|uninstall-agent]` reports, starts,
 signs in, stops or keeps up at login a
-dedicated second browser that is open to remote debugging with no Allow dialog
-(`~/.blowhorn/attach-chrome`, on a port the browser picks, bound to 127.0.0.1; any program running as you on
+dedicated second Chrome that is open to remote debugging with no Allow dialog
+(`~/.blowhorn/attach-chrome`, on a port Chrome picks, bound to 127.0.0.1; any program running as you on
 this Mac can drive it), writing no configuration of its own,
-and `chrome extension-install` writes the native-messaging host manifest the browser
+and `chrome extension-install` writes the native-messaging host manifest Chrome
 launches (`com.blowhorn.chrome_extension.json`) and the executable launcher it names, and prints
 the unpacked `extension/` directory to load. If you already installed the host, run the
 command again and reload the extension once. `--profile <name>` (through this machine's
-mapping) or `--chrome-profile '<directory>'` names one browser profile and prints the steps to
-load the extension in that profile alone. `--all-profiles` also asks the browser to
-install the extension in every browser profile on this machine (the policy by default,
+mapping) or `--chrome-profile '<directory>'` names one Chrome profile and prints the steps to
+load the extension in that profile alone. `--all-profiles` also asks Chrome to
+install the extension in every Chrome profile on this machine (the policy by default,
 or `--external` for the offer in each profile). `--dry-run` prints the paths,
 the host manifest, and the policy: on macOS only the `ExtensionInstallForcelist`
 fragment of the shared plist (other keys in that file are preserved and not
 printed), on Linux the exact JSON Blowhorn's own `blowhorn.json` must contain,
 preserved keys included. It writes nothing.
-It does not launch the browser. `chrome extension-status` reports whether the extension
-is installed, which install route is on disk, which browser profiles hold a Chrome Web Store install, and whether the
-browser extension answers hello. It reads the manifest, the launcher, the policy, each browser profile's
+It does not launch Chrome. `chrome extension-status` reports whether the extension
+is installed, which install route is on disk, which Chrome profiles hold a Chrome Web Store install, and whether the
+Chrome extension answers hello. It reads the manifest, the launcher, the policy, each Chrome profile's
 `Secure Preferences` and `Preferences` (only for the extension's entry) and the socket, stats the external-extensions file and does not read it, and writes only the bridge lock, exiting 0 whatever it
 reports.
-`chrome extension-enable --chrome-profile '<directory>'` asks the browser to open the extension's
-Chrome Web Store page in each browser profile named (repeat the flag for more than one), so one click there turns the extension on; it reads only `Local State` to check each
-directory, writes nothing, and with `--json` reports `ok: false` and exits 1 when the browser was
+`chrome extension-enable --chrome-profile '<directory>'` asks Chrome to open the extension's
+Chrome Web Store page in each Chrome profile named (repeat the flag for more than one), so one click there turns the extension on; it reads only `Local State` to check each
+directory, writes nothing, and with `--json` reports `ok: false` and exits 1 when Chrome was
 asked in no profile. `chrome extension-status --json` reports each profile's state as
 `profile_states` (`enabled`, `disabled`, `removed` or `absent`).
-All but `chrome unmap`, `chrome extension-install`, `chrome extension-status`, `chrome extension-enable` and `chrome extension-mode` read two files under a browser data
+All but `chrome unmap`, `chrome extension-install`, `chrome extension-status`, `chrome extension-enable` and `chrome extension-mode` read two files under a Chrome data
 directory (`Local State`, `DevToolsActivePort`) and nothing else - `attach-chrome`
 reads the dedicated tree's pair rather than the daily one's, plus its `SingletonLock`; `chrome unmap`
 reads only your account, so a mapping can be removed when those files are gone;
 `chrome extension-install --all-profiles` also reads `Local State` in the
-configured browser data directory, only to name each browser profile there, and
+configured Chrome data directory, only to name each Chrome profile there, and
 does not list profiles outside that directory. The policy route applies the
-extension to every browser profile on this machine. It does not read `DevToolsActivePort`;
+extension to every Chrome profile on this machine. It does not read `DevToolsActivePort`;
 `chrome extension-status` reads the manifest, the launcher, the unpacked
-extension, the policy file, each browser profile's `Secure Preferences` and
-`Preferences`, and the browser extension socket it says hello to, stats the external-extensions file and does not read it, and writes nothing but the
+extension, the policy file, each Chrome profile's `Secure Preferences` and
+`Preferences`, and the Chrome extension socket it says hello to, stats the external-extensions file and does not read it, and writes nothing but the
 bridge lock beside that socket; while a run holds the bridge it says so and
 writes no hello.
-`chrome extension-mode` reads no browser file: it reads or writes the extension
+`chrome extension-mode` reads no Chrome file: it reads or writes the extension
 mode in your Blowhorn account.
 `attach-chrome start` and `attach-chrome signin` start a browser, and neither drives the one it
-starts; `chrome map` and `chrome extension-enable` ask the installed browser to open a window on one
-page, which starts the browser and leaves it running when none is running, and drive nothing; `attach-chrome stop` quits only the browser holding that tree. All carry a stable `--json` shape; every detail is in the [Browser reference](/docs/reference/chrome/),
-the procedure in [Map Blowhorn profiles to browser profiles](/docs/how-to/set-up/map-chrome-profiles/).
+starts; `chrome map` and `chrome extension-enable` ask the installed Chrome to open a window on one
+page, which starts Chrome and leaves it running when none is running, and drive nothing; `attach-chrome stop` quits only the Chrome holding that tree. All carry a stable `--json` shape; every detail is in the [Chrome reference](/docs/reference/chrome/),
+the procedure in [Map Blowhorn profiles to Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/).
 The mapping is identity, never permission, and nothing that runs a browser
 reads it yet. The directory is `defaults.chrome.data_dir` /
 `BLOWHORN_CHROME_DATA_DIR`. `blowhorn profile status --chrome` shows the mapping

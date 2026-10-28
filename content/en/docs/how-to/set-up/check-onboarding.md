@@ -7,12 +7,12 @@ weight: 36
 
 `make onboarding-e2e` walks the desktop app's first-muster wizard from sign-in
 through a dry run of the first post, and Create account on its own. It uses the app you just built
-(`desktop/out`), a local stand-in for the Blowhorn service, and a throwaway browser
+(`desktop/out`), a local stand-in for the Blowhorn service, and a throwaway Chrome
 profile. It does not sign in to a social platform, and it does not open your
-own browser profile. The throwaway browser has two profiles, as a person's now
-does: the browser's main profile, started once and left empty, and a second profile
+own Chrome profile. The throwaway Chrome has two profiles, as a person's now
+does: Chrome's main profile, started once and left empty, and a second profile
 set aside for Blowhorn, which gets the extension and any planted logins. The
-walk passes the browser profile intro and checks that the main profile is listed
+walk passes the Chrome profile intro and checks that the main profile is listed
 with no **Use with Blowhorn** switch.
 
 The throwaway home is seeded from the same `.blowhorn.yaml` a packaged app
@@ -24,7 +24,7 @@ publishing it.
 
 It runs four walks. The happy path and `linkedin-session` are the same walk,
 but `linkedin-session` first plants a cookie named `li_at` in the throwaway
-browser profile. Only the cookie's name matters, as with the planted Slack
+Chrome profile. Only the cookie's name matters, as with the planted Slack
 login. With the cookie, Confirm and then Check again have to record exactly
 one LinkedIn account in the local Cloud: connected, with no credential,
 and mapped to the new profile. `blowhorn profile accounts` has to list it
@@ -38,9 +38,9 @@ After setup, both walks also check the console a new person sees:
   coming back.
 - **Connect an account** (happy path only, where nothing is connected yet):
   Home's button opens its own step, not the Profiles table. LinkedIn's row
-  there says which browser profile to sign in to and offers **Open LinkedIn
+  there says which Chrome profile to sign in to and offers **Open LinkedIn
   sign-in** and **Check again**, with no form field.
-- **Check again:** on the browser profiles step and in **Profiles › chrome
+- **Check again:** on the Chrome profiles step and in **Profiles › chrome
   profiles** after setup, each press must read **Checking…** while it runs
   and then leave a result line. With the planted cookie, the walk marks the
   LinkedIn account disconnected in the local Cloud first: the press must
@@ -50,9 +50,9 @@ After setup, both walks also check the console a new person sees:
   guidance (or, with the planted cookie, that LinkedIn is connected) and a
   **Check again** button. It shows no setting name like `LI_PASSWORD`, no
   password field, no **advanced** section (by its label or its slot) and no raw `LI_`, `X_` or `RDDT_`
-  field: LinkedIn's sign-in is the person's own browser session.
+  field: LinkedIn's sign-in is the person's own Chrome session.
   `blowhorn chrome open-profile <profile> --sign-in linkedin --dry-run` must pick the
-  browser profile confirm mapped.
+  Chrome profile confirm mapped.
 - **New activity:** `blowhorn schedule destinations` reports no blog set up
   for the local organization, and the picker offers no organization
   blog action. The unit tests cover an organization that has one.
@@ -88,11 +88,11 @@ node desktop/scripts/onboarding-e2e.mjs --app /path/to/Blowhorn.app
 
 The check walks the variants in turn; `--variant <name>` runs one:
 
-- **happy:** sign in, assign the browser profile, get ready, and queue the
+- **happy:** sign in, assign the Chrome profile, get ready, and queue the
   first post, through to the dry run.
 - **linkedin-session:** the same walk with a planted `li_at` cookie, so
   LinkedIn is found signed in and recorded as a connected account.
-- **empty-profile:** a new organization with one browser profile and no
+- **empty-profile:** a new organization with one Chrome profile and no
   saved logins.
 - **sign-up:** Create account. It checks that the browser opens Blowhorn's
   sign-up page (`/registration`), never the sign-in page, and that once the
@@ -111,7 +111,7 @@ Every walk also checks three things that a real re-run once got wrong:
   second tab on the Cloud dashboard.
 - **The app quits on `SIGTERM`.** Each walk ends by sending the app
   `SIGTERM`. The app and every process it started must be gone within 10
-  seconds with no `SIGKILL`, and no browser may be left on the throwaway
+  seconds with no `SIGKILL`, and no Chrome may be left on the throwaway
   folder.
 
 The app always runs with `BLOWHORN_USER_DATA_DIR` set, and the check refuses to
@@ -134,17 +134,17 @@ The same script is what `make onboarding-e2e` runs.
 A program the check starts opens the sign-in URL. Your default browser
 stays closed, including on macOS.
 
-On macOS the Google Chrome for this check is launched with a throwaway
+On macOS the Chrome for this check is launched with a throwaway
 `--user-data-dir` under the system temp directory, `--use-mock-keychain`,
 and `--password-store=basic`. A user-data directory outside that temp
-directory is refused. Every browser Blowhorn itself starts on that folder
+directory is refused. Every Chrome Blowhorn itself starts on that folder
 during the check, such as the extension's store page during setup, carries
 the same two switches, so macOS never shows "Keychain Not Found". The
-throwaway browser profile has no Google account, like many people's: the
+throwaway Chrome profile has no Google account, like many people's: the
 email in the wizard is what finds the person in the local Cloud. The happy
 path ends by checking that `blowhorn chrome profiles --json` still reports
-identity `ok` for the browser profile it mapped. A `drift` there means the
-mapping no longer matches what the browser shows, and every later run of that
+identity `ok` for the Chrome profile it mapped. A `drift` there means the
+mapping no longer matches what Chrome shows, and every later run of that
 profile would be refused. If branded Chrome cannot load the unpacked extension,
 the check uses a cached Chrome for Testing build. The check also sets
 `BLOWHORN_KEYCHAIN=0`, so the engine keeps the fixture token in the

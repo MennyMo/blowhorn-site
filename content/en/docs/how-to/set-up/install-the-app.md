@@ -40,19 +40,20 @@ The line for `Blowhorn-mac.dmg` must read `OK`.
    disk image disappears when you eject it, so the app does not use its
    engine there and asks you to move it to Applications.
 
-You need macOS 13 or newer and Google Chrome, the browser Blowhorn works
-with today. No browser is bundled: Blowhorn
-drives the browser profiles you already sign in to, through its browser
-extension, which you add to each browser profile you post from
-([Install the browser extension](/docs/how-to/set-up/install-the-chrome-extension/)).
+You need macOS 13 or newer (Apple silicon or Intel) and Google Chrome 142
+or newer. Chrome is not bundled: Blowhorn
+drives the Chrome profiles you already sign in to, through its Chrome
+extension, which you add to each Chrome profile you post from
+([Install the Chrome extension](/docs/how-to/set-up/install-the-chrome-extension/)).
+See [System requirements](/docs/reference/requirements/).
 
 ## First muster
 
 The app opens on its Setup screen until its engine is ready; after that the
 guided setup takes over (see below). Setup checks, in order, the engine
 (bundled in the app), its helper tools, the connection to your organization's
-data, your browser profile mappings
-([Map Blowhorn profiles to browser profiles](/docs/how-to/set-up/map-chrome-profiles/)), and
+data, your Chrome profile mappings
+([Map Blowhorn profiles to Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/)), and
 the background service. Each activity says what it found, or what to do next.
 Every activity is described under Setup in
 [The Blowhorn app, screen by screen](/docs/reference/use-the-desktop-app/#setup).
@@ -64,12 +65,12 @@ app does not read them. If the engine in the app cannot start, Setup says so
 in one line; [Fix an engine that won't start](/docs/how-to/troubleshoot/engine-wont-start/)
 walks through it.
 
-Connecting the Blowhorn browser extension to this computer takes no pop-up:
+Connecting the Blowhorn Chrome extension to this computer takes no pop-up:
 
 - **Connect it today:** the guided setup's **Getting ready** step connects
   it. The extension can then reach the
-  app from every browser profile. The browser is not opened and no browser
-  setting changes.
+  app from every Chrome profile. Chrome is not opened and no Chrome setting
+  changes.
 - **Launching the app changes nothing:** it only looks. Nothing is written
   until you connect.
 - **Safe to repeat:** if it's already connected, nothing is written again.
@@ -137,6 +138,6 @@ takes and what to do if it stalls.
   background service, quitting, and updates.
 - [The Blowhorn app, screen by screen](/docs/reference/use-the-desktop-app/) -
   every screen, including Setup.
-- [Install the browser extension](/docs/how-to/set-up/install-the-chrome-extension/) - the
-  extension each mapped browser profile needs.
+- [Install the Chrome extension](/docs/how-to/set-up/install-the-chrome-extension/) - the
+  extension each mapped Chrome profile needs.
 - [Uninstall Blowhorn](/docs/how-to/manage/uninstall/) - remove it cleanly

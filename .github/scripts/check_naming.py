@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Fail if the built site names the service anything but Blowhorn, or says machines or Macs.
+"""Fail if the built site names the service anything but Blowhorn, says machines or Macs,
+or blurs the Google Chrome requirement.
 
 Users see one product, Blowhorn: they sign in at cloud.blowhorn.ai and
 there is no "Layer5 Cloud" or "Blowhorn Cloud" (Yi, 2026-10-20). Layer5,
@@ -30,7 +31,17 @@ layer5io/... repository links and file names pass.
   computers (or soldiers, recruits, battalion), never Macs (Yi,
   2026-10-20). "macOS", "for Mac" on a download button and the
   Blowhorn-mac.dmg file name pass; docs keep macOS-specific detail.
-- Text in <code> or <pre> passes both rules: a command, flag or printed
+- A vague browser requirement ("Google Chrome is required for now",
+  "Google Chrome, for now", "Support for more browsers is planned")
+  fails on every page. Download and install pages state the exact
+  requirement with versions ("Requires macOS 13 or newer and Google
+  Chrome 142 or newer"); marketing pages link to System requirements
+  (Lee, 2026-10-28, replacing #288's "for now" note).
+- "browser profile" or "browser extension" fails in the docs. Docs about
+  using the app or the CLI name Google Chrome and Chrome profiles, as the
+  app's own labels do, because the reader must use Chrome there. The CLI
+  reference (docs/reference/cli/) comes from --help text and passes.
+- Text in <code> or <pre> passes these rules: a command, flag or printed
   line is quoted as the software writes it.
 
 Usage: check_naming.py [BUILD_DIR]
@@ -51,6 +62,11 @@ MACHINE_IDIOM_RE = re.compile(
     r"\bmachines?(?:\s+learning|-readable|\s+readable)\b|\bstate\s+machines?\b"
     r"|\b(?:posting|outbound)\s+machines?\b", re.I)
 MACS_RE = re.compile(r"\bMacs\b|\b(?:your|my|this|every)\s+(?:own\s+)?Mac\b|\bown\s+Mac\b", re.I)
+VAGUE_BROWSER_RE = re.compile(
+    r"\bChrome(?: is required)?,? for now\b|\bsupport for more browsers\b|\bmore browsers (?:is|are) planned\b", re.I)
+CHROME_WORD_RE = re.compile(r"\bbrowser[- ](?:profiles?|extensions?)\b", re.I)
+# Pages that must say Chrome profile and Chrome extension: the docs, minus the CLI's --help text.
+CHROME_WORDS_PREFIX = "docs/"
 # Pages where "machine" may stay: generated from the CLI's --help text.
 MACHINE_ALLOWED_PREFIXES = ("docs/reference/cli/",)
 # Pages where "Macs" may stay: macOS-specific docs and the archived original home.
@@ -130,6 +146,7 @@ def page_problems(rel: str, html: str) -> list[str]:
     company_ok = rel in COMPANY_ALLOWED
     macs_ok = rel.startswith(MACS_ALLOWED_PREFIXES)
     machine_ok = rel.startswith(MACHINE_ALLOWED_PREFIXES)
+    chrome_words = rel.startswith(CHROME_WORDS_PREFIX) and not machine_ok
     for text, company_here, in_code in reader.out:
         text = " ".join(text.split())
         for m in CLOUD_RE.finditer(text):
@@ -143,6 +160,12 @@ def page_problems(rel: str, html: str) -> list[str]:
         if not macs_ok and not in_code:
             for m in MACS_RE.finditer(text):
                 found.append(f'{rel}: says "{m.group(0)}" (say computers): ...{snippet(text, m)}...')
+        if not in_code:
+            for m in VAGUE_BROWSER_RE.finditer(text):
+                found.append(f'{rel}: says "{m.group(0)}" (state the requirement with versions): ...{snippet(text, m)}...')
+            if chrome_words:
+                for m in CHROME_WORD_RE.finditer(text):
+                    found.append(f'{rel}: says "{m.group(0)}" (say Chrome profile or Chrome extension in the docs): ...{snippet(text, m)}...')
         if company_ok or company_here:
             continue
         for m in COMPANY_RE.finditer(text):
@@ -175,7 +198,7 @@ def main(argv: list[str]) -> int:
     for line in failures:
         print(f"check_naming: {line}", file=sys.stderr)
     if failures:
-        print(f"check_naming: {len(failures)} naming problem(s). Users see Blowhorn (sign in at cloud.blowhorn.ai); Layer5 only in the footer and legal pages; computers, never machines or Macs.", file=sys.stderr)
+        print(f"check_naming: {len(failures)} naming problem(s). Users see Blowhorn (sign in at cloud.blowhorn.ai); Layer5 only in the footer and legal pages; computers, never machines or Macs; the Google Chrome requirement stated with versions.", file=sys.stderr)
         return 1
     print("check_naming: ok")
     return 0

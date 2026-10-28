@@ -12,7 +12,7 @@ sitemap:
 
 ## 1. Download the Blowhorn app {#download-the-app}
 
-The app is for macOS. [Download Blowhorn](/download/), open the disk image and drag Blowhorn to Applications.
+[Download Blowhorn](/download/), open the disk image and drag Blowhorn to Applications.
 
 ## 2. Sign in to your account {#sign-in}
 

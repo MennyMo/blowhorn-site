@@ -5,7 +5,7 @@ weight: 192
 ---
 
 
-Sessions expire. When one does, sign in again by hand in the mapped browser
+Sessions expire. When one does, sign in again by hand in the mapped Chrome
 profile, or run `blowhorn profile auth` for that platform. Scheduled passes
 never wait for a person: an unattended job whose session is gone fails by
 name instead of hanging.
@@ -13,7 +13,7 @@ name instead of hanging.
 ## LinkedIn
 
 When LinkedIn challenges the session or signs it out, the run stops and names
-the step. Sign in again in the mapped browser profile's window, complete any
+the step. Sign in again in the mapped Chrome profile's window, complete any
 challenge LinkedIn shows, then run again. If the challenge keeps returning,
 pause the schedule until it clears so no pass spends itself against it.
 
@@ -40,7 +40,7 @@ again.
 
 ## Reddit
 
-When Reddit reports the session expired, sign in again in the mapped browser
+When Reddit reports the session expired, sign in again in the mapped Chrome
 profile and run again. A failed step leaves a screenshot and a scrubbed copy
 of the page under the checkout's `data/cache/diagnostics/<profile>/` directory, and
 names the step and the reason. Field values are never in that copy.
@@ -52,7 +52,7 @@ completes nothing on your behalf, and leaves the page where it is. Complete
 the challenge once by hand, then run again. For a login that always needs you
 present, run with `--headed` so the window stays visible.
 
-If challenges keep coming back in one browser profile, open the free check at
+If challenges keep coming back in one Chrome profile, open the free check at
 [Blowhorn Tells](https://tells.blowhorn.ai/) in that profile. It shows what
 sites can see about the browser, such as a VPN or proxy, an automation flag, or
 a WebRTC address that doesn't match your connection. Pause the schedule while
@@ -64,5 +64,5 @@ you sort it out.
 - [Troubleshooting](/docs/how-to/troubleshoot/troubleshooting/) - start from a symptom instead
 - [Blowhorn Tells](https://tells.blowhorn.ai/) - a free check of what sites can see about your browser
 - [Pause and resume posting](/docs/how-to/schedule/pause/) - hold the schedule while a challenge clears
-- [Choose how Blowhorn reaches your browser](/docs/how-to/settings/launch-mode/) - which mode a sign-in runs under
+- [Choose how Blowhorn reaches Chrome](/docs/how-to/settings/launch-mode/) - which mode a sign-in runs under
 - [You're in control](/docs/explanation/youre-in-control/) - why CAPTCHAs and 2FA are left to you
