@@ -1,6 +1,6 @@
 ---
 title: "Won or lost in the first hour"
-summary: "Feeds show a new post to a few people first and widen its reach only if they respond. Here is what that early test looks like, what each platform has and hasn't said about it, and how to schedule so the first hour has readers in it."
+summary: "Feeds are widely believed to show a new post to a few people first and widen its reach only if they respond. Here is what that early test looks like, what each platform has and hasn't said about it, and how to schedule so the first hour has readers in it."
 date: 2026-10-28
 author: "Blowhorn team"
 layout: article
@@ -11,9 +11,9 @@ tags: ["in-product-intelligence", "reading-results"]
 
 ## How the early test works
 
-Most ranked feeds work in stages. A new post goes to a small slice of your audience first. The feed watches what that slice does: replies, likes, shares, saves, time spent reading or watching, profile visits. If the response is strong, the post goes out wider; if it is flat, the feed moves on.
+Hypothesis: most ranked feeds work in stages. A new post goes to a small slice of your audience first. The feed watches what that slice does: replies, likes, shares, saves, time spent reading or watching, profile visits. If the response is strong, the post goes out wider; if it is flat, the feed moves on.
 
-That is why early engagement gets so much weight. It is not that minute 59 is magic. It is that the first readers are the test, and a test with nobody in the room tells the feed nothing good.
+If that is right, early engagement carries so much weight. It is not that minute 59 is magic. It is that the first readers are the test, and a test with nobody in the room tells the feed nothing good.
 
 ## What each platform has said, and hasn't
 
@@ -36,7 +36,7 @@ The first hour is a strong signal, not the only one. A few things the rule of th
 The practical move is not to chase the first hour. It is to make sure the first hour has readers in it.
 
 1. **Post at the audience's hour.** Schedule for when your readers are awake and scrolling, not when you finished writing. [The scheduling craft](/resources/articles/the-scheduling-craft/) covers picking those times.
-2. **Be there to answer.** Replies, and especially replies you answer, are the heaviest signal X ever published. Schedule posts for a time you can follow up yourself, by hand.
+2. **Be there to answer.** In X's 2023 ranking weights, replies, and especially replies the author answers, scored among the highest positive weights; X says it has adjusted them since ([X briefing](/field-manual/x/)). Schedule posts for a time you can follow up yourself, by hand.
 3. **Don't stack your own posts.** Two of your posts in the same hour compete for the same first readers. Space them out; X's published ranking even discounts each post after an author's first.
 4. **Never manufacture the first hour.** Pods, trades and your own accounts piling on are exactly what the platforms prohibit. The [Field Manual](/field-manual/) quotes each rule.
 
