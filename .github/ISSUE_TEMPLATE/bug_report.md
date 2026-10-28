@@ -1,6 +1,6 @@
 ---
 name: 🐛 General Bug Report
-about: Report an issue to help improve the project.
+about: Report an issue to help improve Blowhorn.
 title: ''
 labels: 'kind/bug'
 assignees: ''
@@ -12,14 +12,13 @@ assignees: ''
 <!-- A brief description of what you expected to happen. -->
 
 ### Screenshots/Logs
-<!-- Add screenshots, if applicable, to help explain your problem. -->
+<!-- Add screenshots, logs, or screen recordings to help explain your problem. -->
 
 ### Environment
-
-- **Host OS:** Mac Linux Windows
-- **Platform:** Docker or Kubernetes
-- **Meshery Server Version:** stable-v
-- **Meshery Client Version:** stable-v
+- **Component:** macOS Desktop App / Chrome Extension / Marketing Site (Hugo)
+- **Blowhorn Version / Release:** <!-- e.g. v1.37.0 or commit hash -->
+- **Host OS:** macOS / Linux / Windows
+- **Browser (if applicable):** Chrome / Safari / Firefox / Edge
 
 <!-- Optional 
 #### To Reproduce
@@ -30,9 +29,8 @@ assignees: ''
 -->
 
 ---
-#### Contributor [Guides](https://docs.meshery.io/project/contributing) and Resources
-- 🛠 [Meshery Build & Release Strategy](https://docs.meshery.io/project/build-and-release)
-- 📚 [Instructions for contributing to documentation](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#documentation-contribution-flow)
-   - Meshery documentation [site](https://docs.meshery.io/) and [source](https://github.com/meshery/meshery/tree/master/docs)
-- 🎨 Wireframes and [designs for Layer5 site](https://www.figma.com/file/5ZwEkSJwUPitURD59YHMEN/Layer5-Designs) in Figma [(open invite)](https://www.figma.com/team_invite/redeem/GvB8SudhEOoq3JOvoLaoMs)
-- 🙋🏾🙋🏼 Questions: [Layer5 Discussion Forum](https://discuss.layer5.io) and [Layer5 Community Slack](http://slack.layer5.io)
+#### Contributor Guides and Resources
+- 📚 [Blowhorn Documentation](https://blowhorn.ai/docs)
+- 🤝 [Contributing Guidelines](https://github.com/blowhorn-ai/blowhorn-site/blob/master/CONTRIBUTING.md)
+- 🛠 [Local Build & Check Strategy](https://github.com/blowhorn-ai/blowhorn-site#working-on-the-site) (`make site` / `make check`)
+- 🙋🏾🙋🏼 Questions: [Layer5 Community Slack](http://slack.layer5.io) (#websites)
