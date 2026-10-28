@@ -23,7 +23,7 @@ renderSegments = ["internal"]
   internal_edit_repo = "https://github.com/blowhorn-ai/blowhorn"
   internal_edit_branch = "master"
   [params.internal_edit_path_base]
-    from = '^.*?/((?:marketing/strategy|internal/[a-z-]+)/hugo/.*|internal/(?:design|specs|plans|research)/.*)$'
+    from = '^.*?/((?:marketing/strategy|marketing/brand|internal/[a-z-]+)/hugo/.*|internal/(?:design|specs|plans|research)/.*)$'
     to = '$1'
 
 # Only this environment mounts static-internal/ (see [module] below): its
@@ -93,6 +93,22 @@ renderSegments = ["internal"]
     [[module.imports.mounts]]
       source = "marketing/capability-comparison/compare-segments.csv"
       target = "assets/internal/compare-segments.csv"
+    # Marketing asset catalog: the section page and the generated kind pages
+    # (make assets-catalog in blowhorn). The section page's weight places it
+    # after the other internal sections.
+    [[module.imports.mounts]]
+      source = "marketing/brand/hugo/assets"
+      target = "content/internal/assets"
+    # The asset index as a plain file, linked from the catalog for scripts.
+    [[module.imports.mounts]]
+      source = "marketing/assets.manifest.json"
+      target = "static/internal/marketing-assets/assets.manifest.json"
+    # Cast thumbnails for the catalog: the 640-wide webp files only, never the
+    # full-size originals or the 1280 webp.
+    [[module.imports.mounts]]
+      source = "marketing/brand/cast"
+      target = "static/internal/marketing-assets/brand/cast"
+      files = ["**/*-640.webp"]
     # Engineering research pages (Hugo markdown and page bundles).
     [[module.imports.mounts]]
       source = "internal/engineering/hugo/engineering"
