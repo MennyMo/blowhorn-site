@@ -30,8 +30,6 @@ layer5io/... repository links and file names pass.
   computers (or soldiers, recruits, battalion), never Macs (Yi,
   2026-10-20). "macOS", "for Mac" on a download button and the
   Blowhorn-mac.dmg file name pass; docs keep macOS-specific detail.
-  MACS_ALLOWED_SENTENCES lists whole approved sentences that pass
-  verbatim anywhere; every other "Mac" in the same text still fails.
 - Text in <code> or <pre> passes both rules: a command, flag or printed
   line is quoted as the software writes it.
 
@@ -53,11 +51,6 @@ MACHINE_IDIOM_RE = re.compile(
     r"\bmachines?(?:\s+learning|-readable|\s+readable)\b|\bstate\s+machines?\b"
     r"|\b(?:posting|outbound)\s+machines?\b", re.I)
 MACS_RE = re.compile(r"\bMacs\b|\b(?:your|my|this|every)\s+(?:own\s+)?Mac\b|\bown\s+Mac\b", re.I)
-# Whole sentences that may say Mac, exactly as written, anywhere. Only an
-# approved, signed-off line goes here, with who approved it:
-# - the r2-every-mac home page hero (data/hero.json), Blowhorn Marketing
-#   round 2, approved verbatim by Lee for the rotation (2026-10-27).
-MACS_ALLOWED_SENTENCES = ("Every Mac you own, reporting for duty.",)
 # Pages where "machine" may stay: generated from the CLI's --help text.
 MACHINE_ALLOWED_PREFIXES = ("docs/reference/cli/",)
 # Pages where "Macs" may stay: macOS-specific docs and the archived original home.
@@ -148,11 +141,7 @@ def page_problems(rel: str, html: str) -> list[str]:
                     continue
                 found.append(f'{rel}: says "{m.group(0)}" (say computer): ...{snippet(text, m)}...')
         if not macs_ok and not in_code:
-            allowed = [(i.start(), i.end()) for sentence in MACS_ALLOWED_SENTENCES
-                       for i in re.finditer(re.escape(sentence), text)]
             for m in MACS_RE.finditer(text):
-                if any(a <= m.start() < b for a, b in allowed):
-                    continue
                 found.append(f'{rel}: says "{m.group(0)}" (say computers): ...{snippet(text, m)}...')
         if company_ok or company_here:
             continue

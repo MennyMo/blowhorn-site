@@ -55,7 +55,7 @@ order, have a headline only, no subhead and no `cta`, so their secondary button 
 | `r2-scarecrows` | Bought likes are scarecrows with thumbs up. |
 | `r2-manners` | Automation with manners. |
 | `r2-backup` | Not a bot. Just you, with backup. |
-| `r2-every-mac` | Every Mac you own, reporting for duty. |
+| `r2-every-computer` | Every computer you own, reporting for duty. |
 | `r2-army-marches` | Close your laptop. The army keeps marching. |
 | `r2-halt` | Second thoughts? One button halts the whole army. |
 | `r2-juggling` | Juggling clients? Put the balls down. |
@@ -66,11 +66,8 @@ order, have a headline only, no subhead and no `cta`, so their secondary button 
 | `r2-crickets` | Built by a tiny team that got tired of crickets. |
 | `r2-ai-orders` | Let your AI give the orders. Blowhorn follows them. |
 
-`r2-every-mac` says "Mac", which marketing copy otherwise never does (computers, never
-Macs). Its exact sentence is the one entry in `MACS_ALLOWED_SENTENCES` in
-`.github/scripts/check_naming.py`, so it passes `make check-naming` verbatim and nothing
-else does. Rewording it (for example "Every computer you own, reporting for duty.") means
-removing that entry too.
+Hero copy says computer, never Mac, and browser, never Chrome (Lee, 2026-10-28).
+`make check-naming` enforces the Mac half, with no exceptions.
 
 `r2-remote-team` is the longest headline: check it at 1440 and 390 px wide after any
 hero type or layout change (four lines on both, no overflow).

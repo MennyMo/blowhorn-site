@@ -7,7 +7,7 @@
     "ids": [
       "plug-in-ai", "scripted-ai-ready", "same-rules", "ai-optional", "human-or-ai",
       "r2-sound-wave", "r2-advocacy", "r2-whisper", "r2-ovation", "r2-password",
-      "r2-scarecrows", "r2-manners", "r2-backup", "r2-every-mac", "r2-army-marches",
+      "r2-scarecrows", "r2-manners", "r2-backup", "r2-every-computer", "r2-army-marches",
       "r2-halt", "r2-juggling", "r2-agency-name", "r2-remote-team", "r2-no-meter",
       "r2-per-breath", "r2-crickets", "r2-ai-orders"
     ]
@@ -31,7 +31,7 @@
     {
       "id": "plug-in-ai",
       "headline": "Automate your social voice. Plug in AI anytime.",
-      "subhead": "Blowhorn posts exactly what you approve to LinkedIn, X, Reddit, Hacker News and more, from your own Chrome. Bring any AI agent, model or assistant.",
+      "subhead": "Blowhorn posts exactly what you approve to LinkedIn, X, Reddit, Hacker News and more, from your own browser. Bring any AI agent, model or assistant.",
       "cta": { "label": "See how AI fits in", "href": "/ai" },
       "differentiators": [8, 10, 12],
       "note": "AI hybrid messaging (Yi, 2026-10-20). What Blowhorn is in four words, then the hybrid: scripted posting, AI whenever you want it."
@@ -71,20 +71,20 @@
     {
       "id": "not-a-bot",
       "headline": "Not a bot. You, at full volume.",
-      "subhead": "Blowhorn does the typing and clicking in your own Chrome, signed in as you, on computers you own. No Blowhorn server ever logs in as you.",
+      "subhead": "Blowhorn does the typing and clicking in your own browser, signed in as you, on computers you own. No Blowhorn server ever logs in as you.",
       "differentiators": [8, 9],
-      "note": "Default and fallback. Leads with the claim every competitor group lacks: real Chrome, really you."
+      "note": "Default and fallback. Leads with the claim every competitor group lacks: a real browser, really you."
     },
     {
       "id": "real-you",
       "headline": "The real you, everywhere at once.",
-      "subhead": "Not a cloud bot borrowing your password. Your own Chrome, on your own computers, doing exactly what you queued.",
+      "subhead": "Not a cloud bot borrowing your password. Your own browser, on your own computers, doing exactly what you queued.",
       "differentiators": [8, 10],
       "note": "Same claim, framed against the LinkedIn tools that ask for your password."
     },
     {
       "id": "your-fleet",
-      "headline": "Your fleet. Your Chrome. Your voice.",
+      "headline": "Your fleet. Your browser. Your voice.",
       "subhead": "Install Blowhorn on every computer you own. They share one queue, act as you, and are coordinated so the same post isn't sent from two of them.",
       "differentiators": [1, 4, 8],
       "note": "The fleet of your own computers behind one coordinated queue."
@@ -99,14 +99,14 @@
     {
       "id": "own-your-voice",
       "headline": "Own your voice. Keep your accounts.",
-      "subhead": "The social console that runs in your own Chrome: LinkedIn, X, Reddit, Hacker News, Bluesky, GitHub and Slack from one queue, posted as you. About a minute to set up.",
+      "subhead": "The social console that runs in your own browser: LinkedIn, X, Reddit, Hacker News, Bluesky, GitHub and Slack from one queue, posted as you. About a minute to set up.",
       "differentiators": [8, 12],
       "note": "After bindplane.com: a category claim with concrete proof (the networks, the setup time) and an ownership close like its \"Own your telemetry. Control your costs.\""
     },
     {
       "id": "copy-paste",
       "headline": "You did not start a company to copy-paste for a living.",
-      "subhead": "Blowhorn is a Mac social media console. Write one post, and it posts, reposts, and amplifies it across your LinkedIn, X, Reddit, Hacker News, Bluesky, GitHub, and Slack profiles, from your own Chrome, as you.",
+      "subhead": "Blowhorn is a social media console. Write one post, and it posts, reposts, and amplifies it across your LinkedIn, X, Reddit, Hacker News, Bluesky, GitHub, and Slack profiles, from your own browser, as you.",
       "identification": "If this is you: you are the founder, the DevRel team, and the social team, and launch day is currently seven tabs and a prayer.",
       "differentiators": [13],
       "note": "Issue #254, tab chaos. Not in the production rotation; reachable via ?hero=copy-paste and the Easter egg hotkey."
@@ -114,7 +114,7 @@
     {
       "id": "seven-tabs",
       "headline": "Seven tabs. One post. Zero patience left.",
-      "subhead": "One queue for every profile you run. Blowhorn does the typing and clicking in your own Chrome, on a schedule you set.",
+      "subhead": "One queue for every profile you run. Blowhorn does the typing and clicking in your own browser, on a schedule you set.",
       "identification": "If this is you: you have posted it once, and you know you still have to post it six more times.",
       "differentiators": [13],
       "note": "Issue #254, tab chaos. Not in the production rotation; reachable via ?hero=seven-tabs and the Easter egg hotkey."
@@ -130,7 +130,7 @@
     {
       "id": "password-cookie-2fa",
       "headline": "Other tools want your password. And your cookie. And your 2FA secret.",
-      "subhead": "Blowhorn is a Mac social media console that acts as you, in your Chrome. Your LinkedIn, X, Reddit and Hacker News sessions stay on your computer. Your account keeps the queue in sync. Your computers do the posting.",
+      "subhead": "Blowhorn is a social media console that acts as you, in your browser. Your LinkedIn, X, Reddit and Hacker News sessions stay on your computer. Your account keeps the queue in sync. Your computers do the posting.",
       "identification": "If this is you: you have stared at a vendor login screen and thought, absolutely not, that account is the company.",
       "differentiators": [8, 9],
       "note": "Issue #254, custody. Not in the production rotation; reachable via ?hero=password-cookie-2fa and the Easter egg hotkey."
@@ -146,7 +146,7 @@
     {
       "id": "not-rental",
       "headline": "Your accounts are not a rental property.",
-      "subhead": "Blowhorn is a social media console for Mac. One queue, many profiles, and the sessions that matter stay on your computer, not on a vendor server.",
+      "subhead": "Blowhorn is a social media console for your computers. One queue, many profiles, and the sessions that matter stay on your computer, not on a vendor server.",
       "identification": "If this is you: you run client or company accounts and you have had to answer, \"where do my logins live?\"",
       "differentiators": [8, 9],
       "note": "Issue #254, custody. Not in the production rotation; reachable via ?hero=not-rental and the Easter egg hotkey."
@@ -162,7 +162,7 @@
     {
       "id": "no-begging",
       "headline": "One message. Many ears. No group-chat begging.",
-      "subhead": "Blowhorn is a Mac social media console. One message goes in, and it is broadcast, reposted, and amplified across your profiles and platforms.",
+      "subhead": "Blowhorn is a social media console. One message goes in, and it is broadcast, reposted, and amplified across your profiles and platforms.",
       "identification": "If this is you: you are tired of launch momentum depending on who happens to be online to repost you.",
       "differentiators": [2, 13],
       "note": "Issue #254, flat launch. Not in the production rotation; reachable via ?hero=no-begging and the Easter egg hotkey."
@@ -178,7 +178,7 @@
     {
       "id": "hundred-seats",
       "headline": "Enterprise advocacy tools want 100 seats. You have four people and a launch.",
-      "subhead": "Blowhorn is a Mac social media console for small technical teams. One shared queue, as many computers as you own, and amplification from every profile you run. Team onboarding is Coming soon.",
+      "subhead": "Blowhorn is a social media console for small technical teams. One shared queue, as many computers as you own, and amplification from every profile you run. Team onboarding is Coming soon.",
       "identification": "If this is you: you got a quote with a seat minimum and laughed, then cried a little.",
       "differentiators": [2, 13],
       "note": "Issue #254, startup priced out. Not in the production rotation; reachable via ?hero=hundred-seats and the Easter egg hotkey."
@@ -194,7 +194,7 @@
     {
       "id": "too-small-for-demo",
       "headline": "Built by a small team, for teams too small for the enterprise demo.",
-      "subhead": "Blowhorn is a startup social media console for Mac. We know what launch week feels like, because we live it too. One message in, many ears out, no seat math.",
+      "subhead": "Blowhorn is a startup social media console for your computers. We know what launch week feels like, because we live it too. One message in, many ears out, no seat math.",
       "identification": "If this is you: you are a 1 to 50 person technical company, and \"talk to sales\" is not a pricing plan.",
       "differentiators": [13],
       "note": "Issue #254, startup priced out. Not in the production rotation; reachable via ?hero=too-small-for-demo and the Easter egg hotkey."
@@ -248,8 +248,8 @@
       "note": "Round 2 hero line by Blowhorn Marketing (Oct 27 2026), approved by Lee for the homepage rotation."
     },
     {
-      "id": "r2-every-mac",
-      "headline": "Every Mac you own, reporting for duty.",
+      "id": "r2-every-computer",
+      "headline": "Every computer you own, reporting for duty.",
       "differentiators": [1, 4],
       "note": "Round 2 hero line by Blowhorn Marketing (Oct 27 2026), approved by Lee for the homepage rotation."
     },

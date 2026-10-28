@@ -114,18 +114,6 @@ class TheServiceIsBlowhorn(unittest.TestCase):
         })
         self.assertEqual(failures, [])
 
-    def test_an_approved_sentence_passes_verbatim_only(self):
-        self.assertEqual(self.build({
-            "index.html": page('<h1><span data-hero-only="r2-every-mac">Every Mac you own, reporting for duty.</span></h1>'),
-        }), [])
-        failures = self.build({
-            "index.html": page("<h1>Every Mac you own, reporting for duty. Your Macs too.</h1>"),
-            "pricing/index.html": page("<p>Every Mac you own, reporting for work.</p>"),
-        })
-        self.assertEqual(len(failures), 2, failures)
-        self.assertIn("Macs", failures[0])
-        self.assertIn("pricing/index.html", failures[1])
-
     def test_macs_in_prose_beside_code_still_fails(self):
         failures = self.build({"index.html": page("<p>Run <code>blowhorn</code> on all your Macs.</p>")})
         self.assertEqual(len(failures), 1)
