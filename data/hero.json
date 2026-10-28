@@ -154,7 +154,7 @@
     {
       "id": "nine-likes",
       "headline": "Your launch post deserves better than nine likes and a Slack pity-react.",
-      "subhead": "Post once, and Blowhorn amplifies it from every profile you run, in the first hour, so it does not land flat while you are still pasting it elsewhere.",
+      "subhead": "Post once, and Blowhorn amplifies it from every profile you run, in the first hour, when early replies tend to matter most, so it does not sit flat while you are still pasting it elsewhere.",
       "identification": "If this is you: you have shipped something real and then begged in Slack with \"can everyone like this?\"",
       "differentiators": [2, 13],
       "note": "Issue #254, flat launch. Not in the production rotation; reachable via ?hero=nine-likes and the Easter egg hotkey."

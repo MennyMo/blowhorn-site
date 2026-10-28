@@ -7,8 +7,8 @@ description: Prescriptive settings for the Blowhorn CLI and blowhorn-axi that ma
 lead: "Rules in, config out. Each line below maps a cited platform rule to a Blowhorn setting you can set today."
 layout: field-manual
 weight: 70
-checked: 13 October 2026
-lastmod: 2026-10-13
+checked: 28 October 2026
+lastmod: 2026-10-28
 ---
 
 ## Baseline config
@@ -32,6 +32,8 @@ blowhorn config set defaults.pace slow      # human typing, longer random pauses
 | X: no duplicates across accounts you operate ([X automation rules](https://help.x.com/en/rules-and-policies/x-automation)) | Never queue the same Message Text on two X profiles; amplify the original instead |
 | X: author diversity decay ([xai-org/x-algorithm](https://github.com/xai-org/x-algorithm)) | Space X rows hours apart, not minutes |
 | X: follows | `blowhorn follow --platform x --profile <p> --target <h> --limit 10`; Blowhorn also caps 400 a day and 15 per 15 minutes |
+| Early engagement decides reach (<span class="hypothesis">Hypothesis</span>, see [Won or lost in the first hour](/resources/articles/won-or-lost-in-the-first-hour/)) | Schedule each row for the audience's waking hours, at a time you can answer replies by hand |
+| X: replies weigh far more than likes ([twitter/the-algorithm-ml](https://github.com/twitter/the-algorithm-ml/blob/main/projects/home/recap/README.md)) | Don't stack posts in one hour; leave room to reply to each |
 | Reddit: no coordinated or multi-account voting ([Reddit Help](https://support.reddithelp.com/hc/en-us/articles/360043066412-Disrupting-Communities)) | Don't put a Reddit target in Amplify for more than one profile |
 | Reddit: no repeated comments ([Reddit Help](https://support.reddithelp.com/hc/en-us/articles/28012014962580-How-do-I-keep-spam-out-of-my-community)) | One distinct comment row per thread, each rewritten |
 | HN: no solicited votes, no generated text ([HN guidelines](https://news.ycombinator.com/newsguidelines.html)) | Blowhorn never votes; keep submissions to your own words and dry-run each one |

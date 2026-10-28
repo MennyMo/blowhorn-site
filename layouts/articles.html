@@ -29,9 +29,9 @@
 
     {{- if gt $paginator.TotalPages 1 }}
     <nav class="pager" aria-label="Articles pages">
-      {{ if $paginator.HasPrev }}<a class="pager-link" href="{{ $paginator.Prev.URL }}">Newer</a>{{ end }}
+      {{- if $paginator.HasPrev }}<a class="pager-link" href="{{ $paginator.Prev.URL }}">Newer</a>{{ end }}
       <span class="pager-status">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
-      {{ if $paginator.HasNext }}<a class="pager-link" href="{{ $paginator.Next.URL }}">Older</a>{{ end }}
+      {{- if $paginator.HasNext }}<a class="pager-link" href="{{ $paginator.Next.URL }}">Older</a>{{ end }}
     </nav>
     {{- end }}
   </div>

@@ -149,7 +149,7 @@ troops:
     id: 'recruit-chick'
     img: 'assets/brand/cast/recruit-chick-base.webp'
     alt: 'Recruit Chick, a yellow chick in a green helmet firing hearts from a slingshot, with blue thumbs-up and comment icons flying'
-    v: 'The smallest soldier with the biggest cannon. The moment your post goes live, she fires likes, reposts and comments from your other profiles, because the first hour decides whether anybody sees it at all. Every heart comes from a real account you own. No bought thumbs. Major checks.'
+    v: 'The smallest soldier with the biggest cannon. The moment your post goes live, she fires likes, reposts and comments from your other profiles, because early replies are what get a post seen. Every heart comes from a real account you own. No bought thumbs. Major checks.'
     links:
       - t: "Boost a post from your other profiles"
         u: '/docs/how-to/publish/amplify-a-post/'

@@ -5,8 +5,8 @@ heading: "The Field Manual: what the feeds reward, and what gets you benched"
 description: What LinkedIn, X, Reddit and other social feeds reward and penalize, in plain language, with a source for every claim. Hard-won lessons from Major Blowhorn so you can claim victory.
 lead: "We've lost more profiles so you don't have to. Here is what every feed told us, in its own words, and what we learned the hard way."
 layout: field-manual
-checked: 13 October 2026
-lastmod: 2026-10-13
+checked: 28 October 2026
+lastmod: 2026-10-28
 sitemap:
   changefreq: monthly
   priority: 0.5
@@ -33,6 +33,8 @@ These were hard-won battles. This manual passes along that value so you can clai
 3. **No pods, no trades, no bought anything.** LinkedIn calls engagement pods "not allowed" ([LinkedIn, Mar 2026](https://news.linkedin.com/2026/authentic-content-and-conversations)). X prohibits "Repost for Repost" and buying engagement ([X platform manipulation policy](https://help.x.com/en/rules-and-policies/platform-manipulation)). Reddit prohibits coordinated voting ([Reddit Help](https://support.reddithelp.com/hc/en-us/articles/360043066412-Disrupting-Communities)).
 4. **Don't say the same thing twice, from anywhere.** X: "You may not post duplicative or substantially similar posts on one account or over multiple accounts you operate" ([X automation rules](https://help.x.com/en/rules-and-policies/x-automation)). Reddit lists repeating the same or similar comments as spam ([Reddit Help](https://support.reddithelp.com/hc/en-us/articles/28012014962580-How-do-I-keep-spam-out-of-my-community)).
 5. **Annoyed readers cost you.** X's published ranking code lists "not interested," mute, block, report and "not dwelled" as negative actions that carry negative weights ([xai-org/x-algorithm](https://github.com/xai-org/x-algorithm)). X warns that the weights scale each reader's predicted chance of an action, not raw counts, so "1 report cancels out 468 likes" is the wrong reading. The right one: content people want to hide sinks.
+
+**The first hour is a field pattern, not an order.** <span class="hypothesis">Hypothesis:</span> feeds show a new post to a few readers first and widen it if they respond, so early replies and reading time count for a lot, and the decisive window is roughly the first hour. No platform we cover has published that window. The longer story is in [Won or lost in the first hour](/resources/articles/won-or-lost-in-the-first-hour/).
 
 {{< major >}}Nobody can promise you won't get flagged. I can promise I won't rush, won't repeat myself and won't touch your CAPTCHA.{{< /major >}}
 
