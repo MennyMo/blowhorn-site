@@ -17,8 +17,11 @@ name: Publish blowhorn-axi to npm
 #     -f version=0.1.0 -f release_tag=axi-v0.1.0
 #
 # One-time setup on npmjs.com (package Settings > Trusted publishing): GitHub
-# Actions, organization layer5io, repository blowhorn-site, workflow
-# publish-blowhorn-axi.yml, allowed action npm publish.
+# Actions, organization blowhorn-ai, repository blowhorn-site, workflow
+# publish-blowhorn-axi.yml, no environment, and tick "allow npm publish".
+# Trusted publisher configs created after Sep 3, 2026 allow only
+# `npm stage publish` by default, and this workflow runs plain `npm publish`,
+# so without that box the publish fails with E404.
 
 on:
   workflow_dispatch:
