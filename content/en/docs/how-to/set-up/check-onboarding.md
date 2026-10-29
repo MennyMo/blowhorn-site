@@ -122,11 +122,16 @@ check reads `launchctl print gui/<uid>/ai.blowhorn.service` before the first
 walk and after the last, and fails if the registration changed. It only reads:
 a leftover registration from an earlier run is reported, never removed.
 
-Each step prints its name. A failure names the step and leaves a screenshot
-of that screen in the temp directory the script prints at the start. If the
-local Cloud stand-in raises, the check stops and prints that error. Pass
-`ONBOARDING_E2E_ARTIFACTS` when you want those screenshots in a directory you
-choose.
+Each step prints its name. Each variant writes its run to
+`data/cache/e2e/onboarding/<run-id>/` in the checkout, the directory the script
+prints at the start: `shots/` holds a screenshot per step, `logs/electron.log`
+the app's output, and `run.json` each step's outcome. A failure names the step,
+leaves a screenshot of that screen, and records the failure in `run.json`. If
+the local Cloud stand-in raises, the check stops and prints that error. The
+folder is git-ignored and nothing prunes it, so delete old runs when you no
+longer need them. Pass `ONBOARDING_E2E_ARTIFACTS` to put the screenshots and
+the log in a directory you choose; `run.json` is then written only if that
+directory is inside `data/cache/e2e/` or `BLOWHORN_LIVE_EVIDENCE_DIR`.
 
 A desktop release runs this check after the app is built and before it
 packages the DMG. The verify phase runs it again with `--app` pointed at

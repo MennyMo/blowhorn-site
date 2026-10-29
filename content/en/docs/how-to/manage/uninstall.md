@@ -103,7 +103,7 @@ this computer, and no flag removes them.
 
 ## Uninstall from the app
 
-In Settings, **uninstall Blowhorn…** opens a confirm dialog and quits the
+In Settings, on the **Background & updates** page, **uninstall Blowhorn…** opens a confirm dialog and quits the
 app; a helper the app leaves behind then runs the same command above,
 once the app is gone (the command refuses while the app is running, so
 the helper waits for it to quit first). It runs the engine the app
