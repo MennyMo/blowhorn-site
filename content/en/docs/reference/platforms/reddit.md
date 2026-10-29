@@ -5,7 +5,7 @@ description: "What Blowhorn can do on Reddit, and how each action behaves there.
 weight: 227
 ---
 
-Blowhorn works on Reddit in your own signed-in Chrome, through the Blowhorn extension. Sign in to Reddit there once, by hand. The credential Blowhorn checks is `RDDT_USERNAME`, kept in your account.
+Blowhorn works on Reddit in your own signed-in Google Chrome, through the Blowhorn extension. Sign in to Reddit there once, by hand. The credential Blowhorn checks is `RDDT_USERNAME`, kept in your account.
 
 Posts to the subreddit the activity's "Destination" names as `r/<name>`; with
 no subreddit the activity is skipped, never guessed. Comments when "Comment
@@ -29,7 +29,7 @@ already marked done is never acted on twice.
 - [Content queue columns and activity states](/docs/reference/content-queue/) - every column each platform reads.
 - [Messages and exit codes](/docs/reference/messages/) - what a refusal means.
 - [Who can post as whom](/docs/explanation/eligibility/) - why a credential is permission.
-- [Why Blowhorn uses your own Chrome](/docs/explanation/your-own-chrome/) - browser versus API.
+- [Why Blowhorn uses your own browser](/docs/explanation/your-own-chrome/) - browser versus API.
 - [You're in control](/docs/explanation/youre-in-control/) - every safety control in one place.
 - [Field Manual: Reddit](https://blowhorn.ai/field-manual/reddit/) - what the Reddit feed rewards and what it penalizes.
 - [Platform action matrix](https://blowhorn.ai/field-manual/action-matrix/) - safe versus risky actions, per platform.

@@ -9,7 +9,7 @@ weight: 35
 what is missing or out of date, and lists what is left for you to do. It is
 safe to run as often as you like.
 
-It never starts, opens or attaches to Chrome, and it installs no extension.
+It never starts, opens or attaches to Google Chrome, and it installs no extension.
 
 ## See what would change
 

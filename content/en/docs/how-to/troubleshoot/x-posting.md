@@ -15,7 +15,7 @@ fact.
 
 ## Under the extension driver, nothing is typed
 
-The extension's typing sets X's editor text without the input event X reads,
+The Blowhorn extension's typing in Google Chrome sets X's editor text without the input event X reads,
 so X keeps an empty post and Post stays disabled. The run stops before
 anything is typed or clicked:
 

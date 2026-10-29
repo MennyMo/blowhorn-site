@@ -49,7 +49,7 @@ what would change without saving anything.
 ## Not the same as failure reports
 
 Failure reports are a separate setting, **send failure reports** on the
-Safety screen, described under
+Posture screen, described under
 [Failure reports](/docs/explanation/your-data/#failure-reports). Turning
 one off leaves the other as it is.
 

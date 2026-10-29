@@ -36,7 +36,7 @@ in the how-to guides linked under Related.
 
 {{< major >}}Two hundred seventy-four characters before X wants a thread. I don't make the rules. I thread them.{{< /major >}}
 
-Four platforms drive your own signed-in Chrome through the extension:
+Four platforms drive your own signed-in Google Chrome through the extension:
 LinkedIn, X, Reddit, and Hacker News. Three post through their APIs
 above the browser: Slack, Bluesky, and GitHub. A platform is usable the
 moment its credential exists; see [Who can post as whom](/docs/explanation/eligibility/).
@@ -118,7 +118,7 @@ attribute -- but never a higher one. See
 - [Content queue columns and activity states](/docs/reference/content-queue/) - every column each platform reads.
 - [Messages and exit codes](/docs/reference/messages/) - what a refusal means.
 - [Who can post as whom](/docs/explanation/eligibility/) - why a credential is permission.
-- [Why Blowhorn uses your own Chrome](/docs/explanation/your-own-chrome/) - browser versus API.
+- [Why Blowhorn uses your own browser](/docs/explanation/your-own-chrome/) - browser versus API.
 - [You're in control](/docs/explanation/youre-in-control/) - every safety control in one place.
 - [Send a Slack message](/docs/how-to/publish/send-a-slack-message/) - Slack, worked.
 - [Platform action matrix](https://blowhorn.ai/field-manual/action-matrix/) - which actions are safe and which risk a penalty, per platform.

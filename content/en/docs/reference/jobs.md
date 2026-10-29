@@ -21,7 +21,7 @@ and an activity whose lease lapsed is reclaimable by the next pass.
 | Platforms | Activity filter, not a posting target: which activities the command reads |
 | Profiles | Which profiles the run acts as |
 | Recurrence | When the activity comes due again |
-| Driver mode | How the run reaches Chrome: `default`, `extension`, `extension-classic`, `extension-background`, `cdp`, or `persistent` |
+| Driver mode | How the run reaches Google Chrome: `default`, `extension`, `extension-classic`, `extension-background`, `cdp`, or `persistent` |
 | Status | Where the activity stands; `running` is a lease, never a lock |
 
 `blowhorn schedule list` shows each activity and whether it is due.
@@ -75,7 +75,10 @@ its usual preset everywhere else. Leave it blank and the activity
 inherits the profile's preset, exactly as before. A hold or a run
 report names the source as `schedule` when the activity's own setting
 decided it. `blowhorn schedule list` shows each activity's own setting,
-the preset it effectively runs and where that preset came from.
+the preset it effectively runs and where that preset came from. The
+app's activity editor and drawer show the same column as **rules of
+engagement**, with `cautious` as Safety on, `standard` as Weapons tight
+and `brisk` as Weapons free; the stored value does not change.
 
 ## Pause scopes
 

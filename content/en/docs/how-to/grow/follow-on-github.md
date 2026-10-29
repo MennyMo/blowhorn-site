@@ -42,7 +42,7 @@ that self-exclusion, inert: a named profile runs even against its own
 handle.
 
 Each platform authenticates the way it always does: X through the
-profile's browser session, Bluesky through its handle and app password,
+profile's Google Chrome session, Bluesky through its handle and app password,
 GitHub through its `GH_TOKEN`
 ([Sign a profile in to each platform](/docs/how-to/set-up/platform-accounts/)).
 

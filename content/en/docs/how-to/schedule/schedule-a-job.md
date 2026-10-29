@@ -16,7 +16,7 @@ day in the month opens that day, and the day view becomes the one it
 remembers.
 
 To add one, press the round **+** button in the lower right (or ⌘N) and
-choose **Advanced standing orders** under When to march, or click a free time
+under When to march choose **Repeat it?** and a standing order, or click a free time
 in the day or week calendar to start one at that time. (The rest of that
 window, New order, queues a one-off post; see
 [Use the desktop app](/docs/reference/use-the-desktop-app/#the-console).) The routine editor has the
@@ -44,12 +44,19 @@ day risks the account. `blowhorn schedule why <activity>` says when a series
 has stopped; give the job a new time, as above, to restart the series with a
 fresh set of retries.
 
-If you have no routines yet, the screen offers "add sample routines…" instead: it
-previews a starter set of activities first, and writes them only when you apply the
-preview. It never edits routines you already set up.
+If you have no routines yet, the screen offers "add sample routines…" instead. It shows
+each starter routine with its character, what it does and when it runs. Tick the ones
+you want, then add them. A starter routine can be ticked only once the platform it needs
+is connected to its profile; until then it says which connection to make. Starter
+routines are added to what you have, and they never replace or edit routines you
+already set up. A starter routine that was added is greyed out for the rest of that
+visit, so adding again never makes a second copy; if an add stops partway, the ones
+that landed stay added and the rest can be ticked again. Once you have routines, the
+"add sample routines…" button stays in the Routines header, so you can add starter
+routines later; a starter routine you already have is greyed out there too.
 
 Open a job (click it, or focus it and press Enter) to change it, or choose "do it now"
-to run it without waiting for its time. With "preview only" on, check now previews the pass and claims nothing. When the account is not connected, the preview says the activity is blocked and why, in the same words a real run would meet.
+to run it without waiting for its time. With "dry fire" on, check now rehearses the pass and claims nothing. When the account is not connected, the preview says the activity is blocked and why, in the same words a real run would meet.
 
 ## From the command line
 
@@ -125,8 +132,8 @@ heartbeat so `blowhorn schedule status` can report it, and appends one line per
 pass to the run ledger. When the pass cannot reach your account it claims nothing,
 exits 3, and says so in one line.
 
-One activity can run under its own Risk Profile while the rest run under the
-profile's choice: see [One activity on its own preset](/docs/how-to/settings/choose-your-risk-profile/#one-activity-on-its-own-preset).
+One activity can run under its own rules of engagement while the rest run under the
+profile's choice: see [One activity on its own rules of engagement](/docs/how-to/settings/choose-your-rules-of-engagement/#one-activity-on-its-own-rules-of-engagement).
 
 ## Related
 

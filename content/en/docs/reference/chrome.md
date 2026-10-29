@@ -36,7 +36,7 @@ Chrome profile a Blowhorn profile is mapped to (see
 running, any of them starts Chrome to open that window and leaves it
 running; none drives anything in it.
 
-## What it never opens, and when it never starts Chrome {#what-it-never-opens-and-when-it-never-starts-chrome}
+## What it never opens, and when it never starts Chrome
 
 Blowhorn never opens a real Chrome profile folder directly. The Chrome
 it launches itself runs on Blowhorn's own folders (its automation
@@ -198,7 +198,7 @@ The `extension` and `persistent` drivers run on Linux as on macOS; the
 and `/opt/google/chrome/chrome`. Everything else on this page reads
 the same.
 
-## A dedicated attach Chrome (no Allow dialog) {#a-dedicated-attach-chrome-no-allow-dialog}
+## A dedicated attach Chrome (no Allow dialog)
 
 `blowhorn chrome attach-chrome` starts a second Chrome on a tree of
 its own (`~/.blowhorn/attach-chrome`), open to remote debugging, so
@@ -340,7 +340,7 @@ With the extension driver, a run uses one of two behaviors:
 | Chrome's debugging bar | while an action holds the debugger, gone after a short idle period | for the whole run, from before the site loads |
 | visible screenshot | captured through the debugger, without selecting the tab | captured through the debugger, without selecting the tab |
 | input | synthetic unless `BLOWHORN_EXTENSION_INPUT=trusted` | trusted unless `BLOWHORN_EXTENSION_INPUT=synthetic` |
-| bringing the tab forward | never. When Blowhorn needs you it turns the Blowhorn group red and opens it, posts a notification when "Tell me when something needs me" is on in Safety, and waits for you to click the tab | the same |
+| bringing the tab forward | never. When Blowhorn needs you it turns the Blowhorn group red and opens it, posts a notification when "Tell me when something needs me" is on in Posture, and waits for you to click the tab | the same |
 | no Chrome window open | that profile stops and you are asked to open a Chrome window. Opening one itself would bring Chrome in front of what you are doing. A post moves on to the next profile; other commands end there, and nothing that did not happen is recorded | the same |
 
 background is the default. classic keeps the input and debugger behavior of
@@ -560,12 +560,13 @@ Gives Blowhorn a Google Chrome profile of its own, for a Chrome that has
 only its main profile. It asks Google Chrome to open a new window in the
 profile directory `Blowhorn`, with the same handoff as `open-profile`
 (`open -na "Google Chrome" --args --profile-directory=Blowhorn
---new-window chrome://newtab/` on macOS). Chrome is expected to make that
-profile the first time and open the same one every time after, so running
-it again should never make a second profile. Neither that, nor the name
-Chrome gives the new profile, has been confirmed by a recorded check yet:
-Chrome picks the name, often a generic one such as `Person 2`, and the
-desktop then shows the profile as **Blowhorn's profile**. It maps nothing, reads no store and drives
+--new-window chrome://newtab/` on macOS). Chrome makes that profile the
+first time and opens the same one every time after, so running it again
+makes no second profile. That held in a live check on Google Chrome 156,
+both with Chrome already running and with Chrome quit. Chrome gives the
+new profile a default name, `Person 1` in that check (the number can
+differ on your computer), and the desktop shows the profile as
+**Blowhorn's profile**. It maps nothing, reads no store and drives
 nothing in the window: you sign in there to the sites Blowhorn should
 use, then `blowhorn chrome discover` (the desktop's **Check again**)
 finds the profile and its accounts. Setup's **Set up Blowhorn's
@@ -733,4 +734,4 @@ can run side by side. See [You're in control](/docs/explanation/youre-in-control
 - [Choose how Blowhorn reaches Chrome](/docs/how-to/settings/launch-mode/) - when to leave the default.
 - [Chrome extension permissions](/docs/reference/extension-permissions/) - what the extension may do.
 - [Messages and exit codes](/docs/reference/messages/) - every refusal sentence.
-- [Why Blowhorn uses your own Chrome](/docs/explanation/your-own-chrome/) - why your Chrome and not a bundled one.
+- [Why Blowhorn uses your own browser](/docs/explanation/your-own-chrome/) - why your Chrome and not a bundled one.

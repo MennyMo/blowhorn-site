@@ -101,7 +101,7 @@ Output: json with `--json`, text otherwise.
 
 ## blowhorn chrome create-profile
 
-Give Blowhorn a Google Chrome profile of its own, for a Chrome that has only its main profile. Asks Chrome to open a new window in the profile directory `Blowhorn`. Chrome is expected to create that profile the first time and open it again every time after, so running this twice should never make a second one; Chrome picks the new profile's name. Sign in there to LinkedIn, X and the other sites Blowhorn should use, then `blowhorn chrome discover` finds the profile and its accounts. Reads Local State only to say whether the profile was already listed; writes nothing, maps nothing, and drives nothing in the window. If no Chrome is running, Chrome starts to open the window and is left running. Your own profiles, windows and tabs are left as they are.
+Give Blowhorn a Google Chrome profile of its own, for a Chrome that has only its main profile. Asks Chrome to open a new window in the profile directory `Blowhorn`. Chrome creates that profile the first time and opens it again every time after, so running this twice makes no second one. Chrome gives the new profile a default name such as `Person 1`, which Blowhorn shows as Blowhorn's profile. Sign in there to LinkedIn, X and the other sites Blowhorn should use, then `blowhorn chrome discover` finds the profile and its accounts. Reads Local State only to say whether the profile was already listed; writes nothing, maps nothing, and drives nothing in the window. If no Chrome is running, Chrome starts to open the window and is left running. Your own profiles, windows and tabs are left as they are.
 
 ```text
 blowhorn chrome create-profile [OPTIONS]

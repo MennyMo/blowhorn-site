@@ -87,7 +87,7 @@ blowhorn analytics activity 42 --profile ada --json
 platform the activity is addressed to:
 
 - **Delivery** (measured): whether it went out and when, the link to the live
-  item, the computer and Chrome profile that ran it, and for a failed attempt
+  item, the computer and Google Chrome profile that ran it, and for a failed attempt
   the error and the fix to try next. An activity that is due but has not run
   yet reads as pending. One whose sending click was made but never read back
   reads as unconfirmed, with no link: check the platform before assuming it
@@ -111,6 +111,19 @@ you pick it.
 
 A computer that is not connected to a store yet says so in one sentence and
 exits 3.
+
+## Read several activities' results at once
+
+```bash
+blowhorn analytics activities 164 165 166
+blowhorn analytics activities 164 165 166 --json
+```
+
+`activities` prints the same result `activity` does for each number, in the
+order given, from one set of reads of your account rather than one per
+activity. A number your queue no longer has is listed as not found instead of
+failing the rest. This is what the app's New order **Debrief** shows in
+Performance for the posts an order just wrote.
 
 ## Import content exports
 

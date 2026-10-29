@@ -16,7 +16,7 @@ This page stays a draft until it is.
 
 A profile has three things you set: its **name**, what you type after
 `--profile`; an optional **description**; and **who it represents**. Its
-accounts on each platform are not part of the form: Chrome profile
+accounts on each platform are not part of the form: Google Chrome profile
 discovery finds the ones you are signed in to, and each platform card
 connects the rest. What a profile holds is in the
 [Profile reference](/docs/reference/profiles/).
