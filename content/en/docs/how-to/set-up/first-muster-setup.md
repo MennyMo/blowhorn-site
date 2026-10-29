@@ -20,7 +20,11 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   account, or choose **Create account**.
   Both open your browser and bring you straight back to the app. Create
   account opens the sign-up page, and once you confirm your email the
-  app moves on by itself. There is no extra page asking you to allow it. If the browser attempt fails, or you close it before
+  app moves on by itself. Once you are signed in, setup goes straight on
+  to setting up your account, with no **Next** to press; if your account
+  belongs to more than one organization, it stops there for you to pick
+  one. **Back** from the next step still shows who you are signed in as,
+  with **Not you? Sign out**. There is no extra page asking you to allow it. If the browser attempt fails, or you close it before
   finishing, **Cancel** on
   the waiting screen stops the wait right away - you never have to wait
   it out - and **Open it again** ends the old attempt and starts a fresh
@@ -30,7 +34,7 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   screen is **Blowhorn needs Google Chrome**: **Get Google Chrome** opens
   Google's download page, and once it is installed the app notices by
   itself when you come back to its window (or choose **Check again**).
-  A Google Chrome older than Blowhorn needs (142), or one that has never been
+  A Google Chrome older than Blowhorn needs, or one that has never been
   opened, gets its own screen the same way. Google Chrome is found in
   your computer's Applications folder or in your own `~/Applications`.
   **Check again** on these screens, and on Getting ready, reads
@@ -52,9 +56,9 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   **not in use**. For a profile that isn't in Blowhorn yet, confirm the
   name it will be created under. The profiles you mark in use are the ones
   the next step installs into, and a profile you mark not in use is left
-  alone. Chrome's main profile is listed as yours, with no **Use with
-  Blowhorn** switch; a main profile an earlier setup already mapped keeps
-  its switch. If the main profile is the only one you have, the screen
+  alone. Chrome's main profile is not listed here, since Blowhorn never
+  works in it; a main profile an earlier setup already mapped is listed
+  and keeps its switch. If the main profile is the only one you have, the screen
   reads **Blowhorn will set up its own profile**: choose **Set up
   Blowhorn's profile**, and Google Chrome is asked to open a new window
   in a profile of Blowhorn's own (Chrome should make the profile the
@@ -104,7 +108,7 @@ when a new version of Blowhorn needs something your earlier setup did not do.
 - **Home:** you're done. Connect your platform accounts any time. See
   [Platform accounts](/docs/how-to/set-up/platform-accounts/).
 
-## Leaving a Chrome profile out {#leaving-a-chrome-profile-out}
+## Leaving a Chrome profile out
 
 A Chrome profile you leave unchecked on Confirm troops is not in use, and
 guided setup leaves it alone: it gets no extension from this setup, no

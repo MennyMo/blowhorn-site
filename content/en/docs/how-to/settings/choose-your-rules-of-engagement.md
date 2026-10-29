@@ -1,37 +1,51 @@
 ---
-title: "Choose your Risk Profile"
-description: "Your pace. Your risk. Your call. What cautious, standard and brisk change in your day, and which one to pick."
+title: "Choose your rules of engagement"
+description: "Your pace. Your risk. Your call. What Safety on, Weapons tight and Weapons free change in your day, and which one to pick."
 weight: 25
+aliases: [/docs/how-to/settings/choose-your-risk-profile/]
 ---
 
-Your Risk Profile is one choice for how risky and how fast Blowhorn
-runs: cautious, standard (the default) or brisk. It sets pace, pointer
+Your rules of engagement are one choice for how hard and how fast
+Blowhorn pushes on a platform. There are three:
+
+| In the app | Means | Stored, in the CLI and the config file |
+|---|---|---|
+| **Safety on** | slow and careful | `cautious` |
+| **Weapons tight** (the default) | normal pace, within the platform's own limits | `standard` |
+| **Weapons free** | fast, and more noticeable to the platform | `brisk` |
+
+The names are the military's weapons-control states, from most to least
+restrictive; the plain words beside each say what it does, so you never
+need the military meaning to choose well. One choice sets pace, pointer
 movement, caps, spacing, quiet hours, outreach, the pause after a
 sign-in challenge, retries and how much runs at once, together. The
-headline is ownership-first - "Your pace. Your risk. Your call." - and
-the formal name stays Risk Profile: the tradeoff really is detection
-and ban risk against speed, and it is the same term the CLI, the config
-file and the reference use.
+headline is ownership-first - "Your pace. Your risk. Your call." The
+app shows the new names; the CLI and the config file keep the stored
+values (`blowhorn risk set cautious`, `defaults.risk_profile: cautious`,
+`--risk-profile cautious`), and the reference still calls the setting
+the Risk Profile, so old scripts keep working.
 
-Choose it in the app on the **Safety** screen: the slider at the top is
-the choice for everyone, a colour-graded track from cautious (slow end) to
-brisk (fast end). The same mode shows on Home as a pill and as a
-mini-slider in the menu-bar popover; both open Safety, and changing it
-anywhere changes it everywhere. Or use `blowhorn risk set cautious`.
-`blowhorn risk show` says which preset is in effect and where it came
-from, and `blowhorn risk grid` lists every profile on every platform. Any
-single dial you set yourself wins over the preset for that dial, and the
-rest of the preset still applies around it; a profile with a dial set
-outside the preset is a custom profile, not a fourth preset you can pick.
+Choose it in the app on the **Posture** screen: the slider at the top is
+the choice for everyone, a track from Safety on (slow end, in the
+brand's teal blue) through Weapons tight (teal) to Weapons free (fast
+end, in the warn colour). The same choice shows on Home as the **ROE**
+pill and as a mini-slider in the menu-bar popover; both open Posture,
+and changing it anywhere changes it everywhere. Or use
+`blowhorn risk set cautious`. `blowhorn risk show` says which preset is
+in effect and where it came from, and `blowhorn risk grid` lists every
+profile on every platform. Any single dial you set yourself wins over
+the preset for that dial, and the rest of the preset still applies
+around it; a profile with a dial set outside the preset is a custom
+profile, not a fourth preset you can pick.
 
 ## Set one platform for everyone
 
 To run one platform more carefully for every profile, for example
-LinkedIn cautious while the rest stay standard:
+LinkedIn on Safety on while the rest stay on Weapons tight:
 
-1. Open **Safety**.
+1. Open **Posture**.
 2. In the grid, pick the chip in the **Each platform** row under
-   **LinkedIn**, and choose **Cautious**.
+   **LinkedIn**, and choose **Safety on**.
 
 Or, from Terminal:
 
@@ -66,10 +80,11 @@ everyone"). To put a cell back, point at it and press its reset, or choose
 The more specific choice wins: one activity beats one profile on one
 platform, which beats a platform's or a profile's choice, which beats
 everyone's. **When a platform and a profile both have a choice, the more
-careful one wins**, so "LinkedIn cautious for everyone" also slows a profile
-set to brisk, and "X brisk for everyone" never speeds up a profile set to
-cautious. To let one profile go faster on one platform, choose its cell.
-A new profile or computer still runs cautious for its first 14 days. The
+careful one wins**, so "LinkedIn on Safety on for everyone" also slows a
+profile set to Weapons free, and "X on Weapons free for everyone" never
+speeds up a profile set to Safety on. To let one profile go faster on one
+platform, choose its cell. A new profile or computer still runs under
+Safety on for its first 14 days. The
 full order is in
 [Which choice wins](/docs/reference/configuration/#which-choice-wins).
 
@@ -78,20 +93,21 @@ full order is in
 Under the grid, **The limits Blowhorn keeps** starts from the preset: change
 the pace and daily caps per platform in the **by platform** table, and the
 other limits below it, including typing and pointer timing, then **save
-limits**. The header reads "Custom, based on standard, 3 dials changed" once
+limits**. The header reads "Custom, based on Weapons tight, 3 dials changed" once
 dials move, and **reset to preset** puts every dial back. No dial may exceed a
 built-in ceiling: your own cap can only lower a ceiling, never raise it.
 Two dials carry a driver note: pauses and mistakes run on the Playwright
-driver only. The extension driver sends one key per message and runs no
+driver only. The extension driver, which types through the Blowhorn
+extension in Google Chrome, sends one key per message and runs no
 pause plan, so on that driver it types with the shaped delay from the delay
 band and no pauses or corrections. The full values are in the
 [configuration reference](/docs/reference/configuration/#risk-profile-presets),
 with a stable anchor per dial in
 [Risk Profile dials](/docs/reference/configuration/#risk-profile-dials).
 
-## Cautious: one thing at a time, nights off
+## Safety on (cautious): one thing at a time, nights off
 
-Pick cautious for a new account, a new computer, or an unattended run
+Pick Safety on for a new account, a new computer, or an unattended run
 you will not be watching.
 
 - **Between actions:** at least 15 minutes, plus a random wait of up to
@@ -108,21 +124,21 @@ you will not be watching.
   from the last such record.
 - **Outreach:** off entirely - no connects, invites or follows.
 - **At once:** at most 1 run, and one profile at a time on a platform.
-  A second run is refused and names your Cautious profile; its
+  A second run is refused and names your cautious profile; its
   activities stay queued.
 - **Retries:** a failed scheduled job is not retried.
 
-## Standard: today's behaviour, with the guardrails on
+## Weapons tight (standard): half the ceiling, with the guardrails on
 
-Standard is the built-in default, and the right choice when an account
-is established and you want Blowhorn to behave the way it always has,
-with the Risk Profile guardrails explicit rather than new.
+Weapons tight is the built-in default, and the right choice when an account
+is established and you want Blowhorn at a normal pace, held to half of
+each platform's own limit.
 
 - **Between actions:** no minimum spacing; pace still shapes typing
   cadence and the random pauses between actions.
-- **How much per day:** the full built-in ceiling. On LinkedIn that is
-  10 posts and 40 comments a day; on X it is 50 posts a day, before
-  any cap you set yourself or a warmup ramp.
+- **How much per day:** half of each platform's built-in ceiling. On
+  LinkedIn that is 5 posts and 20 comments a day; on X it is 25 posts a
+  day, before any cap you set yourself or a warmup ramp.
 - **Nights:** no preset quiet hours. A quiet window you name yourself
   with `defaults.quiet_hours` still holds scheduled claims.
 - **After a challenge:** the profile on that platform is held for 24
@@ -133,18 +149,20 @@ with the Risk Profile guardrails explicit rather than new.
   on runs overall. Setting `defaults.concurrency.max_runs` adds one.
 - **Retries:** a failed scheduled job is not retried.
 
-## Brisk: fast, while you watch
+## Weapons free (brisk): fast, while you watch
 
-Pick brisk for an established account you are watching, when you want
+Pick Weapons free for an established account you are watching, when you want
 the most throughput and accept the most exposure.
 
 - **Between actions:** no minimum spacing, and the fast pace.
-- **How much per day:** the full built-in ceiling, same as standard -
-  brisk does not raise any ceiling, it only removes cautious's
-  quarter-share, quiet hours, spacing and outreach limits.
+- **How much per day:** the full built-in ceiling - the platform's own
+  limit. On LinkedIn that is 10 posts and 40 comments a day; on X it is
+  50 posts a day. Weapons free never raises a ceiling; it only lifts the
+  share the other two keep below it (a quarter, a half), along with Safety
+  on's quiet hours, spacing and outreach limits.
 - **Nights:** no preset quiet hours.
 - **After a challenge:** the profile on that platform is held for 12
-  hours - the shortest pause, so a challenge is the place brisk costs
+  hours - the shortest pause, so a challenge is the place Weapons free costs
   you the most caution.
 - **Outreach:** on everywhere, including platforms still being built.
 - **At once:** different profiles may share a platform, and no preset
@@ -153,12 +171,12 @@ the most throughput and accept the most exposure.
 - **Retries:** a failed scheduled job gets one retry. A login is never
   retried, and a retry is never granted for an unknown outcome.
 
-## A new profile warms up cautious, whatever you chose
+## A new profile warms up under Safety on, whatever you chose
 
-A new profile or a new Mac runs cautious for scheduled jobs until it
+A new profile or a new Mac runs under Safety on for scheduled jobs until it
 has history - 14 days, whatever preset you picked. Its caps ramp over
-those 14 days, from about a quarter of cautious's caps on day one
-(about 1 LinkedIn post a day) to cautious's full caps by day 14, and
+those 14 days, from about a quarter of Safety on's caps on day one
+(about 1 LinkedIn post a day) to Safety on's full caps by day 14, and
 only then does your chosen preset take over. A profile idle longer
 than the 15-day ledger window warms up again. A run you start yourself
 is not held by the warmup, only warned about, and it follows your
@@ -166,26 +184,27 @@ chosen preset's caps, quiet hours and outreach.
 
 ## If you are still unsure
 
-- New account, or you will not watch it: cautious.
-- Established account, normal use: standard.
+- New account, or you will not watch it: Safety on.
+- Established account, normal use: Weapons tight.
 - Established account, you are watching, and you want the most done
-  today: brisk.
+  today: Weapons free.
 - One account needs to be slower than the rest: set that profile or
-  platform cautious, and leave the rest alone - the choice is per
+  platform to Safety on, and leave the rest alone - the choice is per
   profile and per platform, not only computer-wide.
-- One platform feels risky for everyone: set that platform cautious in
+- One platform feels risky for everyone: set that platform to Safety on in
   the **Each platform** row.
 
-## One activity on its own preset
+## One activity on its own rules of engagement
 
-One recurring activity can run cautious while everything else on the
-same profile and platform runs standard: open the activity, set
-**Risk profile** (blank means inherit, exactly as before), and save.
+One recurring activity can run under Safety on while everything else on
+the same profile and platform runs under Weapons tight: open the
+activity, set **rules of engagement** (inherit means the activity's own
+choice is blank, exactly as before), and save.
 From the terminal the same value is `risk_profile=cautious` in the
 activity's params. The activity's detail then shows the preset and
-where it came from (`Cautious · this activity`, or `Cautious ·
+where it came from (`Safety on · this activity`, or `Safety on ·
 inherits: LinkedIn × work profile`), and while the profile is warming
-it also says what the tick enforces (`warming: runs Cautious for
+it also says what the tick enforces (`warming: runs Safety on for
 now`). An activity without one profile and one platform names no
 single preset; its targets resolve their own. For a single run you
 start by hand, `blowhorn --risk-profile cautious post ...` overrides
@@ -195,5 +214,5 @@ everything for that run only.
 
 - [Configuration reference](/docs/reference/configuration/#risk-profile-presets) - every dial, every preset value.
 - [Risk Profile dials](/docs/reference/configuration/#risk-profile-dials) - one anchor per dial, for the desktop info buttons.
-- [You're in control](/docs/explanation/youre-in-control/#your-risk-profile) - the Risk Profile among every safety control.
+- [You're in control](/docs/explanation/youre-in-control/#your-rules-of-engagement) - the rules of engagement among every safety control.
 - [How Blowhorn paces itself](/docs/explanation/reliability-and-anti-bot-design/) - measured pacing and the no-retry rule.

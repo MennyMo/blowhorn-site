@@ -1,7 +1,7 @@
 ---
 title: "blowhorn analytics"
 linkTitle: "analytics"
-description: "blowhorn analytics: activity, history, import-exports, operations, pages."
+description: "blowhorn analytics: activities, activity, history, import-exports, operations, pages."
 weight: 101
 ---
 
@@ -11,11 +11,42 @@ The `blowhorn analytics` commands. Each one's `--help` prints the same text.
 
 | Command | What it does |
 | --- | --- |
+| [`analytics activities`](#blowhorn-analytics-activities) | Print several activities' results at once, from one set of store reads. |
 | [`analytics activity`](#blowhorn-analytics-activity) | Print one activity's result, read from the store. |
 | [`analytics history`](#blowhorn-analytics-history) | Print the follower history the collectors have already recorded, as one dated series read from the store: every LinkedIn page and every profile's X trend, whichever machine collected them. |
 | [`analytics import-exports`](#blowhorn-analytics-import-exports) | Read the LinkedIn page content exports already on disk and record each activity's reception figures in the store. |
 | [`analytics operations`](#blowhorn-analytics-operations) | Aggregate the run ledger, read from the store, into operations per profile, per platform, per command, per day or per host. |
 | [`analytics pages`](#blowhorn-analytics-pages) | List, add, remove or seed the LinkedIn pages analytics collects from for the signed-in organization, read from and written to the store. |
+
+## blowhorn analytics activities
+
+Print several activities' results at once, from one set of store reads: the same result `analytics activity` prints for each (delivery, reception where it is collected, and the derived follower change, per profile and platform), in the order given. An activity number the queue does not have is listed as not found rather than failing the rest. A computer with no store prints a short explanation and exits 3.
+
+```text
+blowhorn analytics activities [OPTIONS] activities...
+```
+
+| Argument | Required | Description |
+| --- | --- | --- |
+| `activities ...` | yes | Activity numbers, as `content list` prints them |
+
+| Flag | Type | Default | Description |
+| --- | --- | --- | --- |
+| `--json` | boolean | `false` | Emit machine-readable JSON output |
+| `--platform` | string | `all` | Platform scope for `blowhorn analytics`. One of: bluesky, linkedin, x, all (`all` means every platform listed here) |
+| `--pace` | string |  | Accepted by `blowhorn analytics activities` because `--pace` is a global flag, but this command does no paced work -- it sleeps between nothing -- so the value changes nothing about how it runs and appears only in the Pace column of the -v summary. Resolved as CLI flag, then `BLOWHORN_PACE`, then defaults.pace in .blowhorn.yaml (normal when none is set); an unrecognized value is rejected before anything runs |
+| `--risk-profile` | string |  | Accepted by `blowhorn analytics activities` because `--risk-profile` is a global flag, but this command does no gated work -- no Risk Profile hold, cap or pace applies to it -- so the value changes nothing about how it runs. A value after the command word wins over one before it; an unrecognized value is rejected before anything runs |
+
+Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `--log-dir`, `--profile`, `--exclude`, `--headless`, `--chrome-launch`, `--headed`, `--dry-run`, `--verbose`.
+
+Examples:
+
+```bash
+blowhorn analytics activities 164 165 166 --json
+blowhorn analytics activities 12 13
+```
+
+Output: json with `--json`, text otherwise.
 
 ## blowhorn analytics activity
 

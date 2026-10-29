@@ -33,7 +33,7 @@ Here is how that is enforced today:
   the same profile on the same platform is refused with "profile ... is
   in use by another blowhorn process; wait for it to finish or stop it",
   and its activities stay in the queue for the next pass. The lock is the same
-  whichever way Blowhorn reaches Chrome.
+  whichever way Blowhorn reaches your browser.
 - **Scheduled work runs one job at a time.** The background service runs
   one pass at a time, and a pass works through its jobs one after
   another, never side by side.
@@ -43,8 +43,9 @@ Here is how that is enforced today:
   profiles. `defaults.concurrency.max_runs` caps the total: with it set
   to 1, only one automation runs on this computer at a time, however it
   was started, and a run over the limit is refused with its activities
-  left in the queue. With no explicit value, your Risk Profile's value
-  applies: cautious caps runs at 1, standard and brisk set no limit.
+  left in the queue. With no explicit value, your rules of engagement
+  decide: Safety on caps runs at 1, Weapons tight and Weapons free set no
+  limit.
 - **One send per action.** The send control is clicked once. There is
   no retry click.
 
@@ -58,11 +59,11 @@ rule covers the API platforms (Slack, Bluesky, GitHub) as well as the
 browser ones. A queued Slack post whose session has expired is refreshed
 before the run takes the platform's lock, so the refresh -- which opens
 that same session -- is never refused by the run's own lock. If you would rather let different profiles act on the same
-platform at once, set the option to `profile` in Safety or in
+platform at once, set the option to `profile` in Posture or in
 `.blowhorn.yaml`, and the one-profile-one-platform rule above still holds
-either way. This behaviour lives in your Risk Profile (see "Your Risk
-Profile" below): cautious and standard keep `platform`, brisk sets
-`profile`, and an explicit option you set yourself still beats the
+either way. This behaviour lives in your rules of engagement (see "Your
+rules of engagement" below): Safety on and Weapons tight keep `platform`,
+Weapons free sets `profile`, and an explicit option you set yourself still beats the
 preset for that dial.
 
 <!-- Video placeholder: "Blowhorn limits itself to what a human could do". Two runs for the same profile and platform; the second waits. -->
@@ -189,66 +190,70 @@ approval in the app: it cannot approve its own queued work.
 
 | Control | What it does | Where it lives | Reference |
 |---|---|---|---|
-| Dry run | Walks a run without publishing, following or writing | `--dry-run` on every action command; `defaults.dry_run`; Safety in the app | [Configuration](/docs/reference/configuration/), [`blowhorn post`](/docs/reference/post/) |
+| Dry run | Walks a run without publishing, following or writing | `--dry-run` on every action command; `defaults.dry_run`; dry fire in the app, its default in Posture | [Configuration](/docs/reference/configuration/), [`blowhorn post`](/docs/reference/post/) |
 | Check the queue | Lists what a run would do, opening nothing | `blowhorn post --check-queue` | [`blowhorn post`](/docs/reference/post/) |
 | Approval gate | Only approved activities are published | The `Approved?` column of each content activity | [Content queue](/docs/reference/content-queue/) |
 | Approval mode | An agent's activities and ad-hoc actions - or everyone's, under `all` - wait for a person's approval; the approval records who and when | `defaults.approval.mode` (`off`, `agent`, `all`); `blowhorn content approve`; `BLOWHORN_ACTOR` marks an agent caller | [Configuration](/docs/reference/configuration/) |
 | Pause (Stand down / Reenlist in the app) | Stops new claims on this computer, the whole fleet, or one scheduled order | `blowhorn schedule pause`, with `--all` or `--activity`; the rail's duty toggle, Home's Fleet card, an order's drawer, and the popover | [Pause and resume posting](/docs/how-to/schedule/pause/) |
 | Stop everything | Raises the all-computers pause and ends runs already in progress at their next safe point, on every computer; without `--all` it stops this computer only | `blowhorn stop --all`; `blowhorn stop --resume` lifts it | [Pause and resume posting](/docs/how-to/schedule/pause/) |
-| Quiet hours | The automatic pause: holds due scheduled activities inside a named window, in your time zone or a profile's own; they run when the window ends | `defaults.quiet_hours` and `defaults.quiet_hours_tz`; Safety in the app; a profile's Quiet Hours setting for its own activities | [Pause and resume posting](/docs/how-to/schedule/pause/), [Configuration](/docs/reference/configuration/) |
+| Quiet hours | The automatic pause: holds due scheduled activities inside a named window, in your time zone or a profile's own; they run when the window ends | `defaults.quiet_hours` and `defaults.quiet_hours_tz`; Posture in the app; a profile's Quiet Hours setting for its own activities | [Pause and resume posting](/docs/how-to/schedule/pause/), [Configuration](/docs/reference/configuration/) |
 | Stop the current pass | Ends the background service's pass at its next safe point; the activity in progress returns to the queue | `blowhorn service cancel` | [CLI reference](/docs/reference/cli/) |
-| Pace | How fast Blowhorn types and how long it pauses between actions | `--pace fast`, `normal`, `slow` or a number; `defaults.pace`; per platform with `defaults.pace_by_platform` (for example `x: slow`), which a `--pace` flag overrides for the run; Safety in the app | [Change your defaults](/docs/how-to/settings/defaults/) |
-| Pointer movement | Turns the pointer movement before clicks on or off | `defaults.no_mouse_move`; your Risk Profile when the dial is unset; Safety in the app | [Configuration](/docs/reference/configuration/) |
-| Risk Profile | Pace, pointer movement, caps, spacing, quiet hours, outreach and how much runs at once, in one choice | Safety in the app, for everyone, each platform, each profile or one profile on one platform; `blowhorn risk set`; `defaults.risk_profile` | [Configuration](/docs/reference/configuration/#risk-profile-presets) |
+| Pace | How fast Blowhorn types and how long it pauses between actions | `--pace fast`, `normal`, `slow` or a number; `defaults.pace`; per platform with `defaults.pace_by_platform` (for example `x: slow`), which a `--pace` flag overrides for the run; Posture in the app | [Change your defaults](/docs/how-to/settings/defaults/) |
+| Pointer movement | Turns the pointer movement before clicks on or off | `defaults.no_mouse_move`; your rules of engagement when the dial is unset; Posture in the app | [Configuration](/docs/reference/configuration/) |
+| Rules of engagement (stored as the Risk Profile) | Pace, pointer movement, caps, spacing, quiet hours, outreach and how much runs at once, in one choice: Safety on, Weapons tight or Weapons free | Posture in the app, for everyone, each platform, each profile or one profile on one platform; `blowhorn risk set`; `defaults.risk_profile` | [Configuration](/docs/reference/configuration/#risk-profile-presets) |
 | Run size | Caps how many people a follow or accept run takes on, and how many jobs a pass runs | `--limit` on `follow`, `accept` and `schedule tick` | [CLI reference](/docs/reference/cli/) |
 | Excluded profiles | Leaves profiles out of `--profile all` | `--exclude`; `defaults.exclude`; Settings in the app | [Change your defaults](/docs/how-to/settings/defaults/) |
 | Rate caps | Built-in daily caps per action on every platform (2 Hacker News link submissions, 50 X posts, 400 X follows per profile a day), counted from your account's run ledger so they hold across computers; you can set lower caps of your own per platform and action, and for one profile only. X follows also pause at 15 in 15 minutes on the computer that runs them | Built in; your own in `defaults.caps` and a profile's `Daily Caps` attribute | [Platforms](/docs/reference/platforms/), [Configuration](/docs/reference/configuration/#daily-caps) |
 | No blind retries | Within a run, Blowhorn doesn't retry a failed post; it moves on to the next item. If a post goes out but Blowhorn can't record it, it stops that profile's queue rather than risk posting twice. Scheduled jobs only re-run a failure if you turn on retries, and they're off by default. | Built in; scheduled-job retries are opt-in | [How Blowhorn paces itself](/docs/explanation/reliability-and-anti-bot-design/) |
 | One automation per platform per profile | A second run for the same profile and platform on this computer is refused | Built in | [Chrome reference](/docs/reference/chrome/) |
-| One automation per platform across profiles | Only one run at a time uses a platform on this computer, whichever profile it is for | Built in (the default; your Risk Profile keeps it under cautious and standard, brisk loosens it, and `defaults.concurrency.per_platform` set to `profile` loosens it whatever the preset); Safety in the app | [Configuration](/docs/reference/configuration/) |
-| Runs at once | Caps how many automations run at the same time on this computer, across the app, the command line, an agent and the background service; a run over the limit is refused and its activities stay queued | Your Risk Profile (cautious: at most 1; standard and brisk: no limit), or `defaults.concurrency.max_runs` / `BLOWHORN_CONCURRENCY_MAX_RUNS` when you set one; Safety in the app | [Configuration](/docs/reference/configuration/) |
+| One automation per platform across profiles | Only one run at a time uses a platform on this computer, whichever profile it is for | Built in (the default; your rules of engagement keep it under Safety on and Weapons tight, Weapons free loosens it, and `defaults.concurrency.per_platform` set to `profile` loosens it whatever the preset); Posture in the app | [Configuration](/docs/reference/configuration/) |
+| Runs at once | Caps how many automations run at the same time on this computer, across the app, the command line, an agent and the background service; a run over the limit is refused and its activities stay queued | Your rules of engagement (Safety on: at most 1; Weapons tight and Weapons free: no limit), or `defaults.concurrency.max_runs` / `BLOWHORN_CONCURRENCY_MAX_RUNS` when you set one; Posture in the app | [Configuration](/docs/reference/configuration/) |
 | One send per action | The send control is clicked once; an unread outcome is held for you | Built in | [How Blowhorn avoids repeat posts](/docs/explanation/never-twice/) |
 | One computer per job | A scheduled job is claimed by one computer at a time | Built in, through your account | [How scheduling works](/docs/explanation/scheduling/) |
 | CAPTCHA and 2FA | Left for you; never solved | Built in | [Fix sign-in problems](/docs/how-to/troubleshoot/sign-in-problems/) |
 
-## Your Risk Profile
+## Your rules of engagement
 
-Think of your Risk Profile as the dials for how much risk you'll take
-and how fast you want things produced. One choice sets them together:
-cautious, standard (the default) or brisk. It covers the pace, pointer
-movement, caps, spacing between actions, quiet hours, outreach, the
-pause after a sign-in challenge, and how much runs at once: cautious
-is meant to run one thing at a time, standard to keep one profile per platform at a
-time, and brisk to let different profiles share a platform (`blowhorn risk show`
+Think of your rules of engagement as the dials for how much risk you'll
+take and how fast you want things produced. One choice sets them
+together: **Safety on** (slow and careful; stored as `cautious`),
+**Weapons tight** (the default, normal pace; `standard`) or **Weapons
+free** (fast, and more noticeable; `brisk`). The CLI, the config file and
+the reference keep the stored values and call the setting the Risk
+Profile. It covers the pace, pointer movement, caps, spacing between
+actions, quiet hours, outreach, the pause after a sign-in challenge, and
+how much runs at once: Safety on is meant to run one thing at a time,
+Weapons tight to keep one profile per platform at a time, and Weapons
+free to let different profiles share a platform (`blowhorn risk show`
 reports these values, and the run gates enforce them when no explicit
 concurrency value sets them). Pick
-cautious for a new account or an unattended run, and brisk for an
-established one you are watching. A new profile or a new computer runs
-cautious until it has some history, whatever you chose.
+Safety on for a new account or an unattended run, and Weapons free for
+an established one you are watching. A new profile or a new computer
+runs under Safety on until it has some history, whatever you chose.
 
-Any single dial you set yourself wins over the profile for that dial,
-and the rest of the profile still applies around it. A profile with a
-dial set outside it is a custom profile: custom is a description of
+Any single dial you set yourself wins over the preset for that dial,
+and the rest of the preset still applies around it. A profile with a
+dial set outside its preset is a custom profile: custom is a description of
 your mix, not a fourth choice to pick. `blowhorn risk show` names the
-dials you set outside the profile.
+dials you set outside the preset.
 
-Choose it in the app on the Safety screen, for everyone, for one
+Choose it in the app on the Posture screen, for everyone, for one
 platform, for one profile, or for one profile on one platform; or use
 `blowhorn risk set`. The [configuration reference](/docs/reference/configuration/#risk-profile-presets)
-lists what each preset sets, and [Choose your Risk Profile](/docs/how-to/settings/choose-your-risk-profile/)
+lists what each preset sets, and [Choose your rules of engagement](/docs/how-to/settings/choose-your-rules-of-engagement/)
 says what each preset changes in your day.
 
 A platform's choice and a profile's choice each cover one dimension, so
 neither is more specific than the other. When both have one, Blowhorn
-takes the more careful. A platform set cautious is usually a response to
-that platform pushing back, and it should reach every profile on it,
-including one set to brisk; a platform set brisk should never loosen a
+takes the more careful. A platform set to Safety on is usually a response
+to that platform pushing back, and it should reach every profile on it,
+including one set to Weapons free; a platform set to Weapons free should never loosen a
 profile someone deliberately held back. Going faster for one profile on
 one platform stays possible, but only as a choice made for that one cell.
-When the shared choices cannot be read, the platform level reads cautious
-until they can, for the same reason.
+When the shared choices cannot be read, the platform level reads Safety
+on until they can, for the same reason.
 
-The cautious preset's quiet hours are its own. `defaults.quiet_hours`
+Safety on's quiet hours are its own. `defaults.quiet_hours`
 is a window you name yourself, in your time zone or a profile's, and it
 holds that profile's scheduled activities whatever preset is in force.
 

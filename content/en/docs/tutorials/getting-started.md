@@ -27,7 +27,7 @@ export PATH="$HOME/.local/bin:$PATH"
 The installer creates a virtualenv at `./venv`, installs the requirements,
 downloads the Playwright Chromium runtime, and writes an `blowhorn` launcher to
 `~/.local/bin`. It then runs `blowhorn setup`, which checks this computer, asks
-before writing the Chrome native host, and lists what is left for you; answer
+before writing the Google Chrome native host, and lists what is left for you; answer
 no for now if you only want this tutorial.
 
 A checkout's data (logs, caches, the scheduler's state) lives in its own

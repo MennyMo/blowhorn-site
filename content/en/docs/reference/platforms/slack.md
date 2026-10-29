@@ -5,7 +5,7 @@ description: "What Blowhorn can do on Slack, and how each action behaves there."
 weight: 229
 ---
 
-Blowhorn works on Slack through Slack's API, never the browser, and sends as you. It uses a Slack token in your account (`SLACK_USER_TOKEN` or `SLACK_BOT_TOKEN`) or your Slack session, linked through the Blowhorn extension.
+Blowhorn works on Slack through Slack's API, never the browser, and sends as you. It uses a Slack token in your account (`SLACK_USER_TOKEN` or `SLACK_BOT_TOKEN`) or your Slack session, linked through the Blowhorn extension in Google Chrome.
 
 Sends a message as you to a channel, a person, or a thread. One
 profile sends. `blowhorn post --platform slack --message` sends one
@@ -43,6 +43,6 @@ Slack reads.
 - [Content queue columns and activity states](/docs/reference/content-queue/) - every column each platform reads.
 - [Messages and exit codes](/docs/reference/messages/) - what a refusal means.
 - [Who can post as whom](/docs/explanation/eligibility/) - why a credential is permission.
-- [Why Blowhorn uses your own Chrome](/docs/explanation/your-own-chrome/) - browser versus API.
+- [Why Blowhorn uses your own browser](/docs/explanation/your-own-chrome/) - browser versus API.
 - [You're in control](/docs/explanation/youre-in-control/) - every safety control in one place.
 - [Platform action matrix](https://blowhorn.ai/field-manual/action-matrix/) - safe versus risky actions, per platform.

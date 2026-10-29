@@ -7,18 +7,18 @@ weight: 36
 
 `make onboarding-e2e` walks the desktop app's first-muster wizard from sign-in
 through a dry run of the first post, and Create account on its own. It uses the app you just built
-(`desktop/out`), a local stand-in for the Blowhorn service, and a throwaway Chrome
+(`desktop/out`), a local stand-in for the Blowhorn service, and a throwaway Google Chrome
 profile. It does not sign in to a social platform, and it does not open your
 own Chrome profile. The throwaway Chrome has two profiles, as a person's now
 does: Chrome's main profile, started once and left empty, and a second profile
 set aside for Blowhorn, which gets the extension and any planted logins. The
-walk passes the Chrome profile intro and checks that the main profile is listed
-with no **Use with Blowhorn** switch.
+walk passes the Chrome profile intro and checks that the Chrome profiles screen
+lists the second profile and does not show the main profile.
 
 The throwaway home is seeded from the same `.blowhorn.yaml` a packaged app
 seeds, then given a `postgres` backend. That is the file an older install
 left behind. The walk reaches the console only when the engine opens Cloud
-anyway. In the app, Activity shows the draft and Routines runs a preview-only
+anyway. In the app, Activity shows the draft and Routines runs a dry fire
 check. A `blowhorn post --dry-run` then reports the fixture row without
 publishing it.
 
@@ -96,13 +96,15 @@ The check walks the variants in turn; `--variant <name>` runs one:
   saved logins.
 - **sign-up:** Create account. It checks that the browser opens Blowhorn's
   sign-up page (`/registration`), never the sign-in page, and that once the
-  stand-in confirms the email the wizard reaches You're signed in without
+  stand-in confirms the email the wizard moves past the sign-in without
   anything being pressed in the app.
 
 Every walk also checks three things that a real re-run once got wrong:
 
-- **Setting up your account moves on by itself.** With one organization the
-  wizard goes from You're signed in to Confirm troops with one Next.
+- **Signing in and setting up your account move on by themselves.** A
+  sign-in that worked never stops on You're signed in, and with one
+  organization the wizard reaches the Chrome profile intro with nothing
+  pressed after Sign in.
 - **One sign-in opens one browser tab.** The recorder that stands in for the
   browser must see exactly one open of the local Cloud, `/login` for sign-in
   and `/registration` for Create account, counted after the callback has had
@@ -140,6 +142,8 @@ and `--password-store=basic`. A user-data directory outside that temp
 directory is refused. Every Chrome Blowhorn itself starts on that folder
 during the check, such as the extension's store page during setup, carries
 the same two switches, so macOS never shows "Keychain Not Found". The
+check also sets `BLOWHORN_MUTE_AUDIO=1`, so the app and every Chrome it
+starts stay silent. The
 throwaway Chrome profile has no Google account, like many people's: the
 email in the wizard is what finds the person in the local Cloud. The happy
 path ends by checking that `blowhorn chrome profiles --json` still reports

@@ -16,7 +16,7 @@ It reports whether the extension directory is installed, whether the native
 host manifest is missing, current or stale against the checkout, which install
 route is on disk (policy, external, or none), and whether the extension
 answers hello on its socket. An answered hello proves the extension is loaded
-in the real Chrome and talking.
+in the real Google Chrome and talking.
 
 ## Not connected
 

@@ -11,11 +11,13 @@ kept.
 ## Start an update
 
 When a newer release is out, the menu-bar popup shows a card with the new
-version and an **update** button. The Home screen and the Setup screen offer
-the same update. Press **update** in any of them.
+version and an **update** button. The Home screen (**Update to** the new
+version), the Setup screen (**update now**) and the This computer screen
+offer the same update. Press any of them.
 
 The app also checks each time you open it. If that check finds a newer
-release, a prompt in the console window asks before anything is downloaded.
+release, a prompt in the console window asks before anything is downloaded:
+**Update now** starts it, **Later** skips that version.
 
 You can check on demand instead of waiting: in the menu bar, open the
 Blowhorn menu and choose **Check for Updates…**. If you are up to date it
@@ -35,7 +37,10 @@ once they quit it and their service stops.
 
 ## What you see while it updates
 
-The card names each step as it happens:
+In the console window the update covers the whole window, so you can see it
+is working wherever you started it; nothing else can be done until Blowhorn
+reopens. In the menu-bar popup the update card shows the same steps. Each
+step is named as it happens:
 
 1. **downloading**, with a progress bar, the percent done, how many MB of the
    total have arrived, and about how long is left. The time left comes from
@@ -43,7 +48,7 @@ The card names each step as it happens:
 2. **installing**. The new app is copied into Applications and swapped in.
    If anything fails, your current version is put back.
 3. **finishing setup**. Blowhorn runs `blowhorn setup --yes` to refresh its
-   Chrome connection for the new version: the native host file
+   Google Chrome connection for the new version: the native host file
    (`com.blowhorn.chrome_extension.json`) and the small launcher it names,
    rewritten only if they are out of date. Nothing else changes: Chrome is not
    opened, and your Chrome profiles, other apps' hosts, sign-in and Blowhorn
@@ -56,7 +61,7 @@ The card names each step as it happens:
    start Blowhorn, or when you press **update** again.
 
 Installing and finishing setup have no bytes to count, so the bar
-sweeps and the card says how long the step usually takes, for example
+sweeps and Blowhorn says how long the step usually takes, for example
 "usually about 20 seconds". Blowhorn times these steps on your computer each time
 it updates and uses those timings next time. Until it has its own, it uses
 timings measured on an Intel iMac: about 20 seconds to
@@ -78,7 +83,8 @@ tries again. A notification says what was carried, and the Setup screen's
 ## If an update stalls
 
 If the download stops moving for 30 seconds, or a step runs for well over
-its usual time, the card says so and offers two buttons:
+its usual time, Blowhorn says so and offers two buttons (in the console,
+**Close** also hides the update window while the update keeps going):
 
 - **retry** stops the update and starts it again. Your current version stays
   installed until the new one takes its place. Once the new version is in
@@ -89,9 +95,15 @@ its usual time, the card says so and offers two buttons:
 
 The info button after the two buttons says how long nothing has moved.
 
-If the new version is installed but Blowhorn could not reopen itself, the
-card says so instead of opening the release page. Quit Blowhorn and open it
-again to start the new version.
+## If an update fails
+
+Blowhorn says what went wrong and that your current version is still
+installed, with **retry** to start again and **release page** to update by
+hand. The release page opens only when you choose it.
+
+If the new version is installed but Blowhorn could not reopen itself, it
+says so and offers no release page. Quit Blowhorn and open it again to
+start the new version.
 
 ## Update by hand
 

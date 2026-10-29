@@ -31,7 +31,7 @@ an unknown `BLOWHORN_ENTITLEMENT` value is refused by name rather than
 read as off. Dry runs are never refused: they publish nothing. See
 [Plans and limits](/docs/reference/plans/).
 
-## Chrome and the extension {#chrome-and-the-extension}
+## Chrome and the extension
 
 `another blowhorn run holds the Chrome extension bridge (pid ...)`: two runs want
 the extension at once, and the message names the holding run's pid.
@@ -40,7 +40,7 @@ that stops sending its heartbeat is released automatically after
 30 seconds.
 
 `chrome refused the connection (Allow was declined ...)`: the attach
-handshake did not complete. Keep a Chrome window open, approve the
+handshake did not complete. Keep a Google Chrome window open, approve the
 Allow dialog, and run again. In a scheduled pass the Allow window is
 short; prefer the extension default.
 
@@ -74,6 +74,17 @@ retrying, and never retry to beat the limiter.
 '...'`: the schedule activity's word is not one Blowhorn knows; use `once`,
 `hourly`, `daily`, `weekly`, `monthly`, or `every:N`. See
 [Job options and schedules](/docs/reference/jobs/).
+
+`Could not download the media: ...`: the activity's `Image URL`, `GDrive
+Link`, or `Video URL` could not be fetched, and the sentence says why - the
+host could not be reached after its retries, accepted the connection and sent
+nothing for 30 seconds, took longer than 10 minutes to send the file, broke
+off mid-transfer, answered with an HTTP error, sent a file over Blowhorn's cap
+(25 MiB for an image, 1024 MiB for a video), or sent something that is not a
+PNG, JPEG, GIF, WebP, HEIC, MP4, MOV, or WebM file (often a sign-in page: make
+the link public or download it yourself). The activity fails and stays
+pending; nothing was published, and the run goes on to the next activity. The
+caps are Blowhorn's own, not a platform's limit.
 
 An activity `clicked, outcome not read` is not an error: the sending control
 was clicked and no confirmation was read back. Check the platform,

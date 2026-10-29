@@ -20,7 +20,7 @@ Start from what you saw. Each symptom names its fix page.
 ## Sign-in problems
 
 - **LinkedIn, X or Reddit says the session expired.** Sign in again in your
-  mapped Chrome profile, or run `blowhorn profile auth` for that platform. See
+  mapped Google Chrome profile, or run `blowhorn profile auth` for that platform. See
   [Fix a sign-in that stopped working](/docs/how-to/troubleshoot/sign-in-problems/).
 - **A CAPTCHA or second factor appears mid-run.** The run stops and hands the
   browser back to you. Complete the challenge by hand, then run again. See
@@ -45,7 +45,7 @@ Start from what you saw. Each symptom names its fix page.
 - **An update sits on one step, or says it stalled.** See [Update
   Blowhorn](/docs/how-to/manage/update-blowhorn/#if-an-update-stalls).
 
-## Chrome and the extension {#chrome-and-the-extension}
+## Chrome and the extension
 
 - **The extension says not connected, or the versions mismatch.** Re-approve
   the connection after an update, or check which install route is on disk with

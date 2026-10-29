@@ -6,7 +6,7 @@ aliases: [/docs/how-to/choose-a-chrome-launch-mode/]
 ---
 
 
-Most runs should keep the default: Blowhorn drives Chrome through the Blowhorn
+Most runs should keep the default: Blowhorn drives Google Chrome through the Blowhorn
 Chrome extension and launches nothing of its own. Change it only when one run
 or one job needs a real Chrome window. Advanced page: the default is the right
 choice until you have a reason.
@@ -29,7 +29,7 @@ One case needs another mode today: the extension's typing does not reach X's
 editor or sign-in form, so X posts and X sign-ins stop before anything is
 typed. Run those with `--chrome-launch persistent`.
 
-## Launch Blowhorn's own Chrome {#launch-blowhorns-own-chrome}
+## Launch Blowhorn's own Chrome
 
 ```bash
 blowhorn post --profile ada --chrome-launch persistent
@@ -53,7 +53,7 @@ the visible posture is what keeps a flow's waits running at pace. A
 `--headless` request becomes this window, and the unattended argv does not
 change.
 
-## Attach to the Chrome you have open {#attach-to-the-chrome-you-have-open}
+## Attach to the Chrome you have open
 
 ```bash
 blowhorn post --profile ada --chrome-launch cdp

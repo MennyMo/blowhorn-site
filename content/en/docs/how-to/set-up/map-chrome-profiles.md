@@ -14,7 +14,7 @@ one-time setup every browser run depends on.
 Map a Chrome profile set aside for Blowhorn, not the one you browse in.
 The desktop app does not offer Chrome's main profile (`Default`) for a new
 mapping; a mapping an earlier setup made to it keeps working. Why is in
-[Why Blowhorn uses your own Chrome](/docs/explanation/your-own-chrome/#a-chrome-profile-of-its-own).
+[Why Blowhorn uses your own browser](/docs/explanation/your-own-chrome/#a-chrome-profile-of-its-own).
 
 A mapping is identity, never permission: it does not make a profile
 eligible for any platform. Eligibility is credential existence, decided in
@@ -118,7 +118,7 @@ treated as permission to post.
 - Chrome's profile list is readable: `blowhorn chrome profiles` lists it.
   Chrome does not have to be running.
 
-## See what Chrome has {#see-what-chrome-has}
+## See what Chrome has
 
 ```bash
 blowhorn chrome profiles
@@ -254,7 +254,7 @@ blowhorn chrome unmap ada 'Profile 7'   # when ada has more than one
 Only your account's row goes. Nothing under Chrome's directory is touched, and
 the Chrome profile keeps its sessions.
 
-## The Chrome extension in that profile {#the-chrome-extension-in-that-profile}
+## The Chrome extension in that profile
 
 A mapping does not install the Chrome extension. Chrome keeps an extension
 per Chrome profile, and the Blowhorn extension drives only the profile it

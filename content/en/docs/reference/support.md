@@ -17,7 +17,7 @@ your browser.
 To report a problem, file an issue on the public site repository,
 `blowhorn-ai/blowhorn-site`, with what you ran, what it printed, and what
 you expected. Include the exit code and the first words of the error;
-leave out credentials, session files, and anything from your Chrome
+leave out credentials, session files, and anything from your Google Chrome
 profile directories. For a security problem, do not file a public
 issue: email [security@blowhorn.ai](mailto:security@blowhorn.ai)
 instead, as the site repository's security policy describes.

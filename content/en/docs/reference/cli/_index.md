@@ -28,7 +28,7 @@ This is a standing rule, not a one-off pass. `tests/test_cli_help_coverage.py` e
 CLI framework: Python `Typer` (inspired by modern CLIs like `docker`, `kubectl`, and `gh`).
 If `typer`/`click` are missing, `blowhorn` attempts a one-time bootstrap install via `python -m pip install typer click` using the active interpreter.
 Should that bootstrap fail, `blowhorn` falls back to an argparse parser built from the same help and example constants as the Typer app, and the same test file asserts the two surfaces expose the same commands with identical prose - so the fallback can never drift into a second, staler help text.
-For a fresh virtualenv, install the full project runtime with `pip install -r engine/requirements.txt`; the CLI depends on `PyYAML`, `requests`, `playwright`, `tweepy`, `pandas`, and `xlrd` in addition to `typer` and `click`. `psycopg`, `gspread` and `oauth2client` are still listed only for one-time maintainer scripts; no command imports them, and they go with those scripts.
+For a fresh virtualenv, install the full project runtime with `pip install -r engine/requirements.txt`, which declares every runtime dependency and its version range. `psycopg`, `gspread` and `oauth2client` are still listed only for one-time maintainer scripts; no command imports them, and they go with those scripts.
 
 Global flags (available on all commands):
 
@@ -50,7 +50,7 @@ Global flags (available on all commands):
 `all` is a reserved alias, not a real profile name. When you use `--profile all`, Blowhorn expands to all configured profiles and then removes any names passed via `--exclude` / `--e`.
 Use `--exclude none` when you want to clear configured default exclusions for a single run.
 When you pass explicit profile names with `--profile your-profile,second-profile`, those named profiles are processed even if they appear in the configured exclusion list.
-Chrome is never run headless. With `--headless`, Chrome puts `HeadlessChrome/<version>` in the `User-Agent` header of every request while its client hints still say Google Chrome, which tells every site the run is automated. So `--headless` now means *unattended*: the browser opens as a background window (minimized, kept out of the foreground, the same window a flagless run opens), and no one is waited for at a sign-in or challenge. Use `--headed` when you want the window visible and in front so you can finish a sign-in yourself. `blowhorn schedule tick` runs its jobs unattended but never forces visibility onto them - each job resolves its own from its params, then the environment, then Settings - so scheduled jobs never wait for someone who is not there whatever the window does. `trigger-now` runs its one activity attended, so it may wait for you.
+Google Chrome is never run headless. With `--headless`, Chrome puts `HeadlessChrome/<version>` in the `User-Agent` header of every request while its client hints still say Google Chrome, which tells every site the run is automated. So `--headless` now means *unattended*: the browser opens as a background window (minimized, kept out of the foreground, the same window a flagless run opens), and no one is waited for at a sign-in or challenge. Use `--headed` when you want the window visible and in front so you can finish a sign-in yourself. `blowhorn schedule tick` runs its jobs unattended but never forces visibility onto them - each job resolves its own from its params, then the environment, then Settings - so scheduled jobs never wait for someone who is not there whatever the window does. `trigger-now` runs its one activity attended, so it may wait for you.
 
 `--headed` and `--headless` are one choice with two spellings, so exactly one of them survives resolution. `--headed` wins a tie, but only from an equal or higher-precedence layer: `defaults.headed: true` in `.blowhorn.yaml` does **not** cancel a `--headless` typed on the command line or set through `BLOWHORN_HEADLESS`. A run that passes `--headless` opens the background window whatever the file says.
 
@@ -79,7 +79,7 @@ and checked against it, so a page says what `--help` says.
 | Command | What it does |
 | --- | --- |
 | [`blowhorn accept`](/docs/reference/cli/accept/) | Accept pending LinkedIn connection invitations other people have sent you, one at a time with a randomized pause between each. |
-| [`blowhorn analytics`](/docs/reference/cli/analytics/) | blowhorn analytics: activity, history, import-exports, operations, pages. |
+| [`blowhorn analytics`](/docs/reference/cli/analytics/) | blowhorn analytics: activities, activity, history, import-exports, operations, pages. |
 | [`blowhorn auth`](/docs/reference/cli/auth/) | blowhorn auth: anonymous-usage-stats, login, logout, status, switch-organization. |
 | [`blowhorn chrome`](/docs/reference/cli/chrome/) | blowhorn chrome: attach-chrome, confirm, create-profile, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap. |
 | [`blowhorn comment`](/docs/reference/cli/comment/) | Post LinkedIn, Reddit, or Bluesky comments from scheduled activities or ad-hoc target/message flags. |

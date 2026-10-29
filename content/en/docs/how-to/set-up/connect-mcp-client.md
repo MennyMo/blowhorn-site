@@ -7,10 +7,11 @@ weight: 70
 Connect an MCP client to the Blowhorn MCP server and an assistant can
 use every Blowhorn command: it reads your queue and analytics, drafts
 and queues posts, amplifies what went out, and manages profiles. The
-server runs on your own computer, from a Blowhorn checkout, and the
-assistant only ever acts through the commands you already run. What
-the server is, how it groups its tools, and how it keeps writes safe
-are in the [MCP server reference](/docs/reference/mcp-server/).
+server runs on your own computer, from a Blowhorn checkout or from
+the installed app (not yet verified on macOS), and the assistant
+only ever acts through the commands you already run. What the server
+is, how it groups its tools, and how it keeps writes safe are in the
+[MCP server reference](/docs/reference/mcp-server/).
 
 Before you connect anything, finish Blowhorn's own setup: [install
 the app](/docs/how-to/set-up/install-the-app/), [sign a profile in to each
@@ -22,8 +23,10 @@ profile is not signed in, its runs fail the way a CLI run would.
 
 ## Start the server
 
-Today the server runs from a Blowhorn checkout, with the checkout's
-Python environment. From the checkout root:
+The steps below run the server from a Blowhorn checkout, with the
+checkout's Python environment. If you only installed the app, see
+[Use the installed app instead](#use-the-installed-app-instead).
+From the checkout root:
 
 ```bash
 PYTHONPATH=engine ./venv/bin/python -m blowhorn.mcp_server
@@ -47,6 +50,29 @@ make mcp-test       # run the server's tests
 
 `--list-tools` prints the tool list as JSON and `--check-coverage`
 runs the coverage check, both without serving.
+
+### Use the installed app instead
+
+> **Note:** This path is not yet verified on an installed Mac app.
+
+The app ships its own Python, the server and the command bundle, so
+no checkout is needed. Open the app once, so it writes the `blowhorn`
+command to `~/.local/bin`. The app writes that file only when the path
+is free or already holds the app's own command, and leaves any other
+file there alone. Check that `~/.local/bin/blowhorn` contains the line
+`Managed by Blowhorn installer`; if it does not, set `BLOWHORN_MCP_CLI`
+below to the `blowhorn` executable you want instead. Then use these
+values in place of the checkout paths in every client entry below:
+
+- `command`: `/Applications/Blowhorn.app/Contents/Resources/engine/bin/python`
+- `args`: `["-m", "blowhorn.mcp_server"]`
+- `env`: `PYTHONPATH` set to
+  `/Applications/Blowhorn.app/Contents/Resources/engine/engine`, and
+  `BLOWHORN_MCP_CLI` set to `/Users/you/.local/bin/blowhorn` with your
+  home directory filled in
+
+A full entry is in the
+[MCP server reference](/docs/reference/mcp-server/#from-the-installed-app).
 
 ## Connect a client
 
@@ -154,7 +180,7 @@ refuses at startup:
 PYTHONPATH=engine ./venv/bin/python -m blowhorn.mcp_server --transport http
 ```
 
-A hosted server over HTTP, with its own identity and per-profile
+A hosted server over HTTP, with its own identity and per-organization
 scoping, is separate work and owns that transport, so there is
 exactly one remote server. This page covers the local server only.
 
@@ -221,8 +247,21 @@ approval mode sees them for what they are: it sets
 set that variable. Under approval mode `agent` or `all`, the queue
 rules in [You are in control](/docs/explanation/youre-in-control/)
 therefore apply to MCP calls exactly as they apply to any other
-agent caller, including the rule that an agent cannot approve its own
-work. Note the limit of this transport: there is no desktop-app
+agent caller. `content_approve` is one of the tools, but
+`content approve` refuses an agent caller in every mode, so an MCP
+call cannot approve queued work. That only holds work back under
+`agent` or `all`: under `off`, the agent's own writes keep the
+`Approved?` value it sets, and a confirmed ad-hoc action publishes.
+Do not set `BLOWHORN_ACTOR=human` in a client's `env`: the server
+leaves an existing value alone. If the server's environment sets
+`BLOWHORN_ACTOR=human` and does not set
+`BLOWHORN_RUN_SOURCE=scheduler`, every MCP call counts as a person,
+so under `agent` the agent's writes and confirmed ad-hoc actions go
+through unheld, under `all` writes still land pending, and in any
+mode the agent can approve its own work. With
+`BLOWHORN_RUN_SOURCE=scheduler`, the calls still count as an agent
+and nothing changes.
+Note the limit of this transport: there is no desktop-app
 approval step here. On this server, `confirm` true is the approval.
 If you want a person to approve each write in the app, use the queue
 and the approval mode, not a confirmed MCP call.

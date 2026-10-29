@@ -53,7 +53,7 @@ background service. Scheduling on this computer runs from the normal install.
 That run also leaves `~/.zshrc`, `~/.local/bin`, the app's open-at-login item,
 the `blowhorn://` link handler and the installed app in `/Applications` alone.
 It never reads the account you signed in with in your login Keychain, and it
-keeps its own sign-in and Chrome folders inside its data folder. Its menu bar
+keeps its own sign-in and Google Chrome folders inside its data folder. Its menu bar
 icon reads `test`, and its tooltip says `Blowhorn (test)`.
 It still reads the service's state, so Setup shows it, and when it quits it
 stops any Chrome it started on a throwaway folder under the system temp

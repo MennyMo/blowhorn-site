@@ -9,7 +9,7 @@ weight: 111
 
 ## blowhorn post
 
-Publish pending posts or amplify existing content across supported platforms. GitHub is the one platform `blowhorn post` cannot publish to: it is amplify-only, so `--platform github` needs an issue or pull-request URL (from `--amplify` or a github activity's `Amplify` column) and refuses without one. That amplification adds all five uplifting reactions -- +1, laugh, hooray, heart, rocket -- to the target from every selected profile under its own `GH_TOKEN`, over the REST API with no browser, and re-running it adds none of them twice.
+Publish pending posts or amplify existing content across supported platforms. GitHub is the one platform `blowhorn post` cannot publish to: it is amplify-only, so `--platform github` needs an issue or pull-request URL (from `--amplify` or a github activity's `Amplify` column) and refuses without one. That amplification adds all five uplifting reactions -- +1, laugh, hooray, heart, rocket -- to the target from every selected profile under its own `GH_TOKEN`, over the REST API with no browser, and re-running it adds none of them twice. With `--payload-stdin` it is a dry fire instead: one order that is not saved, read on stdin, is walked through the same dry run as far as the platform's final click, and nothing is posted or written to your Blowhorn account.
 
 ```text
 blowhorn post [OPTIONS]
@@ -22,6 +22,8 @@ blowhorn post [OPTIONS]
 | `--message` | string |  | Send this text as one ad-hoc Slack message instead of posting from the content queue: no activity is read or marked done. Needs `--platform` slack, one profile named with `--profile` (not all, not a list) and `--target` (`#channel`, `@user`, a Slack channel link, or a Slack message link for a thread reply -- anything else is refused, never sent to #general); a profile from .blowhorn.yaml or `BLOWHORN_PROFILE` does not count as named. A link also picks the workspace's credentials. Refused with `--check-queue` or `--amplify`. `--dry-run` says what would be sent and sends nothing. |
 | `--amplify` | string |  | URL of existing content to amplify instead of publishing something new. Overrides the activity's `Amplify` column for this run. LinkedIn repost, X retweet/quote, Reddit upvote, Bluesky repost, GitHub reactions. On GitHub it names an issue or pull request and blowhorn adds all five uplifting reactions to it (+1, laugh, hooray, heart, rocket) from every selected profile under that profile's own `GH_TOKEN`; re-running adds none of them twice. `--platform` github REQUIRES a target -- this flag, or a github activity's `Amplify` column -- because it amplifies only and cannot publish a new GitHub post; it refuses the run rather than doing nothing. Ignored for Slack -- use `--target` instead; Slack's `Amplify` column selects the channel/DM/thread target, not an amplified source. |
 | `--check-queue` | boolean | `false` | Show pending posts from the content queue without publishing anything. Honors `--platform` / `--profile` / `--exclude` for filtering. Read-only - does not open a browser, hit a platform API, or invoke `claude` for blog activities. |
+| `--payload-stdin` | boolean | `false` | Dry fire one order that is not saved: read one content item's values as JSON on stdin (the fields `content upsert` takes, naming one Profile and one Platform) and walk it through the dry run as far as the platform's final click, printing each stage as it is reached. Needs `--dry-run`; `--profile` and `--platform` are not read. Writes nothing - no content item, schedule, ledger entry or run record. Hacker News is refused, because its dry run signs in. |
+| `--json` | boolean | `false` | With `--payload-stdin`, end with the dry fire's result as one JSON object |
 | `--platform` | string |  | Platform scope for `blowhorn post`. One of: bluesky, github, hn, linkedin, reddit, slack, x, all (`all` means every platform listed here) |
 | `--slack-auth` | string |  | Which Slack credential may send, for one run: `session` (your captured signed-in web session; the message is yours, with no app attached), `user-token` (an xoxp- app token for you) or `bot-token` (an xoxb- bot token), or a comma-delimited list of them tried in order (e.g. `session,user-token,bot-token`). One value is directive: that credential or a refusal naming why. A token may show the Slack app's attribution. This flag, then `BLOWHORN_SLACK_AUTH`, then defaults.slack.auth_mode in .blowhorn.yaml, then the built-in, selects it; any other value is refused before anything runs. Dry runs and results name the credential that ran and whether it was a fallback |
 | `--pace` | string |  | Pace of the random delays between `blowhorn post` actions (page loads, typing, clicks, API calls): a preset name (fast/normal/slow) or a numeric multiplier (e.g. 0.5, 2.0). Resolved as CLI flag, then `BLOWHORN_PACE`, then defaults.pace in .blowhorn.yaml (normal when none is set); an unrecognized value is rejected before anything runs |
@@ -35,6 +37,7 @@ Examples:
 blowhorn post --profile alex
 blowhorn post --check-queue --profile all
 blowhorn post --profile alex --dry-run
+cat order.json | blowhorn post --dry-run --payload-stdin --json
 blowhorn post --profile all --exclude alex
 blowhorn post --platform linkedin --profile alex --headless
 blowhorn post --profile alex -v
@@ -62,4 +65,4 @@ blowhorn post --platform github --profile alex --amplify "https://github.com/acm
 blowhorn post --platform github --profile alex
 ```
 
-Output: text.
+Output: json with `--json`, text otherwise.

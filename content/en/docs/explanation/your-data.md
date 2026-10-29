@@ -11,8 +11,8 @@ Nothing here is a step; for the sharing behind it see
 
 On your computer: the app with the engine it carries, the engine's folder
 (`~/Library/Application Support/Blowhorn/home`, or a contributor's checkout),
-and your Chrome sessions.
-Browser sessions, meaning the cookies Chrome keeps for LinkedIn, X,
+and your browser sessions.
+Browser sessions, meaning the cookies your browser keeps for LinkedIn, X,
 Reddit and Hacker News, live in your Chrome profiles, where you made
 them; Blowhorn reads them there and copies none of them elsewhere, with
 one exception: a Slack workspace session you capture is kept in your account, below. Every
@@ -34,7 +34,7 @@ isn't sent from two of them, and your analytics cover every computer. Your accou
 passwords, and Slack tokens and captured sessions. For profiles set up
 before October 2026, it also holds the LinkedIn, X, Reddit and Bluesky
 passwords copied in when those profiles moved to your account. It records
-which Chrome profile each Blowhorn profile uses on each computer: the computer's
+which Google Chrome profile each Blowhorn profile uses on each computer: the computer's
 name, the Chrome profile's folder and display name, and the Google
 account signed in to that Chrome profile. A computer that isn't signed in to your account runs nothing.
 
@@ -81,7 +81,7 @@ your operating system (name, version and architecture), the failure
 message, and how many scheduler ticks it skipped), the schema
 contract versions this build speaks, and - only while you are signed
 in - the installation id for your account. It never carries a config
-file, a log, Chrome data, a platform account name, a profile name, a
+file, a log, browser data, a platform account name, a profile name, a
 path, a token, or an email. Host names in the message are reduced to
 "cloud" or "custom" before anything is queued.
 

@@ -35,9 +35,10 @@ The console shows the same line, with the same **try again**.
 The popover footer holds "stand down this computer" and "stand down the fleet"
 (each reads "reenlist" while it holds) and, when an update is
 ready, the update card. The update downloads the new version, installs it
-and relaunches the app; when it cannot, it opens the release page in your
-browser. An installed Blowhorn that finds such a release when it opens also
-asks in the console window, before the download, with **Download**, **Later**
+and relaunches the app; when it cannot, it says why and offers the release
+page. In the console, an update shows its progress over the whole window
+until Blowhorn reopens. An installed Blowhorn that finds such a release when it opens also
+asks in the console window, before the download, with **Update now**, **Later**
 and a **?** help icon;
 what each does is under [Update](/docs/how-to/set-up/install-the-app/#update).
 
@@ -45,44 +46,119 @@ what each does is under [Update](/docs/how-to/set-up/install-the-app/#update).
 
 The console is the full window, reached from the popover. The Blowhorn logo
 at the top of its rail is Home; there is no separate Home item. Below it are
-four places: **Activity**, **Profiles**, **Performance** and **Safety**. The
-round teal **+** button in the lower right of every screen is **New activity**
-(⌘N, or New activity in the File menu). It opens **New order**:
+four places: **Activity**, **Profiles**, **Performance** and **Posture**. The
+round **+** button in the lower right of every screen, teal glass unless you
+change the material, is **New activity** (⌘N, or New activity in the File
+menu). It opens **New order**, a field
+order you fill in one step at a time. Only the open step shows its fields; a
+finished step folds to a one-line summary (press it to change it), and the
+steps ahead wait as dim rows. A step that holds what it asks for takes a teal
+check; one you passed empty, such as a skipped landing zone, takes a dashed
+"-". Each step's **Next** moves on.
 
-- **Dispatch to** - press one or more platform logos (LinkedIn, X, Reddit,
-  Bluesky, Slack, GitHub); press again to drop one.
-- **Orders that fit these channels** - **Compose a dispatch** (a post),
-  **Answer the line** (a reply to a link) or **Rally the troops** (amplify a
-  link). Only the orders every picked platform takes are offered; with GitHub
-  picked, that is Rally alone.
-- **Signed by** - the profile it goes out as.
-- **The message**, and **Attachments**: drop one or more images or videos, or
-  paste a link to one. Anything else is turned away with "Wrong intel - image
-  or video only", and each attached file has its own **Stand down** to remove
-  it. Blowhorn posts media from a link, so a dropped file needs its link
-  pasted too.
-- **When to march** - one row that reads **On my mark** (out on the next
-  check) until you open it and lock in a date and start time. An order goes
-  out once; **Advanced standing orders** opens the routine editor for
-  something that repeats, and for Hacker News, an organization blog (offered
-  only when a profile in your organization is opted in to it, `blowhorn
-  schedule destinations`) or a report.
+1. **Dispatch to** - press one or more platform tiles (LinkedIn, X, Reddit,
+   Bluesky, Slack, GitHub), each showing that platform's mark in its own
+   colour; a picked tile lifts and rings in that colour. Press again to drop
+   one. Then **Orders that fit**: **Compose a dispatch** (a post), **Answer the
+   line** (a reply to a link) or **Rally the troops** (amplify a link). Only
+   the orders every picked platform takes are offered; with GitHub picked, that
+   is Rally alone. Each order has an info button on its top-right corner, shown when you point at the order: its tip says what the order
+   does on each platform picked, and links to that platform's supported
+   actions and to the action-by-platform matrix (the platforms page).
+2. **From the desk of** - one or more profiles. Each desk sends its own copy to
+   every platform, so two platforms from two desks is four posts.
+3. **The message**, with its character count (and, for a reply or a rally, the
+   link it answers or amplifies). Type `@` to tag a person, company, page or
+   community: a note says what the tag means, and the tags found show as chips.
+   Each platform may know them by a different name, so **Next** first opens
+   **Who's who**: for each tag, one line per platform picked, prefilled with a
+   *guess* in that platform's form - `@handle` on X, `@name.bsky.social` on
+   Bluesky, `u/` or `r/` on Reddit, a member id (`U0…`) on Slack. LinkedIn
+   can't carry tags yet, and the order says so: its copy names each one as
+   plain text, without the `@`, and nothing on LinkedIn is tagged. Blowhorn looks none of them up here, so check each one,
+   edit any that are wrong, and leave a line empty to send that platform the
+   name as plain text. **Looks right** moves on; change the message or the
+   platforms afterwards and the order asks again before it can deploy. Each
+   platform's post carries the message with its own form of each tag. Your
+   answers are not remembered for the next order yet.
+   A composed dispatch also offers **Single
+   dispatch | Radio net**. A radio net is a conversation between profiles: the
+   first transmission opens the net, and each one after it is a reply from one
+   of the profiles you picked to the transmission above it, with its own words
+   and character count, closed with "Over." **+ Add a reply** offers the next
+   profile, each reply's profile can be switched, and a reply's **×** stands it
+   down. Replies go out a random number of minutes apart within the window you
+   pick (2-6 by default), never seconds apart; GitHub only rallies, so it sits
+   a net out. The manifest shows the chain (K › L › K) and Deploy counts
+   platforms x transmissions. **A radio net cannot go out yet:** each reply has
+   to answer the post the transmission above it actually produced, read back
+   from the platform, and your Blowhorn account cannot yet keep which item a
+   reply answers. Until it can, Deploy, Hold in reserve and Dry fire wait, and
+   the line above them says why. Switching back to Single dispatch keeps the
+   opening transmission's words as the message.
+4. **Landing zone** - drop one or more images or videos, or paste a link to
+   one. Anything else is turned away with "Wrong intel - image or video only",
+   and each landed file has its own **Stand down** to remove it. Blowhorn posts
+   media from a link, so a dropped file needs its link pasted too. **LZ clear**
+   moves on with no media.
+5. **When to march** - **On my mark** (out on the next check), or a date and a
+   start time from the pickers. Time is read the military way ("1430 HRS"),
+   with the day's bugle calls (Reveille 0600, Mess call 1200, Retreat 1700,
+   Taps 2200) as quick picks; **Roger ✓** closes the clock and **Lock it in**
+   folds the order. An order goes out once: **Repeat it?** lists the standing
+   orders (every day, weekday, week or month), and picking one opens the
+   routine editor, where a repeating order lives, as do Hacker News, an
+   organization blog (offered only when a profile in your organization is
+   opted in to it, `blowhorn schedule destinations`) and a report.
 
-**Deploy** adds one post to the queue for each platform picked, with the same
-words, link, media and time, and opens Upcoming. If one is refused part-way,
-the order says which went out and keeps only the rest picked, so a second
-Deploy never sends one twice. **Stand down** closes it. The **Sounds on**
-control is a preview: no sound plays yet. An activity already saved for a
+On a wide enough window a narrow **manifest** slides out beside the order
+the first time there is something to show: the platforms and desks stacked
+like cards, the message's length (never its words), what landed, and when it
+goes: a field watch shows a set time, and a jump light stands for **On my mark**. On a narrow window the folded summaries say the same. The line above the
+buttons says what is still missing, or when the order goes out.
+
+**Deploy** (it names the count, for example **Deploy 4**; a single post is just
+**Deploy**) adds one post to the queue for each platform and desk, with the same
+words, link, media and time. The steps fold away and the debrief takes the window: **Orders deployed**, one
+row per platform with how many were queued and when, and "link pending" until
+Blowhorn reads each post's own link back - never a guess. **Debrief** opens
+Performance filtered to just the posts this order wrote: a **these dispatches**
+chip in place of the filters, counting the posts the order wrote (its **×** puts
+the whole screen back), and one row per post with its profile, platform, status
+and when it is due or was sent (on your computer's clock, as "Mon, Jul 27, 2026 ·
+10:00 AM"). A post deleted from the queue since is counted under the rows ("1 of
+4 dispatches is no longer in your queue"), so the rows and that line add up to
+the chip. Once its link is read back and
+the platform reports on it, its engagement and reach, labelled measured with
+the date it was read. A post whose link is not read back yet says **link
+pending** - there is nothing to measure, so it never shows a zero. The rows
+are read once when Performance opens and again when you press **read again**,
+never on the screen's 60-second poll. If any platform refuses, the card is an **after-action report**
+instead: **Mission failure**, how many platforms deployed, each refusal in its
+own words, and per platform **Re-engage** (try only what did not land) or
+**Stand down** (leave it unsent). What landed is never written twice.
+**Close** then opens Upcoming. **Dry fire** rehearses the order before you
+save it: for each platform and desk in turn it opens that profile's browser,
+checks the sign-in and stops before composing (Slack, Bluesky and GitHub post
+over their APIs, so they open no browser and stop before sending), listing
+each as it goes and ending "Nothing was posted." It saves nothing - no post,
+routine or record - and a platform it cannot walk says why on its own row.
+Hacker News is not offered, because even its dry run signs in.
+**Hold in reserve** saves the same posts
+unapproved instead, so nothing goes out until someone approves them in
+Upcoming; **Cancel** closes the order without saving. The speaker button
+in the header beside the title starts in your **UI sounds** setting; turning it off
+mutes this order's sounds, and those of every post it saves. An activity already saved for a
 blog still shows and runs. Activity is
 one place with three views, switched at the top of the screen: **Upcoming**
 (what you want to say), **Routines** (when and where things go out) and
-**History** (what Blowhorn did). Safety holds every Risk Profile choice and every
-limit Blowhorn keeps; the Risk Profile pill on Home and the menu-bar popover's
-**safety ›** link open it.
+**History** (what Blowhorn did). Posture holds every rules-of-engagement choice
+and every limit Blowhorn keeps; the **ROE** pill on Home and the menu-bar
+popover's **posture ›** link open it.
 
 At the bottom of the rail, once you are signed in, one duty toggle covers this
-computer: **On duty** with **Stand down** beside it, or **Standing down** with
-**Reenlist**. Its round thumb is the status - teal on duty, amber standing down.
+computer: **On duty** with **Stand down** under it, or **Standing down** with
+**Reenlist** - always in full, never cut short. Its round thumb is the status - teal on duty, amber standing down.
 Press it (or ⌘⇧P) to stand this computer down or reenlist it; it never touches
 the fleet. Under the fleet's stand down alone it reads **Fleet standing down**
 and still offers this computer's own Stand down. When the service is stopped,
@@ -100,7 +176,7 @@ Every organization is on the Free plan unless an active subscription names anoth
 account menu: your name, email, organization and plan, then **Your account and
 plan** (your Blowhorn account page at cloud.blowhorn.ai, in your browser), **Team** (coming
 soon), **Switch organization** when you belong to more than one (it lists them
-with yours checked; picking one switches your account to it right here, the same
+inline in this menu with yours checked; picking one switches your account to it right here, the same
 switch cloud.blowhorn.ai makes, so your browser follows too; `blowhorn auth
 switch-organization` does it from Terminal), **Settings** (⌘,), **Help and docs**, and
 **Sign out**. Opening the menu refreshes your name, photo, organizations and
@@ -119,15 +195,15 @@ activity, is locked. Once you are signed in, the account button stays usable. Se
 
 | Screen | Shows | Acts |
 |---|---|---|
-| Home | Whether Blowhorn is working and whether it needs you, but never what runs next: an activity's next run is on Activity › Routines, and the rail's duty toggle names the next one on hover; the Fleet card: computers known (this one), how many are on duty or standing down, fleet holds, who stood the fleet down and why, and this computer's row; "Your draft was saved" once after setup, until you dismiss it or leave Home | Stand down or Reenlist the entire fleet (reason optional, saved as you type) or this computer; open This computer from this computer's row; reconnect an account; **Connect an account** opens a step for your own profile: each platform, how to sign in to it in your Chrome profile, and **Check again**, with connected ones ticked; finish setting up |
+| Home | Whether Blowhorn is working and whether it needs you, but never what runs next: an activity's next run is on Activity › Routines, and the rail's duty toggle names the next one on hover; the Fleet card: computers known (this one), how many are on duty or standing down, fleet holds, who stood the fleet down and why, and this computer's row; "Your draft was saved" once after setup, until you dismiss it or leave Home | Stand down or Reenlist the entire fleet (reason optional, saved as you type) or this computer; open This computer from this computer's row; reconnect an account; **Connect an account** opens a step for your own profile: each platform, how to sign in to it in your Google Chrome profile, and **Check again**, with connected ones ticked; finish setting up |
 | Activity › Upcoming | Your posts with their status - "ready", "scheduled", "partly sent", "sent", "draft", "needs you" - and clicked-but-unread ones, each with when it goes out: its own time, "next check" when the next run would take it, "not scheduled" when nothing will send it (a draft, or a post that needs you), and "-" once it has gone out; an opened post's editor shows its result: delivery per profile and platform, reception where it was collected, and the follower change since. On the all and scheduled filters, the schedule's routines follow below the posts, each labelled by what it does; a routine names no post, so selecting one opens it on Routines | Add or edit a post; clearing a clicked post's "Date Promoted" queues it again |
-| Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the next check; a drawer for one item; a preview of sample routines | Add an item with the **+** button or by clicking a free time; move an item's next time by dragging it; edit one item, or Stand down / Reenlist it from the duty switch in its drawer; "do it now"; add the sample routines |
+| Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the next check; a drawer for one item; a chooser of sample routines, each one ticked on only once its platform is connected | Add an item with the **+** button or by clicking a free time; move an item's next time by dragging it; edit one item, or Stand down / Reenlist it from the duty switch in its drawer; "do it now"; turn **dry fire** on in the header to rehearse up to the final click and post nothing (the dry run, `--dry-run`); add the sample routines you tick |
 | Activity › History | Everything Blowhorn did, newest first, with each one's detailed log under the log directory's `scheduler/` folder; a picked run's detail shows its activity's result above the log: delivery per profile and platform, reception where it was collected, and the follower change since | "try again" on a failure |
 | Profiles | Every profile, its Chrome mapping, its per-platform sessions; for LinkedIn, X and Reddit, which Chrome profile to sign in to - never a password field | Add a profile; map or unmap its Chrome profile; open a platform's sign-in page in that Chrome profile and **Check again**; enter a token or app password for the platforms that take one |
 | Performance | Followers, growth, and activity per profile; collection freshness in the header | Collect now; open the HTML report |
-| Safety | The Risk Profile for everyone (the slider), which choice wins, one grid of every profile on every platform with where each cell's choice comes from, the limits by platform (pace and daily caps) and the rest (spacing, outreach, how much runs at once, quiet hours, approval, preview only, typing and pointer timing), what happens when a platform pushes back, what the last check held back, where your sign-ins live, and what Blowhorn will never do | Move the slider; choose a preset for one platform for every profile, one profile on every platform, or one cell, or reset any of them to inherit; save limits or reset them to the preset; stand down or stop every computer; run a held activity once with **Do it anyway**; turn the sign-in check, the needs-you note, preview only by default and failure reports on or off |
-| This computer (from Home's computer row, or the rail's reason line) | Who registered the background service, whether it is on duty, the last check, the fleet's stand down | "check now" (with "preview only" to see what would go out); "stand down the fleet" / "reenlist the fleet"; open System Settings when the service is turned off there |
-| Settings (from the account menu) | Startup, notifications, appearance and shortcuts; the engine defaults Safety does not hold, rendered from the CLI's own option list; the extension card; your account card | Change defaults, check the extension, choose its mode, test your account connection; **open Safety ›** for the Risk Profile and limits |
+| Posture | The rules of engagement for everyone (the slider: Safety on, Weapons tight or Weapons free), which choice wins, one grid of every profile on every platform with where each cell's choice comes from, the limits by platform (pace and daily caps) and the rest (spacing, outreach, how much runs at once, quiet hours, approval, dry fire, typing and pointer timing), what happens when a platform pushes back, what the last check held back, where your sign-ins live, and what Blowhorn will never do | Move the slider; choose a preset for one platform for every profile, one profile on every platform, or one cell, or reset any of them to inherit; save limits or reset them to the preset; stand down or stop every computer; run a held activity once with **Do it anyway**; turn the sign-in check, the needs-you note, dry fire by default and failure reports on or off |
+| This computer (from Home's computer row, or the rail's reason line) | Who registered the background service, whether it is on duty, the last check, the fleet's stand down | "check now" (with "dry fire" to rehearse up to the final click, posting nothing); "stand down the fleet" / "reenlist the fleet"; open System Settings when the service is turned off there |
+| Settings (from the account menu) | Startup, appearance (theme, material, spacing), notifications and shortcuts; the engine defaults Posture does not hold, rendered from the CLI's own option list; the extension card; your account card | Change defaults, check the extension, choose its mode, test your account connection; **open Posture ›** for the rules of engagement and limits |
 
 The routines list keeps every value on one line. When the list is narrow -
 the drawer is wide, or the window is small - the browser and recurrence
@@ -154,7 +230,8 @@ gave up after its retries) shows its last time and no next one; giving it a
 new "when" in its editor schedules it again, with its full set of retries.
 
 The Performance screen states how fresh its numbers are in the header and
-has no refresh control of its own. Its activity heatmap has one row per
+has no refresh control of its own (the debrief's **read again** reads only
+those posts). Its activity heatmap has one row per
 profile; attempts recorded for several profiles at once (`all`, or a comma
 list) name no one profile, so they are counted beside it rather than shown
 as a row. The History view reaches each item's detailed log through the
@@ -188,8 +265,12 @@ registering the service happen here, not in a terminal.
 
 Settings edits the same `.blowhorn.yaml` defaults the CLI reads:
 default profile and platform, excluded profiles, notifications, logs, and the
-Chrome launch mode. Pace, daily caps, quiet hours, how much runs at once,
-approval, preview only and the Risk Profile are on the [Safety](#safety)
+Chrome launch mode. Its **appearance** card is the app's own: the theme, the
+material of the side rail and the **+** button (Solid, Teal glass, Ink glass or
+Clear glass, with tint strength, see-through and reduce transparency, which is
+on by default), and spacing; see [Change how the app looks](/docs/how-to/settings/appearance/).
+Pace, daily caps, quiet hours, how much runs at once,
+approval, dry fire and the rules of engagement are on the [Posture](#posture)
 screen instead; each Settings card that used to hold one says so and links
 there. The engine-defaults card renders from `blowhorn config show`,
 so the app can never offer an option the engine does not know. The
@@ -202,12 +283,15 @@ Quitting the app leaves
 posting to the background service and the keep-running setting; see
 [What runs when the app is closed](/docs/explanation/distribution/).
 
-## Safety
+## Posture
 
-Safety opens with "Your pace. Your risk. Your call." and **stand down the fleet**
+Posture opens with "Your pace. Your risk. Your call." and **stand down the fleet**
 and **stop everything**, the same controls as the popover's footer.
 
-- **Who runs how carefully.** The slider sets the Risk Profile for everyone. Under
+- **Who runs how carefully.** The slider sets the rules of engagement for
+  everyone: **Safety on** (slow and careful, in teal blue), **Weapons tight**
+  (normal pace, in teal) or **Weapons free** (fast, in the warn colour); the CLI
+  and the config file keep `cautious`, `standard` and `brisk`. Under
   it, **which choice wins** numbers the levels from everyone to one activity, and
   the grid has a row for each platform's choice for every profile (**Each
   platform**), a column for each profile's choice on every platform (**Every
@@ -219,7 +303,7 @@ and **stop everything**, the same controls as the popover's footer.
   at it or tab to it. A platform's choice is kept for every computer; when it could
   only be saved on this computer, the row says "this computer only". The order is
   in [Which choice wins](/docs/reference/configuration/#which-choice-wins).
-- **The limits Blowhorn keeps.** One table of the platforms a Risk Profile covers,
+- **The limits Blowhorn keeps.** One table of the platforms the rules of engagement cover,
   with each platform's pace (a word, or a number as a multiplier) and its daily
   caps, each cap showing the built-in ceiling until you set a lower one. Below it,
   the speed, how-much and when rows, the preset's own values where no option sets
@@ -229,7 +313,7 @@ and **stop everything**, the same controls as the popover's footer.
   needs you (with **open Profiles ›**), how often sign-ins are checked, and the
   needs-you note.
 - **Held back.** What the last check held, why, and when it can run, with **Do it
-  anyway** for a Risk Profile hold.
+  anyway** for a rules-of-engagement hold.
 - **Where your sign-ins live** and **Blowhorn will never** are the promises, with
   the failure reports switch.
 
@@ -238,7 +322,7 @@ Info buttons stay hidden until you point at their row or tab to them.
 ## Related
 
 - [Map Blowhorn profiles to Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/) - the Setup panel behind the mapping.
-- [Choose your Risk Profile](/docs/how-to/settings/choose-your-risk-profile/) - the Safety screen in practice.
+- [Choose your rules of engagement](/docs/how-to/settings/choose-your-rules-of-engagement/) - the Posture screen in practice.
 - [Change your defaults](/docs/how-to/settings/defaults/) - exclusions, logs.
 - [Settings and configuration](/docs/reference/configuration/) - every option the app edits.
 - [How Blowhorn works](/docs/explanation/how-it-works/) - app, engine, extension, and store.

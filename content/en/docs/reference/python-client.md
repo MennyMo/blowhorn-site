@@ -27,7 +27,7 @@ response = ConfigShowResponse.from_dict(json.loads(stdout))
 
 ## What it covers
 
-Every operation in the OpenAPI bundle: 105 commands, each as one
+Every operation in the OpenAPI bundle: 113 commands, each as one
 function under `blowhorn_schemas.api.<group>.<command>`, with the
 request and response models under `blowhorn_schemas.models`. The
 operations are shaped like the CLI, not like an HTTP service: each
@@ -50,8 +50,9 @@ argv; this client does not replace it.
 
 ## For contributors
 
-Regenerate after changing a command, a flag or a schema (after
-`make schemas-bundle`):
+`make schemas-bundle`, which you run after changing a command, a flag
+or a schema, regenerates the client as its last step. Install the
+pinned tools once, or regenerate the client alone:
 
 ```bash
 pip install openapi-python-client==0.29.1 ruff==0.17.0

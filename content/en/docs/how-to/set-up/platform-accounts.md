@@ -6,7 +6,7 @@ weight: 65
 
 
 One section per platform. LinkedIn, X, and Reddit sign in by hand in your
-Chrome; Bluesky takes a handle and an app password; GitHub takes a token;
+Google Chrome; Bluesky takes a handle and an app password; GitHub takes a token;
 Hacker News takes a username and password, or a confirmed Chrome session;
 Slack takes a captured session.
 
@@ -47,7 +47,7 @@ blowhorn chrome open-profile ada --sign-in linkedin   # sign in in the Chrome wi
 blowhorn chrome discover                              # records the sign-in as ada's account
 ```
 
-Each keeps a persistent browser session. Refresh it with `profile auth`.
+Each keeps a persistent Chrome session. Refresh it with `profile auth`.
 With a username and password stored in the profile's credential in your
 account (`LI_USERNAME` and `LI_PASSWORD`, `X_USERNAME` and `X_PASSWORD`,
 `RDDT_USERNAME` and `RDDT_PASSWORD`, written with `blowhorn profile set`;

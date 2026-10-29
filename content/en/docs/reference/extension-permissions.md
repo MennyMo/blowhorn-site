@@ -10,7 +10,7 @@ The extension acts only on requests from the Blowhorn app on your computer;
 it makes no requests of its own to any server, sells no data, and
 injects no ads. Its single purpose is carrying out the posting,
 engagement, outreach, export and session-check actions you queue or
-start in Blowhorn, inside the Chrome profile you already use. Its
+start in Blowhorn, inside the Google Chrome profile you already use. Its
 toolbar button shows status only; every change happens in the Blowhorn
 app.
 

@@ -97,7 +97,7 @@ touches your account. In the app every scope is a Stand down / Reenlist pair:
 - **This computer** - the rail's duty toggle, the flagless pause above.
 - **The fleet** (every computer sharing your schedule, `--all`) - the
   **Entire fleet** row on Home's Fleet card, or "stand down the fleet" in the
-  popover, This computer and Safety. A reason is optional; on Home you type
+  popover, This computer and Posture. A reason is optional; on Home you type
   it beside the toggle and it saves as you type. While the fleet stands down,
   the card shows who stood it down, when and why, and this computer's row
   waits for the fleet to reenlist.
