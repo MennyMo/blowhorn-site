@@ -67,9 +67,8 @@ check; one you passed empty, such as a skipped landing zone, takes a dashed
    does on each platform picked, and links to that platform's supported
    actions and to the action-by-platform matrix (the platforms page).
    Beside them, **Or run** lists every other action the picked platforms can
-   run once, in one select: on LinkedIn **Invite to a page**, **Connect with
-   mentees**, **Accept invitations**, **Withdraw stale invitations** and
-   **Collect analytics**; on X and Bluesky **Follow accounts** and **Collect
+   run once, in one select: on LinkedIn **Invite to a page**, **Accept
+   invitations**, **Withdraw stale invitations** and **Collect analytics**; on X and Bluesky **Follow accounts** and **Collect
    analytics**; on GitHub **Follow accounts**. With several platforms picked it
    lists the actions all of them run. The list is the same catalog the command
    line schedules from, so an action Blowhorn can schedule is never missing
