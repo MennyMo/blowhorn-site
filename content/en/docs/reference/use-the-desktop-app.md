@@ -208,7 +208,16 @@ soon), **Switch organization** when you belong to more than one (it lists them
 inline in this menu with yours checked; picking one switches your account to it right here, the same
 switch cloud.blowhorn.ai makes, so your browser follows too; `blowhorn auth
 switch-organization` does it from Terminal), **Settings** (⌘,), **Help and docs**, and
-**Sign out**. Opening the menu refreshes your name, photo, organizations and
+**Sign out**. With many organizations the list scrolls on its own, so your name at
+the top and **Sign out** at the bottom stay in view, and with more than eight a
+**Filter organizations** box above the list narrows it as you type (press the
+down arrow to move from the box into the list, and the up arrow on the list's first
+organization to go back to the box). The menu works from the keyboard:
+the up and down arrows move through it and wrap around at the ends, Home and End
+jump to the first and last item, typing a name's first letters jumps to it, Return
+or Space chooses the highlighted item, and Esc closes the menu. **Sign out** signs
+you out and takes you straight to the sign-in screen; if it can't, the menu's error
+line says why and you stay where you were. Opening the menu refreshes your name, photo, organizations and
 plan from your Blowhorn account. Signed out, the rail shows no sign-in button
 and no account placeholder: the guided setup's own sign-in buttons are the way
 in, and this computer's status line stays hidden. While
