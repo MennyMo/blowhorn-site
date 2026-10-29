@@ -54,6 +54,10 @@
         </section>
         {{- end }}
 
+        {{- if not .IsPage }}
+        {{ partial "tells-callout.html" (merge site.Data.tells.callouts.agents (dict "id" "ai" "placement" "ai")) }}
+        {{- end }}
+
         {{- with $p.cards }}
         <section class="agent-section" aria-labelledby="ai-cards-title">
           <div class="section-head"><h2 id="ai-cards-title" class="h2">{{ $p.cards_title }}</h2></div>

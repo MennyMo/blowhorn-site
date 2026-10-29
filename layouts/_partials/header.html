@@ -1,6 +1,7 @@
 {{- /* The site header: lockup, primary navigation and the Download button.
   Five groups open a panel under the bar (Product, Solutions, Compare, Resources,
-  Trust); Pricing and Docs are plain links. Below 1080px a Menu button opens the
+  Trust); Am I a Bot? (the free Blowhorn Tells check, with a Free pill),
+  and Pricing are plain links. Below 1080px a Menu button opens the
   same groups as a sheet, and Download leaves the bar to close the sheet as its
   last item. Behaviour in assets/js/nav.js: click, Enter or Space
   opens a group, Escape closes it, a mouse can also hover. Without the script,
@@ -12,6 +13,8 @@
 {{- $solutions := site.Data.solutions.solutions -}}
 {{- $compare := site.GetPage "/compare" -}}
 {{- $agents := site.GetPage "/agents" -}}
+{{- $tells := site.Data.tells -}}
+{{- $tellsURL := partial "tells-link.html" (dict "placement" "nav") -}}
 {{- define "_partials/mm-link.html" -}}
 <li><a class="mm-link" href="{{ .href }}"><span class="mm-link-title">{{ .title }}</span>{{ with .desc }}<span class="mm-link-desc">{{ . }}</span>{{ end }}</a></li>
 {{- end -}}
@@ -155,14 +158,14 @@
                   <p class="mm-intro-text">Guides, answers and the story behind the horn.</p>
                 </div>
                 <ul class="mm-links mm-cols-2">
+                  {{- partial "mm-link.html" (dict "href" (site.GetPage "/docs").RelPermalink "title" "Docs" "desc" "Set up, how-to guides and reference") }}
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/resources/videos").RelPermalink "title" "Videos" "desc" "Short films and walkthroughs") }}
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/resources/articles").RelPermalink "title" "Articles" "desc" "Product intelligence and tips") }}
-                  {{- partial "mm-link.html" (dict "href" (site.GetPage "/docs").RelPermalink "title" "Docs" "desc" "Set up, how-to guides and reference") }}
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/field-manual").RelPermalink "title" "Field Manual" "desc" "What each feed rewards and punishes") }}
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/docs/reference/support").RelPermalink "title" "Get help" "desc" "Support and troubleshooting") }}
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/major").RelPermalink "title" "Meet Major" "desc" "Our mascot and his troops") }}
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/brand").RelPermalink "title" "Brand" "desc" "Logo, colors and the brand kit") }}
-                  {{- partial "mm-link.html" (dict "href" "https://tells.blowhorn.ai/" "title" "Am I a Bot?" "desc" "Free check: what sites can see about your browser") }}
+                  {{- partial "mm-link.html" (dict "href" $tellsURL "title" $tells.nav.label "desc" "Free check: what sites can see about your browser") }}
                 </ul>
               </div>
             </li>
@@ -182,8 +185,8 @@
                 </ul>
               </div>
             </li>
+            <li class="mm-item"><a class="mm-top mm-top-tells" href="{{ $tellsURL }}"><span class="mm-top-label">{{ $tells.nav.label }} <span class="mm-pill">{{ $tells.nav.pill }}</span></span></a></li>
             <li class="mm-item"><a class="mm-top" href="{{ "pricing/" | relURL }}">Pricing</a></li>
-            <li class="mm-item"><a class="mm-top" href="{{ "docs/" | relURL }}">Docs</a></li>
             <li class="mm-item mm-item-download"><a class="button button-primary mm-download" href="{{ "download/" | relURL }}">Download</a></li>
           </ul>
         </nav>

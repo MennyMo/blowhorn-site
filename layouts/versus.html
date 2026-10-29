@@ -90,13 +90,15 @@
 
         {{ partial "major-says.html" (dict "line" $p.major) }}
 
+        {{ partial "tells-callout.html" (merge site.Data.tells.callouts.compare (dict "id" "compare" "placement" "compare")) }}
+
         <section class="agent-section" aria-labelledby="faq-title">
           <div class="section-head">
             <h2 id="faq-title" class="h2">Frequently Asked Questions</h2>
           </div>
           <div class="agent-faq versus-faq">
             {{- range $p.faq }}
-            <details class="glass"><summary class="ui">{{ .q }}</summary><p>{{ .a }}{{ with .link }} <a href="{{ .href }}">{{ .label }}</a>{{ end }}</p></details>
+            <details class="glass"><summary class="ui">{{ .q }}</summary><p>{{ .a }}{{ with .link }} <a href="{{ cond (eq .href site.Data.tells.url) (partial "tells-link.html" (dict "placement" "compare")) .href }}">{{ .label }}</a>{{ end }}</p></details>
             {{- end }}
           </div>
         </section>

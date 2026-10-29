@@ -834,7 +834,9 @@ pre code { background: none; padding: 0; }
     top: 100%;
     left: 0;
     right: 0;
-    max-height: calc(100dvh - var(--header-h));
+    /* nav.js sets --sheet-top to the header's bottom edge, which sits lower
+       while the Tells bar above it is still on screen. */
+    max-height: calc(100dvh - var(--sheet-top, var(--header-h)));
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: var(--space-2) var(--gutter) var(--space-6);
@@ -1410,7 +1412,12 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .footer-col-wide { grid-column: 1 / -1; }
-.footer-col-wide ul { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(6, auto); grid-auto-flow: column; column-gap: var(--space-6); }
+.footer-col-wide ul { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(6, auto); grid-auto-flow: column; }
+/* Free tools (data/tells.json footer) takes its own row below 1080px, its
+   links on Compare's columns, so no column is left alone in a half-empty row. */
+.footer-col-tools { grid-column: 1 / -1; }
+.footer-col-tools ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 399px) { .footer-col-tools ul { grid-template-columns: minmax(0, 1fr); } }
 .footer-title {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -1420,7 +1427,7 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   text-transform: uppercase;
   color: var(--ink-muted);
 }
-.footer-col ul { margin-top: var(--space-3); display: grid; gap: var(--space-1); align-content: start; }
+.footer-col ul { margin-top: var(--space-3); display: grid; row-gap: var(--space-1); column-gap: var(--space-6); align-content: start; }
 .footer-col a {
   display: inline-block;
   padding-block: var(--space-1);
@@ -1445,12 +1452,18 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   .footer-top { grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); align-items: center; gap: var(--space-8); }
   .footer-cols { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .footer-col-wide ul { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, auto); }
+  .footer-col-tools ul { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (min-width: 1080px) {
   .footer-panel { padding: var(--space-12); gap: var(--space-8); }
-  .footer-cols { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .footer-col-wide { grid-column: span 2; }
-  .footer-col-wide ul { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(6, auto); }
+  /* One row, each column as wide as its longest link and the slack spread
+     between them: equal tracks cut "For AI agents and scripts" (and
+     "Chrome extension") short of their nowrap width. */
+  .footer-cols { grid-template-columns: repeat(6, max-content); justify-content: space-between; }
+  .footer-col-wide,
+  .footer-col-tools { grid-column: auto; }
+  .footer-col-tools ul { grid-template-columns: max-content; }
+  .footer-col-wide ul { grid-template-columns: repeat(2, max-content); grid-template-rows: repeat(6, auto); }
 }
 /* Service status: ported from a shared footer pattern (
    src/sections/General/Footer/footer.style.js, .status-link and .pulse-icon). */
@@ -2853,7 +2866,6 @@ a.card.docs-card > * { margin-top: 0; }
 .major-story { max-width: var(--text-measure); }
 .major-story h2 { margin-bottom: var(--head-gap); }
 .major-story p + p { margin-top: var(--stack-gap); }
-.trust-tells { margin-top: var(--stack-gap); }
 .major-plate { margin: 0; }
 .major-plate img { display: block; width: 100%; height: auto; border-radius: 14px; box-shadow: 0 24px 48px -24px rgb(30 33 23 / 45%); }
 .major-plate figcaption { margin-top: var(--intro-gap); }
@@ -3618,6 +3630,149 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
   .consent { bottom: var(--space-6); width: min(360px, calc(100% - 2 * var(--space-6))); }
 }
 
+
+/* ---------- Blowhorn Tells, the free Am I a Bot? check (data/tells.json) ----------
+   One look for every place the site points at Tells: a slim bar above the
+   header, a Free pill on the header item, the home page band, the callout on
+   compare, /ai/ and /agents/, and the card on /download/thanks/. Sleeper Cell's
+   art keeps its black ground in a rounded frame, like the cast pages. The docs
+   card lives with the docs layout (assets/scss/_styles_project.scss). */
+.tells-bar {
+  background: var(--surface-tint);
+  color: var(--ink);
+  box-shadow: inset 0 -1px 0 0 var(--glass-edge);
+}
+/* Dismissed: tells-bar-head.html sets this before first paint. */
+html[data-tells-bar="off"] .tells-bar { display: none; }
+.tells-bar-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding-block: var(--space-2);
+  padding-right: calc(var(--gutter) + var(--space-8));
+}
+.tells-bar-text { margin: 0; font-size: 13px; line-height: 18px; font-weight: 500; }
+.tells-bar-link,
+.tells-docs-card-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--link);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-thickness: var(--stroke-hairline);
+  text-underline-offset: 3px;
+}
+.tells-bar-link:hover,
+.tells-docs-card-link a:hover { color: var(--link-hover); }
+.tells-bar-link svg,
+.tells-docs-card-link svg { flex: none; fill: none; stroke: currentColor; stroke-width: var(--stroke-icon); stroke-linecap: round; stroke-linejoin: round; }
+@media (prefers-reduced-motion: no-preference) {
+  .tells-bar-link svg,
+  .tells-docs-card-link svg { transition: transform 160ms ease; }
+  .tells-bar-link:hover svg,
+  .tells-docs-card-link a:hover svg { transform: translateX(2px); }
+}
+.tells-bar-close {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--gutter) - var(--space-2));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.tells-bar-close[hidden] { display: none; }
+.tells-bar-close:hover { background: var(--glass-sheen); color: var(--ink); }
+.tells-bar-close svg { fill: none; stroke: currentColor; stroke-width: var(--stroke-icon); stroke-linecap: round; }
+@media (min-width: 720px) {
+  .tells-bar-inner { justify-content: center; padding-left: calc(var(--gutter) + var(--space-8)); text-align: center; }
+}
+
+/* Header item: the label with a small Free pill. */
+.mm-top-label { display: inline-flex; align-items: center; gap: 6px; }
+.mm-pill {
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--teal-deep);
+  color: var(--white);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+@media (prefers-color-scheme: dark) {
+  .mm-pill { background: var(--teal-bright); color: var(--near-black); }
+}
+
+/* Home band (layouts/_partials/home/tells.html) and the callout
+   (layouts/_partials/tells-callout.html). */
+.tells-panel {
+  display: grid;
+  gap: var(--grid-gap);
+  align-items: center;
+  padding: var(--card-pad);
+  border-radius: var(--radius-xl);
+}
+.tells-art,
+.tells-callout-art { margin: 0; }
+.tells-art img,
+.tells-callout-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  background: var(--near-black);
+}
+.tells-art { order: -1; }
+.tells-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.tells-agents { margin-top: var(--stack-gap); max-width: var(--text-measure); }
+.tells-agents a { white-space: nowrap; }
+@media (max-width: 479px) {
+  .tells-panel .tells-actions .button { flex: 1 1 100%; }
+}
+@media (min-width: 900px) {
+  .tells-panel { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-12); padding: var(--space-12); }
+  .tells-art { order: 0; }
+}
+.tells-callout { display: grid; gap: var(--grid-gap); align-items: center; border-radius: var(--radius-xl); }
+.tells-callout-art { max-width: 20rem; }
+.tells-callout-copy > * + * { margin-top: var(--intro-gap); }
+.tells-callout-copy p { max-width: var(--text-measure); }
+.tells-callout-copy .tells-actions { margin-top: var(--space-6); column-gap: var(--space-6); }
+.tells-callout-more { color: var(--link); }
+@media (min-width: 720px) {
+  .tells-callout { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: var(--space-8); }
+}
+
+/* /download/thanks/: one small card after the install steps. */
+.tells-thanks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 44rem;
+  margin: var(--space-16) auto 0;
+  padding: var(--card-pad);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+.tells-thanks p { margin: 0; color: var(--ink-muted); max-width: var(--text-measure); }
+@media (min-width: 720px) {
+  .tells-thanks { flex-direction: row; justify-content: space-between; text-align: left; }
+  .tells-thanks .button { flex: none; }
+}
 
 /* Signal home: AI sections (layouts/_partials/home/ai-agents.html, ai-content.html). */
 .ai-agent-cards, .ai-content-offers { list-style: none; padding: 0; }

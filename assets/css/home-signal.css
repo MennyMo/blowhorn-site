@@ -287,6 +287,12 @@ html[data-machines="battalion-map"] #how .section-head .body-lg { margin-inline:
   display: block;
 }
 .machines-node.is-mate img { border-color: color-mix(in srgb, var(--yellow) 70%, transparent); }
+/* Each node centres on its spot, so a long one-line label on an edge node
+   ran past a 320px screen ("04 Night-shift server"). On narrow stages the
+   label wraps under its node instead. */
+@media (max-width: 479px) {
+  .machines-node .machines-unit-label { max-width: 7rem; white-space: normal; text-align: center; justify-content: center; line-height: 1.3; }
+}
 .machines-node.is-add .machines-add { width: 56px; height: 56px; aspect-ratio: auto; border-radius: 50%; }
 .machines-hq img {
   width: 148px;

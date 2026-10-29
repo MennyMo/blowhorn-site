@@ -1,0 +1,19 @@
+{{- /* Returns the URL of a Blowhorn Tells page with the site's UTM parameters,
+  from data/tells.json. The one place a Tells URL is built: never hard-code
+  one in a template.
+  Context: dict "placement" (required, one of data/tells.json placements; it
+  becomes utm_content) and "page" (home, checks or agents; default home).
+  An unknown page or placement fails the build. */ -}}
+{{- $t := site.Data.tells -}}
+{{- $page := .page | default "home" -}}
+{{- $placement := .placement -}}
+{{- if not (in $t.placements $placement) -}}
+  {{- errorf "tells-link.html: unknown placement %q (data/tells.json placements: %v)" $placement $t.placements -}}
+{{- end -}}
+{{- $path := index $t.pages $page -}}
+{{- if eq $path nil -}}
+  {{- errorf "tells-link.html: unknown page %q (data/tells.json pages)" $page -}}
+{{- end -}}
+{{- /* The values are plain tokens (schemas/tells.schema.json), so they need no escaping. */ -}}
+{{- $query := printf "utm_source=%s&utm_medium=%s&utm_campaign=%s&utm_content=%s" $t.utm.source $t.utm.medium $t.utm.campaign $placement -}}
+{{- return printf "%s%s?%s" $t.url $path $query -}}

@@ -1,0 +1,15 @@
+{{- /* The docs pages' Blowhorn Tells card (copy in data/tells.json docs).
+  docs/baseof.html renders it twice: under the table of contents, shown
+  from 1280px, and at the end of the page, shown below 1280px or while the
+  contents column is collapsed. CSS shows exactly one, so a reader and a
+  screen reader meet it once. Context: dict "page" and "where" (toc or end). */ -}}
+{{- if partial "tells-show.html" .page }}
+{{- with site.Data.tells.docs }}
+<div class="tells-docs-card tells-docs-card-{{ $.where }}">
+  <p class="label">{{ .eyebrow }}</p>
+  <p class="tells-docs-card-title">{{ .title }}</p>
+  <p class="tells-docs-card-text">{{ .text }}</p>
+  <p class="tells-docs-card-link"><a href="{{ partial "tells-link.html" (dict "placement" "docs") }}">{{ .link }}<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"></path></svg></a></p>
+</div>
+{{- end }}
+{{- end }}

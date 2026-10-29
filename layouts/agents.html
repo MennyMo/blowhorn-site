@@ -14,6 +14,7 @@
           <div class="section-head"><h2 id="pick-title" class="h2">Pick your agent</h2></div>
           {{ partial "agents/others.html" . }}
         </section>
+        {{ partial "tells-callout.html" (merge site.Data.tells.callouts.agents (dict "id" "agents" "placement" "agents")) }}
         <section class="agent-section" aria-labelledby="why-title">
           <div class="section-head"><h2 id="why-title" class="h2">Why it works with any agent</h2></div>
           <div class="grid grid-3">

@@ -11,6 +11,9 @@
           <p class="label">404</p>
           <h1 id="missing-title" class="display">There is no page here</h1>
           <p class="body-lg muted">The address may have a typo, or the page moved. The home page has everything that is public.</p>
+          {{- with site.Data.tells.missing }}
+          <p class="tells-missing">{{ .text }} <a href="{{ partial "tells-link.html" (dict "placement" "404") }}">{{ .link }}</a></p>
+          {{- end }}
           <p class="hero-actions">
             <a class="button button-primary" href="{{ "" | relURL }}">Back to the home page</a>
             <a class="button button-secondary" href="{{ site.Params.github_repo }}/releases">See releases</a>

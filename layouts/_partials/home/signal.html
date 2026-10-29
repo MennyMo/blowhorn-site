@@ -182,9 +182,10 @@
             </li>
           </ul>
           <p class="section-body"><a class="button button-secondary" href="{{ (site.GetPage "/legal").RelPermalink }}">Visit the Trust Center</a></p>
-          <p class="muted trust-tells">Curious what sites can see about your browser? <a href="https://tells.blowhorn.ai/">Run the free check at Blowhorn Tells</a>.</p>
         </div>
       </section>
+
+      {{- partial "home/tells.html" . }}
 
       {{ partial "home/ai-content.html" . }}
       <section id="pricing" class="section" aria-labelledby="pricing-title">

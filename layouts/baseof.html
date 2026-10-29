@@ -9,6 +9,7 @@
     <a class="skip-link ui" href="#main">Skip to content</a>
     {{- block "sprite" . }}{{ end }}
 
+    {{- partial "tells-bar.html" . }}
     {{ partial "header.html" . }}
     {{- block "main" . }}{{ end }}
 

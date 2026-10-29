@@ -38,6 +38,71 @@
   }
 }
 
+// ---------- Blowhorn Tells card ----------
+
+// layouts/_partials/tells-docs-card.html renders twice: under the table of
+// contents (shown from 1280px, unless the column is collapsed) and at the
+// end of the page (everywhere else). Exactly one shows at any width. The
+// link and arrow share their style with the announcement bar (site.css).
+.tells-docs-card {
+  max-width: 24rem;
+  margin-top: var(--space-12);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-tint);
+  color: var(--ink);
+}
+
+.tells-docs-card > * {
+  margin: 0;
+}
+
+.tells-docs-card > * + * {
+  margin-top: var(--space-1);
+}
+
+.tells-docs-card-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 700;
+  color: var(--ink-wordmark);
+}
+
+.tells-docs-card-text {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.tells-docs-card .tells-docs-card-link {
+  margin-top: var(--space-2);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.tells-docs-card-toc {
+  display: none;
+  margin-top: var(--space-8);
+}
+
+@media (min-width: 1280px) {
+  .tells-docs-card-toc {
+    display: block;
+  }
+
+  .tells-docs-card-end {
+    display: none;
+  }
+
+  .docs-wrap.toc-collapsed .tells-docs-card-toc {
+    display: none;
+  }
+
+  .docs-wrap.toc-collapsed .tells-docs-card-end {
+    display: block;
+  }
+}
+
 // ---------- Table of contents collapse ----------
 
 // The toggle sits in the TOC header (layouts/_partials/toc.html); the

@@ -74,6 +74,13 @@
           </li>
         </ol>
 
+        {{- with site.Data.tells.thanks }}
+        <div class="tells-thanks glass">
+          <p>{{ .text }}</p>
+          <a class="button button-secondary" href="{{ partial "tells-link.html" (dict "placement" "thanks") }}">{{ .link }}</a>
+        </div>
+        {{- end }}
+
         <div class="thanks-updates">
           {{ partial "newsletter.html" (dict "id" "updates-email" "label" "Get release updates" "button" "Sign up" "class" "newsletter-center" "page" .) }}
         </div>
