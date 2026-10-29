@@ -1,7 +1,8 @@
 {{- /* The Brand page at /brand/ (content/en/brand/_index.md): the logo files,
-  colors, type, Major Blowhorn and the usage rules, with the brand kit zip in
-  static/brand/. Every logo is placed as its own file, never recoloured: the
-  "don't" examples are the one place a mark is distorted, on purpose, with CSS.
+  colors, type, Major Blowhorn, Old Thunderlung and the usage rules, with the two
+  kit zips (the full brand kit and the logos only) in static/brand/. Every logo
+  is placed as its own file, never recoloured: the "don't" examples are the one
+  place a mark is distorted, on purpose, with CSS.
   Colors come from data/brand_colors.json, the kit's own colors file. */ -}}
 {{- /* Download links for one brand asset: SVG first, as the master and the
   file shown on the page, then PNG and WebP renders of it from the same folder.
@@ -30,10 +31,56 @@
                 </div>
               </li>
 {{- end -}}
+{{- /* The two kit downloads, in the hero and the closing call to action:
+  the full kit as the primary button, the logos only as the secondary one. */ -}}
+{{- define "partials/brand-kit-downloads.html" -}}
+{{- $icon := `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11"></path><path d="M7 11l5 5 5-5"></path><path d="M4 19h16"></path></svg>` -}}
+            <div class="brand-downloads">
+              <div class="brand-download">
+                <a class="button button-primary button-pop" href="{{ .full.url | relURL }}" download>
+                  {{ $icon | safeHTML }}
+                  Download full brand kit
+                </a>
+                <p class="caption muted">ZIP, {{ .full.size }}. Logos, colors, type, usage rules, Major Blowhorn, the troops and Old Thunderlung.</p>
+              </div>
+              <div class="brand-download">
+                <a class="button button-secondary" href="{{ .logos.url | relURL }}" download>
+                  {{ $icon | safeHTML }}
+                  Download logos only
+                </a>
+                <p class="caption muted">ZIP, {{ .logos.size }}. Logos, icons and wordmarks in SVG and PNG, light and dark.</p>
+              </div>
+            </div>
+{{- end -}}
+{{- /* A grid of character tiles on cream, each with PNG and WebP downloads.
+  Takes dir (under assets/brand/mascot/), items (name, file without extension,
+  alt, w, h) and who (the name the download labels start with). */ -}}
+{{- define "partials/brand-character-grid.html" -}}
+          <ul class="mascot-grid">
+            {{- range .items }}
+            <li class="asset">
+              <div class="asset-stage stage-cream">
+                <img src="{{ printf "%s%s.webp" $.dir .file | relURL }}" alt="{{ .alt }}" width="{{ .w }}" height="{{ .h }}" loading="lazy">
+              </div>
+              <div class="asset-meta">
+                <div>
+                  {{- /* A hyphenated word ("three-quarter") wraps as one piece. */}}
+                  <p class="ui asset-name">{{ replaceRE `([^\s,]+-[^\s,]+)` `<span class="nowrap">$1</span>` (.name | htmlEscape) | safeHTML }}</p>
+                </div>
+                {{- $name := printf "%s, %s" $.who .name }}{{ $file := .file }}
+                <span class="asset-gets" role="group" aria-label="Download {{ $name }}">
+                  {{- range slice (dict "ext" "png" "label" "PNG") (dict "ext" "webp" "label" "WebP") }}
+                  <a class="asset-get caption{{ if eq .ext "png" }} asset-get-primary{{ end }}" href="{{ printf "%s%s.%s" $.dir $file .ext | relURL }}" download aria-label="Download {{ $name }} as {{ .label }}">{{ .label }}</a>
+                  {{- end }}
+                </span>
+              </div>
+            </li>
+            {{- end }}
+          </ul>
+{{- end -}}
 {{ define "main" }}
     {{- $logo := "assets/brand/logo/" -}}
     {{- $mascot := "assets/brand/mascot/" -}}
-    {{- $kit := .Params.kit.url | relURL -}}
     {{- $colors := hugo.Data.brand_colors -}}
     <main id="main" class="page brand-page">
       <div class="wrap">
@@ -43,11 +90,7 @@
             <h1 class="display">{{ .Title }}</h1>
             <p class="body-lg muted">{{ .Params.lead }}</p>
             <div class="brand-hero-actions">
-              <a class="button button-primary button-pop" href="{{ $kit }}" download>
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11"></path><path d="M7 11l5 5 5-5"></path><path d="M4 19h16"></path></svg>
-                Download brand kit
-              </a>
-              <p class="caption muted">ZIP, {{ .Params.kit.size }}. SVG and PNG, light and dark, colors and a PDF of this page.</p>
+              {{- partial "brand-kit-downloads.html" .Params.kits }}
             </div>
           </div>
           <figure class="brand-showcase">
@@ -68,6 +111,7 @@
           <a href="#color">Color</a>
           <a href="#type">Type</a>
           <a href="#major">Major Blowhorn</a>
+          <a href="#thunderlung">Old Thunderlung</a>
           <a href="#bubbles">Speech bubbles</a>
           <a href="#usage">Usage</a>
         </nav>
@@ -153,7 +197,7 @@
         <section id="color" class="brand-section" aria-labelledby="color-title">
           <div class="section-head">
             <h2 id="color-title" class="h2">Color</h2>
-            <p class="muted">Lead with teal and charcoal. Yellow is the accent, kept under a tenth of any layout. Coral belongs to the rooster, and he doesn't share.</p>
+            <p class="muted">Lead with teal and charcoal. Yellow is the accent, kept under a tenth of any layout. Coral is the rooster's, and an accent wherever it reads well.</p>
           </div>
           <div class="color-ratio" aria-hidden="true">
             <span class="ratio-teal"></span><span class="ratio-charcoal"></span><span class="ratio-near-black"></span><span class="ratio-white"></span><span class="ratio-yellow"></span><span class="ratio-coral"></span>
@@ -231,26 +275,17 @@
               </ul>
             </div>
           </div>
-          <ul class="mascot-grid">
-            {{- range .Params.mascot }}
-            <li class="asset">
-              <div class="asset-stage stage-cream">
-                <img src="{{ printf "%s%s.webp" $mascot .file | relURL }}" alt="{{ .alt }}" width="{{ .w }}" height="{{ .h }}" loading="lazy">
-              </div>
-              <div class="asset-meta">
-                <div>
-                  <p class="ui asset-name">{{ .name }}</p>
-                </div>
-                {{- $name := printf "Major Blowhorn, %s" .name }}{{ $file := .file }}
-                <span class="asset-gets" role="group" aria-label="Download {{ $name }}">
-                  {{- range slice (dict "ext" "png" "label" "PNG") (dict "ext" "webp" "label" "WebP") }}
-                  <a class="asset-get caption{{ if eq .ext "png" }} asset-get-primary{{ end }}" href="{{ printf "%s%s.%s" $mascot $file .ext | relURL }}" download aria-label="Download {{ $name }} as {{ .label }}">{{ .label }}</a>
-                  {{- end }}
-                </span>
-              </div>
-            </li>
-            {{- end }}
-          </ul>
+          {{- partial "brand-character-grid.html" (dict "dir" $mascot "items" .Params.mascot "who" "Major Blowhorn") }}
+        </section>
+
+        <section id="thunderlung" class="brand-section" aria-labelledby="thunderlung-title">
+          <div class="section-head">
+            <h2 id="thunderlung-title" class="h2">Old Thunderlung</h2>
+            <p class="muted">Major Blowhorn's family bugle. Six generations of Blowhorns have carried it, and it has the dent to prove it.</p>
+            <p class="muted">It only sounds for real messages to real ears, so bots and bought crowds can't hear it. Nobody else plays it. As Major puts it: "Is not instrument. Is colleague."</p>
+          </div>
+          {{- partial "brand-character-grid.html" (dict "dir" $mascot "items" .Params.thunderlung "who" "Old Thunderlung") }}
+          <p class="caption muted brand-note">The red cord and tassels are its uniform. The plain version is for small or busy spaces.</p>
         </section>
 
         <section id="bubbles" class="brand-section" aria-labelledby="bubbles-title">
@@ -347,14 +382,11 @@
         </section>
 
         <section class="brand-cta" aria-labelledby="cta-title">
-          <div>
+          <div class="brand-cta-copy">
             <h2 id="cta-title" class="h2">Take it with you</h2>
-            <p class="muted">Every file on this page, in SVG and PNG, plus the colors and a PDF of these rules.</p>
+            <p class="muted">Every file on this page, in SVG and PNG, plus the colors, the cast and a PDF of these rules.</p>
           </div>
-          <a class="button button-primary button-pop" href="{{ $kit }}" download>
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11"></path><path d="M7 11l5 5 5-5"></path><path d="M4 19h16"></path></svg>
-            Download brand kit
-          </a>
+          {{- partial "brand-kit-downloads.html" .Params.kits }}
         </section>
         <p class="caption muted brand-legal">Blowhorn and the Blowhorn logos are trademarks (see the <a href="{{ "legal/terms/#trademarks-and-brand-assets" | relURL }}">terms</a>). Use them to refer to Blowhorn, not as part of your own product's name or logo.</p>
       </div>

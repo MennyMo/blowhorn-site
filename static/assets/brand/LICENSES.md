@@ -16,6 +16,15 @@ product repository's `marketing/brand/major-blowhorn/cutouts/major-6-hat-left.pn
 copied unchanged; the `.webp` beside it is
 a lossy re-encode of that file for the home page hero, with no other change.
 
+Old Thunderlung (`mascot/thunderlung/`, PNG and WebP) is the product repository's
+`marketing/brand/major-blowhorn/thunderlung/brand-style/` cutouts of Major's bugle,
+with and without its red cord, approved 28 Oct 2026 and copied unchanged.
+
+The two kits on the Brand page (`/brand/blowhorn-brand-kit.zip` and
+`/brand/blowhorn-logo-kit.zip`) are built by the product repository and published
+unchanged, under the same terms. They carry no font files: the full kit's
+README links the three families on Google Fonts.
+
 The cast art (`cast/*.webp`) is 960x540 re-encodes of the cast locked on 18 Oct 2026
 (`marketing/brand/cast/` in the product repository), unchanged otherwise, plus the four
 machine Recruit Chicks (`cast/recruit-chick-macbook`, `-imac`, `-laptop-lap` and `-mac-studio`) added on

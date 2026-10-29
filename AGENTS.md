@@ -70,9 +70,11 @@ regenerate them. Claims on every page come from the product repository's
   default; dark follows the OS with no JavaScript. Brand SVGs are used as files, never
   recoloured. Platform logos are the owners' own files in `static/assets/platforms/`, unmodified, on white
   tiles (sources in `static/assets/brand/LICENSES.md`).
-- **The brand kit is built, not edited.** `static/brand/blowhorn-brand-kit.zip` and
-  `data/brand_colors.json` come from the product repository's brand build
-  (`scripts/brand/build-brand-kit.py`, output in `marketing/brand/kit/`); copy them over unchanged.
+- **The brand kits are built, not edited.** `static/brand/blowhorn-brand-kit.zip` (the full
+  kit), `static/brand/blowhorn-logo-kit.zip` and `data/brand_colors.json` come from the product
+  repository's brand build (`tools/scripts/brand/build-brand-kit.py`, output in
+  `marketing/brand/kit/`); copy them over unchanged, then set both sizes under `kits:` in
+  `content/en/brand/_index.md` (`make check-brand-kits` fails a stale one).
 - **The product name is Blowhorn.** "Outbox" is the product's old internal name; never put
   it on a public page.
 - **Browser wording depends on the page.** Marketing and value pages (home, `/for`, `/ai`,

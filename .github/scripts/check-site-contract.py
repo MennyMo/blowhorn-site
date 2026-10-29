@@ -56,7 +56,7 @@ PAGES = {
         "main", "your-accounts", "downloads",
     ],
     "brand/index.html": [
-        "main", "logo", "clear-space", "color", "type", "major", "usage",
+        "main", "logo", "clear-space", "color", "type", "major", "thunderlung", "usage",
     ],
     "agents/index.html": [
         "main", "agents-title", "pick-title",
@@ -323,6 +323,7 @@ FILES = [
     "assets/brand/logo/blowhorn-favicon-32.svg",
     "assets/brand/logo/blowhorn-apple-touch-icon-180.png",
     "brand/blowhorn-brand-kit.zip",
+    "brand/blowhorn-logo-kit.zip",
 ]
 
 

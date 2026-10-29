@@ -1772,6 +1772,21 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   margin-top: var(--space-6);
 }
 .brand-hero-actions .caption { max-width: 22rem; }
+/* The two kit downloads: each button with its own caption underneath, side by side
+   when there is room, stacked on narrow screens. */
+.brand-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-6) var(--space-8);
+}
+.brand-download {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  flex: 1 1 15rem;
+  max-width: 20rem;
+}
 .brand-showcase {
   display: grid;
   justify-items: center;
@@ -1790,6 +1805,7 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   font-size: clamp(22px, 2.6vw, 28px);
   line-height: 1.15;
   letter-spacing: -0.015em;
+  text-wrap: balance;
   color: var(--ink-wordmark);
 }
 @media (min-width: 720px) {
@@ -1876,6 +1892,12 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   }
 }
 .mascot-grid { margin-top: var(--space-8); }
+/* A character tile's name wraps under itself, so its PNG and WebP buttons stay on
+   the same line as every other tile's in the row. */
+.mascot-grid .asset-meta { flex-wrap: nowrap; }
+.mascot-grid .asset-meta > div { min-width: 0; }
+.mascot-grid .asset-gets { flex: none; }
+.asset-name .nowrap { white-space: nowrap; }
 .asset { display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; }
 .asset-stage {
   display: grid;
@@ -2146,7 +2168,7 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   background-image: radial-gradient(var(--line) 1px, transparent 1.5px);
   background-size: var(--space-6) var(--space-6);
 }
-.brand-cta > div > * + * { margin-top: var(--space-2); }
+.brand-cta-copy > * + * { margin-top: var(--space-2); }
 .brand-legal { margin-top: var(--space-8); max-width: 48rem; }
 
 @page { size: 13.333in 7.5in; margin: 0.4in; }

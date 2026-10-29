@@ -182,6 +182,8 @@ The public URLs are a contract, checked by `make site-check`:
   there), whose URL is `params.cloud_url` in `hugo.toml` alone. None of these
   is listed in `sitemap.xml` or `llms.txt`.
 - `/assets/brand/...` (from `static/assets/brand/`), `/favicon.ico`, `/CNAME`.
+- The two brand kits on `/brand/`: `/brand/blowhorn-brand-kit.zip` (the full kit,
+  the URL the kit has always had) and `/brand/blowhorn-logo-kit.zip`.
 - Generated: `/sitemap.xml`, `/robots.txt` (which names the sitemap),
   `/llms.txt`, `/llms-full.txt` and `/index.md`.
 

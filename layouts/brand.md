@@ -2,7 +2,10 @@
 
 > {{ .Params.lead }}
 
-Download the brand kit: [{{ .Params.kit.url | absURL }}]({{ .Params.kit.url | absURL }}) (ZIP, {{ .Params.kit.size }}): the logo, wordmark, lockups and Major Blowhorn in SVG and PNG, light and dark, the colors and a PDF of the guidelines.
+{{ with .Params.kits -}}
+- Download full brand kit: [{{ .full.url | absURL }}]({{ .full.url | absURL }}) (ZIP, {{ .full.size }}). Logos, colors, type, usage rules, Major Blowhorn, the troops and Old Thunderlung.
+- Download logos only: [{{ .logos.url | absURL }}]({{ .logos.url | absURL }}) (ZIP, {{ .logos.size }}). Logos, icons and wordmarks in SVG and PNG, light and dark.
+{{- end }}
 
 ## Logo
 
@@ -31,6 +34,20 @@ The Crowhorn: a megaphone that is also a rooster. Use the horizontal lockup unle
 ## Major Blowhorn
 
 The mascot. Put him on white, light teal or cream, one appearance per page, and keep him off security, billing and legal pages.
+{{ range .Params.mascot }}
+- {{ .name }}: [PNG]({{ printf "assets/brand/mascot/%s.png" .file | absURL }}), [WebP]({{ printf "assets/brand/mascot/%s.webp" .file | absURL }})
+{{- end }}
+
+## Old Thunderlung
+
+Major Blowhorn's family bugle. Six generations of Blowhorns have carried it, and it has the dent to prove it.
+
+It only sounds for real messages to real ears, so bots and bought crowds can't hear it. Nobody else plays it. As Major puts it: "Is not instrument. Is colleague."
+{{ range .Params.thunderlung }}
+- {{ .name }}: [PNG]({{ printf "assets/brand/mascot/%s.png" .file | absURL }}), [WebP]({{ printf "assets/brand/mascot/%s.webp" .file | absURL }})
+{{- end }}
+
+The red cord and tassels are its uniform. The plain version is for small or busy spaces.
 
 ## Usage
 

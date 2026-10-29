@@ -1,17 +1,23 @@
 ---
 title: Brand
-description: The Blowhorn logo, wordmark, colors, type and mascot, with the rules for using them and a brand kit to download.
+description: The Blowhorn logo, wordmark, colors, type, Major Blowhorn and Old Thunderlung, with the rules for using them and two kits to download.
 lead: The logo, the colors, the type and one opinionated rooster. Everything you need to show Blowhorn off without upsetting him.
 layout: brand
-lastmod: 2026-10-11
+lastmod: 2026-10-28
 sitemap:
   changefreq: monthly
   priority: 0.3
-# The zip is built from the brand masters by the product repository's
-# scripts/brand/build-brand-kit.py and copied to static/brand/ unchanged.
-kit:
-  url: /brand/blowhorn-brand-kit.zip
-  size: 5 MB
+# Both zips are built from the brand masters by the product repository's
+# tools/scripts/brand/build-brand-kit.py and copied to static/brand/ unchanged.
+# `size` is the file's size in MB (1024 x 1024 bytes): one decimal under 10 MB,
+# whole MB above. make check-brand-kits fails when it drifts from the file.
+kits:
+  full:
+    url: /brand/blowhorn-brand-kit.zip
+    size: 28 MB
+  logos:
+    url: /brand/blowhorn-logo-kit.zip
+    size: 2.0 MB
 # Logo tiles. `stage` is the ground the file is drawn for: light, dark, teal or charcoal.
 lockups:
   - name: Horizontal lockup
@@ -108,6 +114,29 @@ mascot:
     alt: Major Blowhorn without his hat, shouting into his bullhorn
     w: 659
     h: 560
+# Old Thunderlung tiles: PNG and WebP copies of the product repository's
+# marketing/brand/major-blowhorn/thunderlung/brand-style/ cutouts, unchanged.
+thunderlung:
+  - name: With cord, side
+    file: thunderlung/thunderlung-tassel-side
+    alt: Old Thunderlung, a dented brass army bugle with a red cord and two tassels, seen from the side
+    w: 1173
+    h: 660
+  - name: With cord, three-quarter
+    file: thunderlung/thunderlung-tassel-3q
+    alt: Old Thunderlung, a dented brass army bugle with a red cord and two tassels, at a three-quarter angle
+    w: 1110
+    h: 641
+  - name: Plain, side
+    file: thunderlung/thunderlung-notassel-side
+    alt: Old Thunderlung, a dented brass army bugle without its cord, seen from the side
+    w: 1172
+    h: 611
+  - name: Plain, tilted
+    file: thunderlung/thunderlung-notassel-tilt
+    alt: Old Thunderlung, a dented brass army bugle without its cord, tilted bell up
+    w: 963
+    h: 725
 fonts:
   - family: Bricolage Grotesque
     role: Display
