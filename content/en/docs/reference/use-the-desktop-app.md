@@ -66,6 +66,15 @@ check; one you passed empty, such as a skipped landing zone, takes a dashed
    is Rally alone. Each order has an info button on its top-right corner, shown when you point at the order: its tip says what the order
    does on each platform picked, and links to that platform's supported
    actions and to the action-by-platform matrix (the platforms page).
+   Beside them, **Or run** lists every other action the picked platforms can
+   run once, in one select: on LinkedIn **Invite to a page**, **Connect with
+   mentees**, **Accept invitations**, **Withdraw stale invitations** and
+   **Collect analytics**; on X and Bluesky **Follow accounts** and **Collect
+   analytics**; on GitHub **Follow accounts**. With several platforms picked it
+   lists the actions all of them run. The list is the same catalog the command
+   line schedules from, so an action Blowhorn can schedule is never missing
+   here. Its info button describes every action until you choose one, then the
+   one you chose.
 2. **From the desk of** - one or more profiles. Each desk sends its own copy to
    every platform, so two platforms from two desks is four posts.
 3. **The message**, with its character count (and, for a reply or a rally, the
@@ -97,18 +106,28 @@ check; one you passed empty, such as a skipped landing zone, takes a dashed
    reply answers. Until it can, Deploy, Hold in reserve and Dry fire wait, and
    the line above them says why. Switching back to Single dispatch keeps the
    opening transmission's words as the message.
+   For an action this step is **The details**:
+   the options that action takes, such as how many days old an invitation must
+   be, how many to withdraw and **apply** for **Withdraw stale invitations**
+   (without apply, the run only previews). A box left empty takes the
+   command's own default, shown in it. An option a run cannot do without,
+   such as the account to start from for **Follow accounts**, is marked
+   required, and the order cannot go out until it is filled. Each option
+   has an info button with what it means and the command's own help for it.
 4. **Landing zone** - drop one or more images or videos, or paste a link to
    one. Anything else is turned away with "Wrong intel - image or video only",
    and each landed file has its own **Stand down** to remove it. Blowhorn posts
    media from a link, so a dropped file needs its link pasted too. **LZ clear**
-   moves on with no media.
+   moves on with no media. A rally or an action carries no media.
 5. **When to march** - **On my mark** (out on the next check), or a date and a
    start time from the pickers. Time is read the military way ("1430 HRS"),
    with the day's bugle calls (Reveille 0600, Mess call 1200, Retreat 1700,
    Taps 2200) as quick picks; **Roger ✓** closes the clock and **Lock it in**
    folds the order. An order goes out once: **Repeat it?** lists the standing
    orders (every day, weekday, week or month), and picking one opens the
-   routine editor, where a repeating order lives, as do Hacker News, an
+   routine editor on the platform and desks you picked. A routine runs on one
+   platform, so with more than one picked it asks you to pick one instead.
+   The routine editor is where a repeating order lives, as do Hacker News, an
    organization blog (offered only when a profile in your organization is
    opted in to it, `blowhorn schedule destinations`) and a report.
 
@@ -138,16 +157,25 @@ never on the screen's 60-second poll. If any platform refuses, the card is an **
 instead: **Mission failure**, how many platforms deployed, each refusal in its
 own words, and per platform **Re-engage** (try only what did not land) or
 **Stand down** (leave it unsent). What landed is never written twice.
-**Close** then opens Upcoming. **Dry fire** rehearses the order before you
+An action deploys the same way, as one scheduled run per platform and desk
+that runs once, at the time you picked or on the next check; its debrief rows
+have no link to wait for and no Debrief link, since an action is not a post
+with engagement to measure. The app checks an action in the window and again
+before it is saved, so one missing a required option or naming an option the command
+does not take is refused with the reason, never saved to fail later.
+**Close** then opens Upcoming for a post, or Routines on the first action
+saved. **Dry fire** rehearses the order before you
 save it: for each platform and desk in turn it opens that profile's browser,
 checks the sign-in and stops before composing (Slack, Bluesky and GitHub post
 over their APIs, so they open no browser and stop before sending), listing
 each as it goes and ending "Nothing was posted." It saves nothing - no post,
 routine or record - and a platform it cannot walk says why on its own row.
 Hacker News is not offered, because even its dry run signs in.
+Dry fire is offered for posts only: an action has no post to rehearse.
 **Hold in reserve** saves the same posts
 unapproved instead, so nothing goes out until someone approves them in
-Upcoming; **Cancel** closes the order without saving. The speaker button
+Upcoming (an action is saved turned off on Routines, and runs only once
+someone turns it on); **Cancel** closes the order without saving. The speaker button
 in the header beside the title starts in your **UI sounds** setting; turning it off
 mutes this order's sounds, and those of every post it saves. An activity already saved for a
 blog still shows and runs. Activity is

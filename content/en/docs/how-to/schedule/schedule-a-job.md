@@ -17,8 +17,11 @@ remembers.
 
 To add one, press the round **+** button in the lower right (or ⌘N) and
 under When to march choose **Repeat it?** and a standing order, or click a free time
-in the day or week calendar to start one at that time. (The rest of that
-window, New order, queues a one-off post; see
+in the day or week calendar to start one at that time. A standing order opens the
+routine editor on the profiles you picked, and runs on one platform, so pick only
+one under Dispatch to. (The rest of that
+window, New order, queues a one-off post or runs an action such as an invite
+once; see
 [Use the desktop app](/docs/reference/use-the-desktop-app/#the-console).) The routine editor has the
 command, the browser route, and the exact call, for a case those choices do not
 cover. A command that only runs in one place, such as accept on LinkedIn, can
@@ -53,7 +56,9 @@ already set up. A starter routine that was added is greyed out for the rest of t
 visit, so adding again never makes a second copy; if an add stops partway, the ones
 that landed stay added and the rest can be ticked again. Once you have routines, the
 "add sample routines…" button stays in the Routines header, so you can add starter
-routines later; a starter routine you already have is greyed out there too.
+routines later; a starter routine you already have is greyed out there too. The
+"invite connections" starter routine invites to the Layer5 page; to invite to another
+page, open the routine after adding it and change its page.
 
 Open a job (click it, or focus it and press Enter) to change it, or choose "do it now"
 to run it without waiting for its time. With "dry fire" on, check now rehearses the pass and claims nothing. When the account is not connected, the preview says the activity is blocked and why, in the same words a real run would meet.
