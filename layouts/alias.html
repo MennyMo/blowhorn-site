@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ site.LanguageCode }}">
   <head>
-    <title>{{ .Permalink }}</title>
+    {{- /* A short, fixed title: the target permalink can exceed html-validate's
+         70-character long-title limit (a renamed docs page with a long slug). */}}
+    <title>Page moved</title>
     <link rel="canonical" href="{{ .Permalink }}">
     <meta charset="utf-8">
     <meta http-equiv="refresh" content="0; url={{ .Permalink }}">
   </head>
-  <body></body>
+  <body><p>This page moved to <a href="{{ .Permalink }}">{{ .Permalink }}</a>.</p></body>
 </html>
