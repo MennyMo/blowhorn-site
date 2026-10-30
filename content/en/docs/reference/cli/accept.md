@@ -17,7 +17,7 @@ blowhorn accept [OPTIONS]
 
 | Flag | Type | Default | Description |
 | --- | --- | --- | --- |
-| `--ignore-risk` | boolean | `false` | Run this once even if your Risk Profile would hold it (a daily cap, quiet hours, outreach turned off or a pause after a sign-in challenge). Only this run; your Risk Profile stays as it is |
+| `--ignore-risk` | boolean | `false` | Run this once even if your Risk Profile would hold it (a daily cap, quiet hours, outreach turned off or a pause after a sign-in challenge). Only this run; your Risk Profile stays as it is. A limit the platform itself publishes still applies |
 | `--limit` | integer | `20` | Maximum acceptances confirmed in one run. A click is not an acceptance: only an invitation confirmed gone from the received list counts, and an invitation skipped because LinkedIn warned about it never consumes the budget. 0 means accept nobody. |
 | `--platform` | string |  | Platform scope for `blowhorn accept`. One of: linkedin, all (`all` means every platform listed here) |
 | `--pace` | string |  | Pace of the random delays between `blowhorn accept` actions (page loads, typing, clicks, API calls): a preset name (fast/normal/slow) or a numeric multiplier (e.g. 0.5, 2.0). Resolved as CLI flag, then `BLOWHORN_PACE`, then defaults.pace in .blowhorn.yaml (normal when none is set); an unrecognized value is rejected before anything runs |

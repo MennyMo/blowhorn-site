@@ -10,7 +10,7 @@ Set the defaults every run starts from: pace, excluded profiles, dry-run,
 notifications and logs. Change them in the app, or with `blowhorn config set`
 for the whole checkout. In the app, pace, daily caps, quiet hours, how much
 runs at once, approval and dry fire are on the Posture screen; the rest
-are in Settings.
+are on Settings' **Advanced** page.
 
 ## See what is in effect
 

@@ -17,7 +17,7 @@ blowhorn comment [OPTIONS]
 
 | Flag | Type | Default | Description |
 | --- | --- | --- | --- |
-| `--ignore-risk` | boolean | `false` | Run this once even if your Risk Profile would hold it (a daily cap, quiet hours, outreach turned off or a pause after a sign-in challenge). Only this run; your Risk Profile stays as it is |
+| `--ignore-risk` | boolean | `false` | Run this once even if your Risk Profile would hold it (a daily cap, quiet hours, outreach turned off or a pause after a sign-in challenge). Only this run; your Risk Profile stays as it is. A limit the platform itself publishes still applies |
 | `--target` | string |  | LinkedIn, Reddit, or Bluesky post URL for ad-hoc mode (for Slack thread replies, use `blowhorn post --target ...` instead) |
 | `--message` | string |  | Comment text for ad-hoc mode |
 | `--platform` | string |  | Platform scope for `blowhorn comment`. One of: bluesky, linkedin, reddit, all (`all` means every platform listed here) |

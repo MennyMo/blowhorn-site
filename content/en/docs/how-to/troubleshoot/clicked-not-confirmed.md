@@ -14,7 +14,9 @@ not a result: only you settle it, by looking at the platform yourself.
 
 When no confirmation follows the click, `Date Promoted` carries `clicked,
 outcome not read` with the time, no promotion link is written, and the activity is
-not counted as posted. No later run posts it again.
+not counted as posted. No later run posts it again. In the desktop app, the
+activity's result reads `clicked, outcome not read` with `clicked` and the time
+of the click, never `sent`.
 
 1. Open the profile on the platform and check whether the post is there.
 2. If it is there, record it on the activity so it stays done.

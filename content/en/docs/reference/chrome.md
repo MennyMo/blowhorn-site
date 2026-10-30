@@ -69,7 +69,10 @@ the extension's own IndexedDB files,
 `<profile>/IndexedDB/chrome-extension_<extension id>_0.indexeddb.leveldb/`
 under the data directory of the Chrome that started it (its
 `--user-data-dir`, else Chrome's default), to learn which Chrome profile
-is asking. It
+is asking. When it finds that identifier in more than one profile (a
+copied profile carries the extension's files with it), it names none
+of them, and the popup asks you to map this profile in Blowhorn rather
+than show another profile's mapping. It
 reads no other extension's files and nothing else in the profile, and
 writes nothing there.
 

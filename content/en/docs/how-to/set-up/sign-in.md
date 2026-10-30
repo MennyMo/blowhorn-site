@@ -87,6 +87,10 @@ Blowhorn plan yet, open [Blowhorn](https://cloud.blowhorn.ai) yourself, or choos
 
 ## Sign out
 
+In the app, open the account menu at the bottom of the rail and choose **Sign
+out**. The app takes you to the sign-in screen, where **Sign in with your
+browser** signs you back in, as the same account or another. From Terminal:
+
 ```bash
 blowhorn auth logout
 ```

@@ -13,6 +13,11 @@ unfollows one account with `blowhorn unfollow`, searches posts with
 `blowhorn find`. Analytics appends a follower and following trend activity
 per run.
 
+Bluesky publishes a limit of 1,666 records an hour and 11,666 a day per
+account, every post, like, repost, reply and follow counted together.
+Blowhorn counts them together too and never goes past it
+([the one hard stop](/docs/how-to/settings/choose-your-rules-of-engagement/#a-limit-the-platform-publishes-is-the-one-hard-stop)).
+
 ## Supported actions
 
 {{< supported-actions "bluesky" >}}

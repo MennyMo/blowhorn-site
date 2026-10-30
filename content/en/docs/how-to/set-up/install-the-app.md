@@ -89,8 +89,8 @@ outside the app, so replacing or updating the app keeps them.
 ## The `blowhorn` command
 
 The app also puts the command line on this computer. Each time it
-opens, it writes two small launcher files, `blowhorn` and `blowhorn-axi`,
-into `~/.local/bin`. It does not ask to edit your shell startup files.
+opens, it writes three small launcher files, `blowhorn`, `blowhorn-axi` and
+`blowhorn-mcp` (the MCP server an AI client starts), into `~/.local/bin`. It does not ask to edit your shell startup files.
 If a PATH block was added before, the app keeps that block up to date.
 Open a new terminal afterwards and `blowhorn --help` runs the
 engine the app carries: the same engine, the same profiles and settings as

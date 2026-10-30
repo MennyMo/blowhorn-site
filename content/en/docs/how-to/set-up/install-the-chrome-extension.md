@@ -201,7 +201,7 @@ profile's copy was confirmed.
 
 ## From the desktop app
 
-Settings has one **chrome extension** card. The segmented control is the
+Settings has one **chrome extension** card, on its **Setup** page. The segmented control is the
 route: **every profile** or **ask in each profile**. The button stays
 **install chrome extension** either way. After the command, the card lists
 one row per Chrome profile with the same words the terminal prints.
