@@ -56,8 +56,8 @@ present`, `not unregistered` or `failed`:
 3. **The every-profile install entries.** The external-extensions file and
    Blowhorn's own entry in the managed policy, removed with the same
    administrator prompt that wrote them; other keys in that file stay.
-4. **The launchers.** `~/.local/bin/blowhorn` and `~/.local/bin/blowhorn-axi`,
-   when they carry the installer's marker. A file there that `tools/install.sh` did
+4. **The launchers.** `~/.local/bin/blowhorn`, `~/.local/bin/blowhorn-axi`
+   and the app's `~/.local/bin/blowhorn-mcp`, when they carry the installer's marker. A file there that `tools/install.sh` did
    not write is kept and says so.
    Pass `--bin-dir` if you installed elsewhere. The marked block the
    installer or the app added to your shell startup file (`.zshrc`,

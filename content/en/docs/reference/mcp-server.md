@@ -60,8 +60,8 @@ the command there for its flags, its examples, and its exit codes.
 ## Starting it
 
 The server runs over stdio, from a checkout with the checkout's
-Python environment, or from the installed app (not yet verified on
-macOS; see [From the installed app](#from-the-installed-app)). From a
+Python environment, or from the installed app (see
+[From the installed app](#from-the-installed-app)). From a
 checkout:
 
 ```bash
@@ -94,14 +94,16 @@ because an argument can itself be a secret.
 
 ### From the installed app
 
-> **Note:** This path is not yet verified on an installed Mac app.
+This path is verified on Blowhorn.app 1.44.1 on an Intel Mac with
+macOS 15: the server listed its tools and a read-only call succeeded.
 
 The app carries everything the server needs inside
 `Blowhorn.app/Contents/Resources/engine`: its own Python
 (`bin/python`), the engine with the server (`engine/blowhorn/`,
 `mcp_server` included), and the command bundle
 (`schemas/dist/openapi.yaml`). Each time it opens, the app also writes
-the `blowhorn` and `blowhorn-axi` commands to `~/.local/bin`, but only
+its commands (`blowhorn`, `blowhorn-axi`, and in newer versions
+`blowhorn-mcp`) to `~/.local/bin`, but only
 where the path is free or already holds the app's own command, which
 contains the line `Managed by Blowhorn installer`. Any other file at
 that path is left alone, and `BLOWHORN_MCP_CLI` must then name the
@@ -117,7 +119,7 @@ your home directory filled in:
       "args": ["-m", "blowhorn.mcp_server"],
       "env": {
         "PYTHONPATH": "/Applications/Blowhorn.app/Contents/Resources/engine/engine",
-        "BLOWHORN_MCP_CLI": "/Users/you/.local/bin/blowhorn"
+        "BLOWHORN_MCP_CLI": "/Users/<you>/.local/bin/blowhorn"
       }
     }
   }
@@ -126,7 +128,55 @@ your home directory filled in:
 
 `BLOWHORN_MCP_CLI` names the app's `blowhorn` command outright,
 because an MCP client may start the server without `~/.local/bin` on
-its PATH.
+its PATH. Without it, a client started from the Dock or Finder lists
+the tools, but every call fails with
+`blowhorn executable not found: blowhorn`. Without `PYTHONPATH`, the
+server does not start and stderr says `No module named 'blowhorn'`.
+
+| Fact | With the app |
+|---|---|
+| Interpreter | `/Applications/Blowhorn.app/Contents/Resources/engine/bin/python` |
+| `PYTHONPATH` | `/Applications/Blowhorn.app/Contents/Resources/engine/engine` |
+| `blowhorn` command | `~/.local/bin/blowhorn`, rewritten by the app each time it opens |
+| Config file the tools read | `~/Library/Application Support/Blowhorn/home/.blowhorn.yaml`, the app's own home, not a `.blowhorn.yaml` in the client's working directory |
+| Tool list | Follows the app's version; updating the app updates the tools |
+| A moved app | The two `/Applications/...` paths are written into the client's config, so an app moved elsewhere, `~/Applications` for one, needs both changed. The `~/.local/bin` commands find the app again on their own. |
+
+The `blowhorn` command runs through the app's engine record, the same
+way the app and the background service do, which is why its config is
+the app's home rather than the client's directory.
+
+#### The `blowhorn-mcp` command
+
+Versions of the app that include it also write
+`~/.local/bin/blowhorn-mcp` beside the other two commands. When that
+file exists, it is the whole configuration: the command
+`/Users/<you>/.local/bin/blowhorn-mcp`, with no arguments and no
+environment. The one exception: when `~/.local/bin/blowhorn` is not
+the app's (it lacks the line `Managed by Blowhorn installer`), the
+entry still needs `BLOWHORN_MCP_CLI` in its `env`, naming the
+`blowhorn` executable to use; `blowhorn-mcp` keeps a value the client
+sets.
+
+```json
+{
+  "mcpServers": {
+    "blowhorn": {
+      "command": "/Users/<you>/.local/bin/blowhorn-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+It finds the app again if the app moves, the way `blowhorn` does,
+sets `PYTHONPATH` itself, and sets `BLOWHORN_MCP_CLI` to the
+`blowhorn` command beside it unless the client already set one. It
+prints nothing to stdout before the server starts. With the app in the
+Trash, or no app found at all, it starts nothing: it prints one line
+to stderr and exits 1, and it never runs the uninstall or the cleanup
+that the `blowhorn` command runs in those cases. A checkout keeps the
+venv command above; `tools/install.sh` does not write `blowhorn-mcp`.
 
 ## Options and environment
 
@@ -250,6 +300,10 @@ PYTHONPATH=engine ./venv/bin/python -m blowhorn.mcp_server --transport http
 make mcp-generate   # verify the tool list covers the bundle
 make mcp-test       # run the server's tests
 ```
+
+Those targets need a checkout. With the app, `--list-tools` and
+`--version` run against the app's own interpreter, with `PYTHONPATH`
+set as in [From the installed app](#from-the-installed-app).
 
 `--list-tools` prints the tool list as JSON and `--check-coverage`
 runs the same coverage check on its own, both without serving. A tool

@@ -8,7 +8,7 @@ Connect an MCP client to the Blowhorn MCP server and an assistant can
 use every Blowhorn command: it reads your queue and analytics, drafts
 and queues posts, amplifies what went out, and manages profiles. The
 server runs on your own computer, from a Blowhorn checkout or from
-the installed app (not yet verified on macOS), and the assistant
+the installed app, and the assistant
 only ever acts through the commands you already run. What the server
 is, how it groups its tools, and how it keeps writes safe are in the
 [MCP server reference](/docs/reference/mcp-server/).
@@ -41,7 +41,9 @@ but protocol frames to stdout; diagnostics go to stderr, and tool
 arguments are never logged, because an argument can itself be a
 secret.
 
-Check the server on its own before pointing a client at it:
+Check the server on its own before pointing a client at it. These
+targets need the checkout; the app has its own check in
+[Use the installed app instead](#use-the-installed-app-instead).
 
 ```bash
 make mcp-generate   # verify the tool list covers the bundle
@@ -53,34 +55,89 @@ runs the coverage check, both without serving.
 
 ### Use the installed app instead
 
-> **Note:** This path is not yet verified on an installed Mac app.
-
 The app ships its own Python, the server and the command bundle, so
-no checkout is needed. Open the app once, so it writes the `blowhorn`
-command to `~/.local/bin`. The app writes that file only when the path
-is free or already holds the app's own command, and leaves any other
-file there alone. Check that `~/.local/bin/blowhorn` contains the line
-`Managed by Blowhorn installer`; if it does not, set `BLOWHORN_MCP_CLI`
-below to the `blowhorn` executable you want instead. Then use these
-values in place of the checkout paths in every client entry below:
+no checkout is needed. This path is verified on Blowhorn.app 1.44.1
+on an Intel Mac with macOS 15.
 
-- `command`: `/Applications/Blowhorn.app/Contents/Resources/engine/bin/python`
-- `args`: `["-m", "blowhorn.mcp_server"]`
-- `env`: `PYTHONPATH` set to
-  `/Applications/Blowhorn.app/Contents/Resources/engine/engine`, and
-  `BLOWHORN_MCP_CLI` set to `/Users/you/.local/bin/blowhorn` with your
-  home directory filled in
+1. Open the app once, so it writes the `blowhorn` command to
+   `~/.local/bin`. The app writes that file only when the path is free
+   or already holds the app's own command, and leaves any other file
+   there alone.
+2. Check that `~/.local/bin/blowhorn` contains the line
+   `Managed by Blowhorn installer`. If it does not, set
+   `BLOWHORN_MCP_CLI` below to the `blowhorn` executable you want
+   instead.
+3. If `~/.local/bin/blowhorn-mcp` also exists (newer versions of the
+   app write it), use it as the whole client entry: the command
+   `/Users/<you>/.local/bin/blowhorn-mcp`, no arguments, no `env`. It
+   finds the app again if you move it and sets `PYTHONPATH` and
+   `BLOWHORN_MCP_CLI` itself. If step 2 found no marker, the entry
+   still needs `BLOWHORN_MCP_CLI` in its `env`, naming the `blowhorn`
+   executable to use; the command keeps a value the client sets. For
+   Claude Code:
 
-A full entry is in the
+   ```bash
+   claude mcp add blowhorn -- $HOME/.local/bin/blowhorn-mcp
+   ```
+
+4. Otherwise, use the app's interpreter with two environment values,
+   filling in your home directory. For Claude Code:
+
+   ```bash
+   claude mcp add blowhorn -e PYTHONPATH=/Applications/Blowhorn.app/Contents/Resources/engine/engine -e BLOWHORN_MCP_CLI=$HOME/.local/bin/blowhorn -- /Applications/Blowhorn.app/Contents/Resources/engine/bin/python -m blowhorn.mcp_server
+   ```
+
+   For a client that reads a JSON file, the entry is:
+
+   ```json
+   {
+     "mcpServers": {
+       "blowhorn": {
+         "command": "/Applications/Blowhorn.app/Contents/Resources/engine/bin/python",
+         "args": ["-m", "blowhorn.mcp_server"],
+         "env": {
+           "PYTHONPATH": "/Applications/Blowhorn.app/Contents/Resources/engine/engine",
+           "BLOWHORN_MCP_CLI": "/Users/<you>/.local/bin/blowhorn"
+         }
+       }
+     }
+   }
+   ```
+
+   Put it in the client's file from [Connect a client](#connect-a-client)
+   (VS Code takes it under `servers`, with `"type": "stdio"`). Both
+   values are needed: without `BLOWHORN_MCP_CLI`, a client started
+   from the Dock or Finder, whose PATH lacks `~/.local/bin`, lists the
+   tools but every call fails with
+   `blowhorn executable not found: blowhorn`. These paths assume the
+   app is in `/Applications`; if you moved it, `~/Applications` for
+   one, change both paths to match.
+
+To check the server on its own, without a client, run the app's
+interpreter with `PYTHONPATH` set:
+
+```bash
+PYTHONPATH=/Applications/Blowhorn.app/Contents/Resources/engine/engine /Applications/Blowhorn.app/Contents/Resources/engine/bin/python -m blowhorn.mcp_server --version
+PYTHONPATH=/Applications/Blowhorn.app/Contents/Resources/engine/engine /Applications/Blowhorn.app/Contents/Resources/engine/bin/python -m blowhorn.mcp_server --list-tools
+```
+
+With the app, each tool runs the app's `blowhorn` command, which reads
+the app's own settings in
+`~/Library/Application Support/Blowhorn/home/.blowhorn.yaml`, not a
+`./.blowhorn.yaml` in the client's working directory. The full set of
+app paths is in the
 [MCP server reference](/docs/reference/mcp-server/#from-the-installed-app).
 
 ## Connect a client
 
 Every client below runs the same command; only the config file and
-its top-level key differ. Fill in your checkout's real paths: the
-examples use `/path/to/blowhorn` as a placeholder. Put no secrets in
-these files. The only environment value the server needs is
-`PYTHONPATH`, pointing at the checkout's `engine` directory.
+its top-level key differ. The examples are for a checkout: fill in
+its real paths, where they use `/path/to/blowhorn` as a placeholder.
+From a checkout, the only environment value the server needs is
+`PYTHONPATH`, pointing at the checkout's `engine` directory. With the
+app, use the entry from
+[Use the installed app instead](#use-the-installed-app-instead) in the
+same files. Put no secrets in these files.
 
 ### Claude Code
 
@@ -275,15 +332,22 @@ it ran.
 ## Troubleshooting
 
 - **The client shows no Blowhorn server.** Check the command path
-  first: the venv Python must exist at the path in the config, and
-  `PYTHONPATH` must point at the checkout's `engine` directory.
-  Then restart the client: Claude Desktop only reads its config at
+  first. From a checkout, the venv Python must exist at the path in
+  the config, and `PYTHONPATH` must point at the checkout's `engine`
+  directory. With the app,
+  `/Applications/Blowhorn.app/Contents/Resources/engine/bin/python`
+  must exist (change the path if you moved the app), and `PYTHONPATH`
+  must be `/Applications/Blowhorn.app/Contents/Resources/engine/engine`;
+  a missing `PYTHONPATH` shows `No module named 'blowhorn'` in the
+  server's stderr. Then restart the client: Claude Desktop only reads its config at
   startup, and most clients only pick up a new server on restart.
 - **The server starts but lists no tools, or the tools look stale.**
-  Run `make mcp-generate` in the checkout: it fails if the tool list
+  From a checkout, run `make mcp-generate`: it fails if the tool list
   ever stops matching the command bundle. Restart the server after
   any change to the CLI or the bundle; a command added to the CLI
-  appears as a tool the next time the server starts.
+  appears as a tool the next time the server starts. With the app,
+  the tool list follows the app's version: update the app, then
+  restart the client.
 - **A write only produced a dry run.** That is the default, not a
   failure. The assistant must re-run the call with `confirm` true
   for the real run. If you did not mean to confirm, the dry run is
@@ -297,9 +361,12 @@ it ran.
 - **The server exits when asked for HTTP.** That is deliberate: this
   server is local stdio only, and `--transport http` refuses with
   the reason. Use `--transport stdio`, the default.
-- **A tool call fails with the `blowhorn` executable missing.**
-  Install the launcher with `make cli-install`, or set
-  `BLOWHORN_MCP_CLI` to the executable in the client's `env`.
+- **A tool call fails with `blowhorn executable not found`.** From a
+  checkout, install the launcher with `make cli-install`, or set
+  `BLOWHORN_MCP_CLI` to the executable in the client's `env`. With the
+  app, open the app once so it rewrites `~/.local/bin/blowhorn`, and
+  set `BLOWHORN_MCP_CLI` to `/Users/<you>/.local/bin/blowhorn` in the
+  client's `env` (the `blowhorn-mcp` command sets it for you).
 
 ## Related
 

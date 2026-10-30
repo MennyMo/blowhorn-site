@@ -150,8 +150,8 @@ machine, in order - the background service (`ai.blowhorn.service`, booted out
 and its LaunchAgent file removed), the Chrome native host (the
 `com.blowhorn.chrome_extension` manifest, its launcher under
 `~/Library/Application Support/Blowhorn`, and the every-profile install entries
-`chrome extension-install --all-profiles` wrote), the `~/.local/bin/blowhorn`
-and `~/.local/bin/blowhorn-axi` launchers (only when they carry the installer's marker),
+`chrome extension-install --all-profiles` wrote), the `~/.local/bin/blowhorn`,
+`~/.local/bin/blowhorn-axi` and `~/.local/bin/blowhorn-mcp` launchers (only when they carry the installer's marker),
 `/Applications/Blowhorn.app` (the service label it registered is booted out
 with the service, and the bundle first unregisters its own Login Items entries - open at login and the
 background service - by running `--unregister-login-items`; a bundle whose
