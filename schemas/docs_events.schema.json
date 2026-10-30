@@ -21,7 +21,7 @@
   "properties": {
     "$schema": { "type": "string" },
     "pages": {
-      "description": "Path prefixes (the site's pretty URLs, with leading and trailing slash) where the partial renders and events run.",
+      "description": "Path prefixes (the site's pretty URLs, with leading and trailing slash) where events run. Every other analytics page only captures first-touch attribution.",
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
@@ -71,8 +71,8 @@
       "const": ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
     },
     "attribution_params": {
-      "description": "Sent on every event, captured once per session after consent.",
-      "const": ["first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide"]
+      "description": "Sent on every event, captured once per session after consent on whichever analytics page comes first. landing_guide is the first tracked guide seen in the session, landing_page the first page path.",
+      "const": ["first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide", "landing_page"]
     },
     "events": {
       "description": "GA4 event names (snake_case) and their own parameters; attribution_params are added to each. Payload schemas: schemas/defs/docs-event.schema.json.",

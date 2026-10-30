@@ -1,8 +1,11 @@
 {{- /* Consent-gated GA4 attribution events for the MCP connection guides
   (assets/js/docs-attribution.js, docs/docs-attribution.md). Renders only
-  when analytics does (analytics-enabled.html) and only on a page under one
-  of data/docs_events.json's pages. The config rides along as JSON data, so
-  the script needs no per-block markup: it finds code cards and links itself
+  when analytics does (analytics-enabled.html). On a page under one of
+  data/docs_events.json's pages it carries the whole config and the script
+  sends events; on every other page it carries only the keys the first-touch
+  capture reads, and the script stores the session's attribution after
+  consent and sends nothing. The config rides along as JSON data, so the
+  script needs no per-block markup: it finds code cards and links itself
   and reads the client from the nearest client heading, else front matter
   mcp_client, else default_client. baseof.html and docs-scripts.html call
   this partial. */ -}}
@@ -11,9 +14,10 @@
 {{- $path := .RelPermalink }}
 {{- $on := false }}
 {{- range $cfg.pages }}{{ if hasPrefix $path . }}{{ $on = true }}{{ end }}{{ end }}
-{{- if $on }}
-    <script type="application/json" id="docs-events"{{ with .Params.mcp_client }} data-mcp-client="{{ . }}"{{ end }}>{{ $cfg | jsonify | safeJS }}</script>
+{{- if not $on }}
+{{- $cfg = dict "pages" $cfg.pages "consent_key" $cfg.consent_key "consent_event" $cfg.consent_event "storage_key" $cfg.storage_key "internal_hosts" $cfg.internal_hosts "utm_params" $cfg.utm_params "attribution_params" $cfg.attribution_params }}
+{{- end }}
+    <script type="application/json" id="docs-events"{{ if $on }}{{ with .Params.mcp_client }} data-mcp-client="{{ . }}"{{ end }}{{ end }}>{{ $cfg | jsonify | safeJS }}</script>
     {{- $js := resources.Get "js/docs-attribution.js" | minify | fingerprint }}
     <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous" defer></script>
-{{- end }}
 {{- end -}}

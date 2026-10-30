@@ -3,8 +3,10 @@
 
 Runs the script's pure builders and its DOM wiring through
 docs_attribution_harness.js, then checks: nothing is sent or stored before
-consent, consent given on the page starts it, the client comes from the
-nearest enclosing client heading, links classify by kind, query strings and
+consent, consent given on the page starts it, every other analytics page
+captures the first touch and sends nothing, withdrawing consent clears it
+(assets/js/consent.js), the client comes from the nearest enclosing client
+heading, links classify by kind, query strings and
 full referrers never leave the page, and every payload validates against
 schemas/defs/docs-event.schema.json (ajv, as make check-schemas runs it).
 
@@ -28,6 +30,7 @@ CONFIG = json.loads((ROOT / "data/docs_events.json").read_text(encoding="utf-8")
 AJV_VERSION_RE = re.compile(r"^AJV_CLI_VERSION\s*\??=\s*(\S+)\s*$")
 
 GUIDE = "https://blowhorn.ai/docs/how-to/set-up/connect-mcp-client/"
+OFF_GUIDES = "https://blowhorn.ai/pricing/"
 NODES = [
     {"h": 2, "id": "connect-a-client"},
     {"h": 3, "id": "claude-code"},
@@ -73,6 +76,10 @@ def events(calls):
     return [(c[1], c[2]) for c in calls if c[0] == "event"]
 
 
+def stored(result):
+    return json.loads(result["session"][CONFIG["storage_key"]])
+
+
 class ConsentTests(unittest.TestCase):
     STEPS = [{"click": "card"}, {"click": "npm"}, {"aux": "dmg", "button": 1}]
 
@@ -87,9 +94,14 @@ class ConsentTests(unittest.TestCase):
     def test_nothing_when_declined(self):
         self.assert_silent(page(consent="denied", steps=self.STEPS))
 
-    def test_nothing_without_the_partial_or_off_the_guides(self):
+    def test_nothing_without_the_partial(self):
         self.assert_silent(page(consent="granted", partial=False, steps=self.STEPS))
-        self.assert_silent(page(consent="granted", url="https://blowhorn.ai/pricing/", steps=self.STEPS))
+
+    def test_off_the_guides_nothing_is_sent(self):
+        result = page(consent="granted", url=OFF_GUIDES, steps=self.STEPS)
+        self.assertTrue(all(step == [] for step in result["after"]), result["after"])
+        self.assertIn(CONFIG["storage_key"], result["session"])
+        self.assertEqual(result["localWrites"], [])
 
     def test_consent_on_the_page_starts_from_that_point(self):
         result = page(consent=None, steps=[{"click": "card"}, {"grant": True}, {"click": "card"}])
@@ -125,6 +137,7 @@ class AttributionTests(unittest.TestCase):
                 "first_term": "claude",
                 "first_referrer_host": "news.example.com",
                 "landing_guide": "connect-mcp-client",
+                "landing_page": "/docs/how-to/set-up/connect-mcp-client/",
             },
         )
         stored = result["session"][CONFIG["storage_key"]]
@@ -148,6 +161,77 @@ class AttributionTests(unittest.TestCase):
         (_, params), = events(result["after"][0])
         self.assertEqual(params["first_source"], "launch")
         self.assertEqual(params["landing_guide"], "mcp")
+
+
+class SitewideCaptureTests(unittest.TestCase):
+    def test_untracked_landing_carries_to_a_guide(self):
+        landing = page(
+            consent="granted", url=OFF_GUIDES + "?utm_source=launch&utm_medium=social&email=a@b.c",
+            referrer="https://news.example.com/item?id=42",
+        )
+        self.assertEqual(landing["after"], [[]])
+        first = stored(landing)
+        self.assertEqual(
+            {k: first[k] for k in ("first_source", "first_medium", "first_referrer_host", "landing_page", "landing_guide")},
+            {"first_source": "launch", "first_medium": "social", "first_referrer_host": "news.example.com",
+             "landing_page": "/pricing/", "landing_guide": "(none)"},
+        )
+        self.assertNotIn("a@b.c", landing["session"][CONFIG["storage_key"]])
+
+        guide = page(consent="granted", session=first, url=GUIDE + "?utm_source=later",
+                     referrer="https://blowhorn.ai/pricing/")
+        (name, params), = events(guide["after"][0])
+        self.assertEqual(name, "docs_guide_view")
+        self.assertEqual(params["first_source"], "launch")
+        self.assertEqual(params["first_referrer_host"], "news.example.com")
+        self.assertEqual(params["landing_page"], "/pricing/")
+        self.assertEqual(params["landing_guide"], "connect-mcp-client")
+
+        later = page(consent="granted", session=stored(guide), url="https://blowhorn.ai/ai/mcp/")
+        (_, params), = events(later["after"][0])
+        self.assertEqual((params["landing_guide"], params["landing_page"]), ("connect-mcp-client", "/pricing/"))
+
+    def test_internal_referrer_is_ignored_on_untracked_pages(self):
+        for ref in ["https://blowhorn.ai/", "https://www.blowhorn.ai/docs/", ""]:
+            result = page(consent="granted", url=OFF_GUIDES, referrer=ref)
+            self.assertEqual(stored(result)["first_referrer_host"], "(none)", ref)
+
+    def test_nothing_stored_before_consent_on_untracked_pages(self):
+        for consent in (None, "denied"):
+            result = page(consent=consent, url=OFF_GUIDES + "?utm_source=x", referrer="https://news.example.com/")
+            self.assertEqual(result["session"], {}, consent)
+            self.assertEqual(result["localWrites"], [], consent)
+            self.assertEqual(result["after"], [[]], consent)
+
+    def test_capture_when_consent_is_granted_on_the_page(self):
+        result = page(consent=None, url=OFF_GUIDES + "?utm_campaign=mcp", steps=[{"grant": True}])
+        self.assertEqual(result["after"], [[], []])
+        first = stored(result)
+        self.assertEqual((first["first_campaign"], first["landing_page"]), ("mcp", "/pricing/"))
+
+    def test_first_touch_wins_and_only_fills_a_missing_guide(self):
+        fresh, guide = pure(
+            ("captureAttribution", "?utm_source=b", "", "blowhorn.ai", "/ai/mcp/", True),
+            ("firstTouch", {"first_source": "a", "landing_guide": "(none)", "landing_page": "/"},
+             {"first_source": "b", "landing_guide": "mcp", "landing_page": "/ai/mcp/"}),
+        )
+        self.assertEqual((fresh["landing_guide"], fresh["landing_page"]), ("mcp", "/ai/mcp/"))
+        self.assertEqual(guide, {"first_source": "a", "landing_guide": "mcp", "landing_page": "/"})
+
+
+class WithdrawalTests(unittest.TestCase):
+    FIRST = {"first_source": "launch", "landing_page": "/pricing/"}
+
+    def test_withdrawing_consent_clears_the_first_touch(self):
+        result = harness("consent", {"consent": "granted", "session": self.FIRST, "choose": "denied"})
+        self.assertEqual(result["consent"], "denied")
+        self.assertNotIn(CONFIG["storage_key"], result["session"])
+
+    def test_declining_clears_and_accepting_keeps(self):
+        declined = harness("consent", {"consent": None, "session": self.FIRST, "choose": "denied"})
+        self.assertNotIn(CONFIG["storage_key"], declined["session"])
+        kept = harness("consent", {"consent": "granted", "session": self.FIRST, "choose": "granted"})
+        self.assertEqual(json.loads(kept["session"][CONFIG["storage_key"]]), self.FIRST)
 
 
 class ClientTests(unittest.TestCase):
@@ -306,6 +390,13 @@ class WiringTests(unittest.TestCase):
         consent = (ROOT / "assets/js/consent.js").read_text(encoding="utf-8")
         self.assertIn(f"new CustomEvent('{CONFIG['consent_event']}'", consent)
         self.assertEqual(CONFIG["consent_key"], re.search(r"var KEY = '([^']+)'", consent).group(1))
+        self.assertEqual(CONFIG["storage_key"], re.search(r"var ATTRIBUTION = '([^']+)'", consent).group(1))
+
+    def test_partial_emits_the_capture_keys_off_the_guides(self):
+        partial = (ROOT / "layouts/_partials/docs-attribution.html").read_text(encoding="utf-8")
+        keys = json.loads(re.search(r"const CAPTURE_KEYS = (\[[^\]]*\]);", HARNESS.read_text(encoding="utf-8")).group(1))
+        emitted = re.findall(r'"([a-z_]+)" \$cfg\.([a-z_]+)', partial)
+        self.assertEqual([k for k, v in emitted if k == v], keys)
 
     def test_script_names_no_host(self):
         script = (ROOT / "assets/js/docs-attribution.js").read_text(encoding="utf-8")

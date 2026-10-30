@@ -5,6 +5,8 @@
 // host loads. Nothing is stored, listened for or sent until localStorage
 // blowhorn-consent is "granted"; consent given later on the page starts it
 // from that point (consent.js dispatches the config's consent_event).
+// Every other analytics page loads it too, for the first-touch capture only:
+// it stores the session's attribution and sends nothing.
 // The builders below are pure and exported for
 // .github/scripts/test_docs_attribution.py; the DOM wiring is at the end.
 (function () {
@@ -99,9 +101,10 @@
     return clip(host);
   }
 
-  // First-touch attribution from the landing page: its utm_* parameters and
-  // the external referrer's host.
-  function captureAttribution(search, referrer, pageHost, path, config) {
+  // First-touch attribution from the landing page: its utm_* parameters, the
+  // external referrer's host and its path. landing_guide is (none) off the
+  // tracked guides; firstTouch fills it from the first guide seen.
+  function captureAttribution(search, referrer, pageHost, path, config, tracked) {
     var params = new URLSearchParams(search || '');
     var out = {};
     config.attribution_params.slice(0, config.utm_params.length).forEach(function (name, i) {
@@ -109,8 +112,18 @@
       out[name] = v ? clip(v) : NONE;
     });
     out.first_referrer_host = referrerHost(referrer, pageHost, config);
-    out.landing_guide = guideOf(path);
+    out.landing_guide = tracked ? guideOf(path) : NONE;
+    out.landing_page = clip(path);
     return out;
+  }
+
+  // The session's first touch wins; only a missing landing_guide is filled.
+  function firstTouch(stored, fresh) {
+    if (!stored || typeof stored !== 'object') return fresh;
+    if ((!stored.landing_guide || stored.landing_guide === NONE) && fresh.landing_guide !== NONE) {
+      stored.landing_guide = fresh.landing_guide;
+    }
+    return stored;
   }
 
   function withAttribution(params, attribution, config) {
@@ -118,6 +131,7 @@
       params[name] = attribution && attribution[name] ? clip(attribution[name]) : NONE;
     });
     if (params.landing_guide === NONE) params.landing_guide = guideOf(params.page_path || '/');
+    if (params.landing_page === NONE) params.landing_page = clip(params.page_path || '/');
     return params;
   }
 
@@ -171,6 +185,7 @@
     linkKind: linkKind,
     referrerHost: referrerHost,
     captureAttribution: captureAttribution,
+    firstTouch: firstTouch,
     guideView: guideView,
     snippetCopy: snippetCopy,
     outboundClick: outboundClick
@@ -183,7 +198,7 @@
   var config;
   try { config = JSON.parse(data.textContent); } catch (e) { return; }
   var loc = window.location;
-  if (!isTracked(loc.pathname, config.pages)) return;
+  var tracked = isTracked(loc.pathname, config.pages);
   var pageClient = data.getAttribute('data-mcp-client') || '';
   var started = false;
   var ctx;
@@ -195,10 +210,9 @@
   function attribution() {
     var stored = null;
     try { stored = JSON.parse(sessionStorage.getItem(config.storage_key) || 'null'); } catch (e) { stored = null; }
-    if (stored && typeof stored === 'object') return stored;
-    var fresh = captureAttribution(loc.search, document.referrer, loc.host, loc.pathname, config);
-    try { sessionStorage.setItem(config.storage_key, JSON.stringify(fresh)); } catch (e) { /* private mode */ }
-    return fresh;
+    var kept = firstTouch(stored, captureAttribution(loc.search, document.referrer, loc.host, loc.pathname, config, tracked));
+    try { sessionStorage.setItem(config.storage_key, JSON.stringify(kept)); } catch (e) { /* private mode */ }
+    return kept;
   }
 
   function send(event) {
@@ -242,9 +256,11 @@
   }
 
   function start() {
-    if (started || !consented() || typeof window.gtag !== 'function') return;
+    if (started || !consented()) return;
     started = true;
-    ctx = { path: loc.pathname, hash: loc.hash, host: loc.hostname, pageClient: pageClient, attribution: attribution() };
+    var first = attribution();
+    if (!tracked || typeof window.gtag !== 'function') return;
+    ctx = { path: loc.pathname, hash: loc.hash, host: loc.hostname, pageClient: pageClient, attribution: first };
     send(guideView(ctx, config));
     document.addEventListener('click', onClick, true);
     document.addEventListener('auxclick', onClick, true);

@@ -18,7 +18,7 @@
     "docs_guide_view": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["page_path", "guide", "client", "first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide"],
+      "required": ["page_path", "guide", "client", "first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide", "landing_page"],
       "properties": {
         "page_path": { "$ref": "#/definitions/page_path" },
         "guide": { "$ref": "#/definitions/guide" },
@@ -29,13 +29,14 @@
         "first_content": { "$ref": "#/definitions/first_value" },
         "first_term": { "$ref": "#/definitions/first_value" },
         "first_referrer_host": { "$ref": "#/definitions/host" },
-        "landing_guide": { "$ref": "#/definitions/guide" }
+        "landing_guide": { "$ref": "#/definitions/guide" },
+        "landing_page": { "$ref": "#/definitions/page_path" }
       }
     },
     "docs_snippet_copy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["page_path", "client", "snippet_kind", "snippet_title", "first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide"],
+      "required": ["page_path", "client", "snippet_kind", "snippet_title", "first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide", "landing_page"],
       "properties": {
         "page_path": { "$ref": "#/definitions/page_path" },
         "client": { "$ref": "#/definitions/client" },
@@ -47,13 +48,14 @@
         "first_content": { "$ref": "#/definitions/first_value" },
         "first_term": { "$ref": "#/definitions/first_value" },
         "first_referrer_host": { "$ref": "#/definitions/host" },
-        "landing_guide": { "$ref": "#/definitions/guide" }
+        "landing_guide": { "$ref": "#/definitions/guide" },
+        "landing_page": { "$ref": "#/definitions/page_path" }
       }
     },
     "docs_outbound_click": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["page_path", "client", "link_kind", "link_url", "first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide"],
+      "required": ["page_path", "client", "link_kind", "link_url", "first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide", "landing_page"],
       "properties": {
         "page_path": { "$ref": "#/definitions/page_path" },
         "client": { "$ref": "#/definitions/client" },
@@ -65,7 +67,8 @@
         "first_content": { "$ref": "#/definitions/first_value" },
         "first_term": { "$ref": "#/definitions/first_value" },
         "first_referrer_host": { "$ref": "#/definitions/host" },
-        "landing_guide": { "$ref": "#/definitions/guide" }
+        "landing_guide": { "$ref": "#/definitions/guide" },
+        "landing_page": { "$ref": "#/definitions/page_path" }
       }
     }
   }

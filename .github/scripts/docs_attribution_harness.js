@@ -14,7 +14,13 @@
                  {"a": "https://...", "name": "l1"}],
        "steps": [{"click": "c1"}, {"aux": "l1", "button": 1}, {"grant": true}] }
      Prints: { "after": [[gtag calls so far] per step, starting with load],
-       "session": sessionStorage, "localWrites": keys written to localStorage } */
+       "session": sessionStorage, "localWrites": keys written to localStorage }
+     Off the tracked pages the page carries only CAPTURE_KEYS of the config,
+     as layouts/_partials/docs-attribution.html emits it.
+   Usage: node docs_attribution_harness.js consent '<json scenario>'
+     Runs assets/js/consent.js. scenario: { "consent": null | "granted" | "denied",
+       "session": {...}, "choose": "granted" | "denied" }
+     Prints: { "session": sessionStorage, "consent": the stored choice } */
 "use strict";
 const fs = require("fs");
 const path = require("path");
@@ -22,6 +28,9 @@ const vm = require("vm");
 
 const ROOT = path.resolve(__dirname, "..", "..");
 const SCRIPT = path.join(ROOT, "assets/js/docs-attribution.js");
+const CONSENT = path.join(ROOT, "assets/js/consent.js");
+// The config keys the partial emits on a page outside pages.
+const CAPTURE_KEYS = ["pages", "consent_key", "consent_event", "storage_key", "internal_hosts", "utm_params", "attribution_params"];
 const CONFIG = JSON.parse(fs.readFileSync(path.join(ROOT, "data/docs_events.json"), "utf8"));
 
 function pure(calls) {
@@ -37,7 +46,8 @@ function pure(calls) {
     cleanUrl: (href) => api.cleanUrl(new URL(href)),
     linkKind: (href, pageHost) => api.linkKind(new URL(href), pageHost, c),
     referrerHost: (ref, pageHost) => api.referrerHost(ref, pageHost, c),
-    captureAttribution: (search, ref, host, p) => api.captureAttribution(search, ref, host, p, c),
+    captureAttribution: (search, ref, host, p, tracked) => api.captureAttribution(search, ref, host, p, c, tracked),
+    firstTouch: (stored, fresh) => api.firstTouch(stored, fresh),
     guideView: (ctx) => api.guideView(ctx, c),
     snippetCopy: (ctx, card) => api.snippetCopy(ctx, card, c),
     outboundClick: (ctx, l) => api.outboundClick(ctx, link(l), c),
@@ -107,8 +117,12 @@ function page(s) {
       els[n.name] = new El(order, "a", { href: n.a });
     }
   }
+  const api = require(SCRIPT);
+  const emitted = api.isTracked(url.pathname, CONFIG.pages)
+    ? CONFIG
+    : Object.fromEntries(CAPTURE_KEYS.map((k) => [k, CONFIG[k]]));
   const data = s.partial === false ? null : {
-    textContent: JSON.stringify(CONFIG),
+    textContent: JSON.stringify(emitted),
     getAttribute: (k) => (k === "data-mcp-client" && s.mcpClient ? s.mcpClient : null),
   };
   const document = {
@@ -145,6 +159,42 @@ function page(s) {
   return { after, session: session.dump(), localWrites };
 }
 
+function consent(s) {
+  const listeners = {};
+  const notice = {
+    hidden: true,
+    addEventListener: (type, fn) => { (listeners[type] = listeners[type] || []).push(fn); },
+    querySelector: () => ({ focus() {} }),
+  };
+  const local = storage(s.consent ? { "blowhorn-consent": s.consent } : {});
+  const m = new Map(s.session ? [[CONFIG.storage_key, JSON.stringify(s.session)]] : []);
+  const sessionStorage = {
+    getItem: (k) => (m.has(k) ? m.get(k) : null),
+    setItem: (k, v) => m.set(k, String(v)),
+    removeItem: (k) => m.delete(k),
+  };
+  const document = {
+    currentScript: { getAttribute: () => "G-TEST" },
+    readyState: "complete",
+    head: { appendChild() {} },
+    createElement: () => ({}),
+    getElementById: (id) => (id === "consent" ? notice : null),
+    addEventListener() {},
+    dispatchEvent() {},
+  };
+  const window = { gtag() {}, location: { reload() {} } };
+  class CustomEvent { constructor(type, init) { this.type = type; this.detail = init && init.detail; } }
+  const ctx = vm.createContext({ window, document, localStorage: local, sessionStorage, CustomEvent });
+  vm.runInContext(fs.readFileSync(CONSENT, "utf8"), ctx);
+  if (s.choose) {
+    const button = { getAttribute: () => s.choose };
+    (listeners.click || []).forEach((fn) => fn({ target: { closest: () => button } }));
+  }
+  return { session: Object.fromEntries(m), consent: local.getItem("blowhorn-consent") };
+}
+
 const [mode, arg] = process.argv.slice(2);
 const input = JSON.parse(arg);
-process.stdout.write(JSON.stringify(mode === "pure" ? pure(input) : page(input)));
+const run = { pure, page, consent }[mode];
+if (!run) throw new Error("harness: unknown mode " + mode);
+process.stdout.write(JSON.stringify(run(input)));

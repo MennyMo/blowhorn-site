@@ -54,7 +54,8 @@
     "first_content",
     "first_term",
     "first_referrer_host",
-    "landing_guide"
+    "landing_guide",
+    "landing_page"
   ],
   "events": {
     "docs_guide_view": {

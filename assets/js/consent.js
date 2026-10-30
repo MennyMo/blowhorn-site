@@ -5,6 +5,9 @@
 // the reader accepts. No third-party library.
 (function () {
   var KEY = 'blowhorn-consent';
+  // data/docs_events.json storage_key: the first touch docs-attribution.js
+  // keeps for the session goes with the consent.
+  var ATTRIBUTION = 'blowhorn-docs-attribution';
   var self = document.currentScript;
   var id = self && self.getAttribute('data-ga-id');
   var notice = document.getElementById('consent');
@@ -31,12 +34,13 @@
   function grant() {
     window.gtag('consent', 'update', { analytics_storage: 'granted' });
     load();
-    // assets/js/docs-attribution.js starts its events from here.
+    // assets/js/docs-attribution.js starts its capture and events from here.
     document.dispatchEvent(new CustomEvent('blowhorn:consent', { detail: 'granted' }));
   }
 
   function deny() {
     window.gtag('consent', 'update', { analytics_storage: 'denied' });
+    try { sessionStorage.removeItem(ATTRIBUTION); } catch (e) { /* private mode */ }
   }
 
   function hide() {

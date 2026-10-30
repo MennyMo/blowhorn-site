@@ -82,7 +82,8 @@ regenerate them. Claims on every page come from the product repository's
   page update first. `.github/scripts/check-third-party.py` fails the build.
 - **Docs attribution events ride on GA4.** The MCP guides' `docs_guide_view`,
   `docs_snippet_copy` and `docs_outbound_click` come from `data/docs_events.json`
-  through `assets/js/docs-attribution.js`, consent first; never add markup to synced docs
+  through `assets/js/docs-attribution.js`, consent first; every other analytics page runs it
+  only to store the first touch (`consent.js` clears it on withdrawal). Never add markup to synced docs
   for them. A renamed client heading needs its new id in `clients` ([docs/docs-attribution.md](docs/docs-attribution.md)).
 - **Brand tokens only.** Every colour, type style, radius and shadow in
   `assets/css/site.css` is a token from `static/assets/brand/tokens.json`. Light is the
