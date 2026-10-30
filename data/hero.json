@@ -39,7 +39,7 @@
     {
       "id": "scripted-ai-ready",
       "headline": "Scripted where it counts. AI where it helps.",
-      "subhead": "Every post, reply and amplify runs exactly as written. Drafts, agents and assistants plug in through MCP, a REST API and a scriptable CLI.",
+      "subhead": "Every post, reply and amplify runs exactly as written. Drafts, agents and assistants plug in through MCP and a scriptable CLI.",
       "cta": { "label": "Meet the AI side", "href": "/ai" },
       "differentiators": [8, 10],
       "note": "AI hybrid messaging, default and fallback (Yi, 2026-10-20 8:01 PM). The hybrid as a rule: deterministic actions, AI by choice, and the agent surfaces named."
