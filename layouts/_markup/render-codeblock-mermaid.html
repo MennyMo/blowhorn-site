@@ -1,0 +1,6 @@
+{{- /* A ```mermaid fence renders as a diagram, not a code card (.Inner is
+  already HTML-escaped by Hugo). The page is
+  flagged so layouts/_partials/docs-scripts.html loads the self-hosted mermaid
+  bundle (assets/js/vendor/mermaid.min.js) on this page only. */ -}}
+{{- .Page.Store.Set "hasMermaid" true -}}
+<pre class="mermaid">{{ .Inner }}</pre>

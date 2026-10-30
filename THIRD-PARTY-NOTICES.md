@@ -59,6 +59,21 @@ Copyright (C) 2020 Oliver Nightingale
 
 (MIT license; the full text ships in the file's banner.)
 
+## Mermaid (Knut Sveidqvist and contributors)
+
+`assets/js/vendor/mermaid.min.js` is `dist/mermaid.min.js` from the npm package
+`mermaid` v12.2.0 (sha256 `a8a6a6f805b074a8261a2825c86f99c8054acb3b35f50bb7e24a4f9f2c3c3b9f`),
+vendored so diagrams ship no third-party request. Unmodified. It loads only on
+pages with a `mermaid` code fence (`layouts/_markup/render-codeblock-mermaid.html`),
+which today means the internal site only. To update, unpack the new npm tarball,
+copy that file over and change the version and hash here.
+
+```
+Copyright (c) 2014 - 2022 Knut Sveidqvist
+```
+
+(MIT license; the full text ships in the package.)
+
 ## Docsy offline search (Google LLC, Apache-2.0)
 
 `assets/js/offline-search.js` is forked from Docsy v0.14.3

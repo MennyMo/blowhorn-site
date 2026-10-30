@@ -13,3 +13,18 @@
 {{- if hugo.IsProduction }}{{ $js = $js | minify | fingerprint }}{{ end }}
 <script src="{{ $js.RelPermalink }}"{{ with $js.Data.Integrity }} integrity="{{ . }}" crossorigin="anonymous"{{ end }} defer></script>
 {{ partial "anchor-redirects.html" . }}
+{{- /* Mermaid diagrams: the bundle loads only on a page with a ```mermaid fence
+  (render-codeblock-mermaid.html sets hasMermaid while .Content renders, which
+  is before this partial runs). Dark mode follows the OS, as the rest of the
+  site does. securityLevel strict keeps diagram text from running HTML or JS. */ -}}
+{{- if .Page.Store.Get "hasMermaid" }}
+{{- $mermaid := resources.Get "js/vendor/mermaid.min.js" | fingerprint }}
+<script src="{{ $mermaid.RelPermalink }}" integrity="{{ $mermaid.Data.Integrity }}" crossorigin="anonymous"></script>
+<script>
+mermaid.initialize({
+  startOnLoad: true,
+  securityLevel: "strict",
+  theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "default"
+});
+</script>
+{{- end }}
