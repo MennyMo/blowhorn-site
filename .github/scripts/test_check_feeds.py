@@ -10,14 +10,25 @@ ITEM = """<item><title>Post</title><link>https://blowhorn.ai/resources/articles/
 <description>A summary.</description><category>{cat}</category></item>"""
 
 
-def feed(items, cat="in-product-intelligence"):
+BASE = "https://blowhorn.ai/"
+
+
+def feed(items, cat="in-product-intelligence", path="resources/feed.xml", link="resources/", self_href=None):
     body = "".join(ITEM.format(cat=c) for c in items) if isinstance(items, list) else ITEM.format(cat=cat)
-    return f'<?xml version="1.0" encoding="utf-8"?><rss version="2.0"><channel><title>t</title>{body}</channel></rss>'
+    return (
+        '<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">'
+        f'<channel><title>t</title><link>{BASE}{link}</link>'
+        f'<atom:link href="{self_href or BASE + path}" rel="self" type="application/rss+xml"/>{body}</channel></rss>'
+    )
 
 
 VALID = {
     "resources/feed.xml": feed(1),
-    "resources/tags/in-product-intelligence/feed.xml": feed(1),
+    "resources/tags/in-product-intelligence/feed.xml": feed(
+        1, path="resources/tags/in-product-intelligence/feed.xml", link="tags/in-product-intelligence/"
+    ),
+    "resources/index.html": "",
+    "tags/in-product-intelligence/index.html": "",
 }
 
 
@@ -62,6 +73,17 @@ class CheckFeedsTest(unittest.TestCase):
         bad = feed(1).replace("Wed, 28 Oct 2026 05:00:00 +0000", "last Tuesday-ish")
         files = dict(VALID)
         files["resources/tags/in-product-intelligence/feed.xml"] = bad
+        self.assertEqual(self.run_on(files), 1)
+
+    def test_wrong_self_link_fails(self):
+        files = dict(VALID)
+        tag = "resources/tags/in-product-intelligence/feed.xml"
+        files[tag] = feed(1, link="tags/in-product-intelligence/", self_href=BASE + tag + "feed.xml")
+        self.assertEqual(self.run_on(files), 1)
+
+    def test_missing_channel_page_fails(self):
+        files = dict(VALID)
+        del files["tags/in-product-intelligence/index.html"]
         self.assertEqual(self.run_on(files), 1)
 
 
