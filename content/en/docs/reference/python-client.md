@@ -6,14 +6,11 @@ weight: 226
 
 A generated Python client for the Blowhorn CLI: one API function per
 command, one model class per `--json` payload. It is generated from
-the CLI's OpenAPI document (`schemas/`), not hand-written, and it is
-the MCP Phase 2b deliverable.
+the CLI's OpenAPI document (`schemas/`), not hand-written.
 
 ## Install
 
-The client is not on PyPI, by design: there is no publish step, and
-none may be added without a conscious release task. Install it from
-the checkout:
+The client is not on PyPI. Install it from a checkout:
 
 ```bash
 pip install python/generated
