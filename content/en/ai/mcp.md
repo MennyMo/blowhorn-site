@@ -33,7 +33,7 @@
   "extra_file": ".cursor/mcp.json",
   "extra_lang": "json",
   "extra_code": "{\n  \"mcpServers\": {\n    \"blowhorn\": {\n      \"command\": \"/Users/you/.local/bin/blowhorn-mcp\"\n    }\n  }\n}",
-  "wire_note": "Claude Desktop takes the same command in its config file. New to this? [Connect an assistant and send your first post](/docs/tutorials/first-mcp-connection/) walks through it. [Connect an AI assistant over MCP](/docs/how-to/set-up/connect-mcp-client/) has the steps for every client, including [Claude Code](/docs/how-to/set-up/connect-mcp-client/#claude-code), [Claude Desktop](/docs/how-to/set-up/connect-mcp-client/#claude-desktop), [Cursor](/docs/how-to/set-up/connect-mcp-client/#cursor) and [VS Code](/docs/how-to/set-up/connect-mcp-client/#vs-code-with-github-copilot).",
+  "wire_note": "Claude Desktop takes the same command in its config file. New to this? [Connect an assistant and send your first post](/docs/tutorials/first-mcp-connection/) walks through it. [Connect an AI assistant over MCP](/docs/how-to/set-up/connect-mcp-client/) has the steps for every client, including [Claude Code](/docs/how-to/set-up/connect-mcp-client/#claude-code), [Claude Desktop](/docs/how-to/set-up/connect-mcp-client/#claude-desktop), [Cursor](/docs/how-to/set-up/connect-mcp-client/#cursor) and [VS Code](/docs/how-to/set-up/connect-mcp-client/#vs-code-with-github-copilot). [Source and listings](https://github.com/blowhorn-ai/blowhorn-mcp): the launcher, plugin manifests and listing files live in the public blowhorn-mcp repo.",
   "prompts": [
     "Draft a release post from my personal profile for Tuesday at 9:00 and queue it. Dry run first, show me what would be queued, and wait for my go before you confirm.",
     "Someone asked whether the new release works offline. Draft a reply from my company profile that answers that one question. Show me the dry run and wait for my go.",
@@ -71,6 +71,10 @@
     {
       "q": "Can the agent approve or publish on its own?",
       "a": "No. Every write is a dry run until the assistant re-runs it confirmed, and an agent can never approve its own content. With approval mode on, the work it queues waits for you in the app. [How the MCP server keeps you in control](/docs/explanation/mcp-and-safety/) has the whole picture."
+    },
+    {
+      "q": "Where is the MCP server source?",
+      "a": "The public [blowhorn-mcp repo](https://github.com/blowhorn-ai/blowhorn-mcp) on GitHub holds the launcher, the Claude Code and Cursor plugin manifests, the Gemini CLI extension, the agent skill and the listing files. The server itself ships inside the Blowhorn desktop app. The npx launcher and catalog listings are coming soon."
     },
     {
       "q": "Is it listed in MCP catalogs?",
