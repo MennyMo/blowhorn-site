@@ -207,8 +207,9 @@ the app's home rather than the client's directory.
 | `--timeout SECONDS` | `BLOWHORN_MCP_TIMEOUT` | How long one tool call may run. Default 600. |
 | `--transport stdio` | | The only transport served. `http` refuses at startup. |
 | `--allow-hidden-tool NAME` | `BLOWHORN_MCP_ALLOW_HIDDEN_TOOLS` | Serve one [hidden tool](#hidden-tools) by name. The flag repeats; the variable takes a comma-separated list; the two combine. |
+| `--metrics-port PORT` | `BLOWHORN_MCP_METRICS_PORT` | Serve [metrics](#metrics) on `http://127.0.0.1:PORT/metrics`. Off when neither is set; the flag wins over the variable. `0` picks a free port. |
 | `--list-tools` | | Print the tool list as JSON and exit. |
-| `--check-coverage` | | Check the tool list covers the bundle and exit. |
+| `--check-coverage` | | Check the tool list and its output schemas cover the bundle and exit. |
 | `--version` | | Print the Blowhorn version and exit. |
 
 The flag wins over its environment variable, except for
@@ -255,9 +256,32 @@ step here. On this server, `confirm` true is the approval. If you want
 a person to approve each write in the app, use the queue and the
 approval mode, not a confirmed MCP call.
 
-Tool results never carry secrets. Values under secret-named keys are
-replaced before the result reaches the client, and secret-shaped
-fragments in text output are replaced the same way. A failed run
+Tool results never carry secrets. A string, number, object or array
+under a secret-named key (for example `access_token` or `GH_TOKEN`) is
+replaced with `"[redacted]"` before the result reaches the client. A
+boolean or null under such a key is kept, because neither can carry a
+secret: `auth_status` reports `"token_configured": true` as it is. Two
+more values are kept, both decided by the tool's output schema at that
+place: a value the schema limits to a fixed list (`enum` or `const`)
+that the value is on, such as `auth_login`'s `token_store`
+(`keychain` or `file`), and a value whose schema is marked
+`x-mcp-not-secret: true`, such as `profile_status`'s
+`credential_keys_present`, which lists the names of the credential keys
+that are set, never their values. This holds for every session,
+whatever its protocol version, so the text and `structuredContent`
+always say the same thing.
+
+Text output is redacted too. After a secret-named word, a value that
+follows `:` or `=` is replaced, with or without spaces and with the key
+or the value in double or single quotes (`"access_token": "abc123"`,
+`'access_token': 'abc123'`, `access_token = abc123`,
+`password:hunter2`), as is the word after `Bearer`. This text rule runs
+over output that is not JSON and over every string value in each line
+of a JSON Lines stream (described below), one string at a time, so
+`?token=abc123` in a progress line's URL is replaced and every line
+stays valid JSON. One JSON document is redacted key by key with the
+rule above and nothing else, so a kept value such as
+`"api_token": true` stays valid JSON. A failed run
 reports its exit code and its (redacted) error, never the argv it ran.
 
 ### Destructive and additive tools
@@ -309,9 +333,11 @@ combine. There is no wildcard: each tool is named on its own. A name
 that is not a hidden tool, a typo or a tool that is already served,
 stops the server at startup with exit 1 and a line on stderr listing
 the hidden tools, so an opt-in never silently does nothing. An
-opted-in tool keeps its hints and every gate above: it still runs as
-a dry run until `confirm` is true. `--list-tools` and
-`--check-coverage` honour the same opt-ins.
+opted-in tool keeps its hints, its `outputSchema` and every gate
+above: it still runs as a dry run until `confirm` is true.
+`--list-tools` and `--check-coverage` honour the same opt-ins, so
+the coverage check holds an opted-in tool to the same output schema
+rules as the rest and leaves a hidden one it is not serving alone.
 
 ```json
 {
@@ -341,6 +367,181 @@ an agent can never approve its own content through this server. Under
 `Approved?` value it sets, and confirmed ad-hoc actions publish, so
 nothing waits for a person.
 
+## Structured output
+
+A session that negotiated protocol version `2025-06-18` or `2025-11-25`
+gets structured results. A session on `2024-11-05` or `2025-03-26`, or
+one that has not sent `initialize`, gets the same output it always did:
+no `outputSchema`, no `structuredContent`, and no validation. The
+version is kept per connection.
+
+Where the schema comes from. Each tool's `outputSchema` is generated
+when the server starts, from the command's success (2xx)
+`application/json` response schema in the schema bundle
+(`schemas/dist/openapi.yaml`), the same schema the
+[CLI reference](/docs/reference/cli/) documents for `--json`. It is not written
+by hand. The server removes the bundle's `x-` annotations, carries
+every shape the response refers to under `$defs`, and points each
+`$ref` there. MCP requires the root to be an object: a response whose
+root is a `oneOf`, `allOf` or `$ref` in which every branch is an object
+gets `type: object` added at the root, and nothing else changes.
+
+Text-only tools. A tool whose command has no `--json` flag (its
+response is `text/plain`, for example `accept`, `comment` or
+`config_path`) has no `outputSchema` and never returns
+`structuredContent`. The [CLI reference](/docs/reference/cli/) shows which commands
+take `--json`.
+
+What a result carries. When a JSON tool's command exits 0, the server
+parses its output and checks it against the tool's `outputSchema`. If
+it conforms, the result carries the redacted JSON twice: as
+`structuredContent`, and as the text content item, so clients that
+read only text still work. Data that was not checked is never returned
+as `structuredContent`.
+
+JSON Lines. When the output is a JSON Lines stream (two or more lines,
+each one JSON document), the final document is the result: only it is
+checked against the `outputSchema` and returned as `structuredContent`.
+The earlier lines are progress events. The text content item keeps
+every line, each redacted. This rule is the same for every tool, not
+tied to one command. If any line is not JSON, or the final document
+does not match, the result is an error as described below.
+
+| Case | Result |
+|---|---|
+| Output conforms | `isError` false, the JSON as text and as `structuredContent`. |
+| Output is a JSON Lines stream whose final document conforms | `isError` false, the final document as `structuredContent`, every line as text. |
+| Output is neither one JSON document nor a JSON Lines stream | `isError` true, no `structuredContent`. The first text item says the output did not match the tool's `outputSchema` and why; the second holds the redacted output. |
+| Output is JSON but does not conform | `isError` true, no `structuredContent`. The first text item lists each mismatch as a path and a reason (for example `$.argv[1]: expected string`); the second holds the redacted JSON. |
+| Output conforms, but only before redaction | `isError` false, no `structuredContent`. The first text item is the redacted JSON; the second says that redaction made it stop matching, and where. |
+| Command exits nonzero, times out, or the call is refused | As before: `isError` true with the error text, no `structuredContent`. |
+
+The reasons and the output in an error result are each cut to 4000
+characters; the output is redacted, and the reasons carry only paths and
+schema literals. An error result means the output did not
+match, not that the command failed: the command exited 0, and a
+changing command may already have acted. Read the output before you
+call the tool again.
+
+Redaction. The output is checked as the command printed it, then
+redacted, then checked again. A value under a secret-named key that
+redaction keeps (a boolean, null, a value on its schema's fixed list,
+or a value marked `x-mcp-not-secret`) arrives intact. Anything else
+there becomes the string `"[redacted]"`. The server checks every tool's
+schema when it starts and refuses to start if a secret-named field
+would reject `"[redacted]"` without being kept by one of those rules,
+so no tool declares a schema it can never meet. In the current schemas
+no field is affected. The "only before redaction" row above remains as
+a safety net. Some MCP client libraries refuse a result that has no
+`structuredContent` from a tool that declares an `outputSchema`; with
+such a client, read such a result as text, or use a session on an
+earlier protocol version.
+
+`auth_login`. With `confirm` true, a real sign-in prints a JSON Lines
+stream: an `{"event":"authorize"}` line, then the sign-in result. On a
+`2025-06-18` or later session the sign-in result is the
+`structuredContent` and the result is `isError` false, so there is no
+reason to try again. Do not call it again after a successful sign-in:
+a second sign-in replaces the token this one saved and revokes it. A
+dry run prints one document and is checked normally.
+
+## Metrics
+
+Once you turn metrics on, the server counts its own work in memory:
+tool calls, how long they took, errors, and whether a session is open.
+Metrics are off by default, and then nothing is counted. The counts are
+local only. Nothing sends them anywhere; you read them yourself, from
+your own computer.
+
+### What is collected
+
+Every metric comes from one checked-in catalog,
+`schemas/data/mcp-metrics.json`, and `/metrics` shows exactly these and
+nothing else:
+
+| Metric | Type | Labels | What it says |
+|---|---|---|---|
+| `blowhorn_mcp_active_sessions` | gauge | | 1 while a stdio session is initialized and open, 0 before and after. |
+| `blowhorn_mcp_errors_total` | counter | `kind` | Errors the server answered, by kind: protocol errors and failed or refused tool calls. |
+| `blowhorn_mcp_server_info` | info | `version`, `transport` | The running MCP server: its release version and transport. |
+| `blowhorn_mcp_tool_call_duration_seconds` | histogram | `tool` | Seconds each tools/call took to answer, the CLI subprocess included. |
+| `blowhorn_mcp_tool_calls_total` | counter | `tool`, `outcome` | tools/call requests answered, by tool and outcome. |
+
+The label values:
+
+- `tool` is a tool name from the server's own tool list. A call naming
+  a tool the server does not have is counted as `unknown`, never under
+  the name the client sent.
+- `outcome` is `ok` (the command ran and succeeded), `error` (the call
+  failed or named no tool) or `refused` (a change the server would not
+  run without `confirm`, or `confirm` with `dry_run`; see
+  [Safety](#safety-dry-run-first-confirm-to-act)).
+- `kind` is `timeout`, `cli_not_found`, `nonzero_exit`, `refused`,
+  `invalid_arguments`, `unknown_tool`, `tool_error` (a failed result no
+  other kind names), or one of the JSON-RPC errors `parse_error`,
+  `invalid_request` and `method_not_found`. Every kind is shown from
+  the start, at 0.
+- `version` is the Blowhorn release and `transport` is `stdio`.
+- The duration buckets run from 0.05 to 600 seconds, the longest a
+  tool call may take by default.
+
+No label ever holds a tool argument, post text, a profile or account
+name, or error text, so the number of series stays bounded by the
+number of tools.
+
+### Turning it on
+
+Pass `--metrics-port PORT`, or set `BLOWHORN_MCP_METRICS_PORT`. The
+server then answers `GET /metrics` on 127.0.0.1 only, in the
+Prometheus text format (`text/plain; version=0.0.4`), and any other
+path is a 404. It also refuses (403) any request whose `Host` header
+is not `127.0.0.1:PORT` or `localhost:PORT`, so a web page that points
+its own name at 127.0.0.1 (DNS rebinding) cannot read the numbers. It
+logs the address on stderr when it starts. With neither set, nothing
+is counted and no port is opened.
+
+```json
+{
+  "mcpServers": {
+    "blowhorn": {
+      "command": "/Users/<you>/.local/bin/blowhorn-mcp",
+      "args": ["--metrics-port", "9465"]
+    }
+  }
+}
+```
+
+Your AI client starts the server, so the listener runs only while the
+client keeps it running, and the counts start again at 0 each time.
+Each client starts its own server: give each one its own port, or turn
+metrics on for one client only.
+
+A port the server cannot bind (already in use, or not permitted) does
+not stop it. It prints one warning on stderr naming the port and the
+error, ending `metrics disabled for this process`, and then serves its
+tools as usual without metrics. The same goes for a checkout updated
+without a reinstall, which lacks the `prometheus_client` package that
+metrics need: the server prints one warning saying so, ending
+`metrics disabled for this process`, and serves its tools. Rerun
+`tools/install.sh` to install it. With metrics off the package is never
+loaded, so its absence changes nothing. A port value that is not a
+number from 0 to 65535 is a usage error (exit 2).
+
+A client that starts several server processes from one config (for
+example one per session or window) shares one fixed port among them:
+expect only the first to serve metrics there, and the others to print
+the warning. Port `0` picks a free port for each process instead and
+logs it on stderr.
+
+To collect the numbers with a Prometheus on the same computer:
+
+```yaml
+scrape_configs:
+  - job_name: blowhorn-mcp
+    static_configs:
+      - targets: ["127.0.0.1:9465"]
+```
+
 ## Protocol details
 
 | Item | Behavior |
@@ -350,7 +551,7 @@ nothing waits for a person.
 | Protocol versions | `2024-11-05`, `2025-03-26`, `2025-06-18` and `2025-11-25`. A client asking for one of these gets it; any other request gets `2025-11-25`. |
 | Server info | Name `blowhorn-mcp`; version is the Blowhorn release, or `0.0.0` when it cannot be read. |
 | Annotations | Each tool's four hints come from its operation's `x-mcp` in the bundle, never from a list in the server. A tool whose `x-mcp` says `readOnly`: `readOnlyHint` and `idempotentHint` true, `destructiveHint` and `openWorldHint` false. Any other tool: `readOnlyHint` and `idempotentHint` false, `openWorldHint` true, and `destructiveHint` true only when `x-mcp` also says `destructive`; see [Destructive and additive tools](#destructive-and-additive-tools). An operation with `expose` false is no tool unless it is [opted in](#hidden-tools); one with no `x-mcp`, or one that does not match `McpOperation`, stops the server from starting. |
-| Results | One text content item. Tools declare no `outputSchema` and return no `structuredContent`; a `--json` command's output is the JSON text. |
+| Results | A text content item with the command's output; a `--json` command's output is the JSON text. A session on `2025-06-18` or later also gets `outputSchema` on each JSON tool and `structuredContent` in its results; see [Structured output](#structured-output). |
 | Errors | A command that exits nonzero returns `isError` true with its exit code and its stderr (or stdout), redacted and cut to 4000 characters. A command that runs past the timeout returns `isError` true with a timed-out message only, no exit code or output. An unknown tool name also returns `isError` true, not a protocol error. |
 
 ## What it does not do
@@ -367,7 +568,7 @@ startup:
 ## Checking it
 
 ```bash
-make mcp-generate   # verify the tool list covers the bundle
+make mcp-generate   # verify the tool list and its output schemas cover the bundle
 make mcp-test       # run the server's tests
 ```
 
@@ -376,7 +577,20 @@ Those targets need a checkout. With the app, run
 `~/.local/bin/blowhorn-mcp --list-tools`.
 
 `--list-tools` prints the tool list as JSON and `--check-coverage`
-runs the same coverage check on its own, both without serving. A tool
+runs the same coverage check on its own, both without serving. The
+check fails, naming each offender, when an operation in the bundle has
+no tool (a hidden one counts only when opted in), when a tool whose command has a JSON result has no output
+schema, when an output schema uses a keyword the server cannot
+enforce, or when a field under a secret-named key would reject
+`"[redacted]"` and is not a boolean, null, `enum` or `const`, or marked
+`x-mcp-not-secret` (named by tool and schema path, such as
+`diagnostics_send #/properties/token_configured`). Mark a field in its
+component's source YAML under `schemas/components/`, with a one-line
+reason, then run `make schemas-bundle`. The server runs the same check
+at startup and does not start when it fails. Both
+also check the [metric catalog](#metrics) in the bundle, and refuse
+one that does not conform, as serving does. With metrics on, read
+them with `curl -s http://127.0.0.1:9465/metrics`. A tool
 call may run at most 600 seconds by default
 (`BLOWHORN_MCP_TIMEOUT`, or `--timeout`, changes that); see
 [Options and environment](#options-and-environment).
@@ -384,10 +598,13 @@ call may run at most 600 seconds by default
 ## Catalog listings
 
 The server is not listed in the official MCP Registry or other catalogs
-yet. The listing input, `server.json` at the repository root, names the
-server for the registry and pins its version to the Blowhorn release;
-publication waits on the catalog description's approval and on the
-server being packaged for distribution.
+yet. The listing input, `server.json`, lives in the public
+[blowhorn-mcp repository](https://github.com/blowhorn-ai/blowhorn-mcp)
+beside the source of the `blowhorn-mcp` npm launcher. It names the server
+for the registry and carries the npm launcher's version, not the Blowhorn
+release's: the launcher works with Blowhorn 1.61.0 or later. Neither the npm
+package nor the listing is published yet; publication waits on the catalog
+description's approval.
 
 See also the [CLI reference](/docs/reference/cli/) for the commands themselves,
 [Connect an AI assistant over MCP](/docs/how-to/set-up/connect-mcp-client/)

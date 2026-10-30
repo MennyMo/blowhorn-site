@@ -101,8 +101,11 @@ Pick the mode that matches how much you want to check.
 The assistant never needs your platform credentials. The commands
 read them the way they always do, from your Blowhorn account
 and your computer. On the way back, the server replaces any value
-under a secret-named key, and any secret-shaped text, before the
-result reaches the client. It never logs a tool's arguments, because
+under a secret-named key that could carry a secret, and any
+secret-shaped text, before the result reaches the client. A yes or no,
+an empty value, or a value from a fixed list, such as whether a token
+is set, comes through as it is, so the assistant can still tell what
+is configured. It never logs a tool's arguments, because
 an argument can itself be a secret.
 
 ## Local today, hosted next

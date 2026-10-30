@@ -151,7 +151,7 @@ Fill in the checkout's real path for `/path/to/blowhorn`:
 The server runs the `blowhorn` executable on your PATH. If you have
 not run `make cli-install`, add `BLOWHORN_MCP_CLI` to `env`, naming the
 executable. From the checkout root, `make mcp-generate` checks that the
-tool list covers every command that is not hidden, and `make mcp-test` runs the server's
+tool list and its output schemas cover every command that is not hidden, and `make mcp-test` runs the server's
 tests.
 
 To use either fallback in a client, keep the client's file and
@@ -571,9 +571,14 @@ and the approval mode, not a confirmed MCP call.
 Keep your client's own approval prompt on, too. Zed, Cline and most
 other clients ask before each tool call unless you turn that off.
 
-Tool results never carry secrets. Values under secret-named keys are
-replaced before the result reaches the client, and secret-shaped
-fragments in text output are replaced the same way. A failed run
+Tool results never carry secrets. A value under a secret-named key is
+replaced with `"[redacted]"` before the result reaches the client,
+unless it cannot carry a secret: a boolean, null, a value on its
+schema's fixed list, or a field its schema marks `x-mcp-not-secret`.
+Secret-shaped fragments in text output are replaced the same way. A
+client on protocol version `2025-06-18` or later also gets each JSON
+tool's `outputSchema` and a checked `structuredContent` in its
+results; see [Structured output](/docs/reference/mcp-server/#structured-output). A failed run
 reports its exit code and its (redacted) error, never the arguments
 it ran.
 
