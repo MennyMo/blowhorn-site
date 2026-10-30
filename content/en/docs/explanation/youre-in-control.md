@@ -180,8 +180,8 @@ single run.
 An agent that connects over MCP gets the same dry-run-first rule from
 the server itself: the [MCP server](/docs/reference/mcp-server/) runs
 every changing tool with `--dry-run` unless the call confirms it, and
-it marks its calls as agent calls, so the approval mode above applies
-to them. A confirmed MCP call is still an agent call, not a person's
+it marks every call as an agent call, whatever its own environment
+says, so the approval mode above applies to them. A confirmed MCP call is still an agent call, not a person's
 approval in the app: it cannot approve its own queued work.
 
 <!-- Video placeholder: "Handing approval to an AI agent". An agent queues activities, dry-runs them, and a pause stops the next claim. -->

@@ -29,7 +29,7 @@ or run record - and `--json` ends with the result. Hacker News is refused,
 because its dry run signs in. The app's New order uses it for **Dry fire**.
 
 ```bash
-echo '{"Platform": "LinkedIn", "Profile": "kate", "Message Text": "Release day."}' \
+echo '{"Platform": "LinkedIn", "Profile": "company", "Message Text": "Release day."}' \
   | blowhorn post --dry-run --payload-stdin --json
 ```
 

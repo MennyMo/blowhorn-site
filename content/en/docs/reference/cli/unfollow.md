@@ -28,9 +28,9 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn unfollow --platform bluesky --profile alex --target alice.bsky.social
-blowhorn unfollow --platform bluesky --profile alex --target alice.bsky.social --dry-run -v
-blowhorn unfollow --platform bluesky --profile kate,rian --target alice.bsky.social
+blowhorn unfollow --platform bluesky --profile personal --target alice.bsky.social
+blowhorn unfollow --platform bluesky --profile personal --target alice.bsky.social --dry-run -v
+blowhorn unfollow --platform bluesky --profile company,work --target alice.bsky.social
 ```
 
 Output: text.

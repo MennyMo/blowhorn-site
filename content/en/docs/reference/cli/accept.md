@@ -28,9 +28,9 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn accept --profile marcus --dry-run
-blowhorn accept --profile marcus
-blowhorn accept --profile marcus --limit 5
+blowhorn accept --profile personal --dry-run
+blowhorn accept --profile personal
+blowhorn accept --profile personal --limit 5
 blowhorn accept --profile all --headless
 ```
 

@@ -11,9 +11,9 @@ Answer the LinkedIn invitations other people sent you with
 a time, with a pause between each.
 
 ```bash
-blowhorn accept --profile marcus --dry-run     # preview: accepts nobody
-blowhorn accept --profile marcus               # accept up to 20
-blowhorn accept --profile marcus --limit 5     # cap a single run
+blowhorn accept --profile personal --dry-run     # preview: accepts nobody
+blowhorn accept --profile personal               # accept up to 20
+blowhorn accept --profile personal --limit 5     # cap a single run
 blowhorn accept --profile all --headless       # every eligible profile, unattended
 ```
 

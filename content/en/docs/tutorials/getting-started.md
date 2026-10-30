@@ -92,7 +92,7 @@ each profile in scope.
 Narrow it to one profile and one platform:
 
 ```bash
-blowhorn post --check-queue --profile alex --platform linkedin
+blowhorn post --check-queue --profile personal --platform linkedin
 ```
 
 ## 4. Rehearse a real run {#section-4-rehearse-a-real-run}
@@ -100,7 +100,7 @@ blowhorn post --check-queue --profile alex --platform linkedin
 Now run the posting command itself, in rehearsal mode:
 
 ```bash
-blowhorn post --profile alex --dry-run
+blowhorn post --profile personal --dry-run
 ```
 
 Watch what it prints. It resolves the profile, selects activities, opens the flow
@@ -109,7 +109,7 @@ activities are not marked done, so the same activities are still pending afterwa
 Confirm that:
 
 ```bash
-blowhorn post --check-queue --profile alex
+blowhorn post --check-queue --profile personal
 ```
 
 The same activities are still there. Nothing you have done so far has changed
@@ -121,7 +121,7 @@ Blowhorn paces itself, with delays between keystrokes and pauses
 between actions. You can make it slower:
 
 ```bash
-blowhorn post --profile alex --pace slow --dry-run
+blowhorn post --profile personal --pace slow --dry-run
 ```
 
 `--pace` is global - it works before or after the command word - and takes

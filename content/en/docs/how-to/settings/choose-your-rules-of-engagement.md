@@ -66,9 +66,9 @@ organization admin clears it. Choose **Inherit** in the same chip, or run
 ## Set one profile, or one profile on one platform
 
 - **One profile on every platform:** pick the chip in that profile's
-  **Every platform** column, or `blowhorn risk set cautious --profile kate`.
+  **Every platform** column, or `blowhorn risk set cautious --profile company`.
 - **One profile on one platform:** pick that profile's cell under the
-  platform, or `blowhorn risk set brisk --profile kate --platform x`.
+  platform, or `blowhorn risk set brisk --profile company --platform x`.
 
 A chip you chose is filled; a dashed chip is inherited, and the line under
 it says where it comes from ("from LinkedIn", "from this profile", "from

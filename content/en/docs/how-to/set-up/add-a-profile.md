@@ -78,7 +78,7 @@ blowhorn org members
 Create the profile from a JSON document on stdin:
 
 ```bash
-echo '{"name": "sam", "description": "Sam'\''s posts", "userId": "<a member id from org members>"}' \
+echo '{"name": "personal", "description": "Your personal posts", "userId": "<a member id from org members>"}' \
   | blowhorn profile create --payload-stdin
 ```
 
@@ -90,8 +90,8 @@ which makes every check and sends nothing.
 Edit it the same way, naming it by its name or its id:
 
 ```bash
-echo '{"name": "sam", "description": "Sam'\''s posts and talks"}' \
-  | blowhorn profile update sam --payload-stdin
+echo '{"name": "personal", "description": "Your personal posts and talks"}' \
+  | blowhorn profile update personal --payload-stdin
 ```
 
 The document is the whole of the fields you set: a description left out is
@@ -103,7 +103,7 @@ From the desktop app, select the profile and click **delete profile**. From
 a terminal:
 
 ```bash
-blowhorn profile delete sam --yes
+blowhorn profile delete personal --yes
 ```
 
 Name it by its id instead when two profiles in your organization share a

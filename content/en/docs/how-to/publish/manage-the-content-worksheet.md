@@ -72,14 +72,14 @@ blowhorn content posts
 blowhorn content list --pending --json
 
 # One profile's activities; only X activities.
-blowhorn content list --profile kate
+blowhorn content list --profile company
 blowhorn content list --platform x
 
 # One activity, every column, its state and its problems.
 blowhorn content get 12 --json
 
 # Create an activity: it takes the next activity number, which is never reused.
-blowhorn content upsert --payload '{"Platform":"linkedin","Profile":"kate","Message Text":"Our v2.0 release is out","Approved?":"yes"}'
+blowhorn content upsert --payload '{"Platform":"linkedin","Profile":"company","Message Text":"Our v2.0 release is out","Approved?":"yes"}'
 
 # Update in place: the payload is merged over the activity; columns it does not
 # name are left as they were.

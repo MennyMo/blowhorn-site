@@ -16,7 +16,7 @@ runs over the REST API end to end.
 Store a token as the profile's `GH_TOKEN`:
 
 ```bash
-blowhorn profile set marcus GH_TOKEN=<redacted>
+blowhorn profile set personal GH_TOKEN=<redacted>
 ```
 
 The token lands in the profile's GitHub credential in your account. A
@@ -28,7 +28,7 @@ cannot star as the operator. Then check the token without starring
 anything:
 
 ```bash
-blowhorn profile status --profile marcus --check-platform github
+blowhorn profile status --profile personal --check-platform github
 ```
 
 ## Star from the command line
@@ -36,22 +36,22 @@ blowhorn profile status --profile marcus --check-platform github
 ```bash
 # Preview: reads each repository's star state for real and names exactly
 # which would be starred, issuing no PUT.
-blowhorn star --platform github --profile marcus --repo acme/widgets --dry-run
+blowhorn star --platform github --profile personal --repo acme/widgets --dry-run
 
 # Star one repository from a single profile.
-blowhorn star --platform github --profile marcus --repo acme/widgets
+blowhorn star --platform github --profile personal --repo acme/widgets
 
 # Star two repositories from every profile that holds a GH_TOKEN.
 blowhorn star --platform github --profile all --repo acme/widgets --repo meshery/meshery
 
 # A github.com URL names the same repository as owner/name.
-blowhorn star --platform github --profile marcus --repo https://github.com/acme/widgets
+blowhorn star --platform github --profile personal --repo https://github.com/acme/widgets
 
 # Star from an explicit subset of profiles rather than all of them.
-blowhorn star --platform github --profile kate,rian --repo acme/widgets
+blowhorn star --platform github --profile company,work --repo acme/widgets
 
 # Hold one profile out of this run.
-blowhorn star --platform github --profile all --repo acme/widgets --exclude marcus
+blowhorn star --platform github --profile all --repo acme/widgets --exclude personal
 ```
 
 `--platform github` is required: star acts on GitHub only, and any

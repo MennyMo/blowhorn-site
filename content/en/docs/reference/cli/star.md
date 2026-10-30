@@ -28,11 +28,11 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn star --platform github --profile alex --repo acme/widgets --dry-run
-blowhorn star --platform github --profile alex --repo acme/widgets
+blowhorn star --platform github --profile personal --repo acme/widgets --dry-run
+blowhorn star --platform github --profile personal --repo acme/widgets
 blowhorn star --platform github --profile all --repo acme/widgets --repo meshery/meshery
-blowhorn star --platform github --profile kate,rian --repo acme/widgets
-blowhorn star --platform github --profile all --repo acme/widgets --exclude alex
+blowhorn star --platform github --profile company,work --repo acme/widgets
+blowhorn star --platform github --profile all --repo acme/widgets --exclude personal
 ```
 
 Output: text.

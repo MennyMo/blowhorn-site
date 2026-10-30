@@ -14,7 +14,7 @@ Nothing is published, nothing is written back:
 
 ```bash
 blowhorn post --check-queue
-blowhorn post --check-queue --profile marcus --platform linkedin
+blowhorn post --check-queue --profile personal --platform linkedin
 ```
 
 `--check-queue` is read-only: it opens no browser and reaches no platform.
@@ -22,21 +22,21 @@ blowhorn post --check-queue --profile marcus --platform linkedin
 ## Publish the queue
 
 ```bash
-blowhorn post --profile marcus                       # every platform with pending activities
-blowhorn post --platform linkedin --profile marcus --headless   # unattended: a background window, never headless
-blowhorn post --profile all --exclude marcus,kanvas  # fan out, holding profiles back
+blowhorn post --profile personal                       # every platform with pending activities
+blowhorn post --platform linkedin --profile personal --headless   # unattended: a background window, never headless
+blowhorn post --profile all --exclude personal,kanvas  # fan out, holding profiles back
 ```
 
 `--profile all` leaves out the excluded profiles (`--exclude`, else
 `BLOWHORN_EXCLUDE`, else `defaults.exclude`) and prints `Excluding
 profiles: …` when it does. To post as one of them, name it:
-`--profile marcus`.
+`--profile personal`.
 
 Rehearse first whenever the result matters. A dry run goes end to end
 without publishing and without marking the activity done:
 
 ```bash
-blowhorn post --profile marcus --dry-run
+blowhorn post --profile personal --dry-run
 ```
 
 A dry run still signs in where a real run would: on Hacker News it opens

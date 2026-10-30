@@ -34,35 +34,35 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn post --profile alex
+blowhorn post --profile personal
 blowhorn post --check-queue --profile all
-blowhorn post --profile alex --dry-run
+blowhorn post --profile personal --dry-run
 cat order.json | blowhorn post --dry-run --payload-stdin --json
-blowhorn post --profile all --exclude alex
-blowhorn post --platform linkedin --profile alex --headless
-blowhorn post --profile alex -v
-blowhorn post --profile alex --pace slow
-blowhorn post --platform linkedin --profile alex
-blowhorn post --platform x --profile alex
+blowhorn post --profile all --exclude personal
+blowhorn post --platform linkedin --profile personal --headless
+blowhorn post --profile personal -v
+blowhorn post --profile personal --pace slow
+blowhorn post --platform linkedin --profile personal
+blowhorn post --platform x --profile personal
 blowhorn post --platform x --amplify "https://x.com/user/status/123"
-blowhorn post --platform reddit --profile alex
+blowhorn post --platform reddit --profile personal
 blowhorn post --platform reddit --amplify "https://www.reddit.com/r/k8s/comments/abc/post/"
-blowhorn post --platform hn --profile alex
-blowhorn post --platform hn --profile alex --dry-run
+blowhorn post --platform hn --profile personal
+blowhorn post --platform hn --profile personal --dry-run
 blowhorn post --platform slack --target "#announcements"
-blowhorn post --platform slack --profile alex --target "#announcements" --message "Maintenance is complete"
+blowhorn post --platform slack --profile personal --target "#announcements" --message "Maintenance is complete"
 blowhorn post --platform slack --target "@alice"
 blowhorn post --platform slack --target "https://acme.slack.com/archives/C0123/p1776000000000100"
-blowhorn post --platform slack --profile alex
-blowhorn post --platform bluesky --profile alex
+blowhorn post --platform slack --profile personal
+blowhorn post --platform bluesky --profile personal
 blowhorn post --platform github --profile all --amplify "https://github.com/acme/widgets/issues/1234"
 blowhorn post --platform github --profile all --amplify "https://github.com/meshery/meshery/pull/21625"
-blowhorn post --platform github --profile alex --amplify "https://github.com/acme/widgets/issues/42"
-blowhorn post --platform github --profile alex,kate,rian --amplify "https://github.com/acme/widgets/issues/42"
-blowhorn post --platform github --profile all --exclude alex --amplify "https://github.com/acme/widgets/issues/42"
+blowhorn post --platform github --profile personal --amplify "https://github.com/acme/widgets/issues/42"
+blowhorn post --platform github --profile personal,company,work --amplify "https://github.com/acme/widgets/issues/42"
+blowhorn post --platform github --profile all --exclude personal --amplify "https://github.com/acme/widgets/issues/42"
 blowhorn post --platform github --profile all --amplify "https://github.com/acme/widgets/issues/42" --dry-run
-blowhorn post --platform github --profile alex --amplify "https://github.com/acme/widgets/issues/42" --dry-run -v
-blowhorn post --platform github --profile alex
+blowhorn post --platform github --profile personal --amplify "https://github.com/acme/widgets/issues/42" --dry-run -v
+blowhorn post --platform github --profile personal
 ```
 
 Output: json with `--json`, text otherwise.

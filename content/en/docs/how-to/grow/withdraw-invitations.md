@@ -13,9 +13,9 @@ requests start failing. An invitation unaccepted for three weeks is not
 going to be accepted, so withdrawing it costs nothing and returns headroom.
 
 ```bash
-blowhorn withdraw --profile marcus                                     # preview, withdraws nothing
-blowhorn withdraw --profile marcus --apply                             # withdraw up to 20
-blowhorn withdraw --profile marcus --older-than 60 --limit 40 --apply
+blowhorn withdraw --profile personal                                     # preview, withdraws nothing
+blowhorn withdraw --profile personal --apply                             # withdraw up to 20
+blowhorn withdraw --profile personal --older-than 60 --limit 40 --apply
 ```
 
 | Flag | Default | Meaning |

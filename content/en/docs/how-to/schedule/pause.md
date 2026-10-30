@@ -56,7 +56,7 @@ own control stays beside the stop's.
 ## Pause this computer
 
 ```bash
-blowhorn schedule pause --reason "LinkedIn challenge on kate"
+blowhorn schedule pause --reason "LinkedIn challenge on the company profile"
 blowhorn schedule status
 blowhorn schedule resume
 ```

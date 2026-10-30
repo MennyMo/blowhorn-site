@@ -29,9 +29,9 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn withdraw --profile alex
-blowhorn withdraw --profile alex --apply
-blowhorn withdraw --profile alex --older-than 60 --limit 40 --apply
+blowhorn withdraw --profile personal
+blowhorn withdraw --profile personal --apply
+blowhorn withdraw --profile personal --older-than 60 --limit 40 --apply
 ```
 
 Output: text.

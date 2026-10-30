@@ -29,8 +29,8 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn source --platform github --profile alex --repo acme/widgets --audience stargazers --dry-run
-blowhorn source --platform github --profile alex --repo acme/widgets --repo meshery/meshery --audience contributors --limit 100 --dry-run
+blowhorn source --platform github --profile personal --repo acme/widgets --audience stargazers --dry-run
+blowhorn source --platform github --profile personal --repo acme/widgets --repo meshery/meshery --audience contributors --limit 100 --dry-run
 ```
 
 Output: text.

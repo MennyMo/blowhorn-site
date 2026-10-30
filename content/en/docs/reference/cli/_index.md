@@ -260,7 +260,7 @@ message link, using the link's `?thread_ts=` parent, or a top-level post from a
 channel link), `slack whoami` asks Slack's `auth.test` who that profile's
 credential is, and `slack profiles` lists every profile's captured workspaces
 from your account without calling Slack. `send` sends as one `--profile`, or as each of several
-(`--profile rian,alex`, or `--profile rian --profile alex`) one after another, waiting a random `--pace`-scaled
+(`--profile work,personal`, or `--profile work --profile personal`) one after another, waiting a random `--pace`-scaled
 interval before each confirmed send after the first. Each profile gets its own
 idempotency key, ledger entry and result, and one profile's failure never stops
 the next, except an unavailable store, which ends the walk and reports every

@@ -24,7 +24,7 @@ is a `#channel`, `@user`, channel id, channel link, or message link for
 a thread reply; anything else is refused, never sent somewhere else.
 One profile sends a `post` run, named with `--profile`; the profile from
 the defaults file does not count as named. `blowhorn slack send` can send
-as several profiles (`--profile rian,alex`); see the [CLI reference](/docs/reference/cli/).
+as several profiles (`--profile work,personal`); see the [CLI reference](/docs/reference/cli/).
 
 ## From the command line
 

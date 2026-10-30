@@ -67,9 +67,9 @@ Examples:
 ```bash
 blowhorn risk set cautious
 blowhorn risk set cautious --platform linkedin
-blowhorn risk set brisk --profile alex --platform bluesky
-blowhorn risk set standard --profile alex --dry-run
-blowhorn risk set default --profile alex --platform x
+blowhorn risk set brisk --profile personal --platform bluesky
+blowhorn risk set standard --profile personal --dry-run
+blowhorn risk set default --profile personal --platform x
 ```
 
 Output: json with `--json`, text otherwise.
@@ -95,7 +95,7 @@ Examples:
 
 ```bash
 blowhorn risk show
-blowhorn risk show --profile alex --platform x --json
+blowhorn risk show --profile personal --platform x --json
 ```
 
 Output: json with `--json`, text otherwise.

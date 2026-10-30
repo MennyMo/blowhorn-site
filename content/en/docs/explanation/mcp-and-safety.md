@@ -16,8 +16,9 @@ are in the [MCP server reference](/docs/reference/mcp-server/).
 The MCP server holds no Blowhorn logic. When an assistant calls a
 tool, the server runs the matching `blowhorn` command on your computer
 and hands back what it printed. There is one tool per command, built
-from the same command descriptions the CLI reference is built from. A
-new command becomes a new tool the next time the server starts.
+from the same command descriptions the CLI reference is built from,
+except a few that are hidden by default (see below). A new command
+becomes a new tool the next time the server starts.
 
 That design is deliberate. Every limit Blowhorn already enforces
 lives in the command, not in the door you came through. Pacing, risk
@@ -32,6 +33,18 @@ whether it may destroy or overwrite something, and whether it reaches
 beyond your computer. Blowhorn records those facts once per command,
 in the command descriptions the tools are built from, and the server
 refuses to start if any command lacks them. It never guesses.
+
+The destructive hint draws a line between two kinds of change. An
+additive tool only adds new things, such as a post, a comment, a
+follow, a Slack message or a new record. Blowhorn's own bookkeeping
+on the record it just acted on, such as marking a content item as
+posted, does not count as changing what already exists. A
+destructive tool may change or remove something that is already
+there: it edits, overwrites, deletes, unfollows, pauses or stops.
+Where a command could do either, it counts as destructive. A client
+may ask you only before a destructive call, so keep in mind that an
+additive call still reaches the outside world: a post is new, and it
+is also public.
 
 Hints are advice to the client. Many clients use them to decide when
 to ask you before a call. The rules below are what Blowhorn itself
@@ -48,10 +61,27 @@ That gives you a natural place to say no. A careful assistant shows
 you the dry run and asks before it confirms. Your client's own
 approval prompt adds a second stop before any tool runs at all.
 
+## Some tools stay out of reach
+
+A few commands remove or replace your Blowhorn install or sign you
+out: uninstalling Blowhorn, uninstalling the background service,
+signing out, and building or installing the desktop app. Those are
+hidden from MCP clients by default. An assistant cannot see them, so
+it cannot call them by mistake or be talked into it.
+
+You can serve one when you need it, by naming it in the server's
+settings in your client's config. Each tool is named on its own, so
+opening one never opens the rest, and a name that is not a hidden
+tool stops the server at startup instead of being quietly ignored. An
+opted-in tool is still a dry run until the call confirms it.
+
 ## Approvals stay with a person
 
 The server marks every call it runs as an agent's
-(`BLOWHORN_ACTOR=agent`). Blowhorn's approval mode reads that mark.
+(`BLOWHORN_ACTOR=agent`), whatever its own environment says. Setting
+`BLOWHORN_ACTOR=human` in a client's config does not change that: the
+server ignores it and says so when it starts, so no config can make an
+assistant look like a person. Blowhorn's approval mode reads that mark.
 Under approval mode `agent` or `all`, what an assistant queues waits
 for a person, and its ad-hoc actions are held the same way.
 

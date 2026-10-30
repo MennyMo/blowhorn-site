@@ -65,7 +65,9 @@ Start a new chat and ask:
 > Which Blowhorn tools do you have?
 
 Claude lists tools with names such as `profile_list`, `content_list`
-and `content_upsert`. There is one tool for each Blowhorn command.
+and `content_upsert`. There is one tool for each Blowhorn command,
+except a few that uninstall Blowhorn or sign you out, which stay
+hidden unless you turn them on.
 
 If Claude has no Blowhorn tools, see Troubleshooting in [Connect an AI
 assistant over MCP](/docs/how-to/set-up/connect-mcp-client/).

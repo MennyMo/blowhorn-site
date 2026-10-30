@@ -108,9 +108,9 @@ A Risk Profile can be chosen at several levels. For one profile on one platform,
 |---|---|---|
 | One run | `--risk-profile cautious` on a command you start | that run only |
 | One activity | **rules of engagement** in the activity editor, or `risk_profile=` in its params | the activity |
-| One profile on one platform | a cell in the Posture grid, or `blowhorn risk set <preset> --profile kate --platform linkedin` | the profile's `Risk Profile By Platform` attribute, then `defaults.risk_profiles.<profile>.<platform>` on this computer |
+| One profile on one platform | a cell in the Posture grid, or `blowhorn risk set <preset> --profile company --platform linkedin` | the profile's `Risk Profile By Platform` attribute, then `defaults.risk_profiles.<profile>.<platform>` on this computer |
 | Each platform | the **Each platform** row in Posture, or `blowhorn risk set <preset> --platform linkedin` | your organization, for every computer; on this computer only (`defaults.risk_profile_by_platform`) when your organization cannot keep it |
-| Each profile | the **Every platform** column in Posture, or `blowhorn risk set <preset> --profile kate` | the profile's `Risk Profile` attribute, then `defaults.risk_profiles.<profile>` on this computer |
+| Each profile | the **Every platform** column in Posture, or `blowhorn risk set <preset> --profile company` | the profile's `Risk Profile` attribute, then `defaults.risk_profiles.<profile>` on this computer |
 | Everyone | the slider in Posture, or `blowhorn risk set <preset>` | `BLOWHORN_RISK_PROFILE`, then your account, then `defaults.risk_profile` |
 | Built in | nothing | standard |
 
@@ -240,7 +240,9 @@ launches the process - so a caller that can set its own environment can
 claim to be a person, and no ordering of those claims prevents that.
 The one case precedence does settle is the scheduler: a tick is
 unattended, so a scheduler run counts as an agent whatever
-`BLOWHORN_ACTOR` says. `BLOWHORN_ACTOR=human` still lets a
+`BLOWHORN_ACTOR` says. The [MCP server](/docs/reference/mcp-server/) is the same: it
+sets `BLOWHORN_ACTOR=agent` on every command it runs and ignores any
+other value in its environment. `BLOWHORN_ACTOR=human` still lets a
 non-interactive human script count as the person, and is forgeable by
 exactly the caller it lets through; a proof no environment claim gives -
 the app proving itself over a channel only it holds, or a tick proven

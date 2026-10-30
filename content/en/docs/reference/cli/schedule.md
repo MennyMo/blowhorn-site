@@ -192,9 +192,9 @@ Examples:
 
 ```bash
 blowhorn schedule pause
-blowhorn schedule pause --all --reason "LinkedIn challenge on kate"
+blowhorn schedule pause --all --reason "LinkedIn challenge on the company profile"
 blowhorn schedule pause --activity 7
-blowhorn schedule pause --reason "LinkedIn challenge on kate" --json
+blowhorn schedule pause --reason "LinkedIn challenge on the company profile" --json
 ```
 
 Output: json with `--json`, text otherwise.

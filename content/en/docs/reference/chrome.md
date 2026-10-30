@@ -512,8 +512,8 @@ profile, `ok` is `false` and the command exits 1.
 ## `blowhorn chrome open-profile`
 
 ```bash
-blowhorn chrome open-profile kate
-blowhorn chrome open-profile kate --sign-in linkedin
+blowhorn chrome open-profile company
+blowhorn chrome open-profile company --sign-in linkedin
 ```
 
 Opens a window in the Chrome profile the named Blowhorn profile is

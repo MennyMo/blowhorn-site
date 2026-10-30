@@ -90,7 +90,7 @@ more, so their change is kept; if it changes a second time, nothing is written
 and the command says so - run it again.
 
 ```bash
-blowhorn profile set kate "Risk Profile=cautious" "Quiet Hours=22:00-07:00"
+blowhorn profile set company "Risk Profile=cautious" "Quiet Hours=22:00-07:00"
 ```
 
 `blowhorn profile delete <name-or-id>` deletes the profile in your

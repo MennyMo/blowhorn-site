@@ -1,6 +1,6 @@
 ---
 title: "MCP server"
-description: "The local MCP server: one tool per CLI command, over stdio, with dry run as the default for anything that changes state."
+description: "The local MCP server: one tool per CLI command, a few hidden by default, over stdio, with dry run as the default for anything that changes state."
 weight: 225
 ---
 
@@ -8,7 +8,8 @@ Blowhorn ships a local MCP server so an AI agent can drive the same
 commands you run, through the Model Context Protocol, instead of
 learning a second surface. It is generated, not hand-written: at
 startup it reads `schemas/dist/openapi.yaml` and builds one tool per
-operation in that bundle, named by the operation id
+operation in that bundle, except the few
+[hidden by default](#hidden-tools), named by the operation id
 (`post`, `schedule_trigger_now`, `profile_list`, and so on). A command
 added to the CLI appears as a tool the next time the server starts,
 and `make mcp-generate` fails if the tool list ever stops matching the
@@ -18,9 +19,10 @@ from the same schemas the CLI reference is built from.
 ## How it relates to the CLI and to blowhorn-axi
 
 There are two agent doors into the same commands, and they differ in
-how the agent talks, not in what it can do. The MCP server is the
-standard plug: any MCP client can discover one tool per command and
-call it over the protocol. [blowhorn-axi](/docs/reference/cli/blowhorn-axi/) is the
+how the agent talks, not in what it can do, apart from the few
+tools the MCP server [hides by default](#hidden-tools). The MCP server
+is the standard plug: any MCP client can discover one tool per command
+and call it over the protocol. [blowhorn-axi](/docs/reference/cli/blowhorn-axi/) is the
 agent command line: an agent runs it directly and reads compact,
 agent-shaped answers, with every write a dry run until `--confirm`.
 Both drive the same `blowhorn` commands, both rehearse before they
@@ -32,7 +34,8 @@ or the CLI itself. The steps for connecting a client are in
 ## Tour of the tools
 
 The tools are grouped the way the command bundle groups them, and a
-group's tools cover the commands in it, no more and no less:
+group's tools cover the commands in it, no more and no less, except
+the few that are [hidden by default](#hidden-tools):
 
 - **Act** - the outward actions: `post`, `comment`, `follow`,
   `unfollow`, `accept`, `withdraw`, `find`, and `source`, plus the
@@ -50,8 +53,8 @@ group's tools cover the commands in it, no more and no less:
 - **Observe** - what happened: `analytics history`,
   `analytics activity`, `analytics activities`, `diagnostics reports`,
   and `report`.
-- **Meta** - the computer itself: `setup`, `upgrade`, and
-  `uninstall`.
+- **Meta** - the computer itself: `setup` and `upgrade`. `uninstall`
+  is hidden by default.
 
 A tool's name is its command's operation id, so the
 [CLI reference](/docs/reference/cli/) documents exactly what each tool does: find
@@ -203,11 +206,13 @@ the app's home rather than the client's directory.
 | `--cli PATH` | `BLOWHORN_MCP_CLI` | The `blowhorn` executable each tool call runs. |
 | `--timeout SECONDS` | `BLOWHORN_MCP_TIMEOUT` | How long one tool call may run. Default 600. |
 | `--transport stdio` | | The only transport served. `http` refuses at startup. |
+| `--allow-hidden-tool NAME` | `BLOWHORN_MCP_ALLOW_HIDDEN_TOOLS` | Serve one [hidden tool](#hidden-tools) by name. The flag repeats; the variable takes a comma-separated list; the two combine. |
 | `--list-tools` | | Print the tool list as JSON and exit. |
 | `--check-coverage` | | Check the tool list covers the bundle and exit. |
 | `--version` | | Print the Blowhorn version and exit. |
 
-The flag wins over its environment variable.
+The flag wins over its environment variable, except for
+`--allow-hidden-tool`, whose names add to the variable's.
 
 ## What a tool call does
 
@@ -236,47 +241,14 @@ with no dry-run path refuses without `confirm` rather than running
 for real, and a call that passes both `confirm` and `dry_run` is
 refused as contradictory.
 
-Which tools read, which change something, and which may destroy or
-overwrite state is recorded in the schema bundle as `x-mcp` on each
-operation: `expose`, `readOnly` and `destructive` (shape
-`McpOperation`, authored in `schemas/data/mcp-operations.json`). A
-tool's annotations follow from it: `readOnlyHint` and `idempotentHint`
-are true for a read-only tool, `openWorldHint` is true for a changing
-one, and `destructiveHint` is true for a changing tool marked
-destructive. An operation with `expose` false is not served at all.
+Which tools read, which change something, which may destroy or
+overwrite state, and which are hidden is recorded in the schema bundle
+as `x-mcp` on each operation: `expose`, `readOnly` and `destructive`
+(shape `McpOperation`, authored in `schemas/data/mcp-operations.json`).
 The server refuses to start on a bundle in which any operation has no
 `x-mcp`, and names that operation: classify it in
 `schemas/data/mcp-operations.json` and rebuild the bundle with
 `make schemas-bundle`.
-
-The server also marks its calls as agent calls, so a configured
-approval mode sees them for what they are: it sets
-`BLOWHORN_ACTOR=agent` for the command it runs, unless you already set
-that variable. Under approval mode `agent` or `all`, the queue rules
-in [You are in control](/docs/explanation/youre-in-control/) therefore
-apply to MCP calls exactly as they apply to any other agent caller.
-`content_approve` is a tool like any other, but `content approve`
-refuses an agent caller in every approval mode, so a call marked
-`agent` cannot approve queued work. Under `off` that refusal protects
-little: an agent's content writes keep the `Approved?` value it
-sets, and confirmed ad-hoc actions publish, so nothing waits for a
-person.
-
-> **Warning:** Do not set `BLOWHORN_ACTOR=human` in an MCP client's
-> `env`. The server only sets `BLOWHORN_ACTOR=agent` when the variable
-> is unset. If the server's environment sets `BLOWHORN_ACTOR=human`
-> and does not set `BLOWHORN_RUN_SOURCE=scheduler`, every MCP call
-> counts as a person, so:
->
-> - Under approval mode `agent`, content writes keep the `Approved?`
->   value the agent sets and confirmed ad-hoc actions publish.
-> - Under `all`, every content write still lands pending and no
->   ad-hoc action publishes.
-> - In every mode, `content_approve` lets the agent approve its own
->   work.
->
-> With `BLOWHORN_RUN_SOURCE=scheduler`, the calls still count as an
-> agent and nothing above changes.
 
 Note the limit of this transport: there is no desktop-app approval
 step here. On this server, `confirm` true is the approval. If you want
@@ -288,6 +260,87 @@ replaced before the result reaches the client, and secret-shaped
 fragments in text output are replaced the same way. A failed run
 reports its exit code and its (redacted) error, never the argv it ran.
 
+### Destructive and additive tools
+
+Every tool carries the standard MCP hints, and they follow from
+`x-mcp`:
+
+| Hint | Read-only tool | Additive tool | Destructive tool |
+|---|---|---|---|
+| `readOnlyHint` | true | false | false |
+| `destructiveHint` | false | false | true |
+| `idempotentHint` | true | false | false |
+| `openWorldHint` | false | true | true |
+
+`destructiveHint` tells a client whether a changing tool can take
+something away. False means the tool only adds new things, such as a
+post, a comment, a follow, a star, a Slack message, an accepted
+invitation or a new record. Blowhorn's own bookkeeping on the record
+it just acted on, such as marking a content item as posted, does not
+count as changing what exists. True means it may delete, overwrite, replace or undo existing
+state: an upsert, a set, an edit, a delete, an unfollow, a withdrawal,
+a pause or a stop. Where the command's code leaves it unclear, the
+tool is marked destructive. A client may use the hint to ask you
+before a destructive call; an additive call still reaches the outside
+world, so it is still a dry run until `confirm` is true.
+
+The additive tools are `accept`, `chrome_create_profile`,
+`chrome_extension_enable`, `chrome_open_profile`, `comment`,
+`diagnostics_opened`, `diagnostics_support`, `find`, `follow`, `post`,
+`profile_create`, `risk_grid`, `slack_send` and `star`. Two of them,
+`find` and `risk_grid`, create nothing: they only read, and are listed
+as not destructive because they write nothing. Every other changing
+tool is destructive. Some that mostly add are destructive
+because one of their flags removes something: `slack_react`
+(`--remove`) and `schedule_bootstrap` (`--replace`).
+
+### Hidden tools
+
+Five tools are hidden from MCP clients by default, because each
+removes or replaces your Blowhorn install or signs you out:
+`uninstall`, `service_uninstall`, `auth_logout`, `desktop_build` and
+`desktop_install`. They are not in `tools/list` and a call to one
+answers `unknown tool`. Their `x-mcp` says `expose: false`.
+
+To serve one, name it when the server starts, with
+`--allow-hidden-tool NAME` (repeat the flag for more) or
+`BLOWHORN_MCP_ALLOW_HIDDEN_TOOLS` (a comma-separated list). The two
+combine. There is no wildcard: each tool is named on its own. A name
+that is not a hidden tool, a typo or a tool that is already served,
+stops the server at startup with exit 1 and a line on stderr listing
+the hidden tools, so an opt-in never silently does nothing. An
+opted-in tool keeps its hints and every gate above: it still runs as
+a dry run until `confirm` is true. `--list-tools` and
+`--check-coverage` honour the same opt-ins.
+
+```json
+{
+  "mcpServers": {
+    "blowhorn": {
+      "command": "/Users/<you>/.local/bin/blowhorn-mcp",
+      "args": ["--allow-hidden-tool", "service_uninstall"],
+      "env": {"BLOWHORN_MCP_ALLOW_HIDDEN_TOOLS": "auth_logout"}
+    }
+  }
+}
+```
+
+### MCP calls always run as an agent
+
+Every command the server runs gets `BLOWHORN_ACTOR=agent`, whatever
+the server's own environment says. `BLOWHORN_ACTOR=human` (or any
+other value) in the client's `env` is ignored, and the server says so
+in one line on stderr when it starts. No tool takes an argument that
+names the caller. Under approval mode `agent` or `all`, the queue
+rules in [You are in control](/docs/explanation/youre-in-control/)
+therefore apply to MCP calls exactly as they apply to any other agent
+caller. `content_approve` is a tool like any other, but
+`content approve` refuses an agent caller in every approval mode, so
+an agent can never approve its own content through this server. Under
+`off` that refusal protects little: an agent's content writes keep the
+`Approved?` value it sets, and confirmed ad-hoc actions publish, so
+nothing waits for a person.
+
 ## Protocol details
 
 | Item | Behavior |
@@ -296,7 +349,7 @@ reports its exit code and its (redacted) error, never the argv it ran.
 | Batches | A JSON-RPC batch (an array) is refused with `-32600` (invalid request). |
 | Protocol versions | `2024-11-05`, `2025-03-26`, `2025-06-18` and `2025-11-25`. A client asking for one of these gets it; any other request gets `2025-11-25`. |
 | Server info | Name `blowhorn-mcp`; version is the Blowhorn release, or `0.0.0` when it cannot be read. |
-| Annotations | Each tool's four hints come from its operation's `x-mcp` in the bundle, never from a list in the server. A tool whose `x-mcp` says `readOnly`: `readOnlyHint` and `idempotentHint` true, `destructiveHint` and `openWorldHint` false. Any other tool: `readOnlyHint` and `idempotentHint` false, `openWorldHint` true, and `destructiveHint` true only when `x-mcp` also says `destructive`. An operation with `expose` false is no tool; one with no `x-mcp`, or one that does not match `McpOperation`, stops the server from starting. |
+| Annotations | Each tool's four hints come from its operation's `x-mcp` in the bundle, never from a list in the server. A tool whose `x-mcp` says `readOnly`: `readOnlyHint` and `idempotentHint` true, `destructiveHint` and `openWorldHint` false. Any other tool: `readOnlyHint` and `idempotentHint` false, `openWorldHint` true, and `destructiveHint` true only when `x-mcp` also says `destructive`; see [Destructive and additive tools](#destructive-and-additive-tools). An operation with `expose` false is no tool unless it is [opted in](#hidden-tools); one with no `x-mcp`, or one that does not match `McpOperation`, stops the server from starting. |
 | Results | One text content item. Tools declare no `outputSchema` and return no `structuredContent`; a `--json` command's output is the JSON text. |
 | Errors | A command that exits nonzero returns `isError` true with its exit code and its stderr (or stdout), redacted and cut to 4000 characters. A command that runs past the timeout returns `isError` true with a timed-out message only, no exit code or output. An unknown tool name also returns `isError` true, not a protocol error. |
 

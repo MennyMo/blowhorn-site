@@ -124,7 +124,7 @@ When only one Chrome profile needs the extension, write the native host and
 follow the printed steps. Through the Blowhorn mapping:
 
 ```bash
-blowhorn chrome extension-install --profile kate
+blowhorn chrome extension-install --profile company
 ```
 
 By the Chrome profile directory, as `blowhorn chrome profiles` prints it:
@@ -148,7 +148,7 @@ with those clicks.
 See the files first, and write nothing:
 
 ```bash
-blowhorn chrome extension-install --profile kate --dry-run
+blowhorn chrome extension-install --profile company --dry-run
 ```
 
 ## Every Chrome profile on this computer

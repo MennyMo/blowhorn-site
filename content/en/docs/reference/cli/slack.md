@@ -43,7 +43,7 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn slack delete --profile rian --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000400' --slack-auth session --confirm
+blowhorn slack delete --profile work --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000400' --slack-auth session --confirm
 ```
 
 Output: json with `--json`, text otherwise.
@@ -75,8 +75,8 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn slack edit --profile rian --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000400' --file fixed.md
-blowhorn slack edit --profile rian --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000400' --file fixed.md --slack-auth session --confirm --json
+blowhorn slack edit --profile work --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000400' --file fixed.md
+blowhorn slack edit --profile work --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000400' --file fixed.md --slack-auth session --confirm --json
 ```
 
 Output: json with `--json`, text otherwise.
@@ -103,7 +103,7 @@ Examples:
 
 ```bash
 blowhorn slack profiles --json
-blowhorn slack profiles --profile rian --slack-auth session
+blowhorn slack profiles --profile work --slack-auth session
 ```
 
 Output: json with `--json`, text otherwise.
@@ -135,8 +135,8 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn slack react --profile rian --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000100' --emoji white_check_mark
-blowhorn slack react --profile rian,alex --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000100' --emoji +1 --slack-auth session --confirm --json
+blowhorn slack react --profile work --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000100' --emoji white_check_mark
+blowhorn slack react --profile work,personal --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000100' --emoji +1 --slack-auth session --confirm --json
 ```
 
 Output: json with `--json`, text otherwise.
@@ -168,11 +168,11 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn slack send --profile rian --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000100' --message 'Thanks, merged'
-blowhorn slack send --profile rian --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000100' --message 'Thanks, merged' --slack-auth session --confirm --json
-blowhorn slack send --profile rian --target 'https://mesheryio.slack.com/archives/C0123' --file reply.md --idempotency-key release-notes-1 --confirm
-blowhorn slack send --profile rian,alex --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000100' --file reply.md --slack-auth session --json
-blowhorn slack send --profile rian --workspace mesheryio.slack.com --target '#general' --message - --confirm
+blowhorn slack send --profile work --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000100' --message 'Thanks, merged'
+blowhorn slack send --profile work --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000100' --message 'Thanks, merged' --slack-auth session --confirm --json
+blowhorn slack send --profile work --target 'https://mesheryio.slack.com/archives/C0123' --file reply.md --idempotency-key release-notes-1 --confirm
+blowhorn slack send --profile work,personal --target 'https://mesheryio.slack.com/archives/C0123/p1776000000000100' --file reply.md --slack-auth session --json
+blowhorn slack send --profile work --workspace mesheryio.slack.com --target '#general' --message - --confirm
 ```
 
 Output: json with `--json`, text otherwise.
@@ -199,8 +199,8 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn slack whoami --profile rian --workspace mesheryio.slack.com --slack-auth session
-blowhorn slack whoami --profile rian --workspace mesheryio.slack.com --json
+blowhorn slack whoami --profile work --workspace mesheryio.slack.com --slack-auth session
+blowhorn slack whoami --profile work --workspace mesheryio.slack.com --json
 ```
 
 Output: json with `--json`, text otherwise.

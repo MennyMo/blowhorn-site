@@ -50,10 +50,10 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn profile accounts kate --json
-blowhorn profile accounts kate --map 3f9c2a1e-0000-4000-8000-000000000001
+blowhorn profile accounts company --json
+blowhorn profile accounts company --map 3f9c2a1e-0000-4000-8000-000000000001
 blowhorn profile accounts layer5 --unmap 3f9c2a1e-0000-4000-8000-000000000001
-blowhorn profile accounts kate --page https://www.linkedin.com/in/kate-example
+blowhorn profile accounts company --page https://www.linkedin.com/in/example
 ```
 
 Output: json with `--json`, text otherwise.
@@ -99,14 +99,14 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn profile auth --platform x --profile alex
-blowhorn profile auth --all --profile alex
-blowhorn profile auth --platform slack --profile alex --workspace mesheryio.slack.com
-blowhorn profile auth --platform slack --profile alex --mode paste
+blowhorn profile auth --platform x --profile personal
+blowhorn profile auth --all --profile personal
+blowhorn profile auth --platform slack --profile personal --workspace mesheryio.slack.com
+blowhorn profile auth --platform slack --profile personal --mode paste
 blowhorn profile auth --platform linkedin --profile all --headless
-blowhorn profile auth --platform bluesky --profile alex
-printf '%s\n' "$APP_PASSWORD" | blowhorn profile auth --platform bluesky --profile alex --handle alex.bsky.social --app-password-stdin --json
-blowhorn profile auth --platform linkedin --profile kate --headed --json
+blowhorn profile auth --platform bluesky --profile personal
+printf '%s\n' "$APP_PASSWORD" | blowhorn profile auth --platform bluesky --profile personal --handle personal.bsky.social --app-password-stdin --json
+blowhorn profile auth --platform linkedin --profile company --headed --json
 ```
 
 Output: json with `--json`, text otherwise.
@@ -132,8 +132,8 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-cat kate.json | blowhorn profile create --payload-stdin --json
-cat kate.json | blowhorn profile create --payload-stdin --dry-run
+cat company.json | blowhorn profile create --payload-stdin --json
+cat company.json | blowhorn profile create --payload-stdin --dry-run
 ```
 
 Output: json with `--json`, text otherwise.
@@ -188,8 +188,8 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn profile delete sam --dry-run
-blowhorn profile delete sam --yes --json
+blowhorn profile delete client-a --dry-run
+blowhorn profile delete client-a --yes --json
 blowhorn profile delete 3f2b1c4d-8a9e-4c6b-9d1e-2a3b4c5d6e7f --yes
 ```
 
@@ -219,8 +219,8 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn profile get kate
-blowhorn profile get kate --json
+blowhorn profile get company
+blowhorn profile get company --json
 ```
 
 Output: json with `--json`, text otherwise.
@@ -278,10 +278,10 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn profile set kate X_USERNAME=katesuttons X_PASSWORD=yourpassword
-blowhorn profile set kate "Risk Profile=cautious" "Quiet Hours=22:00-07:00"
-blowhorn profile set kate GH_TOKEN=ghp_yourtoken --json
-blowhorn profile set alex slack_workspaces=mesheryio.slack.com,acme.slack.com
+blowhorn profile set company X_USERNAME=yourhandle X_PASSWORD=yourpassword
+blowhorn profile set company "Risk Profile=cautious" "Quiet Hours=22:00-07:00"
+blowhorn profile set company GH_TOKEN=ghp_yourtoken --json
+blowhorn profile set personal slack_workspaces=mesheryio.slack.com,acme.slack.com
 ```
 
 Output: json with `--json`, text otherwise.
@@ -314,9 +314,9 @@ Examples:
 ```bash
 blowhorn profile status
 blowhorn profile status --json
-blowhorn profile status --profile kate,rian --check-sessions --headless
+blowhorn profile status --profile company,work --check-sessions --headless
 blowhorn profile status --profile all --check-sessions --roster --json
-blowhorn profile status --profile kate --check-platform github --json
+blowhorn profile status --profile company --check-platform github --json
 blowhorn profile status --chrome
 blowhorn profile status --check-sessions --dry-run
 ```
@@ -377,7 +377,7 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-cat kate.json | blowhorn profile update kate --payload-stdin --json
+cat company.json | blowhorn profile update company --payload-stdin --json
 cat brand.json | blowhorn profile update 3f9c2a1e-0000-4000-8000-000000000001 --payload-stdin --dry-run
 ```
 

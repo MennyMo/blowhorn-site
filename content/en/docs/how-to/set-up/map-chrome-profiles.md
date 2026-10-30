@@ -149,7 +149,7 @@ chrome mapping proposal for studio (3 profiles); nothing is applied
   profile  directory  name   account             note
   ada      Profile 2  Ada    ada@example.com     name match
   grace    Profile 5  Grace  grace@example.com   name match
-  marcus       -          -      -                   none
+  personal   -          -      -                   none
 to apply an activity you agree with:
   blowhorn chrome map ada 'Profile 2'
   blowhorn chrome map grace 'Profile 5'
@@ -224,7 +224,7 @@ blowhorn profile status --chrome
 | Profile | Linkedin | X | ... | Chrome              | Notes |
 | ada     | valid    | - | ... | Profile 2           |       |
 | grace   | -        | - | ... | Profile 5 (drift)   |       |
-| marcus      | -        | - | ... | -                   |       |
+| personal    | -        | - | ... | -                   |       |
 ```
 
 The Chrome column shows the mapped directory and, when its recorded

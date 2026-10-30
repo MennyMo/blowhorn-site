@@ -5,7 +5,8 @@ weight: 70
 ---
 
 Connect an MCP client to the Blowhorn MCP server and an assistant can
-use every Blowhorn command: it reads your queue and analytics, drafts
+use the Blowhorn commands, all but a few
+[hidden by default](#hidden-tools): it reads your queue and analytics, drafts
 and queues posts, amplifies what went out, and manages profiles. The
 server runs on your own computer, and the assistant only ever acts
 through the commands you already run. What the server is, how it
@@ -150,7 +151,7 @@ Fill in the checkout's real path for `/path/to/blowhorn`:
 The server runs the `blowhorn` executable on your PATH. If you have
 not run `make cli-install`, add `BLOWHORN_MCP_CLI` to `env`, naming the
 executable. From the checkout root, `make mcp-generate` checks that the
-tool list covers every command, and `make mcp-test` runs the server's
+tool list covers every command that is not hidden, and `make mcp-test` runs the server's
 tests.
 
 To use either fallback in a client, keep the client's file and
@@ -488,7 +489,7 @@ first pass.
 
 ### Draft and queue a post
 
-> Draft a LinkedIn post for profile alex announcing the v2.4 release,
+> Draft a LinkedIn post for profile personal announcing the v2.4 release,
 > queue it for Tuesday 09:00, and show me the dry run before you
 > confirm anything.
 
@@ -537,26 +538,31 @@ passes both `confirm` and `dry_run` is refused as contradictory, and
 a changing command with no dry-run path refuses without `confirm`
 rather than running for real.
 
-The server also marks its calls as agent calls, so a configured
-approval mode sees them for what they are: it sets
-`BLOWHORN_ACTOR=agent` for the command it runs, unless you already
-set that variable. Under approval mode `agent` or `all`, the queue
-rules in [You are in control](/docs/explanation/youre-in-control/)
-therefore apply to MCP calls exactly as they apply to any other
-agent caller. `content_approve` is one of the tools, but
-`content approve` refuses an agent caller in every mode, so an MCP
-call cannot approve queued work. That only holds work back under
-`agent` or `all`: under `off`, the agent's own writes keep the
-`Approved?` value it sets, and a confirmed ad-hoc action publishes.
-Do not set `BLOWHORN_ACTOR=human` in a client's `env`: the server
-leaves an existing value alone. If the server's environment sets
-`BLOWHORN_ACTOR=human` and does not set
-`BLOWHORN_RUN_SOURCE=scheduler`, every MCP call counts as a person,
-so under `agent` the agent's writes and confirmed ad-hoc actions go
-through unheld, under `all` writes still land pending, and in any
-mode the agent can approve its own work. With
-`BLOWHORN_RUN_SOURCE=scheduler`, the calls still count as an agent
-and nothing changes.
+Every MCP call runs as an agent. The server sets
+`BLOWHORN_ACTOR=agent` for every command it runs, whatever its own
+environment says: `BLOWHORN_ACTOR=human` in a client's `env` is
+ignored, and the server says so in one line on stderr when it starts.
+Under approval mode `agent` or `all`, the queue rules in
+[You are in control](/docs/explanation/youre-in-control/) therefore
+apply to MCP calls exactly as they apply to any other agent caller.
+`content_approve` is one of the tools, but `content approve` refuses
+an agent caller in every mode, so an agent can never approve its own
+content through this server. That only holds work back under `agent`
+or `all`: under `off`, the agent's own writes keep the `Approved?`
+value it sets, and a confirmed ad-hoc action publishes.
+
+Each changing tool also tells the client whether it is destructive.
+An additive tool (`destructiveHint` false), such as `post`, `comment`,
+`follow` or `slack_send`, only adds new things; Blowhorn's own
+bookkeeping on the record it acted on, such as marking a content item
+as posted, does not count as a change. A destructive
+tool (`destructiveHint` true), such as `content_upsert`,
+`schedule_delete` or `unfollow`, may change or remove something that
+already exists. Your client may ask you before a destructive call;
+either kind is still a dry run until `confirm` is true. The full list
+is in the
+[MCP server reference](/docs/reference/mcp-server/#destructive-and-additive-tools).
+
 Note the limit of this transport: there is no desktop-app
 approval step here. On this server, `confirm` true is the approval.
 If you want a person to approve each write in the app, use the queue
@@ -573,6 +579,34 @@ it ran.
 
 How these rules fit together is in
 [How the MCP server keeps you in control](/docs/explanation/mcp-and-safety/).
+
+### Hidden tools
+
+Five tools are hidden by default, because each removes or replaces
+your Blowhorn install or signs you out: `uninstall`,
+`service_uninstall`, `auth_logout`, `desktop_build` and
+`desktop_install`. Your assistant cannot see or call them. To serve
+one, name it in the server's arguments with `--allow-hidden-tool`
+(repeat it for more), or list names, comma-separated, in
+`BLOWHORN_MCP_ALLOW_HIDDEN_TOOLS` in the client's `env`. For example,
+to let an assistant uninstall the background service:
+
+```json
+{
+  "mcpServers": {
+    "blowhorn": {
+      "command": "/Users/<you>/.local/bin/blowhorn-mcp",
+      "args": ["--allow-hidden-tool", "service_uninstall"]
+    }
+  }
+}
+```
+
+There is no "all": name each tool. A name that is not a hidden tool
+stops the server at startup with a line on stderr naming the hidden
+tools, so a typo shows up at once. An opted-in tool is still a dry
+run until `confirm` is true. Restart the client after changing its
+config.
 
 ## Troubleshooting
 

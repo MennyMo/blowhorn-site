@@ -14,7 +14,7 @@ Capture your signed-in Slack session into the profile
 ([Sign a profile in to each platform](/docs/how-to/set-up/platform-accounts/)):
 
 ```bash
-blowhorn profile auth --platform slack --profile kate
+blowhorn profile auth --platform slack --profile company
 ```
 
 ## Send one message, no activity
@@ -22,8 +22,8 @@ blowhorn profile auth --platform slack --profile kate
 Name one profile, the destination, and the text, and preview it first:
 
 ```bash
-blowhorn post --platform slack --profile kate --target "#announcements" --message "Maintenance is complete" --dry-run
-blowhorn post --platform slack --profile kate --target "#announcements" --message "Maintenance is complete"
+blowhorn post --platform slack --profile company --target "#announcements" --message "Maintenance is complete" --dry-run
+blowhorn post --platform slack --profile company --target "#announcements" --message "Maintenance is complete"
 ```
 
 `--target` takes `#channel`, `@user`, a Slack channel link, or a Slack
@@ -43,7 +43,7 @@ unless `--confirm`, `--json` output, and each message sent at most once. Name
 several profiles to send the same reply as each of them, one after another:
 
 ```bash
-blowhorn slack send --profile rian,alex --target "https://acme.slack.com/archives/C0123/p1776000000000100" --file reply.md --slack-auth session --json
+blowhorn slack send --profile work,personal --target "https://acme.slack.com/archives/C0123/p1776000000000100" --file reply.md --slack-auth session --json
 ```
 
 Each profile gets its own idempotency key, ledger entry and result, and a
@@ -61,9 +61,9 @@ Fix or take back a message you sent with `blowhorn slack send`, or react to
 any message. Each is a dry run until `--confirm`:
 
 ```bash
-blowhorn slack edit --profile rian --target "https://acme.slack.com/archives/C0123/p1776000000000400" --file fixed.md --confirm
-blowhorn slack delete --profile rian --target "https://acme.slack.com/archives/C0123/p1776000000000400" --confirm
-blowhorn slack react --profile rian --target "https://acme.slack.com/archives/C0123/p1776000000000100" --emoji white_check_mark --confirm
+blowhorn slack edit --profile work --target "https://acme.slack.com/archives/C0123/p1776000000000400" --file fixed.md --confirm
+blowhorn slack delete --profile work --target "https://acme.slack.com/archives/C0123/p1776000000000400" --confirm
+blowhorn slack react --profile work --target "https://acme.slack.com/archives/C0123/p1776000000000100" --emoji white_check_mark --confirm
 ```
 
 Edit and delete work only on a message that profile sent through
@@ -78,7 +78,7 @@ Slack message link in `Comment on` for a thread reply. `Destination` only
 picks the workspace whose credentials send. Then run:
 
 ```bash
-blowhorn post --platform slack --profile kate
+blowhorn post --platform slack --profile company
 ```
 
 An activity with no target in `Amplify` or `Comment on` goes to `#general`, and

@@ -95,9 +95,9 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn config set defaults.profile alex
+blowhorn config set defaults.profile personal
 blowhorn config set defaults.pace slow
-blowhorn config set defaults.exclude acme,alex,meshery,kanvas
+blowhorn config set defaults.exclude acme,personal,meshery,kanvas
 blowhorn config set defaults.logs.directory ~/blowhorn-logs
 blowhorn config set defaults.logs.retention_days 365
 blowhorn config set defaults.logs.retention_days -- -1

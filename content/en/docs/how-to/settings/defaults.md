@@ -23,7 +23,7 @@ blowhorn config show --json
 
 ```bash
 blowhorn config set defaults.pace slow
-blowhorn config set defaults.exclude ada,kate
+blowhorn config set defaults.exclude ada,company
 blowhorn config set defaults.dry_run true
 ```
 

@@ -12,12 +12,12 @@ mail. The run lists with the profile's stored `GH_TOKEN`.
 
 ```bash
 # Stargazers of one repository. Preview first: it lists and writes nothing.
-blowhorn source --platform github --profile marcus --repo layer5io/layer5 --dry-run
-blowhorn source --platform github --profile marcus --repo layer5io/layer5
+blowhorn source --platform github --profile personal --repo layer5io/layer5 --dry-run
+blowhorn source --platform github --profile personal --repo layer5io/layer5
 
 # Another audience, or several repositories at once.
-blowhorn source --platform github --profile marcus --repo layer5io/layer5 --audience contributors
-blowhorn source --platform github --profile marcus --repo layer5io/layer5 --repo blowhorn-ai/blowhorn-site --audience watchers
+blowhorn source --platform github --profile personal --repo layer5io/layer5 --audience contributors
+blowhorn source --platform github --profile personal --repo layer5io/layer5 --repo blowhorn-ai/blowhorn-site --audience watchers
 ```
 
 `--audience` is one of `owner`, `contributors`, `forks`, `stargazers`,

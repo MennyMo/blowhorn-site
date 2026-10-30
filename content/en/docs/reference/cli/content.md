@@ -136,7 +136,7 @@ Examples:
 
 ```bash
 blowhorn content list
-blowhorn content list --profile kate
+blowhorn content list --profile company
 blowhorn content list --platform x --pending --json
 ```
 
@@ -166,7 +166,7 @@ Examples:
 
 ```bash
 blowhorn content posts
-blowhorn content posts --profile kate --json
+blowhorn content posts --profile company --json
 blowhorn content posts --platform x --pending --json
 ```
 
@@ -184,7 +184,7 @@ blowhorn content upsert [OPTIONS]
 
 | Flag | Type | Default | Description |
 | --- | --- | --- | --- |
-| `--payload` | string |  | JSON object of Content column: value pairs in the queue's own column names, for example `{"Platform":"x","Profile":"kate","Message Text":"hello","Approved?":"yes"}` |
+| `--payload` | string |  | JSON object of Content column: value pairs in the queue's own column names, for example `{"Platform":"x","Profile":"company","Message Text":"hello","Approved?":"yes"}` |
 | `--activity` | integer |  | Activity number to update in place; omit to create a new activity |
 | `--expected-fingerprint` | string |  | Refuse the write if the post's fingerprint (from `content get` or `content list`) no longer matches |
 | `--json` | boolean | `false` | Emit machine-readable JSON output (the shape the desktop app's Content screen reads) |
@@ -197,10 +197,10 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn content upsert --payload '{"Platform":"linkedin","Profile":"kate","Message Text":"Meshery v0.9 is out","Approved?":"yes","Promote On":"2026-09-01 09:00:00"}' --json
+blowhorn content upsert --payload '{"Platform":"linkedin","Profile":"company","Message Text":"Meshery v0.9 is out","Approved?":"yes","Promote On":"2026-09-01 09:00:00"}' --json
 blowhorn content upsert --payload '{"Platform":"github","Profile":"all","Amplify":"https://github.com/acme/widgets/issues/1234","Approved?":"yes"}' --json
 blowhorn content upsert --activity 12 --payload '{"Approved?":"yes"}' --expected-fingerprint 3f2a1c --json
-blowhorn content upsert --payload '{"Platform":"x","Profile":"kate","Message Text":"hello"}' --dry-run
+blowhorn content upsert --payload '{"Platform":"x","Profile":"company","Message Text":"hello"}' --dry-run
 ```
 
 Output: json with `--json`, text otherwise.
