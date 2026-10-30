@@ -28,8 +28,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Publish this announcement to my LinkedIn feed as me.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a LinkedIn post from my personal profile announcing that release 2.3 adds offline sync, queued for Tuesday 9:00. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -56,8 +56,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Comment on this LinkedIn post as me: https://www.linkedin.com/feed/update/urn:li:activity:123/ with the message Great post!",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a comment from my personal profile on https://www.linkedin.com/feed/update/urn:li:activity:123/ answering their question: caching the dependency layer cut our p95 build time from 14 to 6 minutes. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -84,8 +84,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Repost this LinkedIn post from each of my profiles: https://www.linkedin.com/feed/update/urn:li:activity:123/",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a repost of https://www.linkedin.com/feed/update/urn:li:activity:123/ from my company and personal profiles, listing what each would do. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -112,8 +112,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Accept pending LinkedIn invitations for my Marcus profile, at most five.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run accepting pending LinkedIn invitations on my personal profile, at most five, and list who would be accepted. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -140,8 +140,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Withdraw LinkedIn invitations I sent that have waited long enough, for my Alex profile.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run withdrawing LinkedIn invitations from my personal profile that have waited more than 30 days, and list each one. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -168,8 +168,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Show my LinkedIn follower history for the last 12 months.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Show my LinkedIn follower history for the last 12 months (read only, nothing to confirm).",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -196,8 +196,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Publish this announcement on X as me.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run an X post from my personal profile saying our CLI now supports --dry-run on every write, queued for Tuesday 9:00. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -223,8 +223,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Reply on X to https://x.com/user/status/123 as me with this message.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a reply from my personal profile to https://x.com/user/status/123 answering their question: yes, rehearsal runs locally and nothing is sent until you approve. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -251,8 +251,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Retweet or quote https://x.com/user/status/123 from each of my X profiles.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a quote of https://x.com/user/status/123 from my company and personal profiles, listing what each would post. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -279,8 +279,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Follow mesheryio on X from my Alex profile, target only.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run following mesheryio on X from my personal profile, target only. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -307,8 +307,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Show my X follower history for the last 12 months.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Show my X follower history for the last 12 months (read only, nothing to confirm).",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -335,8 +335,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Publish this post to the subreddit in the queue row as me.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a post to r/kubernetes from my project profile titled \"How we rehearse every write before it ships\", using the queue row's body. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -363,8 +363,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Comment on this Reddit post as me: https://www.reddit.com/r/k8s/comments/abc/post/ with Thanks for sharing.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a comment from my personal profile on https://www.reddit.com/r/k8s/comments/abc/post/ answering their question: set the readiness probe's initialDelaySeconds to 30, because the JVM needs about 25 seconds to warm up. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -391,8 +391,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Upvote this Reddit post from each of my profiles: https://www.reddit.com/r/k8s/comments/abc/post/",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run an upvote of https://www.reddit.com/r/k8s/comments/abc/post/ from my personal profile only. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -419,8 +419,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Preview a Hacker News submission for my Alex profile, then publish it.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a Hacker News submission of https://blowhorn.ai/ from my personal profile with the title \"Show HN: Rehearse every social post before it ships\". Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -446,8 +446,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Comment on this Hacker News item as me, from the queue row.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a comment from my personal profile on https://news.ycombinator.com/item?id=123 answering their question: the trade-off was a slower first run in exchange for a verified preview. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -474,8 +474,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Send Maintenance is complete to #announcements on Slack as me.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a message to #announcements from my company profile saying \"Maintenance is complete; all services have been back since 14:05 UTC\". Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -502,8 +502,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Reply in this Slack thread as me: https://acme.slack.com/archives/C0123/p1776000000000100",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a reply in https://acme.slack.com/archives/C0123/p1776000000000100 from my company profile saying the fix shipped in build 482 and the cache was cleared at 14:05 UTC. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -530,8 +530,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Publish this announcement on Bluesky as me.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a Bluesky post from my personal profile announcing that release 2.3 adds offline sync, queued for Tuesday 9:00. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -558,8 +558,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Reply on Bluesky to https://bsky.app/profile/alice.bsky.social/post/3kx... as me with Nice thread.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a reply from my personal profile to https://bsky.app/profile/alice.bsky.social/post/3kx... answering their question: sidecar-less mode cut our memory use by about 40 percent. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -586,8 +586,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Repost this Bluesky post from each of my profiles: https://bsky.app/profile/you/post/3kx...",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run a repost of https://bsky.app/profile/you/post/3kx... from my company and personal profiles, listing what each would do. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -614,8 +614,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Follow alice.bsky.social on Bluesky from my Alex profile, target only.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run following alice.bsky.social on Bluesky from my personal profile, target only. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -642,8 +642,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Unfollow alice.bsky.social on Bluesky from my Alex profile.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run unfollowing alice.bsky.social on Bluesky from my personal profile. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -670,8 +670,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Search Bluesky for recent posts about service mesh.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Search Bluesky for the ten latest posts about service mesh and show me the results (read only, nothing to confirm).",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -698,8 +698,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Show my Bluesky follower history for the last 12 months.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Show my Bluesky follower history for the last 12 months (read only, nothing to confirm).",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -726,8 +726,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Add the five upbeat reactions to https://github.com/layer5io/meshery/issues/1234 from my Alex profile.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run adding a thumbs-up and a heart reaction to https://github.com/layer5io/meshery/issues/1234 from my personal profile. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -754,8 +754,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "Follow layer5io on GitHub from my Alex profile, target only.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "Dry-run following layer5io on GitHub from my personal profile, target only. Show me what would happen and wait for my go before you confirm.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
@@ -782,8 +782,8 @@
         },
         "mcp": {
           "status": "available",
-          "prompt": "List stargazers of layer5io/meshery so I can choose whom to reach. Do not follow anyone.",
-          "notes": "The prompt to give an AI assistant connected to the Blowhorn MCP server."
+          "prompt": "List the first 20 stargazers of layer5io/meshery so I can choose whom to reach; read only, nothing to confirm, and do not follow anyone.",
+          "notes": "Ask an assistant connected to the Blowhorn MCP server. Writes come back as a dry run first; nothing goes out until you say go."
         },
         "skill": {
           "status": "available",
