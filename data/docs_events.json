@@ -1,0 +1,74 @@
+{
+  "$schema": "../schemas/docs_events.schema.json",
+  "pages": [
+    "/docs/how-to/set-up/connect-mcp-client/",
+    "/docs/reference/mcp-server/",
+    "/docs/reference/python-client/",
+    "/docs/tutorials/first-mcp-connection/",
+    "/docs/explanation/mcp-and-safety/",
+    "/ai/mcp/"
+  ],
+  "consent_key": "blowhorn-consent",
+  "consent_event": "blowhorn:consent",
+  "storage_key": "blowhorn-docs-attribution",
+  "default_client": "general",
+  "clients": {
+    "claude-desktop": "Claude Desktop",
+    "claude-code": "Claude Code",
+    "chatgpt": "ChatGPT",
+    "openai-codex-cli": "OpenAI Codex CLI",
+    "cursor": "Cursor",
+    "vs-code-with-github-copilot": "VS Code with GitHub Copilot",
+    "vs-code": "VS Code with GitHub Copilot",
+    "windsurf-devin-desktop": "Windsurf (Devin Desktop)",
+    "gemini-cli": "Gemini CLI",
+    "zed": "Zed",
+    "cline": "Cline",
+    "goose": "Goose"
+  },
+  "snippet_kinds": {
+    "json": "json",
+    "toml": "toml",
+    "yaml": "yaml",
+    "yml": "yaml",
+    "bash": "shell",
+    "sh": "shell",
+    "shell": "shell",
+    "zsh": "shell",
+    "console": "shell",
+    "text": "text"
+  },
+  "outbound": [
+    { "kind": "npm", "hosts": ["npmjs.com", "www.npmjs.com", "registry.npmjs.org"] },
+    { "kind": "registry", "hosts": ["registry.modelcontextprotocol.io"] },
+    { "kind": "registry", "hosts": ["github.com"], "paths": ["^/mcp(/|$)"] },
+    { "kind": "download", "hosts": ["github.com"], "paths": ["^/blowhorn-ai/[^/]+/releases(/|$)"] },
+    { "kind": "download", "hosts": ["blowhorn.ai", "www.blowhorn.ai"], "paths": ["^/download/"] }
+  ],
+  "internal_hosts": ["blowhorn.ai", "www.blowhorn.ai"],
+  "utm_params": ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"],
+  "attribution_params": [
+    "first_source",
+    "first_medium",
+    "first_campaign",
+    "first_content",
+    "first_term",
+    "first_referrer_host",
+    "landing_guide",
+    "landing_page"
+  ],
+  "events": {
+    "docs_guide_view": {
+      "description": "A tracked guide was viewed after consent: once per page load.",
+      "params": ["page_path", "guide", "client"]
+    },
+    "docs_snippet_copy": {
+      "description": "The copy button on a code card was pressed. Never carries the copied text.",
+      "params": ["page_path", "client", "snippet_kind", "snippet_title"]
+    },
+    "docs_outbound_click": {
+      "description": "A link to npm, an MCP registry or a Blowhorn download was followed.",
+      "params": ["page_path", "client", "link_kind", "link_url"]
+    }
+  }
+}

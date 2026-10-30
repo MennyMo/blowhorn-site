@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/defs/docs-event.schema.json",
+  "title": "Docs attribution event payloads",
+  "description": "The GA4 event parameters assets/js/docs-attribution.js sends for the event names in data/docs_events.json, and the shared types schemas/docs_events.schema.json uses. Loaded by make check-schemas with ajv -r; test_docs_attribution.py validates every payload the script builds against these. No PII: paths and URLs never carry a query string or fragment, the referrer is a host only, and copied text is never sent. GA4 caps a parameter value at 100 characters. A missing attribution value is (none).",
+  "definitions": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "maxLength": 100 },
+    "client_id": { "$ref": "#/definitions/slug" },
+    "snippet_kind": { "type": "string", "enum": ["json", "toml", "yaml", "shell", "text", "other"] },
+    "link_kind": { "type": "string", "enum": ["npm", "registry", "download"] },
+    "value": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "page_path": { "type": "string", "pattern": "^/[^?#]*$", "maxLength": 100 },
+    "guide": { "$ref": "#/definitions/slug" },
+    "client": { "$ref": "#/definitions/value" },
+    "link_url": { "type": "string", "pattern": "^https?://[^/?#]+(/[^?#]*)?$", "maxLength": 100 },
+    "host": { "type": "string", "pattern": "^(\\(none\\)|[a-z0-9.-]+(:[0-9]+)?)$", "maxLength": 100 },
+    "first_value": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "docs_guide_view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page_path", "guide", "client", "first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide", "landing_page"],
+      "properties": {
+        "page_path": { "$ref": "#/definitions/page_path" },
+        "guide": { "$ref": "#/definitions/guide" },
+        "client": { "$ref": "#/definitions/client" },
+        "first_source": { "$ref": "#/definitions/first_value" },
+        "first_medium": { "$ref": "#/definitions/first_value" },
+        "first_campaign": { "$ref": "#/definitions/first_value" },
+        "first_content": { "$ref": "#/definitions/first_value" },
+        "first_term": { "$ref": "#/definitions/first_value" },
+        "first_referrer_host": { "$ref": "#/definitions/host" },
+        "landing_guide": { "$ref": "#/definitions/guide" },
+        "landing_page": { "$ref": "#/definitions/page_path" }
+      }
+    },
+    "docs_snippet_copy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page_path", "client", "snippet_kind", "snippet_title", "first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide", "landing_page"],
+      "properties": {
+        "page_path": { "$ref": "#/definitions/page_path" },
+        "client": { "$ref": "#/definitions/client" },
+        "snippet_kind": { "$ref": "#/definitions/snippet_kind" },
+        "snippet_title": { "type": "string", "maxLength": 100 },
+        "first_source": { "$ref": "#/definitions/first_value" },
+        "first_medium": { "$ref": "#/definitions/first_value" },
+        "first_campaign": { "$ref": "#/definitions/first_value" },
+        "first_content": { "$ref": "#/definitions/first_value" },
+        "first_term": { "$ref": "#/definitions/first_value" },
+        "first_referrer_host": { "$ref": "#/definitions/host" },
+        "landing_guide": { "$ref": "#/definitions/guide" },
+        "landing_page": { "$ref": "#/definitions/page_path" }
+      }
+    },
+    "docs_outbound_click": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page_path", "client", "link_kind", "link_url", "first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide", "landing_page"],
+      "properties": {
+        "page_path": { "$ref": "#/definitions/page_path" },
+        "client": { "$ref": "#/definitions/client" },
+        "link_kind": { "$ref": "#/definitions/link_kind" },
+        "link_url": { "$ref": "#/definitions/link_url" },
+        "first_source": { "$ref": "#/definitions/first_value" },
+        "first_medium": { "$ref": "#/definitions/first_value" },
+        "first_campaign": { "$ref": "#/definitions/first_value" },
+        "first_content": { "$ref": "#/definitions/first_value" },
+        "first_term": { "$ref": "#/definitions/first_value" },
+        "first_referrer_host": { "$ref": "#/definitions/host" },
+        "landing_guide": { "$ref": "#/definitions/guide" },
+        "landing_page": { "$ref": "#/definitions/page_path" }
+      }
+    }
+  }
+}

@@ -17,5 +17,6 @@
     {{- block "scripts" . }}{{ end }}
     {{- $codeCard := resources.Get "js/code-card.js" | minify | fingerprint }}
     <script src="{{ $codeCard.RelPermalink }}" defer></script>
+    {{- partial "docs-attribution.html" . }}
   </body>
 </html>
