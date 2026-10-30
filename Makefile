@@ -78,6 +78,8 @@ include .github/build/Makefile.show-help.mk
 #   dmg-resolve, dmg-download, dmg-package, dmg-verify, dmg-release,
 #   dmg-pin-download, dmg-sync-docs
 #                      The steps of publish-dmg.yml (see docs/distribution.md).
+#   npm-fetch, npm-verify, npm-publish, npm-confirm
+#                      The steps of publish-blowhorn-axi.yml (see docs/distribution.md).
 #   docs-sync          Sync the user docs from a blowhorn checkout
 #                      into content/en/docs/: make docs-sync REF=<tag|branch|sha>
 #                      (see docs/deploy.md).
@@ -100,7 +102,7 @@ BIN_DIR ?= .bin
 # actionlint from PATH when installed; otherwise a pinned copy is downloaded into $(BIN_DIR).
 ACTIONLINT ?= $(shell command -v actionlint 2>/dev/null)
 # Workflows owned by this repo. Template workflows (labeler and friends) are left as-is.
-WORKFLOWS ?= .github/workflows/site.yml .github/workflows/publish-dmg.yml .github/workflows/sync-docs.yml .github/workflows/cloud-auth-smoke.yml .github/workflows/product-ci.yml .github/workflows/internal-site.yml .github/workflows/internal-site-auto.yml
+WORKFLOWS ?= .github/workflows/site.yml .github/workflows/publish-dmg.yml .github/workflows/sync-docs.yml .github/workflows/cloud-auth-smoke.yml .github/workflows/product-ci.yml .github/workflows/internal-site.yml .github/workflows/internal-site-auto.yml .github/workflows/publish-blowhorn-axi.yml
 # A blowhorn checkout for `make docs-sync` (the sync-docs.yml
 # workflow checks the product repo out at this path).
 SOURCE_DIR ?= product
@@ -440,6 +442,26 @@ dmg-pin-download:
 dmg-sync-docs:
 	.github/scripts/publish-dmg/sync-docs.sh
 
+# publish-blowhorn-axi.yml steps. Each reads its inputs from the environment, as
+# the workflow sets them; see the script headers in .github/scripts/publish-npm/.
+# They need only bash, curl, gh, node and npm (no Go, Hugo or site dependencies).
+
+## publish-blowhorn-axi step 1: fetch PACKAGE-VERSION.tgz from TARBALL_URL (HTTPS) or release RELEASE_TAG; TARBALL into GITHUB_ENV.
+npm-fetch:
+	.github/scripts/publish-npm/fetch.sh
+
+## publish-blowhorn-axi step 2: check TARBALL's sha256 (SHA256), name, version and repository.url; refuse an already-published version.
+npm-verify:
+	.github/scripts/publish-npm/verify.sh
+
+## publish-blowhorn-axi step 3: npm publish TARBALL with --provenance under DIST_TAG (default latest), over OIDC.
+npm-publish:
+	.github/scripts/publish-npm/publish.sh
+
+## publish-blowhorn-axi step 4: poll npm for PACKAGE@VERSION for about 5 minutes, then warn (never fails).
+npm-confirm:
+	.github/scripts/publish-npm/confirm.sh
+
 ## Empty the build cache, reinstall dependencies, and run the site locally.
 clean:
 	npm run clean
@@ -499,6 +521,10 @@ clean:
 	dmg-release \
 	dmg-pin-download \
 	dmg-sync-docs \
+	npm-fetch \
+	npm-verify \
+	npm-publish \
+	npm-confirm \
 	docs-cli-reference \
 	docs-sync \
 	docs-sync-base \
