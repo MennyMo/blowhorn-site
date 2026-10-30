@@ -4,6 +4,17 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 - Add durable project-specific notes here as they are discovered through real work.
 
+## Worktrees, design, and writing
+
+- Git worktree management: use Treehouse - https://github.com/kunchenguid/treehouse - for every Git worktree. Do not hand-roll git worktree commands or use another worktree tool unless Treehouse cannot do the job, and then say why.
+- Design source of truth: Blowhorn Figma project - https://www.figma.com/design/mM9B4Zv9ON3pIyh3IvB4Il/Blowhorn - check the design there before changing layout, copy, or brand. For this site, DESIGN.md still governs layout and copy changes.
+- Writing: never use an em dash. Use a hyphen instead, and replace any em dash found in this repo with a hyphen.
+
+## Website, documentation, and feature updates
+
+- Website and documentation updates: make them to the best of your ability, push when ready, and merge the PR when ready.
+- New or augmented features: update their associated tests, update internal and external documentation, then run the changes through No Mistakes at a maximum of three turns.
+
 ## Building the site locally
 
 blowhorn.ai is Hugo with Docsy as a Hugo module, built like layer5io/docs. Run
