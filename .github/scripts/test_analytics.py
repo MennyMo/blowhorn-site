@@ -26,6 +26,14 @@ class AnalyticsTemplateTests(unittest.TestCase):
         self.assertIn("data-consent-open", footer)
         self.assertIn('partial "consent.html"', footer)
 
+    def test_consent_event_fires_only_on_grant(self):
+        script = (ROOT / "assets/js/consent.js").read_text()
+        grant = script.split("function grant()", 1)[1].split("\n  }", 1)[0]
+
+        self.assertEqual(script.count("dispatchEvent("), 1)
+        self.assertIn("new CustomEvent('blowhorn:consent'", grant)
+        self.assertLess(grant.index("load()"), grant.index("dispatchEvent("))
+
 
 if __name__ == "__main__":
     unittest.main()

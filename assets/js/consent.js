@@ -31,6 +31,8 @@
   function grant() {
     window.gtag('consent', 'update', { analytics_storage: 'granted' });
     load();
+    // assets/js/docs-attribution.js starts its events from here.
+    document.dispatchEvent(new CustomEvent('blowhorn:consent', { detail: 'granted' }));
   }
 
   function deny() {

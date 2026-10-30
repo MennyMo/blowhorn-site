@@ -80,6 +80,10 @@ regenerate them. Claims on every page come from the product repository's
   CDN script or stylesheet, or web fonts from elsewhere, and never copy layer5io/docs' head,
   navbar or footer (Docsy's head would add a second, consent-less gtag). A new outside host needs a privacy
   page update first. `.github/scripts/check-third-party.py` fails the build.
+- **Docs attribution events ride on GA4.** The MCP guides' `docs_guide_view`,
+  `docs_snippet_copy` and `docs_outbound_click` come from `data/docs_events.json`
+  through `assets/js/docs-attribution.js`, consent first; never add markup to synced docs
+  for them. A renamed client heading needs its new id in `clients` ([docs/docs-attribution.md](docs/docs-attribution.md)).
 - **Brand tokens only.** Every colour, type style, radius and shadow in
   `assets/css/site.css` is a token from `static/assets/brand/tokens.json`. Light is the
   default; dark follows the OS with no JavaScript. Brand SVGs are used as files, never
