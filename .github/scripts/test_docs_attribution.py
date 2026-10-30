@@ -246,6 +246,7 @@ class ClientTests(unittest.TestCase):
                 ("clientFor", [h(3, "claude-desktop-1")], ""),
                 ("clientFor", [h(3, "vs-code")], ""),
                 ("clientFor", [h(2, "start-the-server")], "goose"),
+                ("clientFor", [], "gemini-cli"),
                 ("clientFor", [], "Gemini CLI"),
                 ("clientFor", [], "nope"),
                 ("hashClient", "#windsurf-devin-desktop", ""),
@@ -254,7 +255,7 @@ class ClientTests(unittest.TestCase):
             ),
             [
                 "Claude Code", "general", "Zed", "general", "Claude Desktop",
-                "VS Code with GitHub Copilot", "Goose", "Gemini CLI", "general",
+                "VS Code with GitHub Copilot", "Goose", "Gemini CLI", "general", "general",
                 "Windsurf (Devin Desktop)", "Cline", "general",
             ],
         )
@@ -264,6 +265,11 @@ class ClientTests(unittest.TestCase):
         copies = [p for n, p in events(result["after"][-1]) if n == "docs_snippet_copy"]
         self.assertEqual([(p["client"], p["snippet_kind"], p["snippet_title"]) for p in copies],
                          [("Claude Code", "json", "settings.json"), ("general", "shell", "terminal")])
+
+    def test_middle_click_on_copy_is_not_a_copy(self):
+        result = page(consent="granted", steps=[{"aux": "card", "button": 1}, {"click": "card"}])
+        self.assertEqual([n for n, _ in events(result["after"][1])], ["docs_guide_view"])
+        self.assertEqual([n for n, _ in events(result["after"][2])], ["docs_guide_view", "docs_snippet_copy"])
 
     def test_front_matter_client_is_the_fallback(self):
         result = page(consent="granted", mcpClient="chatgpt", steps=[{"click": "shell"}])
@@ -293,13 +299,14 @@ class OutboundTests(unittest.TestCase):
             "https://github.com/blowhorn-ai/blowhorn-site": None,
             "https://blowhorn.ai/download/": "download",
             "https://blowhorn.ai/download/thanks/": "download",
-            "http://localhost:1313/download/": "download",
+            "https://www.blowhorn.ai/download/": "download",
+            "http://localhost:1313/download/": None,
             "https://blowhorn.ai/docs/": None,
             "https://evil.example/download/": None,
             "https://npmjs.com.evil.example/x": None,
             "mailto:hello@blowhorn.ai": None,
         }
-        got = pure(*[("linkKind", url, "localhost") for url in cases])
+        got = pure(*[("linkKind", url) for url in cases])
         self.assertEqual(dict(zip(cases, got)), cases)
 
     def test_query_strings_and_fragments_are_stripped(self):
@@ -342,13 +349,13 @@ class PayloadSchemaTests(unittest.TestCase):
 
     def produced(self):
         long = "x" * 300
-        ctx = {"path": "/ai/mcp/", "hash": "#zed", "host": "blowhorn.ai", "pageClient": "",
-               "attribution": {"first_source": long, "landing_guide": "mcp"}}
+        ctx = {"path": "/ai/mcp/", "hash": "#zed", "pageClient": "",
+               "attribution": {"first_source": long, "landing_guide": "mcp", "landing_page": "/ai/mcp/"}}
         built = pure(
             ("guideView", ctx),
             ("snippetCopy", ctx, {"lang": "toml", "title": long, "headings": []}),
             ("outboundClick", ctx, {"url": "https://registry.modelcontextprotocol.io/v0/servers?q=1", "headings": []}),
-            ("outboundClick", {**ctx, "attribution": None}, {"url": "https://blowhorn.ai/download/?a=b", "headings": []}),
+            ("outboundClick", {**ctx, "attribution": {"landing_guide": "mcp", "landing_page": "/pricing/"}}, {"url": "https://blowhorn.ai/download/?a=b", "headings": []}),
         )
         result = page(
             consent=None, url=GUIDE + "?utm_source=x#claude-desktop", referrer="https://www.google.com/search?q=blowhorn",
@@ -392,11 +399,10 @@ class WiringTests(unittest.TestCase):
         self.assertEqual(CONFIG["consent_key"], re.search(r"var KEY = '([^']+)'", consent).group(1))
         self.assertEqual(CONFIG["storage_key"], re.search(r"var ATTRIBUTION = '([^']+)'", consent).group(1))
 
-    def test_partial_emits_the_capture_keys_off_the_guides(self):
+    def test_partial_emits_the_whole_config(self):
         partial = (ROOT / "layouts/_partials/docs-attribution.html").read_text(encoding="utf-8")
-        keys = json.loads(re.search(r"const CAPTURE_KEYS = (\[[^\]]*\]);", HARNESS.read_text(encoding="utf-8")).group(1))
-        emitted = re.findall(r'"([a-z_]+)" \$cfg\.([a-z_]+)', partial)
-        self.assertEqual([k for k, v in emitted if k == v], keys)
+        self.assertIn("site.Data.docs_events | jsonify", partial)
+        self.assertNotIn("dict ", partial)
 
     def test_script_names_no_host(self):
         script = (ROOT / "assets/js/docs-attribution.js").read_text(encoding="utf-8")

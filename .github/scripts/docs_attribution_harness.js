@@ -15,8 +15,6 @@
        "steps": [{"click": "c1"}, {"aux": "l1", "button": 1}, {"grant": true}] }
      Prints: { "after": [[gtag calls so far] per step, starting with load],
        "session": sessionStorage, "localWrites": keys written to localStorage }
-     Off the tracked pages the page carries only CAPTURE_KEYS of the config,
-     as layouts/_partials/docs-attribution.html emits it.
    Usage: node docs_attribution_harness.js consent '<json scenario>'
      Runs assets/js/consent.js. scenario: { "consent": null | "granted" | "denied",
        "session": {...}, "choose": "granted" | "denied" }
@@ -29,8 +27,6 @@ const vm = require("vm");
 const ROOT = path.resolve(__dirname, "..", "..");
 const SCRIPT = path.join(ROOT, "assets/js/docs-attribution.js");
 const CONSENT = path.join(ROOT, "assets/js/consent.js");
-// The config keys the partial emits on a page outside pages.
-const CAPTURE_KEYS = ["pages", "consent_key", "consent_event", "storage_key", "internal_hosts", "utm_params", "attribution_params"];
 const CONFIG = JSON.parse(fs.readFileSync(path.join(ROOT, "data/docs_events.json"), "utf8"));
 
 function pure(calls) {
@@ -44,7 +40,7 @@ function pure(calls) {
     hashClient: (hash, pageClient) => api.hashClient(hash, c, pageClient),
     snippetKind: (lang) => api.snippetKind(lang, c),
     cleanUrl: (href) => api.cleanUrl(new URL(href)),
-    linkKind: (href, pageHost) => api.linkKind(new URL(href), pageHost, c),
+    linkKind: (href) => api.linkKind(new URL(href), c),
     referrerHost: (ref, pageHost) => api.referrerHost(ref, pageHost, c),
     captureAttribution: (search, ref, host, p, tracked) => api.captureAttribution(search, ref, host, p, c, tracked),
     firstTouch: (stored, fresh) => api.firstTouch(stored, fresh),
@@ -117,12 +113,8 @@ function page(s) {
       els[n.name] = new El(order, "a", { href: n.a });
     }
   }
-  const api = require(SCRIPT);
-  const emitted = api.isTracked(url.pathname, CONFIG.pages)
-    ? CONFIG
-    : Object.fromEntries(CAPTURE_KEYS.map((k) => [k, CONFIG[k]]));
   const data = s.partial === false ? null : {
-    textContent: JSON.stringify(emitted),
+    textContent: JSON.stringify(CONFIG),
     getAttribute: (k) => (k === "data-mcp-client" && s.mcpClient ? s.mcpClient : null),
   };
   const document = {

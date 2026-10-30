@@ -30,18 +30,14 @@
     return clip(last.replace(/[^a-z0-9-]/g, '-').replace(/^-+/, '') || 'home');
   }
 
-  // A heading id, a duplicate's id (claude-code-1) or a client name, to the
-  // client name; '' when it names no client.
+  // A heading id or a duplicate's id (claude-code-1) to the client name;
+  // '' when it names no client.
   function clientName(key, clients) {
     if (!key) return '';
     key = String(key);
     if (Object.prototype.hasOwnProperty.call(clients, key)) return clients[key];
     var base = key.replace(/-\d+$/, '');
-    if (Object.prototype.hasOwnProperty.call(clients, base)) return clients[base];
-    for (var id in clients) {
-      if (Object.prototype.hasOwnProperty.call(clients, id) && clients[id] === key) return key;
-    }
-    return '';
+    return Object.prototype.hasOwnProperty.call(clients, base) ? clients[base] : '';
   }
 
   // headings: every h2/h3 before the element, in document order, as
@@ -77,16 +73,15 @@
     return clip(url.protocol + '//' + url.host + url.pathname);
   }
 
-  // url: a parsed URL; pageHost: location.hostname. The first rule that
-  // matches names the kind; null when the link is none of them.
-  function linkKind(url, pageHost, config) {
+  // url: a parsed URL. The first rule that matches names the kind; null when
+  // the link is none of them.
+  function linkKind(url, config) {
     if (!url || (url.protocol !== 'https:' && url.protocol !== 'http:')) return null;
     var host = url.hostname.toLowerCase();
     var rules = config.outbound;
     for (var i = 0; i < rules.length; i++) {
       var rule = rules[i];
-      var hostOk = rule.hosts.indexOf(host) !== -1 || (rule.site && host === pageHost);
-      if (!hostOk) continue;
+      if (rule.hosts.indexOf(host) === -1) continue;
       if (!rule.paths || rule.paths.some(function (p) { return new RegExp(p).test(url.pathname); })) return rule.kind;
     }
     return null;
@@ -130,8 +125,6 @@
     config.attribution_params.forEach(function (name) {
       params[name] = attribution && attribution[name] ? clip(attribution[name]) : NONE;
     });
-    if (params.landing_guide === NONE) params.landing_guide = guideOf(params.page_path || '/');
-    if (params.landing_page === NONE) params.landing_page = clip(params.page_path || '/');
     return params;
   }
 
@@ -161,7 +154,7 @@
 
   // link: {url (parsed), headings}; null when the link is not tracked.
   function outboundClick(ctx, link, config) {
-    var kind = linkKind(link.url, ctx.host, config);
+    var kind = linkKind(link.url, config);
     if (!kind) return null;
     return {
       name: 'docs_outbound_click',
@@ -238,6 +231,8 @@
     if (!target || typeof target.closest !== 'function') return;
     var copy = target.closest('.term-copy');
     if (copy) {
+      // A middle-click on Copy copies nothing.
+      if (event.type !== 'click') return;
       var card = copy.closest('.term');
       if (!card) return;
       var title = card.querySelector('.term-title');
@@ -260,7 +255,7 @@
     started = true;
     var first = attribution();
     if (!tracked || typeof window.gtag !== 'function') return;
-    ctx = { path: loc.pathname, hash: loc.hash, host: loc.hostname, pageClient: pageClient, attribution: first };
+    ctx = { path: loc.pathname, hash: loc.hash, pageClient: pageClient, attribution: first };
     send(guideView(ctx, config));
     document.addEventListener('click', onClick, true);
     document.addEventListener('auxclick', onClick, true);

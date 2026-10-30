@@ -43,7 +43,7 @@
     { "kind": "registry", "hosts": ["registry.modelcontextprotocol.io"] },
     { "kind": "registry", "hosts": ["github.com"], "paths": ["^/mcp(/|$)"] },
     { "kind": "download", "hosts": ["github.com"], "paths": ["^/blowhorn-ai/[^/]+/releases(/|$)"] },
-    { "kind": "download", "hosts": ["blowhorn.ai", "www.blowhorn.ai"], "site": true, "paths": ["^/download/"] }
+    { "kind": "download", "hosts": ["blowhorn.ai", "www.blowhorn.ai"], "paths": ["^/download/"] }
   ],
   "internal_hosts": ["blowhorn.ai", "www.blowhorn.ai"],
   "utm_params": ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"],

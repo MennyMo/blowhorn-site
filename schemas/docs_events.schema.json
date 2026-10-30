@@ -45,7 +45,7 @@
       "additionalProperties": { "$ref": "https://blowhorn.ai/schemas/defs/docs-event.schema.json#/definitions/snippet_kind" }
     },
     "outbound": {
-      "description": "Link rules in order; the first match names the link_kind. A rule matches a host in hosts (exact) or, with site true, the page's own host; paths are regexes over the URL path, any path when absent.",
+      "description": "Link rules in order; the first match names the link_kind. A rule matches a host in hosts (exact); paths are regexes over the URL path, any path when absent.",
       "type": "array",
       "minItems": 1,
       "items": {
@@ -55,7 +55,6 @@
         "properties": {
           "kind": { "$ref": "https://blowhorn.ai/schemas/defs/docs-event.schema.json#/definitions/link_kind" },
           "hosts": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/definitions/host" } },
-          "site": { "type": "boolean" },
           "paths": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^\\^/" } }
         }
       }
