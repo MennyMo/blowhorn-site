@@ -117,6 +117,60 @@
             "$ref": "#/definitions/card"
           }
         },
+        "agent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "body",
+            "prompt"
+          ],
+          "description": "Optional agent and MCP section: a short heading, 2-3 sentences, one example prompt for the role (dry run first, then wait for go), and optional links.",
+          "properties": {
+            "title": {
+              "$ref": "#/definitions/line"
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 480,
+              "not": {
+                "pattern": "—"
+              }
+            },
+            "prompt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 480,
+              "not": {
+                "pattern": "—"
+              }
+            },
+            "links": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "href"
+                ],
+                "properties": {
+                  "label": {
+                    "$ref": "#/definitions/line"
+                  },
+                  "href": {
+                    "type": "string",
+                    "pattern": "^(/[a-z0-9/-]*|https://.+)$",
+                    "description": "A site path or an https URL."
+                  }
+                }
+              }
+            }
+          }
+        },
         "prompt": {
           "type": "string",
           "maxLength": 200,

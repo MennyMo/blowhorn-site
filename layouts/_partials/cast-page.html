@@ -46,6 +46,26 @@
           </ul>
         </section>
 
+        {{- with $item.agent }}
+        <section class="agent-section" aria-labelledby="agent-title">
+          <div class="section-head"><h2 id="agent-title" class="h2">{{ .title }}</h2></div>
+          <p class="body-lg muted">{{ .body }}</p>
+          <ul class="agent-prompts">
+            <li class="bubble-row">
+              <span class="bubble-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" focusable="false"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+              {{ partial "bubble.html" (dict "text" (printf "\"%s\"" .prompt) "lead" "You say: " "variant" "mint" "tail" "left") }}
+            </li>
+          </ul>
+          {{- with .links }}
+          <p class="actions">
+            {{- range . }}
+            <a class="button button-secondary" href="{{ if hasPrefix .href "/" }}{{ .href | relURL }}{{ else }}{{ .href }}{{ end }}">{{ .label }}</a>
+            {{- end }}
+          </p>
+          {{- end }}
+        </section>
+        {{- end }}
+
         {{- if eq .kind "solution" }}
         {{- partial "social-proof.html" (dict "slot" "rotating") }}
         {{- end }}

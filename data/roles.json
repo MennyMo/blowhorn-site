@@ -53,6 +53,21 @@
           "b": "Schedule the announcement and have every profile you add amplify it at the moment you pick."
         }
       ],
+      "agent": {
+        "title": "Release posts, drafted by your assistant",
+        "body": "Your assistant can draft the release posts straight from your changelog. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. Every write is a dry run until you confirm, and an agent can never approve its own content.",
+        "prompt": "Draft the v2.4 release posts from CHANGELOG.md for LinkedIn, X and Hacker News on my profile. Do a dry run, show me the payloads, wait for me to say \"go\", then confirm and tell me what was queued.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          }
+        ]
+      },
       "prompt": "Draft the release posts from CHANGELOG.md, run blowhorn with --dry-run, show me, then schedule them for Tuesday 9:00.",
       "major": "Release notes are orders, soldier. Every channel hears them by oh-nine-hundred.",
       "faq": [
@@ -145,6 +160,21 @@
           "b": "Run history and analytics from every computer in one place. Analytics cover LinkedIn, X and Bluesky."
         }
       ],
+      "agent": {
+        "title": "Campaign rows, queued and held for you",
+        "body": "Your assistant can queue a row per campaign post. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. With approval mode on, its queued work waits for you, and an agent can never approve its own content.",
+        "prompt": "Queue this week's campaign rows from campaign.csv for my company profile. Do a dry run, show me every row, wait for me to say \"go\", then confirm and list what is waiting for my approval.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          }
+        ]
+      },
       "prompt": "",
       "major": "A hundred-seat minimum is for armies. You need a squad and a launch day.",
       "faq": [
@@ -236,6 +266,21 @@
           "b": "One command stops one action, one computer or all of them. Another starts it again."
         }
       ],
+      "agent": {
+        "title": "Launch day, with you in charge",
+        "body": "Your assistant can line up your launch-day posts on your own profile while you stay in charge. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. Every write is a dry run until you confirm, and pause stops everything.",
+        "prompt": "Prepare my launch-day posts from launch.md for my personal profile, spaced across the day. Do a dry run, show me the schedule, wait for me to say \"go\", then confirm and summarize what is queued.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          }
+        ]
+      },
       "prompt": "",
       "major": "Your company's sign-ins are not a houseguest's to keep.",
       "faq": [
@@ -323,6 +368,21 @@
           "b": "Every command has --help with examples, most have --json, and anything that publishes takes --dry-run."
         }
       ],
+      "agent": {
+        "title": "Release notes where contributors read",
+        "body": "Your assistant can turn a tagged release into notes for Hacker News, GitHub, Reddit, Slack and Bluesky. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. Every write is a dry run until you confirm.",
+        "prompt": "Write the release notes for v2.4 from the changelog for Hacker News, GitHub, Reddit, Slack and Bluesky on my project profile. Do a dry run, show me each one, wait for me to say \"go\", then confirm and report what was sent.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          }
+        ]
+      },
       "prompt": "",
       "major": "Shipping is half the mission. Telling the world is the other half.",
       "faq": [
@@ -408,6 +468,21 @@
           "b": "Coordinated so the same post isn't sent from two computers. One command pauses everything."
         }
       ],
+      "agent": {
+        "title": "Rally the first hour, without the agent approving itself",
+        "body": "Your assistant can plan and queue your teammates' first-hour engagement. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. It can never approve its own content, and with approval mode on its queued work waits for you.",
+        "prompt": "Plan first-hour engagement for our announcement: queue a repost for each teammate profile. Do a dry run, show me the plan, wait for me to say \"go\", then confirm and list what is waiting for approval.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          }
+        ]
+      },
       "prompt": "",
       "major": "Nobody speaks for a soldier. Every soldier speaks for themself.",
       "faq": [
@@ -495,6 +570,21 @@
           "b": "A person doesn't type into two browser windows at once, and neither does Blowhorn."
         }
       ],
+      "agent": {
+        "title": "Several client brands, a limit and a kill switch each",
+        "body": "Run each client brand as its own profile and let your assistant queue work for them. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. Per-profile risk limits apply to every agent action, and pause stops everything.",
+        "prompt": "Queue this week's posts for client brands Acme and Globex from posts.csv, each on its own profile. Do a dry run, show me per client, wait for me to say \"go\", then confirm and report what was queued.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          }
+        ]
+      },
       "prompt": "",
       "major": "Receipts, soldier. Every order logged, every post sent once.",
       "faq": [
