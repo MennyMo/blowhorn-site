@@ -8,7 +8,8 @@
       <div class="wrap">
         <header class="agent-hero glass">
           <div class="agent-hero-copy">
-            <p class="label"><a href="{{ (site.GetPage "/agents").RelPermalink }}">Agentic AI Marketing</a></p>
+            {{- /* crumb_label and crumb_url retarget the label link for pages outside /agents/ (such as /ai/mcp/). */}}
+            <p class="label"><a href="{{ with $p.crumb_url }}{{ . | relURL }}{{ else }}{{ (site.GetPage "/agents").RelPermalink }}{{ end }}">{{ $p.crumb_label | default "Agentic AI Marketing" }}</a></p>
             <h1 id="agent-title" class="display">{{ .Title }}</h1>
             <p class="body-lg muted">{{ $p.lead }}</p>
           </div>
@@ -24,9 +25,16 @@
             <h2 id="how-title" class="h2">How it works</h2>
           </div>
           <ol class="agent-steps grid grid-3">
+            {{- /* steps: optional per-page override of the three default steps. */}}
+            {{- with $p.steps }}
+            {{- range $i, $st := . }}
+            <li class="card glass"><span class="agent-step-n">{{ add $i 1 }}</span><h3 class="h3">{{ $st.t }}</h3><p>{{ $st.b }}</p></li>
+            {{- end }}
+            {{- else }}
             <li class="card glass"><span class="agent-step-n">1</span><h3 class="h3">Install Blowhorn</h3><p>Blowhorn for Mac and the Blowhorn browser extension. Your posts go out from your own signed-in browser.</p></li>
             <li class="card glass"><span class="agent-step-n">2</span><h3 class="h3">{{ $p.wire_title }}</h3><p>{{ $p.hook }}. A few lines and {{ $p.tool }} knows the commands.</p></li>
             <li class="card glass"><span class="agent-step-n">3</span><h3 class="h3">Say what you want</h3><p>{{ $p.tool }} turns it into blowhorn commands. You approve what publishes.</p></li>
+            {{- end }}
           </ol>
         </section>
 
@@ -41,6 +49,9 @@
             {{ partial "code-card.html" (dict "code" $p.extra_code "title" . "lang" $p.extra_lang "prompt" (eq $p.extra_lang "bash")) }}
             {{- end }}
           </div>
+          {{- with $p.wire_note }}
+          <p class="muted">{{ . | markdownify }}</p>
+          {{- end }}
         </section>
 
         {{- with $p.prompts }}
@@ -61,9 +72,9 @@
 
         <section class="agent-section" aria-labelledby="commands-title">
           <div class="section-head">
-            <h2 id="commands-title" class="h2">{{ if eq .File.ContentBaseName "cli" }}A few commands{{ else }}What {{ $p.tool }} runs{{ end }}</h2>
+            <h2 id="commands-title" class="h2">{{ if $p.commands_title }}{{ $p.commands_title }}{{ else if eq .File.ContentBaseName "cli" }}A few commands{{ else }}What {{ $p.tool }} runs{{ end }}</h2>
           </div>
-          {{ partial "code-card.html" (dict "code" $p.commands "title" "terminal" "lang" ($p.commands_lang | default "bash") "prompt" true) }}
+          {{ partial "code-card.html" (dict "code" $p.commands "title" ($p.commands_file | default "terminal") "lang" ($p.commands_lang | default "bash") "prompt" (ne $p.commands_prompt false)) }}
         </section>
 
         <section class="agent-section" aria-labelledby="uses-title">
@@ -93,7 +104,7 @@
         {{- /* Supported actions per platform: the same data/platforms/*.yaml the
           platform docs pages render, so the two always agree. */}}
         {{- $platformsDocs := site.GetPage "/docs/reference/platforms" }}
-        {{- $who := cond (eq .File.ContentBaseName "cli") "the CLI" $p.tool }}
+        {{- $who := cond (eq .File.ContentBaseName "cli") "the CLI" ($p.who | default $p.tool) }}
         <section class="agent-section agent-platforms" aria-labelledby="platforms-title">
           <div class="section-head">
             <h2 id="platforms-title" class="h2">What {{ $who }} can do on each platform</h2>
@@ -123,13 +134,13 @@
         </section>
 
         <section class="agent-section agent-cta glass" aria-labelledby="cta-title">
-          <h2 id="cta-title" class="h2">One message out, many ears in</h2>
+          <h2 id="cta-title" class="h2">{{ $p.cta_title | default "One message out, many ears in" }}</h2>
           <p class="muted">Want the details before {{ $who }} does the talking? The docs cover setup, every command, and each platform.</p>
           <p class="actions"><a class="button button-secondary" href="{{ (site.GetPage "/docs").RelPermalink }}">Read the docs</a> <a class="button button-secondary" href="{{ with $platformsDocs }}{{ .RelPermalink }}{{ end }}">See every platform</a></p>
         </section>
 
         <section class="agent-section" aria-labelledby="more-title">
-          <div class="section-head"><h2 id="more-title" class="h2">More agents</h2></div>
+          <div class="section-head"><h2 id="more-title" class="h2">{{ $p.more_title | default "More agents" }}</h2></div>
           {{ partial "agents/others.html" . }}
         </section>
       </div>
