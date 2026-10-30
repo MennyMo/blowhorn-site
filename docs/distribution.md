@@ -42,8 +42,8 @@ Pages hosts only the marketing site and small static files.
   on master and redeploys the site after every public release (its `pin`
   job, `make dmg-pin-download`); a draft published by hand later needs the
   same `make dmg-pin-download` run, or a one-line PR. Never build a download link on
-  `/releases/latest`: this repository also publishes blowhorn-axi and
-  blowhorn-mcp releases (`axi-vX.Y.Z`, `mcp-vX.Y.Z`), GitHub resolves `latest`
+  `/releases/latest`: this repository also publishes blowhorn-axi releases
+  (`axi-vX.Y.Z`), GitHub resolves `latest`
   to whichever stable release was created most recently, and the always-latest
   URL 404s whenever one of those is the newest. The site's Download section
   (`assets/js/download.js`) reads the release list from GitHub's API in the
@@ -154,6 +154,8 @@ GITHUB_OUTPUT=/tmp/out IN_VERSION=v1.2.3 IN_URL=https://example.com/Blowhorn.dmg
 
 `dmg-resolve` needs bash 4 or newer (macOS ships 3.2; `brew install bash`).
 
-`publish-blowhorn-axi.yml`, which publishes blowhorn-axi and blowhorn-mcp to
-npm, works the same way: its steps are `npm-fetch`, `npm-verify`,
+`publish-blowhorn-axi.yml`, which publishes blowhorn-axi to npm, works the same
+way (blowhorn-mcp publishes from its own repository,
+https://github.com/blowhorn-ai/blowhorn-mcp, with that repository's
+`publish.yml`): its steps are `npm-fetch`, `npm-verify`,
 `npm-publish` and `npm-confirm`, backed by `.github/scripts/publish-npm/`.

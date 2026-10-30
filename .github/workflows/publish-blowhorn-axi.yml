@@ -1,35 +1,32 @@
-name: Publish Blowhorn npm packages (blowhorn-axi, blowhorn-mcp)
+name: Publish blowhorn-axi to npm
 
-# Publishes one of Blowhorn's npm packages with npm trusted publishing over
-# OIDC, chosen by the `package` input:
-#   - blowhorn-axi: the agent interface to Blowhorn (the default, so callers
-#     that do not pass `package` publish blowhorn-axi as before).
-#   - blowhorn-mcp: a thin launcher for the Blowhorn MCP server.
+# Publishes blowhorn-axi, the agent interface to Blowhorn, with npm trusted
+# publishing over OIDC. blowhorn-mcp publishes from its own repository,
+# https://github.com/blowhorn-ai/blowhorn-mcp, not from this workflow.
+# The `package` input keeps blowhorn-axi as its only option, so callers that
+# pass -f package=blowhorn-axi keep working.
 # No npm token is stored anywhere: npmjs.com trusts this repository and this
 # workflow file, and the publish carries a provenance attestation
 # (`--provenance`, so a missing OIDC token fails the run instead of publishing
-# without one). The file keeps its original name because trusted publishers
-# bind to the workflow filename.
+# without one). The file keeps its name because trusted publishers bind to
+# the workflow filename.
 #
-# Each package is built in the private product repo with `npm pack` and handed
+# The package is built in the private product repo with `npm pack` and handed
 # over as a tarball, so this workflow never needs to read that repo:
-#   - tarball_url: an HTTPS URL of <package>-<version>.tgz, or
+#   - tarball_url: an HTTPS URL of blowhorn-axi-<version>.tgz, or
 #   - release_tag: a release of this repository that has the tarball as an asset
-#     (defaults to v<version> for blowhorn-axi and mcp-v<version> for
-#     blowhorn-mcp when neither input is given).
+#     (defaults to v<version> when neither input is given).
 # It does not wait for a desktop release.
 #
 # Every step that runs repository logic is a make target (npm-fetch,
 # npm-verify, npm-publish, npm-confirm) backed by a script in
 # .github/scripts/publish-npm/, so `make <target>` reproduces it.
 #
-# Run: Actions > Publish Blowhorn npm packages > Run workflow, or
+# Run: Actions > Publish blowhorn-axi to npm > Run workflow, or
 #   gh workflow run publish-blowhorn-axi.yml -R blowhorn-ai/blowhorn-site \
 #     -f version=0.1.0 -f release_tag=axi-v0.1.0
-#   gh workflow run publish-blowhorn-axi.yml -R blowhorn-ai/blowhorn-site \
-#     -f package=blowhorn-mcp -f version=0.1.0 -f release_tag=mcp-v0.1.0
 #
-# One-time setup on npmjs.com, once per package (package Settings > Trusted
+# One-time setup on npmjs.com (package Settings > Trusted
 # publishing): GitHub Actions, organization blowhorn-ai, repository
 # blowhorn-site, workflow publish-blowhorn-axi.yml, no environment, and tick
 # "allow npm publish". Trusted publisher configs created after Sep 3, 2026
@@ -43,23 +40,22 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: "npm package to publish"
+        description: "npm package to publish (blowhorn-mcp publishes from blowhorn-ai/blowhorn-mcp)"
         required: false
         type: choice
         options:
           - blowhorn-axi
-          - blowhorn-mcp
         default: blowhorn-axi
       version:
         description: "Version to publish, e.g. 0.1.0 (must match the tarball's package.json)"
         required: true
         type: string
       tarball_url:
-        description: "HTTPS URL of <package>-<version>.tgz (leave empty to use a release asset)"
+        description: "HTTPS URL of blowhorn-axi-<version>.tgz (leave empty to use a release asset)"
         required: false
         type: string
       release_tag:
-        description: "Release of this repo holding <package>-<version>.tgz (default v<version> for blowhorn-axi, mcp-v<version> for blowhorn-mcp)"
+        description: "Release of this repo holding blowhorn-axi-<version>.tgz (default v<version>)"
         required: false
         type: string
       sha256:
