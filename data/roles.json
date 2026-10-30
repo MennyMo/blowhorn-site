@@ -65,6 +65,14 @@
           {
             "label": "Connect an assistant",
             "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Your release, drafted by your assistant, fired by you",
+            "href": "/resources/articles/your-release-drafted-by-your-assistant/"
+          },
+          {
+            "label": "Five minutes from ~/.local/bin/blowhorn-mcp to your first dry run",
+            "href": "/resources/articles/five-minutes-to-your-first-dry-run/"
           }
         ]
       },
@@ -172,6 +180,14 @@
           {
             "label": "Connect an assistant",
             "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Let an agent rally the first hour without approving itself",
+            "href": "/resources/articles/rally-the-first-hour-without-approving-itself/"
+          },
+          {
+            "label": "Why your assistant rehearses first",
+            "href": "/resources/articles/why-your-assistant-rehearses-first/"
           }
         ]
       },
@@ -278,6 +294,14 @@
           {
             "label": "Connect an assistant",
             "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Your release, drafted by your assistant, fired by you",
+            "href": "/resources/articles/your-release-drafted-by-your-assistant/"
+          },
+          {
+            "label": "Five minutes from ~/.local/bin/blowhorn-mcp to your first dry run",
+            "href": "/resources/articles/five-minutes-to-your-first-dry-run/"
           }
         ]
       },
@@ -380,6 +404,14 @@
           {
             "label": "Connect an assistant",
             "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Ship release notes everywhere your contributors read",
+            "href": "/resources/articles/ship-release-notes-where-contributors-read/"
+          },
+          {
+            "label": "Why your assistant rehearses first",
+            "href": "/resources/articles/why-your-assistant-rehearses-first/"
           }
         ]
       },
@@ -480,6 +512,14 @@
           {
             "label": "Connect an assistant",
             "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Let an agent rally the first hour without approving itself",
+            "href": "/resources/articles/rally-the-first-hour-without-approving-itself/"
+          },
+          {
+            "label": "Why your assistant rehearses first",
+            "href": "/resources/articles/why-your-assistant-rehearses-first/"
           }
         ]
       },
@@ -582,6 +622,14 @@
           {
             "label": "Connect an assistant",
             "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Agents across client brands, with a kill switch in your hand",
+            "href": "/resources/articles/agents-across-client-brands-kill-switch/"
+          },
+          {
+            "label": "Why your assistant rehearses first",
+            "href": "/resources/articles/why-your-assistant-rehearses-first/"
           }
         ]
       },
