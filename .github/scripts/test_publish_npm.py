@@ -120,12 +120,13 @@ class PublishNpmTest(unittest.TestCase):
             "gh release download v0.1.0 -R blowhorn-ai/blowhorn-site"
             " -p blowhorn-axi-0.1.0.tgz -O blowhorn-axi-0.1.0.tgz"])
 
-    def test_blowhorn_mcp_defaults_to_the_mcp_v_tag(self):
-        env = self.fetched(PACKAGE="blowhorn-mcp")
-        self.assertEqual(env["TARBALL"], "blowhorn-mcp-0.1.0.tgz")
-        self.assertEqual(self.calls_of("gh"), [
-            "gh release download mcp-v0.1.0 -R blowhorn-ai/blowhorn-site"
-            " -p blowhorn-mcp-0.1.0.tgz -O blowhorn-mcp-0.1.0.tgz"])
+    def test_blowhorn_mcp_is_refused_and_points_at_its_own_repo(self):
+        result = self.run_script("fetch.sh", PACKAGE="blowhorn-mcp")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("::error::blowhorn-mcp is not published from this repository; run the publish"
+                      " workflow in https://github.com/blowhorn-ai/blowhorn-mcp", result.stdout)
+        self.assertEqual(self.calls_of("gh") + self.calls_of("curl"), [])
+        self.assertEqual(self.github_env.read_text(), "")
 
     def test_an_explicit_release_tag_wins(self):
         self.fetched(RELEASE_TAG="axi-v0.1.0")
@@ -142,7 +143,7 @@ class PublishNpmTest(unittest.TestCase):
     def test_an_unknown_package_is_refused(self):
         result = self.run_script("fetch.sh", PACKAGE="blowhorn-other")
         self.assertEqual(result.returncode, 1)
-        self.assertIn("::error::package must be blowhorn-axi or blowhorn-mcp, got blowhorn-other", result.stdout)
+        self.assertIn("::error::package must be blowhorn-axi, got blowhorn-other", result.stdout)
         self.assertEqual(self.github_env.read_text(), "")
 
     def test_a_bad_version_is_refused(self):
