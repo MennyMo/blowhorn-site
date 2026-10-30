@@ -73,14 +73,14 @@ permissions:
   id-token: write
 
 concurrency:
-  group: publish-npm-${{ inputs.package || 'blowhorn-axi' }}
+  group: publish-npm-${{ inputs.package }}
   cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      PACKAGE: ${{ inputs.package || 'blowhorn-axi' }}
+      PACKAGE: ${{ inputs.package }}
     steps:
       - uses: actions/setup-node@v4
         with:
@@ -122,10 +122,6 @@ jobs:
           SHA256: ${{ inputs.sha256 }}
         run: |
           set -euo pipefail
-          case "$PACKAGE" in
-            blowhorn-axi|blowhorn-mcp) ;;
-            *) echo "::error::package must be blowhorn-axi or blowhorn-mcp, got $PACKAGE"; exit 1 ;;
-          esac
           if [ -n "$SHA256" ]; then echo "$SHA256  $TARBALL" | sha256sum -c -; fi
           tar -xzf "$TARBALL" package/package.json -O > pkg.json
           name=$(node -p "require('./pkg.json').name")
