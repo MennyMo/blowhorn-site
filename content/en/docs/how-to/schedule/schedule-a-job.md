@@ -57,7 +57,7 @@ visit, so adding again never makes a second copy; if an add stops partway, the o
 that landed stay added and the rest can be ticked again. Once you have routines, the
 "add sample routines…" button stays in the Routines header, so you can add starter
 routines later; a starter routine you already have is greyed out there too. The
-"invite connections" starter routine invites to the Layer5 page; to invite to another
+"invite connections" starter routine invites to a preset company page; to invite to another
 page, open the routine after adding it and change its page.
 
 Open a job (click it, or focus it and press Enter) to change it, or choose "do it now"
