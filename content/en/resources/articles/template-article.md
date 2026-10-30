@@ -1,6 +1,7 @@
 ---
 # Copy this file, rename it, and fill it in. Files starting with
 # "template" stay drafts and never publish. Delete these comments.
+# Full guide: /resources/contributing/ (tagging rules, feed implications).
 draft: true
 layout: article
 # Required: the headline.

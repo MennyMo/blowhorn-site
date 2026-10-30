@@ -2,6 +2,7 @@
 # Authoring template - copy this file into a category folder
 # (for example getting-started/my-video.md), fill in every field, and
 # set draft to false. This file itself is a draft and never publishes.
+# Full guide: /resources/contributing/ (tagging rules, feed implications).
 #
 # Required front matter:
 #   title        - the video's name, shown on cards and the video page.

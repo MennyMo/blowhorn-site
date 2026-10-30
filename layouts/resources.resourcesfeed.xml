@@ -8,6 +8,9 @@
     <atom:link href="{{ with .OutputFormats.Get "resourcesfeed" }}{{ .Permalink }}{{ end }}" rel="self" type="application/rss+xml"/>
     {{- $pages := where .Site.RegularPages "Section" "eq" "resources" }}
     {{- $pages = where $pages "Type" "ne" "tagfeed" }}
+    {{- /* Contributor pages (resourcesFeed: false) are not resources a reader
+      subscribes to, so they stay out of the feed. */ -}}
+    {{- $pages = where $pages "Params.resourcesFeed" "ne" false }}
     {{- range $pages.ByDate.Reverse }}
     <item>
       <title>{{ .Title }}</title>
