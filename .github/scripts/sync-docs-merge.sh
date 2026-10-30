@@ -79,11 +79,40 @@ if [ "$conclusion" != "success" ]; then
   exit 1
 fi
 
-# Exits non-zero unless every check on the pull request passes.
-# This is a second gate, not the site gate: the site run above already
-# passed, so a watch started now cannot merge past it the way an early
-# watch could. It covers the checks that do attach, such as DCO.
-gh pr checks "$pr" --watch --interval 10
+# Second gate: every check that is attached to the pull request must pass.
+# This is not the site gate: the site run above already passed, so a watch
+# started now cannot merge past it the way an early watch could. It covers
+# the checks that do attach, such as DCO.
+#
+# gh pr checks exits 1 both for a failing check and for "no checks
+# reported on the '<branch>' branch", and the push made with the bot token
+# starts no pull_request workflows, so a pull request may legitimately have
+# none. Only the output tells them apart. No checks is not a failure (the
+# dispatched run already gated the merge), but a check that is about to
+# attach, such as DCO, must not be skipped, so "no checks" is rechecked a
+# few times (CHECKS_RECHECKS, CHECKS_RECHECK_WAIT seconds apart) before it
+# is accepted. A pending check is waited for by --watch; any other
+# non-zero exit is a real failure and nothing is merged.
+recheck_count="${CHECKS_RECHECKS:-3}"
+recheck_wait="${CHECKS_RECHECK_WAIT:-10}"
+attempt=0
+while :; do
+  rc=0
+  out=$(gh pr checks "$pr" --watch --interval 10 2>&1) || rc=$?
+  [ -n "$out" ] && printf '%s\n' "$out"
+  [ "$rc" -eq 0 ] && break
+  if printf '%s' "$out" | grep -qi 'no checks reported'; then
+    attempt=$((attempt + 1))
+    if [ "$attempt" -ge "$recheck_count" ]; then
+      echo "No checks are attached to pull request #$pr; the dispatched site run already gated it. Continuing to merge."
+      break
+    fi
+    sleep "$recheck_wait"
+    continue
+  fi
+  echo "Checks on pull request #$pr did not pass (gh exited $rc); not merging."
+  exit 1
+done
 
 gh pr merge "$pr" --squash
 

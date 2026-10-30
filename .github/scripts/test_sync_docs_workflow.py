@@ -17,6 +17,8 @@ Run with `make test-scripts` (CI runs it too).
 import os
 import re
 import stat
+import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -103,6 +105,81 @@ class SyncDocsWorkflowTest(unittest.TestCase):
         # GitHub's own auto-merge must not be armed: master has no branch
         # protection, so it would merge before the checks finish.
         self.assertNotRegex(text, r"gh pr merge[^\n]*--auto")
+
+    def run_merge(self, checks_script):
+        """Run the merge script against a fake gh; return (result, log lines).
+
+        checks_script is the shell body of the fake `gh pr checks`; the fake
+        sees "$@" and a per-run call counter in "$n". Every other gh call
+        succeeds and is logged, so the log shows whether a merge happened.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            log = tmp / "gh.log"
+            gh = tmp / "gh"
+            gh.write_text(
+                "#!/usr/bin/env bash\n"
+                f'echo "$*" >> "{log}"\n'
+                'case "$1 $2" in\n'
+                '  "pr view") echo "7 OPEN abc123" ;;\n'
+                '  "run list") echo "99 completed success" ;;\n'
+                '  "pr checks")\n'
+                f'    n=$(grep -c "^pr checks" "{log}")\n'
+                f"{checks_script}\n"
+                "    ;;\n"
+                "esac\n",
+                encoding="utf-8",
+            )
+            sleep = tmp / "sleep"
+            sleep.write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+            for fake in (gh, sleep):
+                fake.chmod(0o755)
+            env = dict(os.environ, PATH=f"{tmp}:{os.environ['PATH']}")
+            env["CHECKS_RECHECK_WAIT"] = "0"
+            result = subprocess.run(
+                ["bash", str(MERGE_SCRIPT), "docs-sync"],
+                env=env, capture_output=True, text=True, timeout=60,
+            )
+            lines = log.read_text(encoding="utf-8").splitlines()
+        return result, lines
+
+    def test_merge_proceeds_when_no_checks_are_reported(self):
+        result, calls = self.run_merge(
+            "    echo \"no checks reported on the 'docs-sync' branch\" >&2; exit 1"
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("pr merge 7 --squash", calls)
+        self.assertIn("workflow run site.yml --ref master", calls)
+        self.assertIn("No checks are attached", result.stdout)
+
+    def test_merge_rechecks_so_a_late_check_is_not_skipped(self):
+        # First look sees nothing; the next sees DCO failing.
+        result, calls = self.run_merge(
+            '    if [ "$n" -le 1 ]; then\n'
+            "      echo \"no checks reported on the 'docs-sync' branch\" >&2; exit 1\n"
+            "    fi\n"
+            '    echo "DCO fail"; exit 1'
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertNotIn("pr merge 7 --squash", calls)
+
+    def test_merge_refuses_when_a_check_fails(self):
+        result, calls = self.run_merge('    echo "DCO fail 0 https://x"; exit 1')
+        self.assertNotEqual(result.returncode, 0)
+        self.assertNotIn("pr merge 7 --squash", calls)
+        self.assertNotIn("workflow run site.yml --ref master", calls)
+
+    def test_merge_waits_for_pending_checks_then_merges(self):
+        # Without --watch gh would exit 8 (pending); with it, gh waits and
+        # exits 0 once the check passes.
+        result, calls = self.run_merge(
+            '    case "$*" in\n'
+            '      *--watch*) echo "DCO pass" ;;\n'
+            '      *) echo "DCO pending"; exit 8 ;;\n'
+            "    esac"
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("pr merge 7 --squash", calls)
 
     def test_makefile_defines_the_merge_target(self):
         text = MAKEFILE.read_text(encoding="utf-8")
