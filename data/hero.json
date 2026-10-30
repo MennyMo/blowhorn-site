@@ -50,7 +50,7 @@
       "subhead": "Drive LinkedIn, X, Reddit, Hacker News and more from the app, the CLI, MCP or your AI assistant. One queue, one set of limits.",
       "cta": { "label": "Wire up your agent", "href": "/agents" },
       "differentiators": [3, 10, 12],
-      "note": "AI hybrid messaging. For the agent-heavy Alex persona: one queue and one set of limits, person or agent."
+      "note": "AI hybrid messaging. For the agent-heavy user: one queue and one set of limits, person or agent."
     },
     {
       "id": "ai-optional",

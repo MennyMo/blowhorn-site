@@ -19,7 +19,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn post --platform linkedin --profile alex",
+          "command": "blowhorn post --platform linkedin --profile personal",
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
@@ -75,7 +75,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn post --platform linkedin --profile alex --amplify \"https://www.linkedin.com/feed/update/urn:li:activity:123/\"",
+          "command": "blowhorn post --platform linkedin --profile personal --amplify \"https://www.linkedin.com/feed/update/urn:li:activity:123/\"",
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
@@ -103,7 +103,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn accept --profile marcus --limit 5",
+          "command": "blowhorn accept --profile company --limit 5",
           "cliRef": "/docs/reference/cli/accept/"
         },
         "rest": {
@@ -131,7 +131,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn withdraw --profile alex --apply",
+          "command": "blowhorn withdraw --profile personal --apply",
           "cliRef": "/docs/reference/cli/withdraw/"
         },
         "rest": {
@@ -187,7 +187,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn post --platform x --profile alex",
+          "command": "blowhorn post --platform x --profile personal",
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
@@ -270,7 +270,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn follow --platform x --profile alex --target mesheryio --limit 0",
+          "command": "blowhorn follow --platform x --profile personal --target mesheryio --limit 0",
           "cliRef": "/docs/reference/cli/follow/"
         },
         "rest": {
@@ -326,7 +326,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn post --platform reddit --profile alex",
+          "command": "blowhorn post --platform reddit --profile personal",
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
@@ -410,7 +410,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn post --platform hn --profile alex --dry-run",
+          "command": "blowhorn post --platform hn --profile personal --dry-run",
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
@@ -465,7 +465,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn post --platform slack --profile alex --target \"#announcements\" --message \"Maintenance is complete\"",
+          "command": "blowhorn post --platform slack --profile personal --target \"#announcements\" --message \"Maintenance is complete\"",
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
@@ -521,7 +521,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn post --platform bluesky --profile alex",
+          "command": "blowhorn post --platform bluesky --profile personal",
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
@@ -577,7 +577,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn post --platform bluesky --profile alex --amplify \"https://bsky.app/profile/you/post/3kx...\"",
+          "command": "blowhorn post --platform bluesky --profile personal --amplify \"https://bsky.app/profile/you/post/3kx...\"",
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
@@ -605,7 +605,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn follow --platform bluesky --profile alex --target alice.bsky.social --limit 0",
+          "command": "blowhorn follow --platform bluesky --profile personal --target alice.bsky.social --limit 0",
           "cliRef": "/docs/reference/cli/follow/"
         },
         "rest": {
@@ -633,7 +633,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn unfollow --platform bluesky --profile alex --target alice.bsky.social",
+          "command": "blowhorn unfollow --platform bluesky --profile personal --target alice.bsky.social",
           "cliRef": "/docs/reference/cli/unfollow/"
         },
         "rest": {
@@ -717,7 +717,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn post --platform github --profile alex --amplify \"https://github.com/layer5io/meshery/issues/1234\"",
+          "command": "blowhorn post --platform github --profile personal --amplify \"https://github.com/layer5io/meshery/issues/1234\"",
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
@@ -745,7 +745,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn follow --platform github --profile alex --target layer5io --limit 0",
+          "command": "blowhorn follow --platform github --profile personal --target layer5io --limit 0",
           "cliRef": "/docs/reference/cli/follow/"
         },
         "rest": {
@@ -773,7 +773,7 @@
         },
         "cli": {
           "status": "available",
-          "command": "blowhorn source --platform github --profile alex --repo layer5io/meshery --audience stargazers --dry-run",
+          "command": "blowhorn source --platform github --profile personal --repo layer5io/meshery --audience stargazers --dry-run",
           "cliRef": "/docs/reference/cli/source/"
         },
         "rest": {
