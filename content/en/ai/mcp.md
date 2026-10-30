@@ -8,19 +8,24 @@ intro: MCP is a common standard that lets AI assistants plug into apps. The Blow
 status: Available now
 layout: ai
 weight: 20
-lastmod: 2026-10-20
+lastmod: 2026-10-30
+code:
+  - title: terminal
+    code: "claude mcp add blowhorn -- ~/.local/bin/blowhorn-mcp\n"
+    prompt: true
+code_note: "Open Blowhorn 1.61 or later once so it writes ~/.local/bin/blowhorn-mcp. Other clients: [Connect an AI assistant over MCP](/docs/how-to/set-up/connect-mcp-client/)."
 cards_title: Standard issue
 cards:
   - t: Every action, described
     b: Everything the Blowhorn command line can do is described in a form assistants understand, so they know what each action needs before they ask.
   - t: Works where your assistant works
-    b: Run the server right on your computer, or connect over the web at cloud.blowhorn.ai. Client libraries are there for builders.
+    b: "It runs on your own computer through the `blowhorn-mcp` command the app installs, for any MCP client: Claude Code, Claude Desktop, Cursor, VS Code. A hosted server is coming soon."
   - t: Easy to find
-    b: Clear docs, and listings in the catalogs where people look for MCP servers.
+    b: Clear docs and a setup guide for each client. Catalog listings coming soon.
 rules_title: You stay in charge
 rules:
   - t: Approve before it posts
-    b: Turn on a setting and an agent must get your OK in the app before it queues or amplifies a post. It is off by default, so you choose.
+    b: With approval mode on, anything an agent queues waits for your OK in the app, and an agent can never approve its own content. Every write is a dry run until confirmed.
   - t: Risk limits on every action
     b: The limits you set for each profile apply to everything an agent does, every time.
   - t: Runs on your computer

@@ -23,8 +23,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -51,8 +51,8 @@
           "cliRef": "/docs/reference/cli/comment/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -79,8 +79,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -107,8 +107,8 @@
           "cliRef": "/docs/reference/cli/accept/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -135,8 +135,8 @@
           "cliRef": "/docs/reference/cli/withdraw/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -163,8 +163,8 @@
           "cliRef": "/docs/reference/cli/analytics/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -191,8 +191,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -218,8 +218,8 @@
           "notes": "X replies are not a distinct blowhorn command yet. Queue the tweet URL in Comment on."
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -246,8 +246,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -274,8 +274,8 @@
           "cliRef": "/docs/reference/cli/follow/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -302,8 +302,8 @@
           "cliRef": "/docs/reference/cli/analytics/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -330,8 +330,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -358,8 +358,8 @@
           "cliRef": "/docs/reference/cli/comment/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -386,8 +386,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -414,8 +414,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -441,8 +441,8 @@
           "notes": "Hacker News comments are not a distinct blowhorn command yet. Queue the item URL in Comment on."
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -469,8 +469,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -497,8 +497,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -525,8 +525,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -553,8 +553,8 @@
           "cliRef": "/docs/reference/cli/comment/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -581,8 +581,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -609,8 +609,8 @@
           "cliRef": "/docs/reference/cli/follow/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -637,8 +637,8 @@
           "cliRef": "/docs/reference/cli/unfollow/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -665,8 +665,8 @@
           "cliRef": "/docs/reference/cli/find/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -693,8 +693,8 @@
           "cliRef": "/docs/reference/cli/analytics/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -721,8 +721,8 @@
           "cliRef": "/docs/reference/cli/post/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -749,8 +749,8 @@
           "cliRef": "/docs/reference/cli/follow/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",
@@ -777,8 +777,8 @@
           "cliRef": "/docs/reference/cli/source/"
         },
         "rest": {
-          "status": "available",
-          "notes": "Every Blowhorn action is on the REST API, from the same schema as the CLI. Parameters match the CLI reference."
+          "status": "placeholder",
+          "notes": "The Blowhorn REST API is coming soon. Until then, use the CLI or MCP."
         },
         "mcp": {
           "status": "available",

@@ -14,8 +14,8 @@
       },
       {
         "title": "REST API",
-        "tag": "Same orders, over HTTP",
-        "body": "Every action from the same schema as the CLI, for your scripts, pipelines and internal tools.",
+        "tag": "Coming soon",
+        "body": "Planned: every action over HTTP, from the same schema as the CLI. Until it lands, use the CLI or MCP.",
         "href": "/docs/reference/cli"
       },
       {

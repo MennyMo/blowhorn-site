@@ -52,7 +52,7 @@
     {
       "f": "AI agents",
       "t": "Hosted MCP, CLI, skill, marketplace connectors",
-      "b": "MCP server, REST API, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
+      "b": "MCP server, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
     },
     {
       "f": "Bought engagement",
@@ -73,7 +73,7 @@
     },
     {
       "q": "Does Blowhorn have an MCP server?",
-      "a": "Blowhorn is a CLI any agent with a shell can drive, with --json and --dry-run. See the Agentic AI Marketing pages for setups."
+      "a": "Yes. A local MCP server ships with the desktop app (blowhorn-mcp, 113 tools). Every write is a dry run until the assistant confirms it, and an agent can never approve its own content. Postiz is ahead on hosted MCP today; Blowhorn's hosted server is coming soon."
     }
   ],
   "major": "Respect to a worthy rival. Now, who's actually holding the horn?",

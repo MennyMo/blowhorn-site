@@ -35,7 +35,7 @@
             {{ partial "code-card.html" (dict "code" .code "title" .title "lang" (.lang | default "bash") "prompt" .prompt "copy" (ne .copy false)) }}
             {{- end }}
           </div>
-          {{- with $p.code_note }}<p class="caption muted ai-note">{{ . }}</p>{{ end }}
+          {{- with $p.code_note }}<p class="caption muted ai-note">{{ . | markdownify }}</p>{{ end }}
         </section>
         {{- end }}
 
