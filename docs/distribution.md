@@ -153,3 +153,7 @@ GITHUB_OUTPUT=/tmp/out IN_VERSION=v1.2.3 IN_URL=https://example.com/Blowhorn.dmg
 ```
 
 `dmg-resolve` needs bash 4 or newer (macOS ships 3.2; `brew install bash`).
+
+`publish-blowhorn-axi.yml`, which publishes blowhorn-axi and blowhorn-mcp to
+npm, works the same way: its steps are `npm-fetch`, `npm-verify`,
+`npm-publish` and `npm-confirm`, backed by `.github/scripts/publish-npm/`.

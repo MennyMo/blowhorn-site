@@ -62,7 +62,7 @@ Every CI step that runs repository logic is a make target, and the workflow call
 | Target | What it runs | Run by |
 |---|---|---|
 | `setup-ci` | `npm ci` (the locked dependencies) | `site.yml` |
-| `workflow-check` | actionlint on `site.yml`, `publish-dmg.yml`, `sync-docs.yml`, `cloud-auth-smoke.yml`, `product-ci.yml`, `internal-site.yml` and `internal-site-auto.yml` | `site.yml` |
+| `workflow-check` | actionlint on `site.yml`, `publish-dmg.yml`, `sync-docs.yml`, `cloud-auth-smoke.yml`, `product-ci.yml`, `internal-site.yml`, `internal-site-auto.yml` and `publish-blowhorn-axi.yml` | `site.yml` |
 | `test-scripts` | unit tests for the check scripts in `.github/scripts/` | `site.yml` |
 | `site-check` | one production build, then the checks below | `site.yml` |
 | `check-schemas` | `data/hero.json`, `data/machines.json`, `data/home_ai.json`, `data/tells.json`, `data/roles.json`, `data/use_cases.json`, `data/solutions.json`, `data/themes.json`, `data/integrations.json`, `data/hero_demo.json`, `data/actions.json` and `data/action_examples.json` validate against `schemas/`; role, use-case and solution schemas `$ref` shared `line`/`text`/`card` types in `schemas/defs/cast-page.schema.json` (ajv `-r`) ([docs/hero-variants.md](docs/hero-variants.md)). Every supported YAML action must have an example ([docs/action-examples.md](docs/action-examples.md)). Every action group in `data/actions.json` exists and holds an action (`check_action_matrix.py --source`) | `site-check` |
@@ -82,6 +82,7 @@ Every CI step that runs repository logic is a make target, and the workflow call
 | `dmg-resolve`, `dmg-download`, `dmg-package`, `dmg-verify`, `dmg-release` | the five steps of publishing a DMG release, each reading its inputs from the environment ([docs/distribution.md](docs/distribution.md#local-checks)) | `publish-dmg.yml` |
 | `dmg-check DMG=...` | sanity-check a disk image before publishing | `dmg-package` runs the same script (`check-dmg.sh`) |
 | `dmg-sync-docs` | after a public release, start `sync-docs.yml` at the product tag `desktop-<version>` | `publish-dmg.yml` |
+| `npm-fetch`, `npm-verify`, `npm-publish`, `npm-confirm` | the four steps of publishing blowhorn-axi or blowhorn-mcp to npm, each reading its inputs from the environment ([docs/distribution.md](docs/distribution.md#local-checks)) | `publish-blowhorn-axi.yml` |
 | `docs-cli-reference` | regenerate the CLI reference pages in the product checkout from its CLI schema and parser, before the sync ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
 | `docs-sync REF=...` | copy the product docs from a `blowhorn` checkout into `content/en/docs/` ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
 | `docs-sync-base` | check out the `docs-sync` branch on the open sync PR's head, or on `master` when none is open ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
