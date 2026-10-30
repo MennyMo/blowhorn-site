@@ -1,41 +1,61 @@
-name: Publish blowhorn-axi to npm
+name: Publish Blowhorn npm packages (blowhorn-axi, blowhorn-mcp)
 
-# Publishes the blowhorn-axi npm package (the agent interface to Blowhorn) with
-# npm trusted publishing over OIDC. No npm token is stored anywhere: npmjs.com
-# trusts this repository and this workflow file, and npm adds a provenance
-# attestation automatically.
+# Publishes one of Blowhorn's npm packages with npm trusted publishing over
+# OIDC, chosen by the `package` input:
+#   - blowhorn-axi: the agent interface to Blowhorn (the default, so callers
+#     that do not pass `package` publish blowhorn-axi as before).
+#   - blowhorn-mcp: a thin launcher for the Blowhorn MCP server.
+# No npm token is stored anywhere: npmjs.com trusts this repository and this
+# workflow file, and the publish carries a provenance attestation
+# (`--provenance`, so a missing OIDC token fails the run instead of publishing
+# without one). The file keeps its original name because trusted publishers
+# bind to the workflow filename.
 #
-# The package is built in the private product repo with `npm pack` and handed
+# Each package is built in the private product repo with `npm pack` and handed
 # over as a tarball, so this workflow never needs to read that repo:
-#   - tarball_url: an HTTPS URL of blowhorn-axi-<version>.tgz, or
+#   - tarball_url: an HTTPS URL of <package>-<version>.tgz, or
 #   - release_tag: a release of this repository that has the tarball as an asset
-#     (defaults to v<version> when neither input is given).
+#     (defaults to v<version> for blowhorn-axi and mcp-v<version> for
+#     blowhorn-mcp when neither input is given).
 # It does not wait for a desktop release.
 #
-# Run: Actions > Publish blowhorn-axi to npm > Run workflow, or
+# Run: Actions > Publish Blowhorn npm packages > Run workflow, or
 #   gh workflow run publish-blowhorn-axi.yml -R blowhorn-ai/blowhorn-site \
 #     -f version=0.1.0 -f release_tag=axi-v0.1.0
+#   gh workflow run publish-blowhorn-axi.yml -R blowhorn-ai/blowhorn-site \
+#     -f package=blowhorn-mcp -f version=0.1.0 -f release_tag=mcp-v0.1.0
 #
-# One-time setup on npmjs.com (package Settings > Trusted publishing): GitHub
-# Actions, organization blowhorn-ai, repository blowhorn-site, workflow
-# publish-blowhorn-axi.yml, no environment, and tick "allow npm publish".
-# Trusted publisher configs created after Sep 3, 2026 allow only
-# `npm stage publish` by default, and this workflow runs plain `npm publish`,
-# so without that box the publish fails with E404.
+# One-time setup on npmjs.com, once per package (package Settings > Trusted
+# publishing): GitHub Actions, organization blowhorn-ai, repository
+# blowhorn-site, workflow publish-blowhorn-axi.yml, no environment, and tick
+# "allow npm publish". Trusted publisher configs created after Sep 3, 2026
+# allow only `npm stage publish` by default, and this workflow runs plain
+# `npm publish`, so without that box the publish fails with E404.
+# A brand-new package must already exist on npm before a trusted publisher can
+# be added to it, so a maintainer publishes a first placeholder version by hand
+# once; every later version goes through this workflow.
 
 on:
   workflow_dispatch:
     inputs:
+      package:
+        description: "npm package to publish"
+        required: false
+        type: choice
+        options:
+          - blowhorn-axi
+          - blowhorn-mcp
+        default: blowhorn-axi
       version:
         description: "Version to publish, e.g. 0.1.0 (must match the tarball's package.json)"
         required: true
         type: string
       tarball_url:
-        description: "HTTPS URL of blowhorn-axi-<version>.tgz (leave empty to use a release asset)"
+        description: "HTTPS URL of <package>-<version>.tgz (leave empty to use a release asset)"
         required: false
         type: string
       release_tag:
-        description: "Release of this repo holding blowhorn-axi-<version>.tgz (default v<version>)"
+        description: "Release of this repo holding <package>-<version>.tgz (default v<version> for blowhorn-axi, mcp-v<version> for blowhorn-mcp)"
         required: false
         type: string
       sha256:
@@ -53,12 +73,14 @@ permissions:
   id-token: write
 
 concurrency:
-  group: publish-blowhorn-axi
+  group: publish-npm-${{ inputs.package || 'blowhorn-axi' }}
   cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      PACKAGE: ${{ inputs.package || 'blowhorn-axi' }}
     steps:
       - uses: actions/setup-node@v4
         with:
@@ -78,13 +100,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          case "$PACKAGE" in
+            blowhorn-axi) default_tag="v$VERSION" ;;
+            blowhorn-mcp) default_tag="mcp-v$VERSION" ;;
+            *) echo "::error::package must be blowhorn-axi or blowhorn-mcp, got $PACKAGE"; exit 1 ;;
+          esac
           [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]] || { echo "::error::version must be X.Y.Z[-pre], got $VERSION"; exit 1; }
-          file="blowhorn-axi-${VERSION}.tgz"
+          file="${PACKAGE}-${VERSION}.tgz"
           if [ -n "$TARBALL_URL" ]; then
             [[ "$TARBALL_URL" == https://* ]] || { echo "::error::tarball_url must be HTTPS"; exit 1; }
             curl --fail --location --proto '=https' --proto-redir '=https' --max-time 120 -sS -o "$file" "$TARBALL_URL"
           else
-            tag="${RELEASE_TAG:-v$VERSION}"
+            tag="${RELEASE_TAG:-$default_tag}"
             gh release download "$tag" -R "$GITHUB_REPOSITORY" -p "$file" -O "$file"
           fi
           echo "TARBALL=$file" >> "$GITHUB_ENV"
@@ -95,29 +122,43 @@ jobs:
           SHA256: ${{ inputs.sha256 }}
         run: |
           set -euo pipefail
+          case "$PACKAGE" in
+            blowhorn-axi|blowhorn-mcp) ;;
+            *) echo "::error::package must be blowhorn-axi or blowhorn-mcp, got $PACKAGE"; exit 1 ;;
+          esac
           if [ -n "$SHA256" ]; then echo "$SHA256  $TARBALL" | sha256sum -c -; fi
           tar -xzf "$TARBALL" package/package.json -O > pkg.json
           name=$(node -p "require('./pkg.json').name")
           ver=$(node -p "require('./pkg.json').version")
           repo=$(node -p "(require('./pkg.json').repository||{}).url||''")
-          [ "$name" = "blowhorn-axi" ] || { echo "::error::tarball is $name, not blowhorn-axi"; exit 1; }
+          [ "$name" = "$PACKAGE" ] || { echo "::error::tarball is $name, not $PACKAGE"; exit 1; }
           [ "$ver" = "$VERSION" ] || { echo "::error::tarball is version $ver, input is $VERSION"; exit 1; }
           case "$repo" in *github.com/blowhorn-ai/blowhorn-site*) ;; *) echo "::error::repository.url ($repo) must be blowhorn-ai/blowhorn-site for provenance"; exit 1;; esac
-          if npm view "blowhorn-axi@$VERSION" version >/dev/null 2>&1; then echo "::error::blowhorn-axi@$VERSION is already published"; exit 1; fi
+          if npm view "$PACKAGE@$VERSION" version >/dev/null 2>&1; then echo "::error::$PACKAGE@$VERSION is already published"; exit 1; fi
           tar -tzf "$TARBALL"
           sha256sum "$TARBALL"
 
       - name: Publish (OIDC trusted publishing, provenance)
         env:
           DIST_TAG: ${{ inputs.dist_tag }}
-        run: npm publish "./$TARBALL" --access public --tag "${DIST_TAG:-latest}"
+        run: npm publish "./$TARBALL" --access public --provenance --tag "${DIST_TAG:-latest}"
 
       - name: Confirm
         env:
           VERSION: ${{ inputs.version }}
         run: |
-          for i in 1 2 3 4 5 6; do
-            npm view "blowhorn-axi@$VERSION" version && exit 0
-            sleep 10
+          # The registry can take a few minutes to list a new version. Poll for
+          # about 5 minutes (10s growing to 30s between attempts), then warn.
+          waited=0
+          delay=10
+          attempt=1
+          while :; do
+            echo "Attempt $attempt (${waited}s elapsed): npm view $PACKAGE@$VERSION version"
+            if npm view "$PACKAGE@$VERSION" version; then exit 0; fi
+            [ "$waited" -ge 300 ] && break
+            sleep "$delay"
+            waited=$((waited + delay))
+            attempt=$((attempt + 1))
+            delay=$((delay + 5 > 30 ? 30 : delay + 5))
           done
-          echo "::warning::published, but the registry does not list $VERSION yet"
+          echo "::warning::The publish step succeeded, but the registry did not list $PACKAGE@$VERSION within ${waited}s. It is usually propagation delay; check later with: npm view $PACKAGE@$VERSION version"

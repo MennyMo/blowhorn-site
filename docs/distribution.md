@@ -42,10 +42,10 @@ Pages hosts only the marketing site and small static files.
   on master and redeploys the site after every public release (its `pin`
   job, `make dmg-pin-download`); a draft published by hand later needs the
   same `make dmg-pin-download` run, or a one-line PR. Never build a download link on
-  `/releases/latest`: this repository also publishes blowhorn-axi releases
-  (`axi-vX.Y.Z`), GitHub resolves `latest` to whichever stable release was
-  created most recently, and the always-latest URL 404s whenever an axi
-  release is the newest. The site's Download section
+  `/releases/latest`: this repository also publishes blowhorn-axi and
+  blowhorn-mcp releases (`axi-vX.Y.Z`, `mcp-vX.Y.Z`), GitHub resolves `latest`
+  to whichever stable release was created most recently, and the always-latest
+  URL 404s whenever one of those is the newest. The site's Download section
   (`assets/js/download.js`) reads the release list from GitHub's API in the
   visitor's browser and fills in the newest desktop release by the same rule
   the app's update check uses (the newest non-draft, non-prerelease release

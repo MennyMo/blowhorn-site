@@ -16,7 +16,7 @@ Blowhorn is a social media console that takes one message and broadcasts, repost
 
 ## Download
 
-Download the current universal macOS build from [blowhorn.ai/download](https://blowhorn.ai/download/). (This repository also publishes blowhorn-axi releases, so GitHub's `latest` is not reliably the desktop release and no always-latest asset link is offered here.)
+Download the current universal macOS build from [blowhorn.ai/download](https://blowhorn.ai/download/). (This repository also publishes blowhorn-axi and blowhorn-mcp releases, so GitHub's `latest` is not reliably the desktop release and no always-latest asset link is offered here.)
 
 Every release carries a `SHA256SUMS.txt`. Check the image before you open it:
 
