@@ -34,6 +34,8 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   screen is **Blowhorn needs Google Chrome**: **Get Google Chrome** opens
   Google's download page, and once it is installed the app notices by
   itself when you come back to its window (or choose **Check again**).
+  If Safari or another browser is your default, the screen says you can
+  keep it.
   A Google Chrome older than Blowhorn needs, or one that has never been
   opened, gets its own screen the same way. Google Chrome is found in
   your computer's Applications folder or in your own `~/Applications`.
@@ -49,7 +51,9 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   likes and connects for you. **What's a Google Chrome profile?** explains
   the rest if you want it. If another browser, such as Safari, is your
   default, the screen says it stays your default: there is nothing to
-  change. **Show my Chrome profiles** moves on.
+  change. **Continue** moves on. The row of five steps across the top
+  (Mission, Sign in, Browser, Profiles, First post) shows where you are on
+  every screen, and **Back** at the bottom left returns to the screen before.
 - **Assign troops:** Blowhorn shows what it found in each Chrome
   profile: the Google account, and the platform accounts signed in or
   saved there. Mark each Chrome profile and each account **in use** or
