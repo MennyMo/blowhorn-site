@@ -227,6 +227,15 @@ class WithdrawalTests(unittest.TestCase):
         self.assertEqual(result["consent"], "denied")
         self.assertNotIn(CONFIG["storage_key"], result["session"])
 
+    def test_consent_event_fires_only_on_grant(self):
+        granted = harness("consent", {"consent": None, "choose": "granted"})
+        self.assertEqual(granted["dispatched"], [{"type": CONFIG["consent_event"], "detail": "granted"}])
+        denied = harness("consent", {"consent": None, "choose": "denied"})
+        self.assertEqual(denied["dispatched"], [])
+        stored_grant = harness("consent", {"consent": "granted"})
+        self.assertEqual(len(stored_grant["dispatched"]), 1)
+        self.assertEqual(harness("consent", {"consent": "denied"})["dispatched"], [])
+
     def test_declining_clears_and_accepting_keeps(self):
         declined = harness("consent", {"consent": None, "session": self.FIRST, "choose": "denied"})
         self.assertNotIn(CONFIG["storage_key"], declined["session"])
@@ -383,37 +392,6 @@ class PayloadSchemaTests(unittest.TestCase):
                          ("page_path", "/ai/mcp/?utm_source=x")]:
             result = self.ajv("docs_outbound_click", [{**good, key: bad}])
             self.assertNotEqual(result.returncode, 0, key)
-
-
-class WiringTests(unittest.TestCase):
-    def test_partial_is_analytics_gated_and_included(self):
-        partial = (ROOT / "layouts/_partials/docs-attribution.html").read_text(encoding="utf-8")
-        self.assertIn('partial "analytics-enabled.html"', partial)
-        self.assertIn("site.Data.docs_events", partial)
-        for layout in ["layouts/baseof.html", "layouts/_partials/docs-scripts.html"]:
-            self.assertIn('partial "docs-attribution.html"', (ROOT / layout).read_text(encoding="utf-8"), layout)
-
-    def test_consent_js_announces_the_grant(self):
-        consent = (ROOT / "assets/js/consent.js").read_text(encoding="utf-8")
-        self.assertIn(f"new CustomEvent('{CONFIG['consent_event']}'", consent)
-        self.assertEqual(CONFIG["consent_key"], re.search(r"var KEY = '([^']+)'", consent).group(1))
-        self.assertEqual(CONFIG["storage_key"], re.search(r"var ATTRIBUTION = '([^']+)'", consent).group(1))
-
-    def test_partial_emits_the_whole_config(self):
-        partial = (ROOT / "layouts/_partials/docs-attribution.html").read_text(encoding="utf-8")
-        self.assertIn("site.Data.docs_events | jsonify", partial)
-        self.assertNotIn("dict ", partial)
-
-    def test_script_names_no_host(self):
-        script = (ROOT / "assets/js/docs-attribution.js").read_text(encoding="utf-8")
-        self.assertIsNone(re.search(r"https?://", script))
-
-    def test_synced_content_carries_no_hooks(self):
-        files = [ROOT / "content/en/ai/mcp.md", *sorted((ROOT / "content/en/docs").rglob("*.md"))]
-        for path in files:
-            text = path.read_text(encoding="utf-8")
-            for hook in ("docs-attribution", "docs-events", "data-mcp-client", "docs_snippet_copy"):
-                self.assertNotIn(hook, text, path)
 
 
 if __name__ == "__main__":

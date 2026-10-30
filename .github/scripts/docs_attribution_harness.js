@@ -18,7 +18,8 @@
    Usage: node docs_attribution_harness.js consent '<json scenario>'
      Runs assets/js/consent.js. scenario: { "consent": null | "granted" | "denied",
        "session": {...}, "choose": "granted" | "denied" }
-     Prints: { "session": sessionStorage, "consent": the stored choice } */
+     Prints: { "session": sessionStorage, "consent": the stored choice,
+       "dispatched": document events fired, "gtag": gtag calls } */
 "use strict";
 const fs = require("fs");
 const path = require("path");
@@ -165,6 +166,8 @@ function consent(s) {
     setItem: (k, v) => m.set(k, String(v)),
     removeItem: (k) => m.delete(k),
   };
+  const dispatched = [];
+  const gtagCalls = [];
   const document = {
     currentScript: { getAttribute: () => "G-TEST" },
     readyState: "complete",
@@ -172,9 +175,9 @@ function consent(s) {
     createElement: () => ({}),
     getElementById: (id) => (id === "consent" ? notice : null),
     addEventListener() {},
-    dispatchEvent() {},
+    dispatchEvent: (ev) => { dispatched.push({ type: ev.type, detail: ev.detail }); },
   };
-  const window = { gtag() {}, location: { reload() {} } };
+  const window = { gtag: function () { gtagCalls.push(Array.from(arguments)); }, location: { reload() {} } };
   class CustomEvent { constructor(type, init) { this.type = type; this.detail = init && init.detail; } }
   const ctx = vm.createContext({ window, document, localStorage: local, sessionStorage, CustomEvent });
   vm.runInContext(fs.readFileSync(CONSENT, "utf8"), ctx);
@@ -182,7 +185,7 @@ function consent(s) {
     const button = { getAttribute: () => s.choose };
     (listeners.click || []).forEach((fn) => fn({ target: { closest: () => button } }));
   }
-  return { session: Object.fromEntries(m), consent: local.getItem("blowhorn-consent") };
+  return { session: Object.fromEntries(m), consent: local.getItem("blowhorn-consent"), dispatched, gtag: gtagCalls };
 }
 
 const [mode, arg] = process.argv.slice(2);
