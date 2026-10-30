@@ -181,8 +181,8 @@ blog still shows and runs. Activity is
 one place with three views, switched at the top of the screen: **Upcoming**
 (what you want to say), **Routines** (when and where things go out) and
 **History** (what Blowhorn did). Posture holds every rules-of-engagement choice
-and every limit Blowhorn keeps; the **ROE** pill on Home and the menu-bar
-popover's **posture ›** link open it.
+and every limit Blowhorn keeps; the menu-bar
+popover's **posture ›** link opens it.
 
 At the bottom of the rail, once you are signed in, one duty toggle covers this
 computer: **On duty** with **Stand down** under it, or **Standing down** with

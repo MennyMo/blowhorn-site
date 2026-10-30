@@ -13,7 +13,11 @@ by retweet or quote. Follows accounts with `blowhorn follow`. Analytics
 appends a follower and following trend activity per run.
 
 Follows: at most 400 per profile a day and 15 in any 15 minutes,
-counted from that profile's follow log on this computer.
+counted from that profile's follow log on this computer. The 400 is X's
+own published follow limit; the 15 is Blowhorn's spacing. X also
+publishes 50 original posts and 200 replies a day for an account without
+a checkmark, and no setting in Blowhorn goes past any of the three
+([the one hard stop](/docs/how-to/settings/choose-your-rules-of-engagement/#a-limit-the-platform-publishes-is-the-one-hard-stop)).
 
 ## Supported actions
 

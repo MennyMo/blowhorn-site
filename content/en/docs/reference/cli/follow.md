@@ -17,7 +17,7 @@ blowhorn follow [OPTIONS]
 
 | Flag | Type | Default | Description |
 | --- | --- | --- | --- |
-| `--ignore-risk` | boolean | `false` | Run this once even if your Risk Profile would hold it (a daily cap, quiet hours, outreach turned off or a pause after a sign-in challenge). Only this run; your Risk Profile stays as it is |
+| `--ignore-risk` | boolean | `false` | Run this once even if your Risk Profile would hold it (a daily cap, quiet hours, outreach turned off or a pause after a sign-in challenge). Only this run; your Risk Profile stays as it is. A limit the platform itself publishes still applies |
 | `--target` | string |  | Target account handle (comma-delimited when `--limit` 0) |
 | `--limit` | integer | `20` | Max follows; 0 means target-only mode |
 | `--platform` | string |  | Platform scope for `blowhorn follow`. One of: bluesky, github, x, all (`all` means every platform listed here) |

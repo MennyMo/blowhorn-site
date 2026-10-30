@@ -28,9 +28,9 @@ the Risk Profile, so old scripts keep working.
 Choose it in the app on the **Posture** screen: the slider at the top is
 the choice for everyone, a track from Safety on (slow end, in the
 brand's teal blue) through Weapons tight (teal) to Weapons free (fast
-end, in the warn colour). The same choice shows on Home as the **ROE**
-pill and as a mini-slider in the menu-bar popover; both open Posture,
-and changing it anywhere changes it everywhere. Or use
+end, in the warn colour). The same choice shows as a mini-slider in
+the menu-bar popover, which opens Posture, and changing it anywhere
+changes it everywhere. Or use
 `blowhorn risk set cautious`. `blowhorn risk show` says which preset is
 in effect and where it came from, and `blowhorn risk grid` lists every
 profile on every platform. Any single dial you set yourself wins over
@@ -132,7 +132,7 @@ you will not be watching.
 
 Weapons tight is the built-in default, and the right choice when an account
 is established and you want Blowhorn at a normal pace, held to half of
-each platform's own limit.
+each platform's built-in ceiling.
 
 - **Between actions:** no minimum spacing; pace still shapes typing
   cadence and the random pauses between actions.
@@ -155,9 +155,11 @@ Pick Weapons free for an established account you are watching, when you want
 the most throughput and accept the most exposure.
 
 - **Between actions:** no minimum spacing, and the fast pace.
-- **How much per day:** the full built-in ceiling - the platform's own
-  limit. On LinkedIn that is 10 posts and 40 comments a day; on X it is
-  50 posts a day. Weapons free never raises a ceiling; it only lifts the
+- **How much per day:** the full built-in ceiling - Blowhorn's own
+  estimate of a safe day, not a number the platform publishes. On LinkedIn
+  that is 10 posts and 40 comments a day; on X it is 50 posts a day.
+  Weapons free never raises a ceiling, and never goes past a
+  [limit the platform publishes](#a-limit-the-platform-publishes-is-the-one-hard-stop); it only lifts the
   share the other two keep below it (a quarter, a half), along with Safety
   on's quiet hours, spacing and outreach limits.
 - **Nights:** no preset quiet hours.
@@ -209,6 +211,39 @@ now`). An activity without one profile and one platform names no
 single preset; its targets resolve their own. For a single run you
 start by hand, `blowhorn --risk-profile cautious post ...` overrides
 everything for that run only.
+
+An activity's own choice stays as you set it, even when it is looser than
+the Posture page: an activity on Weapons free runs Weapons free while the
+same profile is on Safety on everywhere else. (A choice on one order in New
+order works the other way and can only tighten.) Two things still stand
+above it: the 14-day warm-up, and a limit the platform publishes.
+
+## A limit the platform publishes is the one hard stop
+
+Where a platform publishes its own limit for an account, nothing in
+Blowhorn goes past it: not an activity's own choice, not Weapons free, not
+your own dials, not a setting in `.blowhorn.yaml` or the environment, not
+`--ignore-risk` and not **do it now**. Blowhorn cuts any cap that would go
+past one down to it, and says so: the run prints which setting asked for
+more and the platform's page it read the limit from, and the routine editor
+says `this routine stops at …` under **rules of engagement** when the preset
+you pick would go past it. When the limit is already reached for the day,
+the activity waits until it clears.
+
+Only limits the platform itself publishes count, each with its page and the
+day it was read:
+
+| Platform | Limit | Source |
+|---|---|---|
+| X | 400 follows a day | X Help, "Understanding X limits" |
+| X | 50 original posts and 200 replies a day, for an account without a checkmark | X Help, "Understanding X limits" |
+| Bluesky | 1,666 records an hour and 11,666 a day - posts, likes, reposts, replies and follows together | Bluesky's "Rate Limits" guide |
+
+The rest of the numbers on this page are Blowhorn's own estimates, and
+there is no hard stop where a platform publishes nothing: LinkedIn,
+Reddit, Hacker News, Slack and GitHub publish no per-account count for
+what Blowhorn does. Platforms change these limits without notice, and
+Blowhorn reads them again on a schedule.
 
 ## Related
 

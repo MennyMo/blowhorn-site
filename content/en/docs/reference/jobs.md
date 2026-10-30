@@ -80,6 +80,21 @@ app's activity editor and drawer show the same column as **rules of
 engagement**, with `cautious` as Safety on, `standard` as Weapons tight
 and `brisk` as Weapons free; the stored value does not change.
 
+The activity's own setting is kept as set, looser than the profile's or
+the platform's choice or not; it is never pulled back to the Posture
+page. Only the warm-up and a limit the platform itself publishes stand
+above it. `blowhorn schedule get <activity> --json` carries
+`published_limits`: each limit the platform publishes on the activity's
+action (count, window, the platform's page and the day it was read), and
+`above`, the presets whose cap for that profile would go past it. A cap
+that would go past one is cut to it, and the tick prints
+`Activity N: the brisk setting would allow … so this stops at …`. An
+activity whose published window is already full is held as
+`held by X's published limit (…)`, a `trigger-now` included: it skips the
+Posture checks, never the platform's own limit. The limits themselves
+are listed under
+[A limit the platform publishes is the one hard stop](/docs/how-to/settings/choose-your-rules-of-engagement/#a-limit-the-platform-publishes-is-the-one-hard-stop).
+
 ## Pause scopes
 
 An activity is claimed only when none of the three scopes says paused:
