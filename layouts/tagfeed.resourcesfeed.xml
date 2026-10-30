@@ -1,12 +1,13 @@
 {{- printf "<?xml version=\"1.0\" encoding=\"utf-8\"?>" | safeHTML }}
 {{- $tag := .Params.feedTag }}
+{{- $term := site.GetPage (printf "/tags/%s" $tag) }}
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blowhorn Resources: {{ .Title }}</title>
-    <link>{{ printf "tags/%s/" $tag | absURL }}</link>
+    <link>{{ with $term }}{{ .Permalink }}{{ else }}{{ printf "tags/%s/" $tag | absURL }}{{ end }}</link>
     <description>Everything in Blowhorn Resources tagged {{ .Title }}.</description>
     <language>en</language>
-    <atom:link href="{{ .Permalink }}feed.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="{{ with .OutputFormats.Get "resourcesfeed" }}{{ .Permalink }}{{ end }}" rel="self" type="application/rss+xml"/>
     {{- $pages := where .Site.RegularPages "Params.tags" "intersect" (slice $tag) }}
     {{- range $pages.ByDate.Reverse }}
     <item>
