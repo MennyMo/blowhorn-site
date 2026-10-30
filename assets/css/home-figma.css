@@ -1,0 +1,184 @@
+/* Figma home previews (/home-figma-v1/ to /home-figma-v4/). Every rule is
+   scoped to .fig, so no other page changes. Copy and section order follow
+   the Blowhorn Figma file, Website page, Home V1 to V4 (2026-10-27).
+   Colours are brand tokens from static/assets/brand/tokens.json, not new
+   hex values: near-black #1E2117, charcoal #3C494F, teal #00B39F,
+   teal-bright #00D3A9, teal-deep #00756A. Type uses the site fonts, not
+   Figma's Inter, per the design-to-code rule. Spacing reads the shared
+   whitespace tokens from site.css (DESIGN.md). Dark mode follows the OS
+   for the light variants; the dark sections keep their dark ground in
+   both modes, as Figma draws them. */
+.fig {
+  --fig-ink: #1e2117;
+  --fig-muted: #3c494f;
+  --fig-grey: #f3f3f3;
+  --fig-mint: #e6f7f5;
+  --fig-teal: #00b39f;
+  --fig-teal-bright: #00d3a9;
+  --fig-teal-deep: #00756a;
+  --fig-line: #d5dedd;
+  background: var(--fig-grey);
+  color: var(--fig-ink);
+  overflow-x: clip;
+}
+@media (prefers-color-scheme: dark) {
+  .fig {
+    --fig-ink: #f4f7f6;
+    --fig-muted: #d5dedd;
+    --fig-grey: #1e2117;
+    --fig-mint: #2a2e25;
+    --fig-line: #3c494f;
+  }
+  .fig .fig-dark, .fig-v2 .fig-hero, .fig-v2 .fig-close {
+    --fig-ink: #f4f7f6;
+    --fig-muted: #d5dedd;
+  }
+}
+.fig a { color: var(--fig-teal-deep); text-underline-offset: 3px; }
+@media (prefers-color-scheme: dark) {
+  .fig a { color: var(--fig-teal-bright); }
+}
+.fig p { max-width: var(--text-measure); line-height: 1.6; }
+.fig .fig-display, .fig .fig-h2, .fig .fig-h3 {
+  font-family: var(--font-display); margin: 0; text-wrap: balance;
+}
+.fig .fig-display { font-size: clamp(2.4rem, 6vw, 5rem); line-height: 1.05; letter-spacing: -0.02em; }
+.fig .fig-h2 { font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.12; }
+.fig .fig-h3 { font-size: 1.2rem; line-height: 1.3; }
+.fig .fig-lead { font-size: 1.2rem; color: var(--fig-muted); margin: var(--intro-gap) 0 0; }
+.fig .fig-section { padding-block: var(--section-y); }
+.fig .fig-head { margin-bottom: var(--head-gap); }
+.fig .fig-center { text-align: center; }
+.fig .fig-center p { margin-inline: auto; }
+.fig .fig-note { color: var(--fig-muted); font-size: 0.95rem; margin-top: 16px; }
+
+/* In-page nav: the Figma bar, under the site header. It is a preview
+   artifact, not a second site nav: it carries the Figma links only. */
+.fig .fig-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; padding-block: 28px; }
+.fig .fig-brand { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--fig-ink); text-decoration: none; }
+.fig .fig-nav-links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 32px; list-style: none; margin: 0; padding: 0; }
+.fig .fig-nav-links a { color: var(--fig-ink); text-decoration: none; font-size: 0.9rem; }
+
+/* Buttons: one CTA per page, as Figma states. V1 uses a black pill,
+   V2 to V4 a teal pill with near-black text. */
+.fig .fig-btn {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px;
+  padding: 12px 28px; border-radius: 999px; font-weight: 600;
+  font-size: 1rem; text-decoration: none; white-space: nowrap;
+}
+.fig .fig-btn-black { background: #111; color: #fff; }
+.fig .fig-btn-teal { background: var(--fig-teal); color: #1e2117; }
+.fig .fig-mx-auto { margin-inline: auto; }
+/* Button text is fixed, never the theme ink: otherwise a teal button in a
+   dark section, or in dark mode, gets light text on teal (2.6:1). The
+   nav-link and dark-section link colours would otherwise win by
+   specificity over the button colour. */
+.fig .fig-nav-links a.fig-btn-black, .fig .fig-dark a.fig-btn-black { color: #fff; }
+.fig .fig-nav-links a.fig-btn-teal, .fig .fig-dark a.fig-btn-teal { color: #1e2117; }
+.fig .fig-dark .fig-nav-links a:not(.fig-btn) { color: #f4f7f6; }
+.fig .fig-dark .fig-brand { color: #f4f7f6; }
+.fig .fig-dark .fig-chip { background: #fff; color: #1e2117; }
+.fig .fig-dark .fig-quote { color: #1e2117; }
+.fig .fig-btn:focus-visible { outline: 3px solid var(--fig-teal-deep); outline-offset: 3px; }
+.fig .fig-actions { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-top: var(--head-gap); }
+.fig .fig-actions-center { justify-content: center; }
+.fig .fig-link { font-weight: 600; color: var(--fig-teal-deep); text-decoration: none; }
+@media (prefers-color-scheme: dark) {
+  .fig .fig-link { color: var(--fig-teal-bright); }
+}
+
+/* Hero */
+.fig .fig-hero { padding-block: 64px var(--section-y); }
+.fig-v1 .fig-hero { text-align: center; padding-block: 120px 64px; }
+.fig-v1 .fig-hero p { margin-inline: auto; }
+.fig-v2 .fig-hero { padding-block: 120px; }
+.fig .fig-hero-grid { display: grid; gap: var(--head-gap); align-items: center; }
+@media (min-width: 900px) {
+  .fig .fig-hero-grid { grid-template-columns: 1.2fr 0.8fr; }
+}
+.fig .fig-visual {
+  border: 1px solid var(--fig-line); border-radius: 16px; background: #fff;
+  color: #1e2117; padding: 32px; min-height: 220px; display: grid; place-items: center; text-align: center;
+}
+@media (prefers-color-scheme: dark) {
+  .fig .fig-visual { background: #2a2e25; color: #f4f7f6; }
+}
+.fig .fig-visual-note { color: #3c494f; font-size: 0.85rem; }
+@media (prefers-color-scheme: dark) {
+  .fig .fig-visual-note { color: #d5dedd; }
+}
+.fig .fig-explode { position: relative; }
+.fig .fig-chip-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+.fig .fig-chip {
+  border: 1px solid var(--fig-line); border-radius: 999px; padding: 6px 12px;
+  font-size: 0.85rem; background: #fff; color: #1e2117;
+}
+@media (prefers-color-scheme: dark) {
+  .fig .fig-chip { background: #1e2117; color: #f4f7f6; }
+}
+
+/* Film (V1 only) */
+.fig .fig-film { text-align: center; padding-bottom: var(--section-y); }
+.fig .fig-film video { width: 100%; max-width: 560px; aspect-ratio: 16 / 9; background: #111; border-radius: 16px; display: block; margin-inline: auto; }
+
+/* Cards and grids */
+.fig .fig-grid { display: grid; gap: var(--grid-gap); margin-top: var(--head-gap); }
+@media (min-width: 700px) {
+  .fig .fig-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .fig .fig-grid-2 { grid-template-columns: repeat(2, 1fr); }
+}
+.fig .fig-card {
+  border: 1px solid var(--fig-line); border-radius: 16px; padding: var(--card-pad);
+  background: #fff; color: #1e2117;
+}
+@media (prefers-color-scheme: dark) {
+  .fig .fig-card { background: #2a2e25; color: #f4f7f6; }
+}
+.fig .fig-card h3 { margin: 0 0 12px; }
+.fig .fig-card p { margin: 0; color: #3c494f; }
+@media (prefers-color-scheme: dark) {
+  .fig .fig-card p { color: #d5dedd; }
+}
+.fig .fig-tag { display: block; color: var(--fig-teal-deep); font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+@media (prefers-color-scheme: dark) {
+  .fig .fig-tag { color: var(--fig-teal-bright); }
+}
+
+/* Dark sections (agents, V1 platforms, V3/V4 close) */
+.fig .fig-dark { background: #1e2117; color: #f4f7f6; }
+.fig .fig-dark p, .fig .fig-dark .fig-lead { color: #d5dedd; }
+.fig .fig-dark .fig-card { background: #2a2e25; border-color: #3c494f; color: #f4f7f6; }
+.fig .fig-dark .fig-card p { color: #d5dedd; }
+.fig .fig-dark .fig-tag { color: var(--fig-teal-bright); }
+.fig .fig-dark a { color: var(--fig-teal-bright); }
+
+/* Mint section (V1 agents, V3/V4 model offers) */
+.fig .fig-mint { background: var(--fig-mint); }
+
+/* Platform rows (V3/V4) */
+.fig .fig-platform-rows { list-style: none; margin: var(--head-gap) 0 0; padding: 0; border-top: 1px solid var(--fig-line); }
+.fig .fig-platform-rows li {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;
+  padding-block: 16px; border-bottom: 1px solid var(--fig-line);
+}
+.fig .fig-platform-rows .fig-actions-label { color: var(--fig-muted); font-size: 0.95rem; }
+
+/* Proof band (V2) and thesis notes (V3/V4) */
+.fig .fig-proof { display: grid; gap: 16px; }
+@media (min-width: 900px) {
+  .fig .fig-proof { grid-template-columns: 1fr 1.2fr; align-items: start; }
+}
+.fig .fig-quote {
+  background: #fff6e0; color: #1e2117; border-radius: 12px; padding: 20px 24px;
+  font-weight: 600; margin: var(--head-gap) 0 0;
+}
+/* The quote stays cream with dark text in every mode and section, so it
+   never lands as dark text on a dark ground. */
+.fig .fig-terminal {
+  background: #1e2117; color: #f4f7f6; border-radius: 12px; padding: 16px 20px;
+  font-family: var(--font-mono); font-size: 0.95rem; overflow-x: auto; margin: var(--head-gap) 0 0;
+}
+.fig .fig-step-num { font-family: var(--font-display); font-size: 1.6rem; color: var(--fig-teal-deep); font-weight: 700; }
+@media (prefers-color-scheme: dark) {
+  .fig .fig-step-num { color: var(--fig-teal-bright); }
+}

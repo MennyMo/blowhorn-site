@@ -1,0 +1,311 @@
+{{- /* Figma home previews (/home-figma-v1/ to /home-figma-v4/). The page's
+  variant front matter picks one of the four Home designs on the Website
+  page of the Blowhorn Figma file (file mM9B4Zv9ON3pIyh3IvB4Il):
+  v1 Home V1 Molly-inspired SaaS (332:10), v2 Home V2 Editorial ink
+  (332:94), v3 Home V3 Claude section map (337:16), v4 Home V4 Grok craft
+  (348:9). Copy is the Figma copy, with two site-truth corrections: the
+  Figma V3 platform row says GitHub posts, but GitHub rallies reactions
+  and does not post, so both V3 and V4 say that; the Figma footers say
+  Layer5, but the site footer (baseof.html) is kept instead. The V1 film
+  plays inline with native controls, not the Signal expand-in-place
+  dialog, to keep this preview self-contained. Not linked from
+  navigation, noindex, out of sitemap.xml and llms.txt. Styles live in
+  assets/css/home-figma.css and are scoped to .fig. */ -}}
+{{ define "head" }}
+    {{- $css := resources.Get "css/home-figma.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Blowhorn">
+    <meta property="og:title" content="{{ .Title }}">
+    <meta property="og:description" content="{{ .Description }}">
+    <meta property="og:url" content="{{ partial "canonical.html" . }}">
+{{- end }}
+
+{{ define "sprite" }}
+    {{ partial "sprite.html" . }}
+{{- end }}
+
+{{ define "main" }}
+{{- $variant := .Params.variant -}}
+{{- $agents := site.Data.home_ai.agents -}}
+{{- $content := site.Data.home_ai.content -}}
+{{- $video := site.Data.hero.media.video -}}
+{{- $plat := (site.GetPage "/docs/reference/platforms").RelPermalink -}}
+{{- $platformRows := slice
+  (dict "id" "linkedin" "name" "LinkedIn" "actions" "post, reply, amplify")
+  (dict "id" "x" "name" "X" "actions" "post, reply, amplify")
+  (dict "id" "reddit" "name" "Reddit" "actions" "post, reply")
+  (dict "id" "hacker-news" "name" "Hacker News" "actions" "post")
+  (dict "id" "bluesky" "name" "Bluesky" "actions" "post, amplify")
+  (dict "id" "github" "name" "GitHub" "actions" "Rally reactions, not posts")
+  (dict "id" "slack" "name" "Slack" "actions" "Post via official API") -}}
+    <main id="main" class="fig fig-{{ $variant }}">
+      {{- /* Figma nav bar, under the site header. V2's nav is dark, as Figma draws it. */ -}}
+      <div class="{{ if eq $variant "v2" }}fig-dark{{ end }}">
+      <div class="wrap">
+        <nav class="fig-nav" aria-label="Preview">
+          <a class="fig-brand" href="{{ "" | relURL }}">Blowhorn</a>
+          <ul class="fig-nav-links">
+            {{- if or (eq $variant "v3") (eq $variant "v4") }}
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#agents">For agents</a></li>
+            <li><a href="{{ "docs/" | relURL }}">Docs</a></li>
+            <li><a href="https://cloud.blowhorn.ai">Sign in</a></li>
+            {{- else }}
+            <li><a href="{{ "" | relURL }}">Product</a></li>
+            <li><a href="{{ "ai/" | relURL }}">AI</a></li>
+            <li><a href="{{ "docs/" | relURL }}">Docs</a></li>
+            {{- end }}
+            <li><a class="fig-btn {{ if eq $variant "v1" }}fig-btn-black{{ else }}fig-btn-teal{{ end }}" href="{{ "download/" | relURL }}">Download free</a></li>
+          </ul>
+        </nav>
+      </div>
+      </div>
+
+      {{- /* Hero */ -}}
+      <section class="fig-hero {{ if eq $variant "v2" }}fig-dark{{ end }}" aria-labelledby="hero-title">
+        <div class="wrap {{ if or (eq $variant "v3") (eq $variant "v4") }}fig-hero-grid{{ end }}">
+          <div>
+            {{- if eq $variant "v4" }}
+            <h1 id="hero-title" class="fig-display">Scripted where it counts. AI where it helps.</h1>
+            {{- else }}
+            <h1 id="hero-title" class="fig-display">Scripted where it counts.<br>AI where it helps.</h1>
+            {{- end }}
+            {{- if eq $variant "v3" }}
+            <p class="fig-lead">Every post, reply and amplify runs exactly as written, from your own browser. When you want an AI agent at the controls, plug one in.</p>
+            {{- else }}
+            <p class="fig-lead">Every post, reply and amplify runs exactly as written. Drafts, agents and assistants plug in through MCP and a scriptable CLI. A REST API is coming soon.</p>
+            {{- end }}
+            <div class="fig-actions {{ if eq $variant "v1" }}fig-actions-center{{ end }}">
+              <a class="fig-btn {{ if eq $variant "v1" }}fig-btn-black{{ else }}fig-btn-teal{{ end }}" href="{{ "download/" | relURL }}">Download free</a>
+              {{- if eq $variant "v1" }}<a class="fig-link" href="{{ "ai/" | relURL }}">Meet the AI side &rarr;</a>{{ end }}
+            </div>
+            {{- if eq $variant "v1" }}
+            <p class="fig-note">Install on as many computers as you like. They share one queue.</p>
+            {{- else if eq $variant "v3" }}
+            <p class="fig-note">Install on your computers.</p>
+            <p><a class="fig-link" href="{{ "ai/" | relURL }}">Meet the AI side &rarr;</a></p>
+            {{- else if eq $variant "v4" }}
+            <p class="fig-note">Install on your computers &middot; as many as you like</p>
+            <p><a class="fig-link" href="{{ "ai/" | relURL }}">Meet the AI side &rarr;</a></p>
+            {{- end }}
+          </div>
+          {{- if eq $variant "v3" }}
+          <div class="fig-visual" aria-hidden="true">
+            <div><strong>App window</strong><p class="fig-visual-note">scripted + agent-queued</p></div>
+          </div>
+          {{- else if eq $variant "v4" }}
+          <div class="fig-visual fig-explode" aria-hidden="true">
+            <div>
+              <span class="fig-btn fig-btn-teal">Download</span>
+              <p class="fig-visual-note">on your computers</p>
+              <div class="fig-chip-row">
+                <span class="fig-chip">LinkedIn</span><span class="fig-chip">X</span><span class="fig-chip">Reddit</span><span class="fig-chip">HN</span><span class="fig-chip">Slack</span><span class="fig-chip">GitHub</span><span class="fig-chip">Bluesky</span>
+              </div>
+            </div>
+          </div>
+          {{- end }}
+        </div>
+        {{- if or (eq $variant "v3") (eq $variant "v4") }}
+        <div class="wrap">
+          <p class="fig-note fig-center fig-mx-auto">Posts to the places you already are.</p>
+          <p class="fig-center fig-mx-auto">{{ range $i, $p := $platformRows }}{{ if $i }}, {{ end }}{{ $p.name }}{{ end }}.</p>
+        </div>
+        {{- end }}
+      </section>
+
+      {{- /* V1 film */ -}}
+      {{- if eq $variant "v1" }}
+      <section class="fig-film" aria-labelledby="film-title">
+        <div class="wrap">
+          <h2 id="film-title" class="visually-hidden">The film</h2>
+          <video controls playsinline preload="metadata" poster="{{ $video.poster | relURL }}" aria-label="Blowhorn film: from one recruit to one thunder">
+            <source src="{{ $video.webm | relURL }}" type="video/webm">
+            <source src="{{ $video.mp4 | relURL }}" type="video/mp4">
+          </video>
+          <p class="fig-note">Play the film. 41 seconds, captioned, with sound.</p>
+        </div>
+      </section>
+      {{- end }}
+
+      {{- /* How it works (V3/V4) */ -}}
+      {{- if or (eq $variant "v3") (eq $variant "v4") }}
+      <section id="how" class="fig-section" aria-labelledby="how-title">
+        <div class="wrap">
+          <div class="fig-head">
+            <h2 id="how-title" class="fig-h2">Your computers. Your browser. Your queue.</h2>
+            <p class="fig-lead">Blowhorn runs on each computer you own, signed in as you. Write a post, schedule it, and it goes out exactly as written.</p>
+          </div>
+          <div class="fig-grid fig-grid-3">
+            {{- if eq $variant "v4" }}
+            <div class="fig-card"><span class="fig-step-num">01</span><h3 class="fig-h3">Write or import</h3><p>Draft a post, paste a changelog, or hand the queue to an agent.</p></div>
+            <div class="fig-card"><span class="fig-step-num">02</span><h3 class="fig-h3">Schedule and approve</h3><p>Pick the moment. Nothing leaves until you say so.</p></div>
+            <div class="fig-card"><span class="fig-step-num">03</span><h3 class="fig-h3">Runs from your browser</h3><p>Your computers post as you, signed in, exactly as written.</p></div>
+            {{- else }}
+            <div class="fig-card"><h3 class="fig-h3">Write or import</h3><p>Draft in the app, CLI, or hand an agent the order.</p></div>
+            <div class="fig-card"><h3 class="fig-h3">Schedule and approve</h3><p>Orders wait in one queue until you say go.</p></div>
+            <div class="fig-card"><h3 class="fig-h3">Runs from your browser</h3><p>Posted as you, from your own signed-in browser.</p></div>
+            {{- end }}
+          </div>
+          <p class="fig-note"><a class="fig-link" href="{{ "docs/" | relURL }}">See how it works &rarr;</a></p>
+        </div>
+      </section>
+      {{- end }}
+
+      {{- /* Agents */ -}}
+      {{- if eq $variant "v2" }}
+      <section id="agents" class="fig-section" aria-labelledby="agents-title">
+        <div class="wrap">
+          <h2 id="agents-title" class="fig-h2">Built for agents. Still yours.</h2>
+          <p class="fig-lead">MCP &middot; CLI &middot; AI skills &middot; BYOM &middot; built-in generation &middot; REST API coming soon. Deterministic send either way.</p>
+        </div>
+      </section>
+      {{- else }}
+      <section id="agents" class="fig-section {{ if eq $variant "v1" }}fig-mint{{ else }}fig-dark{{ end }}" aria-labelledby="agents-title">
+        <div class="wrap">
+          <div class="fig-head">
+            <h2 id="agents-title" class="fig-h2">{{ $agents.headline }}</h2>
+            <p class="fig-lead">{{ $agents.subhead }}</p>
+          </div>
+          {{- if eq $variant "v4" }}
+          <p><span class="fig-chip">MCP</span> <span class="fig-chip">CLI</span> <span class="fig-chip">REST API: Coming soon</span> <span class="fig-chip">Skills</span></p>
+          {{- end }}
+          <div class="fig-grid fig-grid-3">
+            {{- $cards := $agents.cards -}}
+            {{- if eq $variant "v1" }}{{ $cards = first 3 $cards }}{{ end -}}
+            {{- range $cards }}
+            <div class="fig-card">
+              <span class="fig-tag">{{ .tag }}</span>
+              <h3 class="fig-h3">{{ .title }}</h3>
+              <p>{{ .body }}</p>
+            </div>
+            {{- end }}
+          </div>
+          {{- if eq $variant "v4" }}
+          <pre class="fig-terminal">blowhorn --json --dry-run</pre>
+          <p class="fig-quote">{{ $agents.major }}</p>
+          {{- end }}
+          <p class="fig-note"><a class="fig-link" href="{{ "agents/" | relURL }}">Wire up your agent &rarr;</a></p>
+        </div>
+      </section>
+      {{- end }}
+
+      {{- /* Model or ours (not V2) */ -}}
+      {{- if ne $variant "v2" }}
+      <section class="fig-section" aria-labelledby="model-title">
+        <div class="wrap">
+          <div class="fig-head">
+            <h2 id="model-title" class="fig-h2">{{ $content.headline }}</h2>
+            <p class="fig-lead">{{ $content.subhead }}</p>
+          </div>
+          <div class="fig-grid fig-grid-2">
+            {{- range $content.offers }}
+            <div class="fig-card">
+              <span class="fig-tag">{{ .tag }}</span>
+              <h3 class="fig-h3">{{ .title }}</h3>
+              <p>{{ .body }}</p>
+              {{- with .price }}<p class="fig-note">{{ . }}</p>{{ end }}
+            </div>
+            {{- end }}
+          </div>
+          {{- if eq $variant "v4" }}
+          <p class="fig-note">Nothing posts until you approve it. Neither? Fine. Every plan posts exactly what you write, and we never charge per action.</p>
+          <p><a class="fig-link" href="{{ "ai/" | relURL }}">Compare options &rarr;</a></p>
+          {{- else }}
+          <p class="fig-note">Neither? Fine. Every plan posts exactly what you write.</p>
+          {{- end }}
+        </div>
+      </section>
+      {{- end }}
+
+      {{- /* Platforms */ -}}
+      {{- if eq $variant "v1" }}
+      <section class="fig-section fig-dark fig-center" aria-labelledby="platforms-title">
+        <div class="wrap">
+          <h2 id="platforms-title" class="fig-h2">One message. Many ears.</h2>
+          <p class="fig-lead">Seven platforms, one queue, as many computers as you have got. LinkedIn, X, Bluesky, Reddit, GitHub, Hacker News and Slack.</p>
+          <div class="fig-chip-row">
+            {{- range $platformRows }}<a class="fig-chip" href="{{ $plat }}{{ .id }}/">{{ .name }}</a>{{ end -}}
+          </div>
+        </div>
+      </section>
+      {{- else if eq $variant "v2" }}
+      <section class="fig-section" aria-labelledby="platforms-title">
+        <div class="wrap fig-proof">
+          <h2 id="platforms-title" class="fig-h2">One message.<br>Many ears.</h2>
+          <p class="fig-lead">LinkedIn, X, Reddit, Slack, Bluesky, GitHub. Browser-driven where needed. API-first where it is better.</p>
+        </div>
+      </section>
+      {{- else }}
+      <section class="fig-section" aria-labelledby="platforms-title">
+        <div class="wrap">
+          <div class="fig-head">
+            <h2 id="platforms-title" class="fig-h2">One queue. Every profile. Every platform.</h2>
+            <p class="fig-lead">Publish and amplify from every profile you run, on every computer you own.</p>
+          </div>
+          <ul class="fig-platform-rows">
+            {{- range $platformRows }}
+            <li><a href="{{ $plat }}{{ .id }}/">{{ .name }}</a><span class="fig-actions-label">{{ .actions }}</span></li>
+            {{- end }}
+          </ul>
+          <p class="fig-note"><a class="fig-link" href="{{ "integrations/" | relURL }}">All supported platforms &rarr;</a></p>
+        </div>
+      </section>
+      {{- end }}
+
+      {{- /* V1 real you */ -}}
+      {{- if eq $variant "v1" }}
+      <section class="fig-section fig-center" aria-labelledby="realyou-title">
+        <div class="wrap">
+          <h2 id="realyou-title" class="fig-h2">Real you, not a bot.</h2>
+          <p class="fig-lead">Your password called. It wants to stay home. Blowhorn does the typing and clicking in your own browser, signed in as you.</p>
+          <p>Install Blowhorn, queue it once, and every profile you run says it as you.</p>
+        </div>
+      </section>
+      {{- end }}
+
+      {{- /* Thesis lite (V3/V4) */ -}}
+      {{- if or (eq $variant "v3") (eq $variant "v4") }}
+      <section class="fig-section" aria-labelledby="thesis-title">
+        <div class="wrap">
+          <div class="fig-head">
+            <h2 id="thesis-title" class="fig-h2">Why scripted beats guessed.</h2>
+            {{- if eq $variant "v4" }}<p class="fig-lead">Short notes on why deterministic actions make AI safe to use on your own accounts.</p>{{ end }}
+          </div>
+          <div class="fig-grid fig-grid-3">
+            {{- if eq $variant "v4" }}
+            <div class="fig-card"><span class="fig-tag">Product note</span><h3 class="fig-h3">Deterministic actions, optional AI</h3><p>Scripted clicks mean an agent never has to guess the UI.</p></div>
+            <div class="fig-card"><span class="fig-tag">Safety note</span><h3 class="fig-h3">Dry runs before fire</h3><p>Every agent path rehearses against your limits first.</p></div>
+            <div class="fig-card"><span class="fig-tag">Trust note</span><h3 class="fig-h3">Your browser stays yours</h3><p>Posts leave from computers you own, signed in as you.</p></div>
+            {{- else }}
+            <div class="fig-card"><h3 class="fig-h3">Dry run before fire</h3><p>Limits travel with every order.</p></div>
+            <div class="fig-card"><h3 class="fig-h3">Your browser, your session</h3><p>Nobody else logs in as you.</p></div>
+            <div class="fig-card"><h3 class="fig-h3">Stand down any time</h3><p>Reenlist later.</p></div>
+            {{- end }}
+          </div>
+          {{- if eq $variant "v4" }}<p class="fig-note"><a class="fig-link" href="{{ (site.GetPage "/docs/explanation/reliability-and-anti-bot-design").RelPermalink }}">Read the notes &rarr;</a></p>{{ end }}
+          <p class="fig-quote">Major: An agent with a dry run is a recruit. An agent without one is a liability. I only enlist recruits.</p>
+        </div>
+      </section>
+      {{- end }}
+
+      {{- /* Close CTA */ -}}
+      <section id="download" class="fig-section {{ if eq $variant "v1" }}fig-center{{ else if eq $variant "v2" }}fig-dark{{ else }}fig-dark{{ end }}" {{ if eq $variant "v1" }}aria-label="Download Blowhorn"{{ else }}aria-labelledby="download-title"{{ end }}>
+        <div class="wrap {{ if eq $variant "v1" }}fig-center{{ end }}">
+          {{- if eq $variant "v1" }}
+          <h2 id="download-title" class="fig-h2">One message. Many ears.</h2>
+          <p class="fig-lead">Install Blowhorn, queue it once, and every profile you run says it as you.</p>
+          {{- else if eq $variant "v2" }}
+          <h2 id="download-title" class="fig-h2">Your voice. On every channel.<br>Still yours.</h2>
+          {{- else }}
+          <h2 id="download-title" class="fig-h2">Put your voice on schedule.</h2>
+          <p class="fig-lead">Download Blowhorn, sign in, and your first post can go out today. Plug in an AI agent whenever you like.</p>
+          {{- end }}
+          <div class="fig-actions {{ if eq $variant "v1" }}fig-actions-center{{ end }}">
+            <a class="fig-btn {{ if eq $variant "v1" }}fig-btn-black{{ else }}fig-btn-teal{{ end }}" href="{{ "download/" | relURL }}">Download free</a>
+            {{- if eq $variant "v4" }}<a class="fig-link" href="{{ "docs/" | relURL }}">Read the docs &rarr;</a>{{ end }}
+          </div>
+        </div>
+      </section>
+    </main>
+{{- end }}
