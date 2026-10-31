@@ -341,7 +341,7 @@ workflow-check:
 ifeq ($(ACTIONLINT),)
 	@test -x $(BIN_DIR)/actionlint || (mkdir -p $(BIN_DIR) && cd $(BIN_DIR) && \
 		curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/v$(ACTIONLINT_VERSION)/scripts/download-actionlint.bash | \
-		bash -s -- $(ACTIONLINT_VERSION) .)
+		TAR_OPTIONS="--no-same-owner" bash -s -- $(ACTIONLINT_VERSION) .)
 	$(BIN_DIR)/actionlint -color $(WORKFLOWS)
 else
 	$(ACTIONLINT) -color $(WORKFLOWS)
