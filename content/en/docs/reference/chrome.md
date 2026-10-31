@@ -297,11 +297,11 @@ than the oldest version this Blowhorn accepts (`extension_outdated`, or
 the version-skew sentence) and ensures it as above. The app also tells
 the extension that minimum: the native host's `host_status` answer
 carries `min_extension_version` (host protocol 4). An extension older
-than that minimum never shows "You're all set". Its side panel says the
-extension needs an update and offers **Upgrade** and **Check for
-update**, and the extension asks Chrome for an update on its own, at
-most once every ten minutes. An older host that sends no minimum sets
-no floor.
+than that minimum never shows "You're all set". Its side panel says
+"This extension doesn't work with your Blowhorn app yet." and offers
+**Upgrade** and **Check for update**, and the extension asks Chrome for
+an update on its own, at most once every ten minutes. An older host that
+sends no minimum sets no floor.
 
 Both buttons use Chrome's own update calls
 (`chrome.runtime.requestUpdateCheck`), never `chrome://extensions`, and

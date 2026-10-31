@@ -16,7 +16,7 @@ Click the Blowhorn button in Chrome's toolbar. The side panel opens on the
 right of the window. If you do not see the button, open the extensions menu
 (the puzzle piece) and pin Blowhorn.
 
-With nothing running the panel says so. Below the run, **This Chrome
+With nothing running the panel shows **Idle**. Below the run, **This Chrome
 profile** shows whether this profile is linked and ready, as the toolbar
 button did before (see [Install the Chrome extension](/docs/how-to/set-up/install-the-chrome-extension/#check-it-from-the-toolbar)).
 
@@ -24,8 +24,8 @@ button did before (see [Install the Chrome extension](/docs/how-to/set-up/instal
 
 While a run works, the panel shows:
 
-- the task, such as **Post the queue**, and the site it is on;
-- the address of the Blowhorn tab;
+- the task, such as **Post the queue**;
+- the address of the Blowhorn tab, which names the site;
 - each step as a short line: done, in progress, or failed. Typing is one
   line; the panel never shows what was typed.
 

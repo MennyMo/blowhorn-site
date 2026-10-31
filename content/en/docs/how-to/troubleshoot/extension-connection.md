@@ -34,8 +34,8 @@ run holds the bridge, no ensure runs: wait for it to finish and recheck.
 ## Version mismatch after an update
 
 A Blowhorn upgrade does not reinstall the extension. When the extension is
-older than the app accepts, its side panel says it needs an update
-instead of "You're all set". To update it:
+older than the app accepts, its side panel says "This extension doesn't
+work with your Blowhorn app yet." instead of "You're all set". To update it:
 
 1. Click the Blowhorn icon in Chrome's toolbar to open the Blowhorn side panel.
 2. Click **Upgrade**. The extension asks Chrome for the update and

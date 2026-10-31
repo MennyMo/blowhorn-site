@@ -25,6 +25,13 @@ Blowhorn menu and choose **Check for Updates…**. If you are up to date it
 says so; if the check fails it says why; if a newer release is out, the
 console window asks before anything is downloaded, exactly as above.
 
+Whichever way the update starts, the download checks once more for the
+newest release before downloading anything, so the version installed is
+the latest one at that moment, even if the offer you clicked named an
+older one. There is no second prompt for the newer version: the click
+already said update. If that last check fails, nothing is downloaded;
+try the update again.
+
 Blowhorn may also tell you it is out of date itself: when the server's
 minimum app version is newer than the build you run, a scheduled pass
 claims nothing and `schedule status` names the cause `app_outdated`.
