@@ -8,7 +8,7 @@ weight: 219
 What a failed run prints, why, and what fixes it. Entries are keyed by
 the sentence's first words. Exits: 0 ran clean; 1 the run failed; 2 the
 invocation was wrong; 3 your account was unreachable. A run cancelled
-between passes exits 75.
+at a safe point (between passes, or by Stop in the side panel) exits 75.
 
 ## Your account
 

@@ -64,14 +64,14 @@ directory, never gets those switches: its cookies were encrypted with
 your keychain's key.
 
 The extension's native host reads one more thing, only to answer the
-toolbar popup: it looks for the extension's own random identifier in
+status in the Blowhorn side panel: it looks for the extension's own random identifier in
 the extension's own IndexedDB files,
 `<profile>/IndexedDB/chrome-extension_<extension id>_0.indexeddb.leveldb/`
 under the data directory of the Chrome that started it (its
 `--user-data-dir`, else Chrome's default), to learn which Chrome profile
 is asking. When it finds that identifier in more than one profile (a
 copied profile carries the extension's files with it), it names none
-of them, and the popup asks you to map this profile in Blowhorn rather
+of them, and the panel asks you to map this profile in Blowhorn rather
 than show another profile's mapping. It
 reads no other extension's files and nothing else in the profile, and
 writes nothing there.
@@ -297,7 +297,7 @@ than the oldest version this Blowhorn accepts (`extension_outdated`, or
 the version-skew sentence) and ensures it as above. The app also tells
 the extension that minimum: the native host's `host_status` answer
 carries `min_extension_version` (host protocol 4). An extension older
-than that minimum never shows "You're all set". Its popup says the
+than that minimum never shows "You're all set". Its side panel says the
 extension needs an update and offers **Upgrade** and **Check for
 update**, and the extension asks Chrome for an update on its own, at
 most once every ten minutes. An older host that sends no minimum sets
@@ -305,18 +305,18 @@ no floor.
 
 Both buttons use Chrome's own update calls
 (`chrome.runtime.requestUpdateCheck`), never `chrome://extensions`, and
-the popup says what Chrome answered: an update downloading, up to date,
+the panel says what Chrome answered: an update downloading, up to date,
 checked too recently (try again in a few minutes), or the check failed.
 Chrome installs a downloaded update only while the extension is idle,
 and the extension is rarely idle while the Blowhorn app runs, so the
 extension restarts itself into a downloaded update as soon as no run is
 at work: never while a run holds a tab or has not yet released its
-input, however long it waits on you. The
-ready popup keeps a quiet **Check for update** (or **Upgrade to** the
+input, however long it waits on you. When the profile is ready the
+panel keeps a quiet **Check for update** (or **Upgrade to** the
 downloaded version once Chrome has one), so you can take an update
 before you fall behind. A store update still needs the Chrome Web Store
 to publish it first: Blowhorn never claims an update Chrome did not
-report. An unpacked install gets nothing from the store; the popup says
+report. An unpacked install gets nothing from the store; the panel says
 so, and the ensure plus a Chrome relaunch is the way forward there.
 
 The extension logs every check, every deferred update and every update

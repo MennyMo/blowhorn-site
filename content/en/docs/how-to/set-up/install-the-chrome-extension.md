@@ -95,7 +95,8 @@ If it says the extension is too old for this Blowhorn, update it: open
 On first install the extension opens the Blowhorn welcome page. Its
 toolbar button shows the Blowhorn paw in grey until this Chrome profile
 is ready, then in colour; hovering it names what is missing. Click it to
-see what is missing, then follow its one button:
+open the Blowhorn side panel; its **This Chrome profile** section says what
+is missing, then follow its one button:
 
 - **Download the Blowhorn app** - the app is not installed.
 - **Update the Blowhorn app** - the app is too old for this extension.
@@ -107,16 +108,19 @@ see what is missing, then follow its one button:
 - **Map this profile in Blowhorn** - opens the app's mapping screen for
   this Chrome profile.
 
-When everything is in place the popup names the linked Blowhorn
+When everything is in place the panel names the linked Blowhorn
 profile and signed-in account, and offers **Change mapping**. The app
 tells the extension which profile by its id as well as its name, so a
 profile renamed in your Blowhorn account keeps its link.
 
-After an update from a version that named the profile only, the popup
+After an update from a version that named the profile only, the panel
 reads **Map this profile in Blowhorn** even for a Chrome profile that is
-mapped. Nothing is lost: the mapping itself is unchanged. The popup
+mapped. Nothing is lost: the mapping itself is unchanged. The panel
 catches up the next time the app reads the mapping: after you sign in or
 change a mapping.
+
+The same panel shows a run while it works; see
+[Watch, pause or take over a run in Chrome](/docs/how-to/manage/watch-and-take-over-a-run/).
 
 ## Load it unpacked in one Chrome profile
 

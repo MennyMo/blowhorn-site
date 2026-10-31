@@ -34,18 +34,18 @@ run holds the bridge, no ensure runs: wait for it to finish and recheck.
 ## Version mismatch after an update
 
 A Blowhorn upgrade does not reinstall the extension. When the extension is
-older than the app accepts, its toolbar popup says it needs an update
+older than the app accepts, its side panel says it needs an update
 instead of "You're all set". To update it:
 
-1. Click the Blowhorn icon in Chrome's toolbar.
+1. Click the Blowhorn icon in Chrome's toolbar to open the Blowhorn side panel.
 2. Click **Upgrade**. The extension asks Chrome for the update and
-   restarts itself once Chrome has downloaded it; the popup closes when it
+   restarts itself once Chrome has downloaded it; the side panel closes when it
    does. If a run is at work, the update waits until that run finishes.
-3. If the popup says Chrome checked a moment ago, wait a few minutes and
+3. If the panel says Chrome checked a moment ago, wait a few minutes and
    click **Check for update** again.
 4. Run `blowhorn chrome extension-status` again until hello answers.
 
-If the popup says Chrome has no newer version, the Chrome Web Store has
+If the panel says Chrome has no newer version, the Chrome Web Store has
 not published one yet, or the extension was loaded unpacked. For a store
 install, take the
 [store update](/docs/how-to/set-up/install-the-chrome-extension/#from-the-chrome-web-store)
@@ -55,7 +55,7 @@ an unpacked copy, run
 relaunch Chrome. The ensure leaves a store install alone, since Chrome's
 updater owns it, and never forces a store update.
 
-The ready popup also has **Check for update**, so you can take an update
+When the profile is ready the panel also has **Check for update**, so you can take an update
 before the app requires it.
 
 ## "Update the Blowhorn app" when the app is current
@@ -63,18 +63,18 @@ before the app requires it.
 Chrome starts the extension's native host once and keeps it until the
 extension lets go. After you install or move the Blowhorn app, Chrome can
 still be talking to the host the previous app started, and that host
-cannot read the newer app's setup, so the popup asks you to update the
+cannot read the newer app's setup, so the panel asks you to update the
 app. The extension handles this itself: when the host reads as outdated
 and no run is at work, it lets go of that host and Chrome starts the one
-the installed app names. The popup says it is checking for a moment and
+the installed app names. The panel says it is checking for a moment and
 then shows your real state. If a run is at work, the switch waits until
 the run finishes.
 
-If the popup still says to update the app:
+If the panel still says to update the app:
 
 1. Open the Blowhorn app and check its version against the latest
    release. If it is older, update it.
-2. If it is current, close the popup, wait a minute, and open it again:
+2. If it is current, close the panel, wait a minute, and open it again:
    the extension tries a fresh host again then, and waits longer
    between each later try.
 3. If it still says so, quit and reopen Chrome.
