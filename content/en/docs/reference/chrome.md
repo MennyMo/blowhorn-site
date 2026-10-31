@@ -338,7 +338,7 @@ With the extension driver, a run uses one of two behaviors:
 
 | | classic | background |
 | --- | --- | --- |
-| Blowhorn's tab | opens inactive beside the tab you are on, in a Blowhorn group that is collapsed by default | opens inactive beside the tab you are on, in a Blowhorn group that is collapsed by default |
+| Blowhorn's tab | opens inactive beside the tab you are on, in a Blowhorn group that is collapsed by default, or in its own window, mostly behind yours (see below) | the same |
 | focus emulation | from the first action that takes the debugger | from the first page load |
 | Chrome's debugging bar | while an action holds the debugger, gone after a short idle period | for the whole run, from before the site loads |
 | visible screenshot | captured through the debugger, without selecting the tab | captured through the debugger, without selecting the tab |
@@ -364,6 +364,34 @@ account setting: collapsed (the default) or open, saved as `chromeGroup` in
 the same Blowhorn preferences, so it follows you to every computer. Set it on
 Settings, Chrome extension, or with `blowhorn chrome extension-mode --group
 open` (`default` clears it). A run reads it once when it starts.
+
+Where Blowhorn's tab lives is another account setting, saved as `chromeWindow`
+the same way:
+
+| setting | Blowhorn's tab |
+| --- | --- |
+| `side_tab` (the default) | an inactive tab right after the tab you are on, in your window |
+| `own_window` | the selected tab of one window of Blowhorn's own, opened without focus in Chrome's normal window state at the size of the window you used last and 56 px to its right, so it sits mostly behind yours with an edge showing. It holds its own Blowhorn tab group, collapsed or open as above. Blowhorn reuses it for every run until you close it or Chrome quits, and makes a new one after you close it; it never closes it itself |
+
+Either way nothing takes focus, your selected tab stays selected, and focus
+emulation is on as the extension mode says. The window is never minimized,
+placed off screen or opened as a popup. On a Mac a background tab reads its
+window's outer size as 0 x 0 (a Chrome behavior), which a page can notice;
+the selected tab of its own window can read a real size. `side_tab` stays the
+default.
+
+**Keep that edge showing.** On a Mac, `own_window` reads a real size only
+while part of Blowhorn's window is visible on the current Space. When the window
+is fully covered by other windows, minimized, hidden (Command-H) or on another
+Space (desktop), macOS occludes it and the page reads like a background tab.
+When your Chrome window fills the screen there is no room for the edge, so leave
+a little space on the right of your window, or use `side_tab`.
+
+With no Chrome window
+open, `own_window` stops the profile just as the side tab does. Set it on
+Settings, Chrome extension, or with `blowhorn chrome extension-mode --window
+own-window` (`side-tab`, or `default` to clear it); see
+[Choose where Blowhorn works in Chrome](/docs/how-to/settings/where-blowhorn-works/).
 
 ## Blowhorn's desktop (Spaces)
 
@@ -445,16 +473,20 @@ Run it again and leave the tab and the bar alone.
 blowhorn chrome extension-mode              # the mode a run would use, and why
 blowhorn chrome extension-mode classic      # save classic to your account
 blowhorn chrome extension-mode default      # clear it, so runs use background
+blowhorn chrome extension-mode --group open # keep the Blowhorn tab group open
+blowhorn chrome extension-mode --window own-window  # work in a window of its own, mostly behind yours
 ```
 
 With no mode it reads your account setting from Blowhorn and writes
 nothing; when it cannot be read it says why (`account_error`) and shows
 the cached setting a run would fall back to. With one it saves `extensionMode` to Blowhorn; sign in
-first with `blowhorn auth login`. `--dry-run`, with a mode or `--group`, reads that stored account,
+first with `blowhorn auth login`. `--group` saves `chromeGroup` and `--window` saves `chromeWindow`
+the same way. `--dry-run`, with a mode, `--group` or `--window`, reads that stored account,
 reports it with the change on top, and writes nothing; when the account cannot be read it says why
 and changes nothing. `--json` prints one object: `mode`,
 `source` (`rollback`, `account` or `default`), `account`, `account_error`,
-`rollback`, `rollback_error`, `features` and `written`.
+`rollback`, `rollback_error`, `features`, `group` and `group_account`, `window`
+(`side_tab` or `own_window`) and `window_account`, and `written`.
 
 ## `blowhorn chrome extension-status`
 

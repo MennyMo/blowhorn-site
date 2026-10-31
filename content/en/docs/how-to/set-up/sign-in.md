@@ -72,9 +72,11 @@ Google Chrome. The app opens [Blowhorn](https://cloud.blowhorn.ai) in your brows
 an account, then choose **Allow**. `blowhorn://signup` starts the same sign-in for a new account
 (see [Create a Blowhorn account](/docs/how-to/set-up/create-an-account/)). The sign-in sends its
 answer to the command line on this computer (`127.0.0.1`), and the app comes
-forward with the sign-in finished. The browser tab says **Authorization complete**
-and usually stays open: close it, or choose **Return to Blowhorn** to bring the app
-forward. Now and then the tab closes on its own. The token is kept by Blowhorn's command line, never by
+forward with the sign-in finished. The browser tab says **Authorization complete**.
+If the sign-in ran in Google Chrome with the Blowhorn extension installed, the tab
+closes itself a moment later. Anywhere else, including a first sign-in before you
+have installed the extension, it stays open: close it, or choose **Return to Blowhorn**
+to bring the app forward. The token is kept by Blowhorn's command line, never by
 the app. If the browser stays on an update page, update Blowhorn. If it stays on a Blowhorn error page instead, the sign-in was refused: no answer comes back. If Blowhorn cannot be reached at all, the app says it could not reach cloud.blowhorn.ai: check your connection, then try again. In guided setup, **Cancel** on the
 waiting screen stops the wait at once; left alone, the app tells you
 you're not signed in once the wait runs out. Try again, and if that page

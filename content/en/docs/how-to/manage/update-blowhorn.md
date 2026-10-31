@@ -11,8 +11,9 @@ kept.
 ## Start an update
 
 When a newer release is out, the menu-bar popup shows a card with the new
-version and an **update** button. The Home screen (**Update to** the new
-version), the Setup screen (**update now**) and the This computer screen
+version and an **update** button. The Home screen (the **Update to
+Blowhorn** card at the top of its results column), the Setup screen
+(**update now**) and the This computer screen
 offer the same update. Press any of them.
 
 The app also checks each time you open it. If that check finds a newer
