@@ -1,6 +1,6 @@
 # Blowhorn site design rules
 
-The full design language lives in `internal/DESIGN.md` in the product repository (private, so it is named here rather than linked). This file holds the site's spacing and copy rules; keep the two in sync.
+The brand-wide design language (principles, colour, type, liquid glass, platform logos, the mascot) lives in `internal/DESIGN.md` in the product repository (private, so it is named rather than linked). This file is the one written source for the site's own rules below; the product page links here and does not repeat them.
 
 ## Whitespace and rhythm
 
@@ -48,12 +48,14 @@ Say less, more clearly. Turn the verbosity dial down a notch from your first dra
 
 ## Code and commands
 
-Anywhere the site shows a command a reader might run, it can be copied in one click. Full rule: the "Code and commands" section of the design language DESIGN.md.
+Rule (Lee, 12 Oct 2026): **anywhere the site shows a command a reader might run, it can be copied in one click.** Source: `layouts/_partials/code-card.html`, `layouts/_markup/render-codeblock.html`, `assets/js/code-card.js` and the "Terminal code card" section of `assets/css/site.css`.
 
-- Every code block is a terminal code card (`layouts/_partials/code-card.html`); docs fences get it through `layouts/_markup/render-codeblock.html`. Declare the language of the card's actual content.
-- Shell prompts (`$`) and sample output are never copied. Untyped or `text` fences are output: no copy button.
-- Inline `blowhorn ...` commands in prose get a small copy button; commands with placeholders are not copyable.
-- Copy buttons are real buttons with an `aria-label`, keyboard reachable, and announce "Copied" through `aria-live`.
+1. **Every code block is a terminal code card:** title bar with three dots, a file or `terminal` label, a language pill and a Copy button, on a glass window that is light in light mode and near-black in dark mode. Docs fences get it through the render hook; layouts call the partial.
+2. **Declare the language.** Each card names the language of its actual content (`bash`, `markdown`, `json`, `toml`, `yaml`...) so Chroma highlights it with the brand token colours. Markdown front matter is highlighted as YAML.
+3. **Prompts and output are never copied.** Shell cards draw a `$` before each command line (not before comments, blank lines or continuation lines) as an unselectable element that copy drops. Untyped or `text` fences are sample output: labelled `output`, muted, no copy button.
+4. **Inline commands in prose** (`blowhorn ...` in backticks) get a small copy button after them. Commands with placeholders such as `<url>` are not copyable; show them in a card with the placeholder explained instead.
+5. **Accessible:** the copy button is a real button with an `aria-label`, reachable by keyboard, and "Copied" is announced through an `aria-live` region. Code scrolls horizontally rather than wrapping; it must work at 320px.
+6. **No third-party scripts** for highlighting or copy: Hugo's built-in Chroma with class output, and a small local script.
 
 ## Interface art
 
@@ -66,13 +68,9 @@ The miniature product UI in the Product menu and the homepage "Ways in" section 
 
 ## Mascot consistency
 
-Major Blowhorn must look the same in every scene. Image tools give no seed control, so consistency comes from references and a locked prompt, not luck. Full procedure and the prompt block: `marketing/brand/major-blowhorn/consistency.md` in the blowhorn repository.
+Mascot art comes from the product repository's locked style (`marketing/brand/major-blowhorn/STYLE-LOCKED.md` and `consistency.md` there: one locked prompt, reference images, no text in the art). The oil-painting process that used to be described here is historical; never start a new scene from it. On the site:
 
-- Start every new scene from the official vector art in `static/assets/brand/mascot/` or the canonical reference sheet (`marketing/brand/major-blowhorn/reference/`).
-- Paste the locked character and style prompt block verbatim into every generation, and attach the reference sheet plus the official mascot image as reference images every time.
-- Review each output against the sheet (comb, campaign hat, teal body, amber hackles, yellow beak and legs, medals, Old Thunderlung's dent and red tassel). Regenerate rejects. Log every prompt in `prompts.md`.
-- Default pose: open beak, barking into the horn like a bullhorn; trumpet-playing only occasionally.
-- Oil-painting style: attach `army.jpg`, `signal.jpg` and `hero.jpg` from `marketing/brand/oil-style/` as reference images for every new scene. Canonical look: broad charcoal campaign hat with a gold band, heavy red jowls under the beak, gold epaulettes on both shoulders.
+- Use the official art in `static/assets/brand/mascot/`; one character per page, and only Major and the General speak, in a speech bubble below.
 - Lore art for /major/ lives in `static/assets/brand/mascot/lore/` as WebP with alt text.
 
 ## Speech bubbles
@@ -91,5 +89,6 @@ Paper, mint and command keep their colours in dark mode so a voice looks the sam
 - Do pick the variant by who is talking, and use the same variant for the same voice on every page.
 - Do keep command to one per section.
 - Don't mix variants within one list, put links or buttons inside a bubble, or use teal (#00B39F) as a fill under white text (2.6:1).
+- Current assignments: Major's intros and asides (/major/ hero, the home Major card, /brand/, the 404) are `paper`; the home "Fall in, profiles" rally and the army demo's yells are `command`; the agent pages' Try saying prompts are `mint`; the /major/ Greatest hits list is neutral.
 - The storybook variant is retired: its only page, the /home-alt/ preview, was deleted with the flat storybook art.
 
