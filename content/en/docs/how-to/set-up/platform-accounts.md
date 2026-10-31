@@ -69,17 +69,21 @@ LinkedIn can also work from a **confirmed Chrome session** instead of a
 stored password: when setup's Confirm troops step found you signed in to
 LinkedIn in a Chrome profile and you confirmed it, the profile holds
 `LI_CHROME_SESSION` naming that Chrome profile, and runs use the session
-in the mapped Chrome profile. If that session signs out, sign in again in
-Chrome; there is no password for Blowhorn to fall back to unless you store
-one too.
+in the mapped Chrome profile. Setup does not ask for your LinkedIn
+username: the session is the account. If that session signs out, sign in
+again in Chrome; there is no password for Blowhorn to fall back to unless
+you store one too.
 
 ### Record your LinkedIn page
 
 Blowhorn finds your LinkedIn sign-in, which is an email, never your
 `/in/` name. Without that name it cannot tell your own posts from anyone
 else's, so it skips any `Amplify` row on LinkedIn for the profile and says
-why. Record the page once, on the LinkedIn account already mapped to the
-profile:
+why. A session check (`blowhorn profile status --check-sessions`, which
+the app runs in the background) reads the name off your signed-in LinkedIn
+feed and records it when the profile has none yet; it never replaces a page
+you recorded. To record the page yourself, once, on the LinkedIn account
+already mapped to the profile:
 
 ```bash
 blowhorn profile accounts ada --page https://www.linkedin.com/in/ada-example

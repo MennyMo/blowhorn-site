@@ -58,6 +58,27 @@ updater owns it, and never forces a store update.
 The ready popup also has **Check for update**, so you can take an update
 before the app requires it.
 
+## "Update the Blowhorn app" when the app is current
+
+Chrome starts the extension's native host once and keeps it until the
+extension lets go. After you install or move the Blowhorn app, Chrome can
+still be talking to the host the previous app started, and that host
+cannot read the newer app's setup, so the popup asks you to update the
+app. The extension handles this itself: when the host reads as outdated
+and no run is at work, it lets go of that host and Chrome starts the one
+the installed app names. The popup says it is checking for a moment and
+then shows your real state. If a run is at work, the switch waits until
+the run finishes.
+
+If the popup still says to update the app:
+
+1. Open the Blowhorn app and check its version against the latest
+   release. If it is older, update it.
+2. If it is current, close the popup, wait a minute, and open it again:
+   the extension tries a fresh host again then, and waits longer
+   between each later try.
+3. If it still says so, quit and reopen Chrome.
+
 ## Bridge busy
 
 ```text

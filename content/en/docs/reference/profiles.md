@@ -106,7 +106,7 @@ Chrome, and follower counts grant nothing.
 
 | Platform | Keys |
 |---|---|
-| LinkedIn | `LI_USERNAME`, and `LI_PASSWORD` or `LI_CHROME_SESSION` |
+| LinkedIn | `LI_CHROME_SESSION`, or `LI_USERNAME` and `LI_PASSWORD` |
 | X | `X_USERNAME` (password beside it for automated sign-in; `X_APP_KEY`, `X_APP_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_SECRET` for the API) |
 | Reddit | `RDDT_USERNAME` (password beside it for automated sign-in; `RDDT_CLIENT_ID` and the other `RDDT_*` keys for OAuth) |
 | Hacker News | `HN_USERNAME`, and `HN_PASSWORD` or `HN_CHROME_SESSION` |
@@ -127,8 +127,10 @@ Bluesky accepts them.
 LinkedIn and Hacker News also accept a **confirmed Chrome session**
 instead of a password: `LI_CHROME_SESSION` and `HN_CHROME_SESSION` name
 the Chrome profile directory whose signed-in session the person
-confirmed on setup's Confirm troops step. The run then works through
-that profile's live session in its mapped Chrome profile. If the session
+confirmed on setup's Confirm troops step. LinkedIn's needs no
+`LI_USERNAME` beside it; Hacker News's still needs `HN_USERNAME`. The
+run then works through that profile's live session in its mapped Chrome
+profile. If the session
 has signed out and no password is stored, the run says so and stops for
 that platform. The session counts toward eligibility only because the
 credential row exists - a browser that merely happens to be signed in
