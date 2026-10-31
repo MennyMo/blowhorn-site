@@ -80,33 +80,43 @@ VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
         "meta", "source", "track", "wbr"}
 
 
+# The site header and footer: one partial on every page, worded for marketing
+# (browser extension), so the docs-only Chrome wording is not asked of them.
+SITE_CHROME_CLASSES = {"site-header", "site-footer"}
+
+
 class Reader(HTMLParser):
-    """Collect (text, company_ok, in_code) triples a reader of the page sees.
+    """Collect (text, company_ok, in_code, in_site_chrome) tuples a reader of the page sees.
 
     company_ok is true in a <footer>, and for text in <code> or <pre>.
     in_code is true only for text in <code> or <pre>.
+    in_site_chrome is true inside the site header or footer (SITE_CHROME_CLASSES).
     """
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
-        self.stack: list[str] = []
+        self.stack: list[tuple[str, bool]] = []
+        self.site_chrome = 0
         self.footer = 0
         self.code = 0
         self.skip = 0
-        self.out: list[tuple[str, bool, bool]] = []
+        self.out: list[tuple[str, bool, bool, bool]] = []
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         for name in TEXT_ATTRS:
             if a.get(name):
-                self.out.append((a[name], self.footer > 0, False))
+                self.out.append((a[name], self.footer > 0, False, self.site_chrome > 0))
         if tag == "meta":
             key = (a.get("name") or a.get("property") or "").lower()
             if key in META_NAMES and a.get("content"):
-                self.out.append((a["content"], False, False))
+                self.out.append((a["content"], False, False, False))
         if tag in VOID:
             return
-        self.stack.append(tag)
+        chrome = bool(SITE_CHROME_CLASSES & set((a.get("class") or "").split()))
+        self.stack.append((tag, chrome))
+        if chrome:
+            self.site_chrome += 1
         if tag == "footer":
             self.footer += 1
         if tag in ("code", "pre"):
@@ -116,14 +126,16 @@ class Reader(HTMLParser):
 
     def handle_startendtag(self, tag, attrs):
         self.handle_starttag(tag, attrs)
-        if tag not in VOID and self.stack and self.stack[-1] == tag:
+        if tag not in VOID and self.stack and self.stack[-1][0] == tag:
             self.handle_endtag(tag)
 
     def handle_endtag(self, tag):
-        if tag not in self.stack:
+        if all(t != tag for t, _ in self.stack):
             return
         while self.stack:
-            t = self.stack.pop()
+            t, chrome = self.stack.pop()
+            if chrome:
+                self.site_chrome -= 1
             if t == "footer":
                 self.footer -= 1
             if t in ("code", "pre"):
@@ -135,7 +147,7 @@ class Reader(HTMLParser):
 
     def handle_data(self, data):
         if not self.skip and data.strip():
-            self.out.append((data, self.footer > 0 or self.code > 0, self.code > 0))
+            self.out.append((data, self.footer > 0 or self.code > 0, self.code > 0, self.site_chrome > 0))
 
 
 def page_problems(rel: str, html: str) -> list[str]:
@@ -147,7 +159,7 @@ def page_problems(rel: str, html: str) -> list[str]:
     macs_ok = rel.startswith(MACS_ALLOWED_PREFIXES)
     machine_ok = rel.startswith(MACHINE_ALLOWED_PREFIXES)
     chrome_words = rel.startswith(CHROME_WORDS_PREFIX) and not machine_ok
-    for text, company_here, in_code in reader.out:
+    for text, company_here, in_code, in_site_chrome in reader.out:
         text = " ".join(text.split())
         for m in CLOUD_RE.finditer(text):
             found.append(f'{rel}: says "{m.group(0)}" (say Blowhorn): ...{snippet(text, m)}...')
@@ -163,7 +175,7 @@ def page_problems(rel: str, html: str) -> list[str]:
         if not in_code:
             for m in VAGUE_BROWSER_RE.finditer(text):
                 found.append(f'{rel}: says "{m.group(0)}" (state the requirement with versions): ...{snippet(text, m)}...')
-            if chrome_words:
+            if chrome_words and not in_site_chrome:
                 for m in CHROME_WORD_RE.finditer(text):
                     found.append(f'{rel}: says "{m.group(0)}" (say Chrome profile or Chrome extension in the docs): ...{snippet(text, m)}...')
         if company_ok or company_here:

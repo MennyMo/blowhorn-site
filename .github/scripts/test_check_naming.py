@@ -173,6 +173,16 @@ class TheServiceIsBlowhorn(unittest.TestCase):
         })
         self.assertEqual(failures, [])
 
+    def test_the_site_header_and_footer_keep_marketing_words_on_docs_pages(self):
+        # The header and footer are one partial on every page, marketing first,
+        # so on a docs page they still say browser extension; the docs' own text does not.
+        html = ('<html><body><header class="site-header"><span>Browser extension</span></header>'
+                "<main><p>Install the browser extension.</p></main>"
+                '<footer class="site-footer"><a href="#">Browser extension</a></footer></body></html>')
+        failures = self.build({"docs/reference/requirements/index.html": html})
+        self.assertEqual(len(failures), 1)
+        self.assertIn("Install the browser extension", failures[0])
+
     def test_main_fails_on_macs(self):
         with tempfile.TemporaryDirectory() as tmp:
             (Path(tmp) / "index.html").write_text(page("<p>Your Macs share one queue.</p>"), encoding="utf-8")

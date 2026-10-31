@@ -1,6 +1,6 @@
 # Blowhorn site design rules
 
-The full design language lives in [DESIGN.md in the blowhorn repository](https://github.com/blowhorn-ai/blowhorn/blob/master/DESIGN.md). This file holds the site's spacing and copy rules; keep the two in sync.
+The full design language lives in `internal/DESIGN.md` in the product repository (private, so it is named here rather than linked). This file holds the site's spacing and copy rules; keep the two in sync.
 
 ## Whitespace and rhythm
 

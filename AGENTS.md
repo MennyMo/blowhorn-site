@@ -8,6 +8,7 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 - Git worktree management: use Treehouse - https://github.com/kunchenguid/treehouse - for every Git worktree. Do not hand-roll git worktree commands or use another worktree tool unless Treehouse cannot do the job, and then say why.
 - Design source of truth: Blowhorn Figma project - https://www.figma.com/design/mM9B4Zv9ON3pIyh3IvB4Il/Blowhorn - check the design there before changing layout, copy, or brand. For this site, DESIGN.md still governs layout and copy changes.
+- UX audits: load the `ux-audit` skill (`.agents/skills/ux-audit/`) before reviewing or merging a change to `layouts/`, `assets/css/site.css` or a page's data file, and for any page or layout audit.
 - Writing: never use an em dash. Use a hyphen instead, and replace any em dash found in this repo with a hyphen.
 
 ## Website, documentation, and feature updates
