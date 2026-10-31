@@ -29,9 +29,12 @@ package on this computer. `--mode` chooses how Blowhorn reaches Google Chrome:
 - `persistent` -- Blowhorn launches its own Chrome.
 
 `--anonymous` uses a fresh throwaway profile labelled `anonymous` instead
-of a named profile. The extension modes are refused for it by name: a
-fresh profile has no Blowhorn extension installed, and a run that
-pretended otherwise would measure nothing. `cdp` and `persistent` run.
+of a named profile. Only `persistent` runs: Blowhorn launches its own
+Chrome on a new temporary folder, removed when the run ends, and reads no
+Chrome mapping. The extension modes are refused for it by name: a fresh
+profile has no Blowhorn extension installed. `cdp` is refused too: it
+attaches to the Chrome you already have open, which is not a fresh
+profile. A run that pretended otherwise would measure nothing.
 
 ## Run every mode
 

@@ -85,6 +85,17 @@ does not open a second tab once the sign-in answer arrives. If your account has 
 Blowhorn plan yet, open [Blowhorn](https://cloud.blowhorn.ai) yourself, or choose
 **Your account and plan** in the app's account menu, to start the beta there.
 
+## Come back after your sign-in ends
+
+If your sign-in ended without you choosing **Sign out** (it timed out, or its
+saved token is gone), the app still remembers who you were and opens on a
+**Welcome back** screen that greets you by name, instead of the locked Home.
+Choose **Sign in** to sign in again. Choose **Not you?** to
+forget the remembered account and get the first sign-in screen. Major
+Blowhorn's welcome line on this screen, and on the first sign-in screen,
+changes each time it shows. After a **Sign out** the app remembers nobody, so
+you get the first sign-in screen.
+
 ## Sign out
 
 In the app, open the account menu at the bottom of the rail and choose **Sign

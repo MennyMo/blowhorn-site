@@ -27,6 +27,12 @@ reads a workspace session only from its sign-in pages:
 - `mentorship.lfx.linuxfoundation.org`, `sso.linuxfoundation.org`
 - `*.slack.com`
 
+`tells.blowhorn.ai`, Blowhorn's own bot-detection page, is the one other
+page the extension will open, and only for `blowhorn diagnostics tells-run`.
+It adds no permission and no content script, so updating never asks you to
+approve anything new: the extension opens the tab and reads it through the
+debugger permission below.
+
 No other site is touched. You remain responsible for each destination's
 terms and acceptable-use rules; Blowhorn gives you the controls, not
 permission to ignore them.

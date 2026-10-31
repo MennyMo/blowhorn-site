@@ -66,6 +66,12 @@ contains the failure to its own unit of work instead.
 
 Within a run, Blowhorn doesn't retry a failed post; it moves on to the next item. If a post goes out but Blowhorn can't record it, it stops that profile's queue rather than risk posting twice. Scheduled jobs only re-run a failure if you turn on retries, and they're off by default.
 
+Pointer and keyboard input look like a hand's. A click does not jump to its target: the pointer crosses to it
+along a gently curved path, quickly in the middle and slowly at both ends, reporting a position every few
+milliseconds, and each key stays down for a short, varying time before it is released. The Chrome extension sends
+these as real input events, the same kind a mouse and keyboard produce, and Blowhorn turns off every
+browser-masking tweak that would make Chrome report itself differently from how it really is.
+
 ## Hacker News is the least forgiving platform
 
 A Hacker News submission cannot be deleted, and coordinated-looking
