@@ -9,5 +9,9 @@
   {{ .Content }}
   {{ partial "page-meta-lastmod.html" . -}}
 </div>
+{{- if eq .CurrentSection.RelPermalink "/docs/reference/platforms/" -}}
+{{ partial "platform-pager.html" . -}}
+{{- else -}}
 {{ partial "pager.html" . -}}
+{{- end -}}
 {{ end -}}
