@@ -1,7 +1,7 @@
-# Home page machines section variants
+# Home page computers section variants
 
 The home page's How it works section (the orders section, `#how`) shows one of
-four designs for how machines join the fleet. The designs, their headlines and
+four designs for how computers join the fleet. The designs, their headlines and
 subheads come from [`data/machines.json`](../data/machines.json), which must
 validate against [`schemas/machines.schema.json`](../schemas/machines.schema.json)
 (`make check-schemas`, part of `make site-check` and so of CI). Each variant has
@@ -16,11 +16,11 @@ were brainstormed on the Landing concepts page of the Blowhorn Figma file.
 
 Production rotates these four, one per hour:
 
-1. `muster`: "Every machine you own is a recruit." Roll call beside the
+1. `muster`: "Every computer you own is a recruit." Roll call beside the
    formation. Default and fallback.
 2. `battalion-map`: "Your squad, on one map." The fleet as units around
-   HQ, a teammate's machine included, with a reports feed.
-3. `one-thunder`: "Many voices. One thunder." Teammates and machines wired
+   HQ, a teammate's computer included, with a reports feed.
+3. `one-thunder`: "Many voices. One thunder." Teammates and computers wired
    into the Major's single call out to every platform.
 4. `call-to-arms`: "From one recruit to a full squad." The four-beat
    storyboard (Enlist, Muster, Rally, Thunder); the beats play in
@@ -71,10 +71,10 @@ enlist pop), `wave-pulse` (rings), `stage-bark` (the Major) and `army-shout`
 - **Muster:** recruits fall into the formation, the roll call fills, and the
   strength counts up. The two Enlist buttons (the `+` tile and the roll call's
   `+ Enlist`) add a recruit on the page, up to 23, and the Major answers in
-  his bubble. The "Enlist a machine" button still goes to the download page.
+  his bubble. The "Enlist a computer" button still goes to the download page.
 - **Battalion Map:** units ping in, reports run the dashed lines to HQ, HQ
   rings, and the reports feed ticks a new report every 2.6 s.
-- **One Thunder:** dotted voice lines flow from every teammate and machine
+- **One Thunder:** dotted voice lines flow from every teammate and computer
   into the Major, rings leave the bullhorn, and each platform tile lights as
   the call lands. The logos themselves never move (Bluesky's and X's brand
   rules).

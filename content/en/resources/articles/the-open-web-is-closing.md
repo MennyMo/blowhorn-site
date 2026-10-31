@@ -35,6 +35,6 @@ Reddit's response is to close up. It plans to put much more of the site behind a
 
 ## Where Blowhorn fits
 
-Blowhorn posts from your own Chrome, signed in as you, so a login wall does not stop it the way it stops a crawler ([Why Blowhorn uses your own browser](/docs/explanation/your-own-chrome/)). It posts to the community you name, at the pace you set ([How Blowhorn paces itself](/docs/explanation/reliability-and-anti-bot-design/)). The words have to be yours. Blowhorn keeps the schedule.
+Blowhorn posts from your own browser, signed in as you, so a login wall does not stop it the way it stops a crawler ([Why Blowhorn uses your own browser](/docs/explanation/your-own-chrome/)). It posts to the community you name, at the pace you set ([How Blowhorn paces itself](/docs/explanation/reliability-and-anti-bot-design/)). The words have to be yours. Blowhorn keeps the schedule.
 
 When a platform tightens its rules, [When a platform changes the rules](/resources/articles/when-a-platform-changes-the-rules/) covers how it shows up in your activity and what to do.
