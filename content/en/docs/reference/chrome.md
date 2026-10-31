@@ -276,6 +276,20 @@ or registered something and the extension then connects, the run says
 so once on stderr, for example `repaired the native host manifest and
 registered the extension; the Blowhorn extension (1.36.6) is connected`.
 
+### A host that reads as outdated
+
+Chrome starts the native host when the extension connects, and keeps
+that process until the extension disconnects. A host started by an
+earlier app can therefore outlive the app's replacement and answer
+`host_status` without the newer app's snapshot, which reads as "update
+the app". When `host_status` reads outdated (protocol below the minimum,
+or no snapshot) and no run is at work - no tab held, and the last run
+sent `input_release` - the extension drops the port and connects again,
+so Chrome starts the host the current manifest names. A run in progress
+keeps its host; the switch happens after its `input_release`. The first
+switch is immediate; each later one waits at least a minute, doubling
+per switch up to an hour, and a host that reads current resets the wait.
+
 ### The minimum extension version, both ways
 
 The minimum is checked from both sides. A run refuses an extension older
@@ -703,8 +717,11 @@ the mapping with `chrome map`'s own checks; then record each attached
 platform's username as the profile's account there; then record the
 attached LinkedIn, X and Reddit sign-ins, as `chrome discover` does. Both
 land in each result's `accounts`. A LinkedIn sign-in with no saved
-username still becomes the account. Slack writes no key - its note says to
-capture the session with `blowhorn profile auth --platform slack <profile>`.
+username still becomes the account, and `session` alone writes
+`LI_CHROME_SESSION` with no `LI_USERNAME`; any other username platform
+with neither a username nor a session is skipped by name in the notes.
+Slack writes no key - its note says to capture the session with
+`blowhorn profile auth --platform slack <profile>`.
 A username omitted from the document is re-read from discovery.
 
 An account is a connection in your Blowhorn account linked to the profile with

@@ -83,8 +83,9 @@ person with `userId`. Confirm then stores the credentials in your
 account, records a confirmed Chrome session for LinkedIn and Hacker News
 when you're signed in there, writes the mapping with the same checks as
 `blowhorn chrome map`, and links each account it found to the profile in
-your account, named for its username. The profile's handles come from
-those accounts. A Chrome profile you mark not in use is recorded
+your account, named for its username. A LinkedIn sign-in with no saved
+username is not linked here; the session check can link it later. The profile's
+handles come from those accounts. A Chrome profile you mark not in use is recorded
 that way and unmapped on this computer; the Blowhorn profile and its
 credentials stay, and a run of every profile skips it. A profile you had
 already excluded stays excluded. Marking it in use again removes that skip
