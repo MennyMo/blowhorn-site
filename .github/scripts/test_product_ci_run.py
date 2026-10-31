@@ -6,6 +6,8 @@ Run with `make test-scripts` (CI runs it too).
 
 import importlib.util
 import io
+import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -140,6 +142,14 @@ class RunStepsTest(unittest.TestCase):
 
 class MakeTargetTest(unittest.TestCase):
     def test_make_product_ci_runs_the_suite_and_prints_only_its_summary(self):
+        # Resolve `make` from the host PATH instead of assuming where it lives, and
+        # fail with a clear message when it is not installed at all.
+        host_path = os.environ.get("PATH", "")
+        make_bin = shutil.which("make")
+        if make_bin is None:
+            self.fail(f"`make` was not found on PATH ({host_path!r}); "
+                      "install make to run this test (`make test-scripts` needs it).")
+
         with tempfile.TemporaryDirectory() as tmp:
             product = Path(tmp) / "product"
             (product / "desktop").mkdir(parents=True)
@@ -149,8 +159,10 @@ class MakeTargetTest(unittest.TestCase):
             pnpm.write_text(f"#!/bin/sh\necho {SECRET!r}\n[ \"$1\" = test ] && echo '      Tests  5 passed (5)'\nexit 0\n")
             pnpm.chmod(0o755)
             log = Path(tmp) / "desktop.log"
-            env = {"PATH": f"{fake_bin}:/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin", "HOME": tmp}
-            done = subprocess.run(["make", "-s", "product-ci", "SUITE=desktop", f"PRODUCT_DIR={product}",
+            # fake pnpm first, then the host PATH (empty entries dropped: they mean "current dir").
+            path = os.pathsep.join(p for p in (str(fake_bin), *host_path.split(os.pathsep)) if p)
+            env = {"PATH": path, "HOME": tmp}
+            done = subprocess.run([make_bin, "-s", "product-ci", "SUITE=desktop", f"PRODUCT_DIR={product}",
                                    f"PRODUCT_CI_LOG={log}"], cwd=ROOT, env=env, capture_output=True, text=True,
                                   timeout=60)
             self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
