@@ -10,10 +10,10 @@
 </div>
 
 {{- if eq .Parent.RelPermalink "/docs/reference/platforms/" -}}
-  {{- partial "platform-pager.html" . -}}
+  {{- partial "docs-sibling-pager.html" . -}}
 {{- else if ne .Parent.RelPermalink "/docs/" -}}
   {{- if eq .Parent.Parent.RelPermalink "/docs/" -}}
-    {{- partial "docs-component-pager.html" . -}}
+    {{- partial "docs-sibling-pager.html" . -}}
   {{- else -}}
     {{- partial "pager.html" . -}}
   {{- end -}}
