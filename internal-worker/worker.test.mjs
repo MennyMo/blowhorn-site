@@ -25,6 +25,7 @@ const env = {
   TEAM_DOMAIN: TEAM_HOST,
   POLICY_AUD: AUD,
   ALLOWED_EMAILS: 'lee.calcote@layer5.io',
+  ALLOWED_EMAIL_DOMAINS: 'layer5.io',
   ASSETS: { fetch: async (r) => new Response(`asset:${new URL(r.url).pathname}`, { status: 200 }) },
 };
 const certsFetch = async (url) => {
@@ -56,6 +57,30 @@ test('expired token is denied', async () =>
   assert.equal(await status(req({ 'cf-access-jwt-assertion': sign(good({ exp: now() - 1 })) })), 403));
 test('email not on the allow list is denied', async () =>
   assert.equal(await status(req({ 'cf-access-jwt-assertion': sign(good({ email: 'someone@example.com' })) })), 403));
+
+// Domain members: any address at an allowed domain, matched exactly.
+const asEmail = (email, e = env, f = certsFetch) => status(req({ 'cf-access-jwt-assertion': sign(good({ email })) }), e, f);
+test('member of an allowed domain is served', async () => assert.equal(await asEmail('someone@layer5.io'), 200));
+test('domain match ignores case', async () => assert.equal(await asEmail('Someone@LAYER5.io'), 200));
+test('look-alike domain is denied', async () => assert.equal(await asEmail('a@evil-layer5.io'), 403));
+test('domain as a prefix is denied', async () => assert.equal(await asEmail('a@layer5.io.evil.com'), 403));
+test('subdomain of an allowed domain is denied', async () => assert.equal(await asEmail('a@sub.layer5.io'), 403));
+test('domain with no local part is denied', async () => assert.equal(await asEmail('layer5.io'), 403));
+test('empty local part is denied', async () => assert.equal(await asEmail('@layer5.io'), 403));
+test('domain is judged after the last @', async () => assert.equal(await asEmail('a@layer5.io@evil.com'), 403));
+test('two @ signs are denied even when the last domain matches', async () => assert.equal(await asEmail('a@evil.com@layer5.io'), 403));
+test('named email is still served when the domain list is empty', async () =>
+  assert.equal(await asEmail('lee.calcote@layer5.io', { ...env, ALLOWED_EMAIL_DOMAINS: '' }), 200));
+test('domain member is denied when the domain list is empty', async () =>
+  assert.equal(await asEmail('someone@layer5.io', { ...env, ALLOWED_EMAIL_DOMAINS: '' }), 403));
+test('named email is served when it is outside the domains', async () =>
+  assert.equal(await asEmail('lee.calcote@layer5.io', { ...env, ALLOWED_EMAIL_DOMAINS: 'example.org' }), 200));
+test('domains alone admit their members', async () =>
+  assert.equal(await asEmail('someone@example.org', { ...env, ALLOWED_EMAILS: '', ALLOWED_EMAIL_DOMAINS: 'example.org' }), 200));
+test('empty email and domain lists fail closed (503)', async () =>
+  assert.equal(await asEmail('lee.calcote@layer5.io', { ...env, ALLOWED_EMAILS: '', ALLOWED_EMAIL_DOMAINS: '' }), 503));
+test('whitespace-only lists fail closed (503)', async () =>
+  assert.equal(await asEmail('lee.calcote@layer5.io', { ...env, ALLOWED_EMAILS: ' , ', ALLOWED_EMAIL_DOMAINS: '  ' }), 503));
 test('alg none is denied', async () => {
   const t = `${b64({ alg: 'none', kid: 'k1' })}.${b64(good())}.`;
   assert.equal(await status(req({ 'cf-access-jwt-assertion': t })), 403);

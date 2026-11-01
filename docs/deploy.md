@@ -486,19 +486,76 @@ is no private host and no artifact of `public-internal/`.
 The internal build is served by the `blowhorn-internal` Cloudflare Worker
 (`internal-worker/`) at https://internal.blowhorn.ai/, behind a Cloudflare
 Access application. Nobody reaches a page, asset or file there without
-signing in to Access as one of the named emails in
-`internal-worker/access.json`.
+signing in to Access as someone the allow list admits: anyone at an allowed
+email domain (layer5.io), a named team member, or an extra address from the
+`INTERNAL_ACCESS_EXTRA_EMAILS` secret. See "Who can read it" below.
 
 | Layer | What it enforces |
 | --- | --- |
-| Access application (self-hosted, the whole hostname) | Login required; one reusable `allow` policy whose only rules are the named emails in `access.json`. Anything not allowed is denied. |
-| Worker (`internal-worker/src/worker.js`, `run_worker_first`) | Every request, assets included, must carry an Access token signed by the team's keys, for this application's audience, unexpired, for an email on the same list. Otherwise 403. A missing or misconfigured Access application fails closed. |
+| Access application (self-hosted, the whole hostname) | Login required; one reusable `allow` policy whose only rules are the email domains, named emails and extras, and the login methods in `allowed_idps`. Anything not allowed is denied. |
+| Worker (`internal-worker/src/worker.js`, `run_worker_first`) | Every request, assets included, must carry an Access token signed by the team's keys, for this application's audience, unexpired, for an email the Worker admits: a named address, or an address whose domain is exactly one of `ALLOWED_EMAIL_DOMAINS` (no subdomain or look-alike match). Otherwise 403. A missing or misconfigured Access application, or an empty allow list, fails closed. |
 | `wrangler.json` | Custom domain only: `workers_dev` and `preview_urls` are off, so no other hostname serves the Worker. `verify-worker` confirms it after each deploy. |
 
 The root (`/`) serves the `/internal/` page, whose table of contents
 (`layouts/_partials/internal-contents.html`) is generated from the content
 tree on every build. Locally, `make site-internal` still redirects `/` to
 `/internal/`.
+
+### Who can read it
+
+The allow list has three sources, all read by `.github/scripts/internal_access.py`
+so the Access policy and the Worker's allow list always match:
+
+- **Email domains.** `allowed_email_domains` in `internal-worker/access.json`
+  (today `layer5.io`) admits every address at that domain. The match is exact:
+  `sub.layer5.io` and `layer5.io.example.com` are not admitted.
+- **Named emails in the repository.** `allowed_emails` in the same file. This
+  repository is public, so list only the team's own addresses, each at an
+  allowed domain (a test in `.github/scripts/test_internal_access.py` checks it).
+- **Extra people, from a secret.** The `INTERNAL_ACCESS_EXTRA_EMAILS` repository
+  secret holds addresses outside the domains, one per line or comma-separated.
+  Set it from a file, never on the command line or in the repository:
+
+  ```sh
+  gh secret set INTERNAL_ACCESS_EXTRA_EMAILS -R blowhorn-ai/blowhorn-site < extras.txt
+  ```
+
+  The secret's name is in `extra_emails_env`. The deploy fails unless it is set,
+  so an unconfigured secret can never silently drop teammates. Under Actions each
+  address is masked before any output, and the scripts print only counts. A
+  malformed entry fails the run by count, without echoing it.
+
+A change to the secret takes effect on the next deploy. To apply it now, run
+`make site-internal-deploy` by hand.
+
+### Login methods
+
+`allowed_idps` lists the login methods on the Access login page, by Cloudflare
+identity provider type. Automatic redirect to one method is off, so the page
+shows every method allowed. Each type must match exactly one login method on
+the account. `internal_access.py` resolves the types to ids at run time, and
+the deploy fails, naming the type, when there are none or more than one.
+
+- **One-time PIN** (`onetimepin`): Access emails a code to the address signing
+  in. This is how the allowed addresses sign in today. If it is missing from
+  Zero Trust > Settings > Authentication > Login methods, add it there.
+- **Google** (`google`): add it before listing it, because the deploy fails on
+  an `allowed_idps` type with no login method behind it.
+  1. In Google Cloud Console, create an OAuth 2.0 client ID of type Web
+     application. Set the authorized redirect URI to
+     `https://<team>.cloudflareaccess.com/cdn-cgi/access/callback` and the
+     authorized JavaScript origin to `https://<team>.cloudflareaccess.com`
+     (`<team>` is the Zero Trust team name).
+  2. Set the OAuth consent screen to user type External, publishing status In
+     production, with only the `openid`, `email` and `profile` scopes.
+  3. Add it in Zero Trust > Settings > Authentication > Login methods > Add new
+     > Google, with the client ID and secret. Or send `POST
+     /accounts/{account_id}/access/identity_providers` with `type` `google` and
+     `config` holding `client_id` and `client_secret`.
+  4. In a pull request, add `"google"` to `allowed_idps` in `access.json`, then
+     merge. The client secret stays in Cloudflare, never in the repository.
+
+Any Cloudflare identity provider type can be listed the same way.
 
 ### Shipping an update
 
@@ -549,13 +606,15 @@ automatic deploy waits for a running one instead of cancelling it.
 
 The workflow, in order (each step is a make target):
 
-1. Fails unless `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` and the
-   `BLOWHORN_INTERNAL_READ_KEY` environment secret are set.
-2. `site-internal-access-check`: read-only probe of the token's permissions.
-3. `site-internal-access`: creates or updates the Access policy and
-   application, reads them back, and fails unless they are exactly the
-   managed default-deny pair. This runs before any private content reaches
-   the runner.
+1. Fails unless `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`,
+   `INTERNAL_ACCESS_EXTRA_EMAILS` and the `BLOWHORN_INTERNAL_READ_KEY`
+   environment secret are set.
+2. `site-internal-access-check`: read-only probe of the token's permissions,
+   including the login methods.
+3. `site-internal-access`: creates or updates the Access policy, application
+   and login methods, reads them back, and fails unless they are exactly the
+   managed default-deny pair with the configured domains, emails and login
+   methods. This runs before any private content reaches the runner.
 4. Checks out blowhorn-ai/blowhorn (sparse: `marketing/strategy`,
    `marketing/capability-comparison`, `marketing/brand`, `marketing/cast`,
    `marketing/assets.manifest.json`, `internal/engineering`,
@@ -583,8 +642,12 @@ checkout after building. Keep it that way in any change to the workflow or
 - `CLOUDFLARE_API_TOKEN` (repository secret) needs: Account > Workers
   Scripts > Edit; Account > Account Settings > Read; Zone (blowhorn.ai) >
   Workers Routes > Edit; Account > Access: Apps and Policies > Edit;
-  Account > Access: Organizations, Identity Providers, and Groups > Read.
+  Account > Access: Organizations, Identity Providers, and Groups > Read
+  (the last also reads the login methods that `allowed_idps` names).
 - `CLOUDFLARE_ACCOUNT_ID` (repository secret).
+- `INTERNAL_ACCESS_EXTRA_EMAILS` (repository secret): the extra addresses
+  allowed to sign in, one per line or comma-separated. Set with `gh secret set`
+  from a file; see "Who can read it". The deploy fails without it.
 - `BLOWHORN_INTERNAL_READ_KEY` (secret of the `internal-site` environment,
   which deploys from master only): the private half of an SSH deploy key
   added read-only to blowhorn-ai/blowhorn. It can read that one repository and
@@ -599,8 +662,10 @@ checkout after building. Keep it that way in any change to the workflow or
 
 ### Changing who can read it
 
-Edit `allowed_emails` in `internal-worker/access.json` in a pull request (so
-the change is reviewed) and merge; the push to `master` redeploys. The
-workflow updates the Access policy and the Worker's list together. Do not edit
-the policy in the Cloudflare dashboard: the next deploy resets it, and a
-mismatch fails verification.
+Edit `allowed_email_domains`, `allowed_emails` or `allowed_idps` in
+`internal-worker/access.json` in a pull request (so the change is reviewed)
+and merge; the push to `master` redeploys. The workflow updates the Access
+policy, the login methods and the Worker's allow list together. Extra people
+change through the `INTERNAL_ACCESS_EXTRA_EMAILS` secret, not the repository.
+Do not edit the policy or login methods in the Cloudflare dashboard: the next
+deploy resets them, and a mismatch fails verification.
