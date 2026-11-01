@@ -12,12 +12,12 @@ PR #354). Never recolour, outline, shadow or rotate the mark; see the brand
 book for the rules.
 
 The locked-6 Major Blowhorn cutout (`mascot/locked-6/major-6-hat-left.png`) is the
-product repository's `marketing/brand/major-blowhorn/cutouts/major-6-hat-left.png`,
+product repository's `marketing/cast/major-blowhorn/cutouts/major-6-hat-left.png`,
 copied unchanged; the `.webp` beside it is
 a lossy re-encode of that file for the home page hero, with no other change.
 
 Old Thunderlung (`mascot/thunderlung/`, PNG and WebP) is the product repository's
-`marketing/brand/major-blowhorn/thunderlung/brand-style/` cutouts of Major's bugle,
+`marketing/cast/major-blowhorn/thunderlung/brand-style/` cutouts of Major's bugle,
 with and without its red cord, approved 28 Oct 2026 and copied unchanged.
 
 The two kits on the Brand page (`/brand/blowhorn-brand-kit.zip` and
@@ -26,7 +26,7 @@ unchanged, under the same terms. They carry no font files: the full kit's
 README links the three families on Google Fonts.
 
 The cast art (`cast/*.webp`) is 960x540 re-encodes of the cast locked on 18 Oct 2026
-(`marketing/brand/cast/` in the product repository), unchanged otherwise, plus the four
+(`marketing/cast/` in the product repository), unchanged otherwise, plus the four
 machine Recruit Chicks (`cast/recruit-chick-macbook`, `-imac`, `-laptop-lap` and `-mac-studio`) added on
 20 Oct 2026. The `cast/icons/*.webp` files are square crops of the same art with the black ground keyed out. `cast/major-6-hat-left-horn.webp` is the locked
 `major-6-hat-left` art with three Caribbean Green (#00D3A9) sound arcs added at the
