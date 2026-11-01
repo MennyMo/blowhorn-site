@@ -14,6 +14,18 @@ hooray, heart, rocket) to the issue or pull request the `--amplify`
 flag or the activity's "Amplify" column names, from every selected profile
 under its own token. Re-running adds none of them twice.
 
+One command group works differently: `blowhorn github` runs through
+GitHub's GraphQL API instead of the REST API, with no CLI to install
+and nothing vendored. Its squatter sweep
+(`blowhorn github squatters --repo owner/name`) finds assigned-but-stalled
+issues and, on a fixed grace-period progression, posts a nudge, then a
+final warning, then releases the assignment -- never reassigning to
+another person, never closing the issue. It runs with the store's
+GitHub token, never a second credential, and a token that is missing
+or unauthenticated is a hard error, never a silent fallback.
+A dry run is the default: without `--apply` nothing is
+written. See [Sweep stalled GitHub assignments](/docs/how-to/grow/squatter-sweep/).
+
 ## Supported actions
 
 {{< supported-actions "github" >}}
