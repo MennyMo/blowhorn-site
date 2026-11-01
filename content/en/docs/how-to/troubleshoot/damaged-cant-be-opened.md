@@ -77,34 +77,35 @@ or Spotlight opens. macOS checks that copy, not the one you just installed.
 To see which version you have, select Blowhorn in Applications and choose
 **File** > **Get Info**.
 
-## If hidden backup copies are in Applications
+## If an update left an old copy behind
 
-The updater can leave hidden copies of earlier versions in Applications,
-named `.Blowhorn-backup-<id>.app`. They share Blowhorn's app ID, so
-macOS can check a broken backup copy instead of the good copy in
-Applications. That check produces this dialog even when
-`/Applications/Blowhorn.app` itself is signed and notarized.
+An in-app update keeps the previous version as a hidden copy in
+Applications, named `.Blowhorn-backup-<id>.app`, until the new version
+starts. Every copy carries Blowhorn's identity, so anything that opens
+Blowhorn without naming a path, a `blowhorn` command included, can open an
+old or broken copy instead and get this dialog.
 
-1. Check for backup copies. In Terminal, run:
+Blowhorn removes these copies itself each time it starts. When it can't,
+usually because another account on this computer owns the copy, it shows
+the copy's path once, with a **copy command** button. To remove one by
+hand:
 
-   ```bash
-   ls -a /Applications ~/Applications 2>/dev/null | grep -i blowhorn
-   ```
-
-   Anything named `.Blowhorn-backup-….app` is a leftover.
-2. Delete only the backup copies. In Terminal, run:
+1. List the hidden copies:
 
    ```bash
-   rm -rf /Applications/.Blowhorn-backup-*.app
+   ls -a /Applications ~/Applications | grep -E '^\.Blowhorn-(backup|update)-'
    ```
 
-   If macOS says Permission denied, the copy belongs to another user.
-   Run the same command with `sudo` and enter an admin password. Never
-   delete `/Applications/Blowhorn.app` itself.
-3. Retry the blowhorn command, or open Blowhorn from Applications again.
+2. Tell macOS to forget each one, then delete it. Replace the path with
+   the one you found, whether it is `.Blowhorn-backup-` or
+   `.Blowhorn-update-`. `sudo` asks for an administrator password:
 
-The updater leaving these copies behind is tracked in
-[blowhorn-ai/blowhorn#1651](https://github.com/blowhorn-ai/blowhorn/issues/1651).
+   ```bash
+   /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -u '/Applications/.Blowhorn-backup-<id>.app'
+   sudo rm -rf '/Applications/.Blowhorn-backup-<id>.app'
+   ```
+
+Never delete `/Applications/Blowhorn.app` itself this way.
 
 ## Related
 
