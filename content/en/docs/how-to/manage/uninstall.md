@@ -43,7 +43,7 @@ blowhorn uninstall
 The command removes, in order, reporting each item as `removed`, `not
 present`, `not unregistered` or `failed`:
 
-1. **The background service.** A loaded `ai.blowhorn.service` is booted out
+1. **The background service.** A loaded `ai.blowhorn.service` (the installed app's label; a checkout's is `ai.blowhorn.service.dev`) is booted out
    and waited for, then its file under `~/Library/LaunchAgents` is removed. A
    label the app registered as its login item is booted out the same way; its
    Login Items entry is unregistered by the app itself in step 5. The attach

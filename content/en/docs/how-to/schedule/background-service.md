@@ -75,6 +75,14 @@ On a computer without the desktop app:
 blowhorn service install
 ```
 
+A checkout installs its own service under the label `ai.blowhorn.service.dev`, so
+it never replaces the installed app's `ai.blowhorn.service`. The engine inside
+Blowhorn.app cannot install one: `service install` and `service update` stop with
+one line that names the fix, Open Blowhorn, then This computer, then Register the
+service. A file-installed `ai.blowhorn.service` that a checkout wrote before this
+label existed shows as legacy in `service status`; `service update` moves it to
+`ai.blowhorn.service.dev`.
+
 `service test` validates the schedule and previews a pass the way the service
 would run it. `service stop` drains the pass in flight before it stops; the
 definition stays, and `service start` loads it again. `service update` brings

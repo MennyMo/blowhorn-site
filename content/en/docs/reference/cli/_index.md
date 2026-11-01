@@ -147,7 +147,7 @@ It exits 1 when a step failed. See
 [Finish setup on this computer](/docs/how-to/set-up/finish-setup/).
 
 `blowhorn uninstall` is a single command: it removes Blowhorn from this
-machine, in order - the background service (`ai.blowhorn.service`, booted out
+machine, in order - the background service (`ai.blowhorn.service`, or `ai.blowhorn.service.dev` for a checkout, booted out
 and its LaunchAgent file removed), the Chrome native host (the
 `com.blowhorn.chrome_extension` manifest, its launcher under
 `~/Library/Application Support/Blowhorn`, and the every-profile install entries
