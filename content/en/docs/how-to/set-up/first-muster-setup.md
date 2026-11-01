@@ -7,8 +7,11 @@ weight: 33
 
 
 The guided setup opens by itself the first time you open Blowhorn, and every
-time after that until you finish it. If you quit partway and you are still
-signed in, it picks up at the step you left. If you are not signed in, it
+time after that until you finish it. If you quit partway, or come back with
+Home's **Finish setting up**, it checks what is already done and opens
+straight on the first step that isn't, with one line saying so. It never asks
+whether to pick up first. If your sign-in ended, it asks you to sign in once,
+then picks up the same way. If you are signed out when you open Blowhorn, it
 starts at Sign in. Uninstalling removes that progress with the sign-in, so
 the next open is a first muster. If you set Blowhorn up before this setup
 existed and you are still signed in, it doesn't open by itself. Updating
