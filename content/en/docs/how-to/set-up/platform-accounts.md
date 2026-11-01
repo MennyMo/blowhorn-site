@@ -65,14 +65,17 @@ the automated login is attempted; the manual fallback is skipped. A
 CAPTCHA or second-factor challenge always hands back to you: unattended
 runs never wait for a person.
 
-LinkedIn can also work from a **confirmed Chrome session** instead of a
-stored password: when setup's Confirm troops step found you signed in to
-LinkedIn in a Chrome profile and you confirmed it, the profile holds
-`LI_CHROME_SESSION` naming that Chrome profile, and runs use the session
-in the mapped Chrome profile. Setup does not ask for your LinkedIn
-username: the session is the account. If that session signs out, sign in
-again in Chrome; there is no password for Blowhorn to fall back to unless
-you store one too.
+LinkedIn, X, Reddit and Hacker News can also work from a **confirmed
+Chrome session** instead of a stored password or typed username: when
+setup's Confirm step found you signed in to one of them in a Chrome
+profile and you confirmed it, the profile holds a session key naming that
+Chrome profile (`LI_CHROME_SESSION`, `X_CHROME_SESSION`,
+`RDDT_CHROME_SESSION`, `HN_CHROME_SESSION`), and runs use the session in
+the mapped Chrome profile. Setup does not ask for your username: the
+session is the account, and a background session check reads the account
+name off the signed-in page and records it when the profile has none yet.
+If that session signs out, sign in again in Chrome; there is no password
+for Blowhorn to fall back to unless you store one too.
 
 ### Record your LinkedIn page
 
@@ -89,8 +92,10 @@ already mapped to the profile:
 blowhorn profile accounts ada --page https://www.linkedin.com/in/ada-example
 ```
 
-Do the same with your `https://x.com/<handle>` page when your saved X
-login is an email.
+The same session check reads your X handle and Reddit username off their
+signed-in pages when a saved login did not name them; recording your
+`https://x.com/<handle>` page yourself is the fallback when the read has
+not landed yet.
 
 ## Bluesky
 
@@ -129,18 +134,20 @@ Issues (and Pull requests for PR targets) to react.
 
 ## Hacker News
 
-Store the login with `profile set`. Both keys are needed; the password is
-read from your account:
+Store the login with `profile set`. The password is read from your
+account; the username is only needed when you sign in with a password:
 
 ```bash
 blowhorn profile set ada HN_USERNAME=<account> HN_PASSWORD=<password>
 ```
 
-Or work from a **confirmed Chrome session**: if setup's Confirm troops
-step found you signed in to Hacker News in a Chrome profile and you
-confirmed it, the profile holds `HN_CHROME_SESSION` naming that Chrome
-profile instead of a password, and runs use that session. If it signs
-out, sign back in in Chrome, or store a password as above.
+Or work from a **confirmed Chrome session**: if setup's Confirm step
+found you signed in to Hacker News in a Chrome profile and you confirmed
+it, the profile holds `HN_CHROME_SESSION` naming that Chrome profile
+instead of a password, and runs use that session. Setup does not ask for
+your username: a background session check reads it off the signed-in
+page's header and records it when the profile has none yet. If the
+session signs out, sign back in in Chrome, or store a password as above.
 
 Check it landed, with the password shown only as set or not set:
 

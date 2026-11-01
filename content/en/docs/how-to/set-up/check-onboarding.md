@@ -154,7 +154,9 @@ email in the wizard is what finds the person in the local Cloud. The happy
 path ends by checking that `blowhorn chrome profiles --json` still reports
 identity `ok` for the Chrome profile it mapped. A `drift` there means the
 mapping no longer matches what Chrome shows, and every later run of that
-profile would be refused. If branded Chrome cannot load the unpacked extension,
-the check uses a cached Chrome for Testing build. The check also sets
+profile would be refused. The check runs only in the installed Google Chrome
+and loads the unpacked extension into it over the debugging pipe. If Google
+Chrome is missing, or will not load the extension, the check stops and says so.
+It never downloads or falls back to another browser. The check also sets
 `BLOWHORN_KEYCHAIN=0`, so the engine keeps the fixture token in the
 throwaway home and does not write the login keychain.

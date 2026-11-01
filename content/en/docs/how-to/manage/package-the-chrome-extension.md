@@ -24,7 +24,7 @@ the same id.
 The zip is the extension directory only. It leaves out `.git`, `node_modules`,
 `venv`, `.env`, source maps, `tests`, `docs`, `profiles`, `desktop`,
 `README.md`, `CHROMEWEBSTORE.md`, `.DS_Store`, `store-assets`, and `chrome-web-store`. Listing
-images live in `marketing/assets/store/chrome-web-store/` and are uploaded in the dashboard, not inside
+images live in `marketing/store/chrome-web-store/` and are uploaded in the dashboard, not inside
 the zip. The script adds the repo-root `LICENSE` (AGPL-3.0-only) at the zip root. A private key in the source tree stops the script before it writes
 the archive.
 
@@ -32,11 +32,11 @@ the archive.
 desktop app icon (`desktop/assets/app-icon.png`, sized copies in
 `desktop/assets/blowhorn-icon-set/`) at those sizes. The manifest names them.
 The listing images - five 1280 x 800 screenshots, the 440 x 280 promo tile
-and the 1400 x 560 marquee - live in `marketing/assets/store/chrome-web-store/`; the Graphic assets table
-in `marketing/assets/store/chrome-web-store/LISTING.md` in the product repository names each file and
+and the 1400 x 560 marquee - live in `marketing/store/chrome-web-store/`; the Graphic assets table
+in `marketing/store/chrome-web-store/LISTING.md` in the product repository names each file and
 its dashboard slot, beside the paste-ready summary and description. A
 HyperFrames global promo (storyboard + script for HeyGen) lives at
-`marketing/assets/store/chrome-web-store/hyperframes/global-promo/` in the product repository.
+`marketing/store/chrome-web-store/hyperframes/global-promo/` in the product repository.
 
 ## Rebuild the listing graphics
 
@@ -44,7 +44,7 @@ Rebuild them after the brand kit, the console or its platform marks change:
 
 ```bash
 make desktop-install          # once: the desktop dependencies the capture launches
-make extension-assets-build   # rewrites every image in marketing/assets/store/chrome-web-store/
+make extension-assets-build   # rewrites every image in marketing/store/chrome-web-store/
 ```
 
 `make extension-assets-build` runs `tools/scripts/brand/build-store-assets.py`. It
@@ -53,7 +53,7 @@ checkout that answers the console's reads from the desktop's own contract
 fixtures, so no account, profile, Chrome or real person is involved - and
 captures four console screens at the default 1104 x 900 window, scaled to
 1280 x 800. It then draws the platform gallery, the promo tile and the marquee
-from `marketing/brand/` with Playwright's Chromium. The app window opens on your screen
+from `marketing/brand/` with your installed Google Chrome. The app window opens on your screen
 for about a minute while it captures; leave it alone until the command
 finishes. To recompose after a brand change without launching the app again,
 pass the script `--skip-capture`:

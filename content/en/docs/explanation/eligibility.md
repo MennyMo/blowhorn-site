@@ -23,13 +23,14 @@ skips such profiles quietly.
 
 One deliberate exception, and it is still a credential: on setup's
 confirm step a person can attest that the session in one of their
-Google Chrome profiles is theirs and signed in, for LinkedIn or Hacker News.
-Blowhorn stores that attestation as a credential naming the Chrome
-profile (`LI_CHROME_SESSION`, `HN_CHROME_SESSION`), and eligibility
-reads the credential exactly as it reads a password's existence. For
-LinkedIn the attestation is the whole credential: setup does not ask
-for a username, and the session check reads the profile's LinkedIn name
-off the signed-in feed. A signed-in browser nobody confirmed grants
+Google Chrome profiles is theirs and signed in, for LinkedIn, X, Reddit
+or Hacker News. Blowhorn stores that attestation as a credential naming
+the Chrome profile (`LI_CHROME_SESSION`, `X_CHROME_SESSION`,
+`RDDT_CHROME_SESSION`, `HN_CHROME_SESSION`), and eligibility reads the
+credential exactly as it reads a password's existence. For these
+platforms the attestation is the whole credential: setup does not ask
+for a username, and the session check reads the account name off the
+signed-in page. A signed-in browser nobody confirmed grants
 nothing, and a confirmed
 session that has since signed out stops that platform's run with the
 reason rather than posting.
