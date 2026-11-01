@@ -17,6 +17,7 @@ paths=(
   marketing/strategy
   marketing/capability-comparison
   marketing/brand
+  marketing/cast
   marketing/assets.manifest.json
   internal/engineering
   internal/design
