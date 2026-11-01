@@ -276,6 +276,15 @@ or registered something and the extension then connects, the run says
 so once on stderr, for example `repaired the native host manifest and
 registered the extension; the Blowhorn extension (1.36.6) is connected`.
 
+In a source checkout, `--native-host rust` points the native host
+launcher at the Rust native host built with `cargo build --release -p
+blowhorn-host` in `engine/rust` (or the binary `--rust-host` names)
+instead of the Python one. It is off by default, and the app does not
+ship that binary. A Rust host that is missing or not executable is
+refused and nothing is written. A later install or ensure keeps the
+Rust host while its binary still runs, and puts the Python one back,
+saying so, once it does not; `--native-host python` switches back.
+
 ### A host that reads as outdated
 
 Chrome starts the native host when the extension connects, and keeps
