@@ -481,6 +481,30 @@ The server serves stdio only. Asking it for HTTP refuses at startup:
 A hosted Blowhorn MCP server, with its own sign-in, is coming. This
 page covers the local server only.
 
+### Revoke a leaked token
+
+The local server uses the token that sign-in saved on this computer.
+If that token, or any other Blowhorn API token, leaks, revoke it
+at once. Having the token is enough; no sign-in is needed:
+
+```bash
+read -rs TOKEN   # paste the token, then press Enter
+printf '{"token": "%s"}' "$TOKEN" | curl -sS -X POST https://cloud.blowhorn.ai/revoke \
+  -H 'Content-Type: application/json' --data-binary @- -w 'HTTP %{http_code}\n'
+```
+
+A 200 response means the token no longer works, if it existed. A 200
+does not confirm the token existed. A 503 response means nothing was
+revoked, so run the call again.
+
+While you are still signed in with a token you trust, you can delete
+the token by ID instead. List your tokens with
+`GET https://cloud.blowhorn.ai/api/identity/tokens`, then send
+`DELETE https://cloud.blowhorn.ai/api/identity/tokens?tokenId=<id>`
+with `Authorization: Bearer <token>`.
+
+Then sign in again with `blowhorn auth login` to get a fresh token.
+
 ## Example prompts and workflows
 
 The assistant picks the tools; you approve the writes. These prompts

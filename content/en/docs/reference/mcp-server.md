@@ -565,6 +565,9 @@ startup:
 ~/.local/bin/blowhorn-mcp --transport http
 ```
 
+If the token this server uses leaks, see
+[Revoke a leaked token](/docs/how-to/set-up/connect-mcp-client/#revoke-a-leaked-token).
+
 ## Checking it
 
 ```bash
