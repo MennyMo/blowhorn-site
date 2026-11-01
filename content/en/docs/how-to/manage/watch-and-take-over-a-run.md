@@ -42,6 +42,9 @@ nothing more in any tab and lets go of the tab. The run is recorded as stopped
 by you, never as failed or as a crash; a scheduled activity that was not yet
 posted goes back to the queue for its next turn.
 
+The panel shows **Stopped** for a few seconds, then goes back to **Idle**.
+The stopped run stays stopped: nothing it asks for afterwards is done.
+
 If Blowhorn had already clicked Post, it records that post as clicked but not
 confirmed and does not post it again. Check the profile on the site before you
 retry it. Stop between steps when you can.
