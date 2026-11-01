@@ -3,8 +3,9 @@ name: Internal site
 # Builds the internal Blowhorn site (make site-internal-build, the /internal/
 # section mounted from the private blowhorn-ai/blowhorn repository) and deploys
 # it to the blowhorn-internal Worker at internal.blowhorn.ai, behind a
-# Cloudflare Access application that admits only the named emails in
-# internal-worker/access.json. See docs/deploy.md, "Internal site hosting".
+# Cloudflare Access application that admits layer5.io and the named team
+# members in internal-worker/access.json, plus the extra addresses in the
+# INTERNAL_ACCESS_EXTRA_EMAILS secret. See docs/deploy.md, "Internal site hosting".
 #
 # Triggers:
 #   - workflow_dispatch: `make site-internal-deploy` (in this repository or in
@@ -25,6 +26,8 @@ name: Internal site
 #
 # Credentials:
 #   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID  repository secrets.
+#   INTERNAL_ACCESS_EXTRA_EMAILS  repository secret: extra addresses allowed to
+#     sign in, one per line or comma-separated. Masked in logs; never printed.
 #   BLOWHORN_INTERNAL_READ_KEY  secret of the `internal-site` environment
 #     (deployments from master only): the private half of a read-only deploy
 #     key on blowhorn-ai/blowhorn. It reads that one repository and nothing else.
@@ -68,6 +71,7 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      INTERNAL_ACCESS_EXTRA_EMAILS: ${{ secrets.INTERNAL_ACCESS_EXTRA_EMAILS }}
       HAS_READ_KEY: ${{ secrets.BLOWHORN_INTERNAL_READ_KEY != '' }}
       BLOWHORN_REF: ${{ inputs.blowhorn_ref || github.event.client_payload.blowhorn_ref || 'master' }}
       WRANGLER_SEND_METRICS: 'false'
@@ -77,6 +81,7 @@ jobs:
           missing=()
           [ -n "$CLOUDFLARE_API_TOKEN" ] || missing+=(CLOUDFLARE_API_TOKEN)
           [ -n "$CLOUDFLARE_ACCOUNT_ID" ] || missing+=(CLOUDFLARE_ACCOUNT_ID)
+          [ -n "$INTERNAL_ACCESS_EXTRA_EMAILS" ] || missing+=(INTERNAL_ACCESS_EXTRA_EMAILS)
           [ "$HAS_READ_KEY" = true ] || missing+=("BLOWHORN_INTERNAL_READ_KEY (internal-site environment)")
           if [ "${#missing[@]}" -gt 0 ]; then
             echo "::error::Not configured on blowhorn-ai/blowhorn-site: ${missing[*]}. Nothing was built or deployed."
@@ -177,7 +182,7 @@ jobs:
         run: |
           {
             echo "### Internal site"
-            echo "- Host: https://internal.blowhorn.ai/ (Cloudflare Access, named emails only)"
+            echo "- Host: https://internal.blowhorn.ai/ (Cloudflare Access: layer5.io and named team members)"
             echo "- blowhorn ref: \`$BLOWHORN_REF\`"
             echo "- Result: ${{ job.status }}"
           } >> "$GITHUB_STEP_SUMMARY"

@@ -12,7 +12,14 @@
 // Deploy-time vars (set by .github/scripts/internal-deploy.sh):
 //   TEAM_DOMAIN     <team>.cloudflareaccess.com (the Access auth domain)
 //   POLICY_AUD      the Access application's audience tag
-//   ALLOWED_EMAILS  comma-separated allow list (internal-worker/access.json)
+//   ALLOWED_EMAILS          comma-separated named addresses: the repository's
+//                           allowed_emails plus the INTERNAL_ACCESS_EXTRA_EMAILS
+//                           secret (internal-worker/access.json, docs/deploy.md)
+//   ALLOWED_EMAIL_DOMAINS   comma-separated email domains (allowed_email_domains)
+//
+// A verified email is admitted when it is one of ALLOWED_EMAILS, or when the
+// part after its last "@" is exactly one of ALLOWED_EMAIL_DOMAINS (no subdomain
+// or suffix match). With neither list set, every request is refused (503).
 
 const CERTS_TTL_MS = 10 * 60 * 1000;
 let certsCache = { url: '', keys: null, fetchedAt: 0 };
@@ -99,17 +106,33 @@ export async function verifyAccessToken(token, env, fetchImpl = fetch, nowSec = 
   if (claims.iss !== `https://${env.TEAM_DOMAIN}`) return null;
   if (typeof claims.exp !== 'number' || claims.exp <= nowSec) return null;
   if (typeof claims.nbf === 'number' && claims.nbf > nowSec + 60) return null;
-  const allowed = String(env.ALLOWED_EMAILS || '')
-    .split(',')
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
   const email = String(claims.email || '').toLowerCase();
-  if (!email || !allowed.includes(email)) return null;
+  if (!emailAllowed(email, listFrom(env.ALLOWED_EMAILS), listFrom(env.ALLOWED_EMAIL_DOMAINS))) return null;
   return claims;
 }
 
+function listFrom(value) {
+  return String(value || '')
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+// Exact matches only. A domain match needs exactly one "@" and a non-empty
+// local part, so "a@evil.com@layer5.io", "layer5.io" and "@layer5.io" are
+// refused.
+export function emailAllowed(email, emails, domains) {
+  if (!email) return false;
+  if (emails.includes(email)) return true;
+  const at = email.lastIndexOf('@');
+  // Exactly one "@": a real mailbox never has two, so refuse rather than judge.
+  if (at <= 0 || email.indexOf('@') !== at) return false;
+  return domains.includes(email.slice(at + 1));
+}
+
 export async function handle(request, env, fetchImpl = fetch) {
-  if (!env.TEAM_DOMAIN || !env.POLICY_AUD || !env.ALLOWED_EMAILS) return deny(503);
+  if (!env.TEAM_DOMAIN || !env.POLICY_AUD) return deny(503);
+  if (listFrom(env.ALLOWED_EMAILS).length + listFrom(env.ALLOWED_EMAIL_DOMAINS).length === 0) return deny(503);
   const token = tokenFrom(request);
   if (!token) return deny();
   let claims = null;
