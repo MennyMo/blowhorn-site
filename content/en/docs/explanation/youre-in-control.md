@@ -109,8 +109,9 @@ not what a platform will decide.
 - **Rehearse first.** `--check-queue` lists what a run would do, and
   `--dry-run` walks it end to end without publishing, following or
   writing anything. Make dry run your default until you trust a setup.
-- **Stop it any time.** Stand down this computer, the whole fleet of computers in
-  your organization, or one scheduled order, and Reenlist when you are ready. A job already running
+- **Stop it any time.** Set this computer, the whole fleet of computers in your
+  organization, or one scheduled order to standing down, and back to on duty when
+  you are ready. A job already running
   finishes first, because killing a browser mid-post can leave a
   half-done action on the platform.
 
@@ -194,7 +195,7 @@ approval in the app: it cannot approve its own queued work.
 | Check the queue | Lists what a run would do, opening nothing | `blowhorn post --check-queue` | [`blowhorn post`](/docs/reference/post/) |
 | Approval gate | Only approved activities are published | The `Approved?` column of each content activity | [Content queue](/docs/reference/content-queue/) |
 | Approval mode | An agent's activities and ad-hoc actions - or everyone's, under `all` - wait for a person's approval; the approval records who and when | `defaults.approval.mode` (`off`, `agent`, `all`); `blowhorn content approve`; `BLOWHORN_ACTOR` marks an agent caller | [Configuration](/docs/reference/configuration/) |
-| Pause (Stand down / Reenlist in the app) | Stops new claims on this computer, the whole fleet, or one scheduled order | `blowhorn schedule pause`, with `--all` or `--activity`; the rail's duty toggle, Home's Fleet card, an order's drawer, and the popover | [Pause and resume posting](/docs/how-to/schedule/pause/) |
+| Pause (Standing down in the app) | Stops new claims on this computer, the whole fleet, or one scheduled order | `blowhorn schedule pause`, with `--all` or `--activity`; the rail's duty toggle, Home's Fleet card, an order's drawer, and the popover | [Pause and resume posting](/docs/how-to/schedule/pause/) |
 | Stop everything | Raises the all-computers pause and ends runs already in progress at their next safe point, on every computer; without `--all` it stops this computer only | `blowhorn stop --all`; `blowhorn stop --resume` lifts it | [Pause and resume posting](/docs/how-to/schedule/pause/) |
 | Quiet hours | The automatic pause: holds due scheduled activities inside a named window, in your time zone or a profile's own; they run when the window ends | `defaults.quiet_hours` and `defaults.quiet_hours_tz`; Posture in the app; a profile's Quiet Hours setting for its own activities | [Pause and resume posting](/docs/how-to/schedule/pause/), [Configuration](/docs/reference/configuration/) |
 | Stop the current pass | Ends the background service's pass at its next safe point; the activity in progress returns to the queue | `blowhorn service cancel` | [CLI reference](/docs/reference/cli/) |

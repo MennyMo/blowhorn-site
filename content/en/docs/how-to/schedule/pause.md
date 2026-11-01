@@ -45,8 +45,8 @@ already running on another computer finishes the activity it is on
 instead of stopping mid-pass. The command says so when it happens.
 
 In the app, **stop everything** is in the popover footer, beside the
-Stand down controls. It asks for a reason and a confirmation first - nothing
-stops on the first click. Stop everything is the emergency control; Stand
+**stand down the fleet** control. It asks for a reason and a confirmation first - nothing
+stops on the first click. Stop everything is the emergency control; standing
 down is not. The standing down board then shows a **stop** line with who
 stopped it, when and why, and that board's **stop everything** control
 is the way back: turning it off lifts the stop, and the pause it raised
@@ -71,14 +71,14 @@ A job already running finishes first. Killing a browser flow mid-post can leave
 a half-done action on the platform, so the pause stops the next claim, never
 the running job.
 
-In the app this pause is called **Stand down**, and lifting it is
-**Reenlist**. Use the duty toggle at the bottom of the console rail: it reads
-**On duty** with **Stand down** beside it, or **Standing down** with
-**Reenlist**, and the round thumb is teal or amber to match. ⌘⇧P does the same,
-and so does "stand down this computer" in the popover or the menu. It takes one
-click and no reason. Home's Fleet card offers the same toggle on this
-computer's row. While this computer is standing down, the app also skips its
-session probe, so it opens no browser at all.
+In the app this pause is a duty switch. Use the switch at the bottom of the
+console rail, or in the menu-bar popover's header: it shows **On duty** while
+this computer runs scheduled work and **Standing down** while it is held. The
+switch's position and colour say which, and a click changes it. ⌘⇧P does the
+same, and so does the **On duty** item in the Scheduler menu. It takes one click
+and no reason. Home's Fleet card shows the same switch on this computer's row.
+While this computer is standing down, the app also skips its session probe, so
+it opens no browser at all.
 
 ## Pause every computer, or one activity
 
@@ -92,22 +92,23 @@ blowhorn schedule resume --activity 7
 An activity is claimed only when none of the three scopes says paused: this computer,
 all computers, or that activity. `--all` and `--activity` live in your account, so every
 computer sharing it honours them on its next claim; the flagless pause never
-touches your account. In the app every scope is a Stand down / Reenlist pair:
+touches your account. In the app every scope is one duty switch, reading
+**On duty** or **Standing down**:
 
-- **This computer** - the rail's duty toggle, the flagless pause above.
+- **This computer** - the rail's switch and the popover header's switch, the
+  flagless pause above.
 - **The fleet** (every computer sharing your schedule, `--all`) - the
   **Entire fleet** row on Home's Fleet card, or "stand down the fleet" in the
   popover, This computer and Posture. A reason is optional; on Home you type
-  it beside the toggle and it saves as you type. While the fleet stands down,
-  the card shows who stood it down, when and why, and this computer's row
-  waits for the fleet to reenlist.
-- **This order** (`--activity N`) - the duty switch inside an item's drawer:
-  **Scheduled** with **Stand down**, or **Standing down** with **Reenlist**.
-  The optional reason field above it saves as you type, with a teal check
-  once saved, and goes out with the Stand down. The item's list row reads
-  **standing down** while it is held.
+  it beside the switch and it saves as you type. While the fleet stands down,
+  the card shows who stood it down, when and why, and this computer's row is
+  held until the fleet is back on duty.
+- **This order** (`--activity N`) - the duty switch inside an item's drawer,
+  reading **On duty** or **Standing down**. The optional reason field above it
+  saves as you type, with a teal check once saved, and goes out with the
+  hold. The item's list row reads **standing down** while it is held.
 
-There is no Stand down for another computer: stand that computer down from
+There is no switch for another computer: stand that computer down from
 its own Blowhorn app, or stand down the whole fleet.
 
 Lifting one scope leaves the other two as they were. A held activity still reads

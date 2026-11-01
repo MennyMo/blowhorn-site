@@ -33,9 +33,9 @@ the next check runs straight away; you never have to relaunch the app to
 clear it. **try again** on the line checks at once instead of waiting.
 The console shows the same line, with the same **try again**.
 
-The popover footer holds "stand down this computer" and "stand down the fleet"
-(each reads "reenlist" while it holds) and, when an update is
-ready, the update card. The update downloads the new version, installs it
+The popover header holds this computer's duty switch, the footer holds "stand
+down the fleet" (the fleet's switch takes its place while the fleet holds) and,
+when an update is ready, the update card. The update downloads the new version, installs it
 and relaunches the app; when it cannot, it says why and offers the release
 page. In the console, an update shows its progress over the whole window
 until Blowhorn reopens. An installed Blowhorn that finds such a release when it opens also
@@ -184,17 +184,16 @@ one place with three views, switched at the top of the screen: **Upcoming**
 and every limit Blowhorn keeps; the menu-bar
 popover's **posture ›** link opens it.
 
-At the bottom of the rail, once you are signed in, one duty toggle covers this
-computer: **On duty** with **Stand down** under it, or **Standing down** with
-**Reenlist** - always in full, never cut short. Its round thumb is the status - teal on duty, amber standing down.
-Press it (or ⌘⇧P) to stand this computer down or reenlist it; it never touches
-the fleet. Under the fleet's stand down alone it reads **Fleet standing down**
-and still offers this computer's own Stand down. When the service is stopped,
-not installed or turned off in System Settings it reads **Not on duty**, and
-a line above it gives the reason and opens This computer; the same line says
-when a check is late or when the fleet's state can't be read. Hover the toggle
-for the next scheduled run (for example "Next: Post on X, tomorrow at 9:00 AM")
-or when the stand down began. Under the toggle, the
+At the bottom of the rail, once you are signed in, one duty switch covers this
+computer: **On duty**, or **Standing down** while it is held. Its position and
+colour show the state, and it never names the action. Press it (or ⌘⇧P) to change
+it; it never touches the fleet. Under the fleet's stand down alone it reads
+**Standing down** and is held: the fleet's switch on Home's Fleet card is the one
+that changes it. When the service is stopped, not installed or turned off in
+System Settings it still reads **On duty**, and a line above it gives the reason
+and opens This computer; the same line says when a check is late or when the
+fleet's state can't be read. Hover the switch for the next scheduled run (for
+example "Next: Post on X, tomorrow at 9:00 AM") or when the stand down began. Under the switch, the
 account button (desktop v1.27.2) shows who is signed in: your Blowhorn profile photo, or
 your initials, your name, and your organization and plan (for example "Acme ·
 Free plan"). The organization is the one your Blowhorn session has
@@ -204,7 +203,9 @@ Every organization is on the Free plan unless an active subscription names anoth
 account menu: your name, email, organization and plan, then **Your account and
 plan** (your Blowhorn account page at cloud.blowhorn.ai, in your browser), **Team** (coming
 soon), **Switch organization** when you belong to more than one (it lists them
-inline in this menu with yours checked; picking one switches your account to it right here, the same
+inline in this menu with yours checked, and pointing at one, or moving to it with the
+arrow keys, shows its description and its ID, so two organizations with the same name
+can be told apart; picking one switches your account to it right here, the same
 switch cloud.blowhorn.ai makes, so your browser follows too; `blowhorn auth
 switch-organization` does it from Terminal), **Settings** (⌘,), **Help and docs**, and
 **Sign out**. With many organizations the list scrolls on its own, so your name at
@@ -232,14 +233,14 @@ activity, is locked. Once you are signed in, the account button stays usable. Se
 
 | Screen | Shows | Acts |
 |---|---|---|
-| Home (two tabs: **Today** and **Resources**) | Today: whether Blowhorn is working and whether it needs you, but never what runs next: an activity's next run is on Activity › Routines, and the rail's duty toggle names the next one on hover; the Fleet card: computers known (this one), how many are on duty or standing down, fleet holds, who stood the fleet down and why, and this computer's row; "Your draft was saved" once after setup, until you dismiss it or leave Home; beside them your results, and one card with **Recent activity** and **What went wrong** (it opens on what went wrong while something failed). Resources: ideas worth a try, the latest from Blowhorn, and a tip. A newer release is offered on a card at the top of the results column, **Update to Blowhorn** and the version | Stand down or Reenlist the entire fleet (reason optional, saved as you type) or this computer; open This computer from this computer's row; reconnect a signed-out account from the **Needs you** card at the top of Today: one row per signed-out account, its platform's mark and **Reconnect @handle** (or the person's name where the platform has no handle), which signs that account in again and reads **Reconnecting…** while it runs, and the **?** says which computer they are signed out on and how many scheduled posts wait (a Bluesky app password or a GitHub token opens Profiles instead); start the update from its card (Blowhorn restarts to finish); **Connect an account** opens a step for your own profile: each platform, how to sign in to it in your Google Chrome profile, and **Check again**, with connected ones ticked; finish setting up |
+| Home (two tabs: **Today** and **Resources**) | Today: whether Blowhorn is working and whether it needs you, but never what runs next: an activity's next run is on Activity › Routines, and the rail's duty toggle names the next one on hover; the Fleet card: computers known (this one), how many are on duty or standing down, fleet holds, who stood the fleet down and why, and this computer's row; "Your draft was saved" once after setup, until you dismiss it or leave Home; beside them your results, and one card with **Recent activity** and **What went wrong** (it opens on what went wrong while something failed). Resources: ideas worth a try, the latest from Blowhorn, and a tip. A newer release is offered on a card at the top of the results column, **Update to Blowhorn** and the version | the entire fleet's switch (reason optional, saved as you type) or this computer's switch, on the Fleet card; open This computer from this computer's row; reconnect a signed-out account from the **Needs you** card at the top of Today: one row per signed-out account, its platform's mark and **Reconnect @handle** (or the person's name where the platform has no handle), which signs that account in again and reads **Reconnecting…** while it runs, and the **?** says which computer they are signed out on and how many scheduled posts wait (a Bluesky app password or a GitHub token opens Profiles instead); start the update from its card (Blowhorn restarts to finish); **Connect an account** opens a step for your own profile: each platform, how to sign in to it in your Google Chrome profile, and **Check again**, with connected ones ticked; finish setting up |
 | Activity › Upcoming | Your posts with their status - "ready", "scheduled", "partly sent", "sent", "draft", "needs you" - and clicked-but-unread ones, each with when it goes out: its own time, "next check" when the next run would take it, "not scheduled" when nothing will send it (a draft, or a post that needs you), and "-" once it has gone out; an opened post's editor shows its result: delivery per profile and platform, reception where it was collected, and the follower change since. On the all and scheduled filters, the schedule's routines follow below the posts, each labelled by what it does; a routine names no post, so selecting one opens it on Routines | Add or edit a post; clearing a clicked post's "Date Promoted" queues it again |
-| Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the next check; a drawer for one item; a chooser of sample routines, each one ticked on only once its platform is connected | Add an item with the **+** button or by clicking a free time; move an item's next time by dragging it; edit one item, or Stand down / Reenlist it from the duty switch in its drawer; "do it now"; turn **dry fire** on in the header to rehearse up to the final click and post nothing (the dry run, `--dry-run`); add the sample routines you tick |
+| Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the next check; a drawer for one item; a chooser of sample routines, each one ticked on only once its platform is connected | Add an item with the **+** button or by clicking a free time; move an item's next time by dragging it; edit one item, or switch it between on duty and standing down from the duty switch in its drawer; "do it now"; turn **dry fire** on in the header to rehearse up to the final click and post nothing (the dry run, `--dry-run`); add the sample routines you tick |
 | Activity › History | Everything Blowhorn did, newest first, with each one's detailed log under the log directory's `scheduler/` folder; a picked run's detail shows its activity's result above the log: delivery per profile and platform, reception where it was collected, and the follower change since | "try again" on a failure |
 | Profiles | Every profile, its Chrome mapping, its per-platform sessions; for LinkedIn, X and Reddit, which Chrome profile to sign in to - never a password field. Clicking a profile opens it in a window over the list, which keeps the whole screen. It keeps its name and **check sessions** on top, over three tabs: **Details** (name, description, who it is), **Platforms** (one platform's card at a time, picked by its mark, each mark showing that session's state) and **Chrome** (its Chrome profile) | Add a profile (in the same window); save or delete it, or **cancel** to close without saving (on an open profile, the X, Escape or a click outside asks first if you typed something); map or unmap its Chrome profile; open a platform's sign-in page in that Chrome profile and **Check again**; enter a token or app password for the platforms that take one |
 | Performance | Followers, growth, and activity per profile; collection freshness in the header. Under the filters, three tabs that all read them: **Activity** (runs by platform, activity per profile), **History** (the figures, followers over time, new versus unfollowed per month) and **Report** (your LinkedIn pages and the health of each profile and page) | Collect now; open the HTML report |
 | Posture (three tabs: **Rules**, **Limits**, **Protection**; the fleet's stand down and stop sit on the tabs' line) | Rules: the rules of engagement for everyone (the slider: Safety on, Weapons tight or Weapons free), which choice wins, one grid of every profile on every platform with where each cell's choice comes from. Limits, one section at a time: by platform (pace and daily caps), speed and amount (spacing, outreach, how much runs at once), when and who says yes (quiet hours, approval, dry fire), typing, and pointer timing. Protection: what happens when a platform pushes back and what the last check held back, beside where your sign-ins live and what Blowhorn will never do | Move the slider; choose a preset for one platform for every profile, one profile on every platform, or one cell, or reset any of them to inherit; save limits or reset them to the preset; stand down or stop every computer; run a held activity once with **Do it anyway**; turn the sign-in check, the needs-you note, dry fire by default and failure reports on or off |
-| This computer (from Home's computer row, or the rail's reason line) | Who registered the background service, whether it is on duty, the last check, the fleet's stand down | "check now" (with "dry fire" to rehearse up to the final click, posting nothing); "stand down the fleet" / "reenlist the fleet"; open System Settings when the service is turned off there |
+| This computer (from Home's computer row, or the rail's reason line) | Who registered the background service, whether it is on duty, the last check, the fleet's stand down | "check now" (with "dry fire" to rehearse up to the final click, posting nothing); "stand down the fleet", and the fleet's switch while the fleet holds; open System Settings when the service is turned off there |
 | Settings (from the account menu; its pages are listed in the left rail under the places while it is open) | **General**: appearance (theme, material, spacing), notifications and usage data. **Background & updates**: startup, keeping this computer on watch after quit, the pause shortcut, the update channel, uninstall. **Setup**: setup and the guided setup, the extension card. **Advanced**: app paths and the engine defaults Posture does not hold, rendered from the CLI's own option list; your account card | Change defaults, check the extension, choose its mode, test your account connection; run setup again or quit or uninstall; **open Posture ›** for the rules of engagement and limits |
 
 The routines list keeps every value on one line. When the list is narrow -

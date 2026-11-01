@@ -20,6 +20,10 @@ blowhorn service tick-now --follow
 pass and the pass in flight. `tick-now` asks the running service for a pass
 now and watches it. In the app, the "this computer" screen shows the same state.
 
+While no pass is running, the service also tells Blowhorn that this
+computer is still here, about once a minute, so the computer shows online there
+between passes. It sends nothing while you are signed out.
+
 When this install is signed in to a Blowhorn account, one tick runs at a time. A
 second `blowhorn schedule tick` or `blowhorn schedule trigger-now` while that
 tick is running stops, and Blowhorn says it is already running a tick on this

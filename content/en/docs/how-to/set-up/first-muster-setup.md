@@ -23,7 +23,9 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   app moves on by itself. Once you are signed in, setup goes straight on
   to setting up your account, with no **Next** to press; if your account
   belongs to more than one organization, it stops there for you to pick
-  one. **Back** from the next step still shows who you are signed in as,
+  one. Point at an organization, or move to it with the keyboard, to see its
+  description and its ID, which tell apart two organizations with the same
+  name. **Back** from the next step still shows who you are signed in as,
   with **Not you? Sign out**. There is no extra page asking you to allow it. If the browser attempt fails, or you close it before
   finishing, **Cancel** on
   the waiting screen stops the wait right away - you never have to wait
