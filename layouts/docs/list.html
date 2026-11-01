@@ -1,5 +1,4 @@
-{{- /* Quadrant and group index pages: title, lead, body, the child pages, and
-  prev/next across the section. */ -}}
+{{- /* Documentation section pages. */ -}}
 {{ define "main" -}}
 <div class="prose docs-section">
   <h1 class="h1">{{ .Title }}</h1>
@@ -9,7 +8,14 @@
   {{ .Content -}}
   {{- partial "section-index.html" . -}}
 </div>
-{{- if ne .Parent.RelPermalink "/docs/" -}}
-  {{ partial "pager.html" . -}}
+
+{{- if eq .Parent.RelPermalink "/docs/reference/platforms/" -}}
+  {{- partial "platform-pager.html" . -}}
+{{- else if ne .Parent.RelPermalink "/docs/" -}}
+  {{- if eq .Parent.Parent.RelPermalink "/docs/" -}}
+    {{- partial "docs-component-pager.html" . -}}
+  {{- else -}}
+    {{- partial "pager.html" . -}}
+  {{- end -}}
 {{- end -}}
 {{ end -}}
