@@ -69,6 +69,8 @@
         </div>
         <p><a href="{{ $articlesSection.RelPermalink }}">All articles</a></p>
         {{- end }}
+
+        <p>Every tip and intelligence piece, with its column: <a href="{{ (site.GetPage "/resources/tips").RelPermalink }}">Tips and intelligence</a>.</p>
       </div>
     </main>
     {{ partial "video-dialog.html" . }}

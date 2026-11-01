@@ -7,7 +7,7 @@ import check_feeds as check
 ITEM = """<item><title>Post</title><link>https://blowhorn.ai/resources/articles/x/</link>
 <guid>https://blowhorn.ai/resources/articles/x/</guid>
 <pubDate>Wed, 28 Oct 2026 05:00:00 +0000</pubDate>
-<description>A summary.</description><category>{cat}</category></item>"""
+<description>A summary.</description><category>{cat}</category><category>column:boot-camp</category></item>"""
 
 
 BASE = "https://blowhorn.ai/"
@@ -89,3 +89,22 @@ class CheckFeedsTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+    def test_item_without_column_fails(self):
+        files = dict(VALID)
+        files["resources/feed.xml"] = feed(1).replace("<category>column:boot-camp</category>", "")
+        self.assertEqual(self.run_on(files), 1)
+
+    def test_item_with_unknown_column_fails(self):
+        files = dict(VALID)
+        files["resources/feed.xml"] = feed(1).replace("column:boot-camp", "column:barracks")
+        self.assertEqual(self.run_on(files), 1)
+
+    def test_item_with_two_columns_fails(self):
+        files = dict(VALID)
+        files["resources/feed.xml"] = feed(1).replace(
+            "<category>column:boot-camp</category>",
+            "<category>column:boot-camp</category><category>column:from-the-field</category>",
+        )
+        self.assertEqual(self.run_on(files), 1)

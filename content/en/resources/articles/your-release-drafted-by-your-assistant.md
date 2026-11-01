@@ -5,6 +5,7 @@ date: 2026-10-30
 author: "Blowhorn team"
 layout: article
 tags: ["in-product-intelligence", "agents"]
+column: "boot-camp"
 ---
 
 If you are the one person who is the company's public voice, a release has two jobs: ship the code, then tell the people who care. The second job is where launch week goes to die. The changelog is finished, but the posts are not, and every network wants its own wording. An assistant is good at the first draft. It should not be the one who presses send.

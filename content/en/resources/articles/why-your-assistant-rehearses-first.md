@@ -5,6 +5,7 @@ date: 2026-10-30
 author: "Blowhorn team"
 layout: article
 tags: ["in-product-intelligence", "agents"]
+column: "desk-of-the-general"
 ---
 
 When an assistant can act in your accounts, the question is not whether it is clever. It is what happens when it is wrong. Blowhorn's answer is a rehearsal by default: every write returns a dry run, and nothing becomes real until the assistant runs it again, confirmed. This article explains what that gives you and how to use it well. For the full account of how the server keeps you in control, read [How the MCP server keeps you in control](/docs/explanation/mcp-and-safety/).

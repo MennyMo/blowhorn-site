@@ -11,7 +11,9 @@
 {{- end -}}
 {{- $tagSlugs := slice -}}
 {{- range .GetTerms "tags" }}{{ $tagSlugs = $tagSlugs | append .Data.Term }}{{ end -}}
-<li class="video-card" data-card data-category="{{ $cat }}" data-tags="{{ delimit $tagSlugs " " }}" data-search="{{ lower (printf "%s %s %s" .Title .Description (delimit (.Params.tags | default slice) " ")) }}">
+{{- $column := .Params.column | default "" }}
+{{- $columnLabel := partial "column-label.html" $column -}}
+<li class="video-card" data-card data-category="{{ $cat }}" data-tags="{{ delimit $tagSlugs " " }}{{ with $column }} column:{{ . }}{{ end }}" data-column="{{ $column }}" data-search="{{ lower (printf "%s %s %s %s" .Title .Description (delimit (.Params.tags | default slice) " ") $columnLabel) }}">
   <button type="button" class="video-card-poster" data-play-video data-title="{{ .Title }}" data-sources="{{ $sources | jsonify }}"{{ with .Params.video }}{{ with .poster }} data-poster="{{ . | relURL }}"{{ end }}{{ end }} aria-label="Play video: {{ .Title }}">
     {{- with .Params.video -}}
       {{- with .poster }}<img src="{{ . | relURL }}" alt="" width="1920" height="1080" loading="lazy">{{ else }}<span class="poster-fallback" aria-hidden="true"></span>{{ end -}}
@@ -20,7 +22,7 @@
     {{- with .Params.duration }}<span class="video-card-duration">{{ . }}</span>{{ end -}}
   </button>
   <div class="video-card-body">
-    <p class="label">{{ .Parent.Title }}</p>
+    <p class="label">{{ .Parent.Title }}{{ with $columnLabel }} · {{ . }}{{ end }}</p>
     <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
     <p>{{ .Description }}</p>
     {{- with .GetTerms "tags" }}

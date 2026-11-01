@@ -306,7 +306,7 @@ check-action-matrix: site-build
 	python3 .github/scripts/check_action_matrix.py $(BUILD_DIR)
 
 ## Build for production once, then validate-html, check-links, check-third-party and check-urls, plus check-schemas (what site.yml runs).
-site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-download-links check-feeds check-brand-kits check-tells
+site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-download-links check-feeds check-brand-kits check-tells check-tips
 
 ## Production build, then fail if any built page or script links to /releases/latest/download (an axi release can hold Latest; build download URLs from data/download.json).
 check-download-links: site-build
@@ -319,6 +319,10 @@ check-brand-kits: site-build
 ## Production build, then validate the Resources RSS feeds, including the desktop contract feed (issue #253, Part D).
 check-feeds: site-build
 	python3 .github/scripts/check_feeds.py $(BUILD_DIR)
+
+## Source check, no build: fail if a published article or video lacks a column (blowhorn #1555), or a published tip lacks a video or a unique tipOrder (blowhorn #1554).
+check-tips:
+	python3 .github/scripts/check_tips.py
 
 ## Production build, then fail if a Blowhorn Tells placement (data/tells.json) left its page or a Tells link lost its UTM tags.
 check-tells: site-build
@@ -476,6 +480,7 @@ clean:
 	check-naming \
 	check-download-links \
 	check-feeds \
+	check-tips \
 	check-tells \
 	check-theme \
 	check-platform-docs \

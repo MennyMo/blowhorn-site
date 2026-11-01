@@ -5,6 +5,7 @@ date: 2026-10-28
 author: "Blowhorn team"
 layout: article
 tags: ["in-product-intelligence", "platform-rules"]
+column: "from-the-field"
 ---
 
 Every platform you post to reserves the right to change the rules, and they exercise it: a daily limit drops, a link format stops working, a kind of post that was fine last month now needs a different flow. Nothing about your schedule changed. Everything about its results can.

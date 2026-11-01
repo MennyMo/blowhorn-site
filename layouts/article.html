@@ -6,7 +6,16 @@
     <p class="article-meta">
       <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
       {{ with .Params.author }}<span aria-hidden="true">·</span> {{ . }}{{ end }}
+      {{- with partial "column-label.html" (.Params.column | default "") }}<span aria-hidden="true">·</span> {{ . }}{{ end }}
     </p>
+    {{- with .Params.video }}
+    <div class="vs-frame article-video">
+      <video controls preload="metadata" playsinline{{ with .poster }} poster="{{ . | relURL }}"{{ end }}>
+        {{- with .webm }}<source src="{{ . | relURL }}" type="video/webm">{{ end }}
+        {{- with .mp4 }}<source src="{{ . | relURL }}" type="video/mp4">{{ end }}
+      </video>
+    </div>
+    {{- end }}
     {{- with .GetTerms "tags" }}
     <div class="tag-chips-row" role="group" aria-label="Tags">
       <ul class="tag-chips">

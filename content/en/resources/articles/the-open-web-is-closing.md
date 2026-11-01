@@ -5,6 +5,7 @@ date: 2026-10-31
 author: "Blowhorn team"
 layout: article
 tags: ["in-product-intelligence", "platform-rules"]
+column: "desk-of-the-general"
 ---
 
 Reddit just reported a strong Q3 2026: revenue of $895 million, up 53% year over year. Its stock fell 30% anyway. As a [venture investor's widely shared analysis](https://lnkd.in/p/gX4awBSH) explains, the market was reacting to a disclosure buried in the results: search referral traffic declined during the quarter and is now falling by more than a million referrals a week.

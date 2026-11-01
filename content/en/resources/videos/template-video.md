@@ -17,6 +17,9 @@
 #   duration     - "m:ss", shown on the card.
 #   categories   - the display name of the category folder the file
 #                  lives in. The folder is the category; keep them equal.
+#   column       - exactly one of "desk-of-the-general", "boot-camp",
+#                  "from-the-field" (blowhorn #1555); feeds carry it as
+#                  a "column:<value>" category element.
 #   tags         - lowercase slugs; they become /tags/<tag>/ pages and
 #                  the tag filter chips. Reuse existing tags first.
 #   video        - mp4 and webm paths under assets/video/, and a poster
@@ -33,6 +36,7 @@ videoType: local
 duration: "0:00"
 categories: ["Getting started"]
 tags: ["overview"]
+column: "boot-camp"
 video:
   mp4: "assets/video/battalion-thunder.mp4"
   webm: "assets/video/battalion-thunder.webm"
