@@ -68,7 +68,7 @@ The miniature product UI in the Product menu and the homepage "Ways in" section 
 
 ## Mascot consistency
 
-Mascot art comes from the product repository's locked style (`marketing/brand/major-blowhorn/STYLE-LOCKED.md` and `consistency.md` there: one locked prompt, reference images, no text in the art). The oil-painting process that used to be described here is historical; never start a new scene from it. On the site:
+Mascot art comes from the product repository's locked style (`marketing/cast/major-blowhorn/STYLE-LOCKED.md` and `consistency.md` there: one locked prompt, reference images, no text in the art). The oil-painting process that used to be described here is historical; never start a new scene from it. On the site:
 
 - Use the official art in `static/assets/brand/mascot/`; one character per page, and only Major and the General speak, in a speech bubble below.
 - Lore art for /major/ lives in `static/assets/brand/mascot/lore/` as WebP with alt text.

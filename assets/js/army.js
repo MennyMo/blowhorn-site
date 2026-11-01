@@ -16,7 +16,7 @@
   var note = root.querySelector('.army-fleet-note');
   var plats = root.querySelectorAll('.army-plats img');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // Soldier art per slot, in the cast slot order (marketing/brand/cast/README.md).
+  // Soldier art per slot, in the cast slot order (marketing/cast/README.md).
   var soldiers = (macs.getAttribute('data-soldiers') || '').split(' ').filter(Boolean);
   // Unit sizes: one combined count of computers plus amplifying profiles.
   function unit(n) {

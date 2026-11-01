@@ -365,8 +365,8 @@ adds a module import, `github.com/blowhorn-ai/blowhorn`, with its own mounts:
     source = "marketing/assets.manifest.json"
     target = "static/internal/marketing-assets/assets.manifest.json"
   [[module.imports.mounts]]
-    source = "marketing/brand/cast"
-    target = "static/internal/marketing-assets/brand/cast"
+    source = "marketing/cast"
+    target = "static/internal/marketing-assets/cast"
     files = ["**/*-640.webp"]
   [[module.imports.mounts]]
     source = "internal/engineering/hugo/engineering"

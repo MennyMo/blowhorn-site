@@ -115,7 +115,7 @@ mascot:
     w: 659
     h: 560
 # Old Thunderlung tiles: PNG and WebP copies of the product repository's
-# marketing/brand/major-blowhorn/thunderlung/brand-style/ cutouts, unchanged.
+# marketing/cast/major-blowhorn/thunderlung/brand-style/ cutouts, unchanged.
 thunderlung:
   - name: With cord, side
     file: thunderlung/thunderlung-tassel-side

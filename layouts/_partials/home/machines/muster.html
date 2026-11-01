@@ -4,7 +4,7 @@
   assets/js/machines.js: recruits fall in, the roll call fills, and the
   two Enlist buttons (shown only with JavaScript) add a recruit on the
   page. The "Enlist a computer" link still goes to the download. */ -}}
-{{- /* Mixed roster in the computer pattern: the four computer chicks take every third slot (marketing/brand/cast/README.md, Unit sizes). */ -}}
+{{- /* Mixed roster in the computer pattern: the four computer chicks take every third slot (marketing/cast/README.md, Unit sizes). */ -}}
 {{- $troops := slice "recruit-chick-macbook" "platoon-private-base" "trench-trooper-base" "recruit-chick-imac" "mouse-marine-salute" "keyboard-warrior-base" "recruit-chick-laptop-lap" "robo-recruit-base" "sleeper-cell-base" "recruit-chick-mac-studio" "drill-instructor-base" "gi-donkey-base" -}}
 {{- $urls := slice -}}
 {{- range $troops }}{{ $urls = $urls | append (printf "assets/brand/cast/%s.webp" . | relURL) }}{{ end -}}
