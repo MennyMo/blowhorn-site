@@ -1,6 +1,5 @@
 {{- /*
-  Navigate between the Actions section and individual platform pages.
-  Direct child pages and sections participate in one weight-sorted sequence.
+  Navigate between sibling documentation pages and sections, ordered by weight.
 */ -}}
 
 {{- $siblings := (union .Parent.Pages .Parent.Sections).ByWeight -}}
