@@ -1,0 +1,36 @@
+{{- /*
+  Navigate between direct children of a major documentation section.
+  Both regular pages and nested sections participate, ordered by weight.
+*/ -}}
+
+{{- $siblings := (union .Parent.Pages .Parent.Sections).ByWeight -}}
+{{- $currentIndex := -1 -}}
+
+{{- range $index, $sibling := $siblings -}}
+  {{- if eq $sibling.RelPermalink $.RelPermalink -}}
+    {{- $currentIndex = $index -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $lastIndex := sub (len $siblings) 1 -}}
+
+<ul class="list-unstyled d-flex justify-content-between align-items-center mb-0 pt-5">
+  <li>
+    {{- if gt $currentIndex 0 -}}
+      {{- with index $siblings (sub $currentIndex 1) -}}
+    <a href="{{ .RelPermalink }}" aria-label="{{ T "ui_pager_prev" }} - {{ .Title }}" class="btn btn-primary"><span class="me-1">←</span>{{ T "ui_pager_prev" }}</a>
+      {{- end -}}
+    {{- else -}}
+    <a aria-disabled="true" class="btn btn-primary disabled"><span class="me-1">←</span>{{ T "ui_pager_prev" }}</a>
+    {{- end -}}
+  </li>
+  <li>
+    {{- if and (ge $currentIndex 0) (lt $currentIndex $lastIndex) -}}
+      {{- with index $siblings (add $currentIndex 1) -}}
+    <a href="{{ .RelPermalink }}" aria-label="{{ T "ui_pager_next" }} - {{ .Title }}" class="btn btn-primary">{{ T "ui_pager_next" }}<span class="ms-1">→</span></a>
+      {{- end -}}
+    {{- else -}}
+    <a aria-disabled="true" class="btn btn-primary disabled">{{ T "ui_pager_next" }}<span class="ms-1">→</span></a>
+    {{- end -}}
+  </li>
+</ul>
