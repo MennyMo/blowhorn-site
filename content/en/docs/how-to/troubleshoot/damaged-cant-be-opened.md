@@ -77,6 +77,35 @@ or Spotlight opens. macOS checks that copy, not the one you just installed.
 To see which version you have, select Blowhorn in Applications and choose
 **File** > **Get Info**.
 
+## If hidden backup copies are in Applications
+
+The updater can leave hidden copies of earlier versions in Applications,
+named `.Blowhorn-backup-<id>.app`. They share Blowhorn's app ID, so
+macOS can check a broken backup copy instead of the good copy in
+Applications. That check produces this dialog even when
+`/Applications/Blowhorn.app` itself is signed and notarized.
+
+1. Check for backup copies. In Terminal, run:
+
+   ```bash
+   ls -a /Applications ~/Applications 2>/dev/null | grep -i blowhorn
+   ```
+
+   Anything named `.Blowhorn-backup-….app` is a leftover.
+2. Delete only the backup copies. In Terminal, run:
+
+   ```bash
+   rm -rf /Applications/.Blowhorn-backup-*.app
+   ```
+
+   If macOS says Permission denied, the copy belongs to another user.
+   Run the same command with `sudo` and enter an admin password. Never
+   delete `/Applications/Blowhorn.app` itself.
+3. Retry the blowhorn command, or open Blowhorn from Applications again.
+
+The updater leaving these copies behind is tracked in
+[blowhorn-ai/blowhorn#1651](https://github.com/blowhorn-ai/blowhorn/issues/1651).
+
 ## Related
 
 - [Troubleshooting](/docs/how-to/troubleshoot/troubleshooting/) - start from the symptom.
