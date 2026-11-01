@@ -67,6 +67,27 @@ Blowhorn notices when you are done.
 You can take over at any time, not only when Blowhorn asks, and give back the
 same way.
 
+## Teach Blowhorn a step it got stuck on
+
+When a click fails because Blowhorn found nothing to click, or another element
+covered the target, the panel offers **Show me**.
+
+1. Click **Show me**. Blowhorn takes you to the tab, as with Take over.
+2. Click the element yourself, the way the step should have.
+3. Click **Give back**. Blowhorn reads the element you clicked through its
+   debugger connection - its role, its name and a selector for it - and keeps
+   it as a hint for that page. The next time the same step fails there,
+   Blowhorn tries your hint before giving up.
+
+Hints stay on this computer, in the extension's own storage; they are never
+sent to your Blowhorn account or anywhere else. A hint only applies to the
+page you taught it on. If the site changes and the hint stops matching,
+Blowhorn fails the step as it did before, and you can teach it again.
+
+Known limit: Blowhorn records the element your click focused. If your click
+moved to another page, there is nothing focused to record and the panel says
+so.
+
 ## Related
 
 - [Chrome extension permissions](/docs/reference/extension-permissions/) - what
