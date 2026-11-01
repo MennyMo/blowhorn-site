@@ -9,6 +9,7 @@ featured: true
 duration: "0:41"
 categories: ["Getting started"]
 tags: ["overview", "desktop-app"]
+column: "boot-camp"
 video:
   mp4: "assets/video/battalion-thunder.mp4"
   webm: "assets/video/battalion-thunder.webm"

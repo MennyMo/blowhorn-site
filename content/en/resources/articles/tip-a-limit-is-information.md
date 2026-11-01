@@ -5,6 +5,13 @@ date: 2026-10-28
 author: "Blowhorn team"
 layout: article
 tags: ["tips", "platform-rules"]
+column: "from-the-field"
+tipOrder: 5
+video:
+  mp4: "assets/video/tips/tip-a-limit-is-information.mp4"
+  webm: "assets/video/tips/tip-a-limit-is-information.webm"
+  poster: "assets/video/tips/tip-a-limit-is-information-poster.webp"
+  duration: "0:20"
 ---
 
 A limit reached is a platform telling you, precisely, where its boundary sits today. That is useful information. Treat it the way you would treat a price: adjust what you buy. Halve the batch, widen the spacing, and let the troop finish smaller and slower.

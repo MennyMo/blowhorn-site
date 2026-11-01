@@ -1,0 +1,45 @@
+{{- /* The Resources Tips section (blowhorn #1555, decision 3): every
+       in-product intelligence piece appears here, whatever route
+       delivers it to the desktop app - the bundled tips (tagged
+       "tips", shown in curriculum order) and the dated Product
+       intelligence pieces (tagged "in-product-intelligence", newest
+       first). Each card carries its column, and the column chips
+       filter the whole list. */ -}}
+{{ define "main" }}
+{{- $articlesSection := site.GetPage "/resources/articles" -}}
+{{- $articles := $articlesSection.RegularPagesRecursive -}}
+{{- $tips := sort (where $articles "Params.tags" "intersect" (slice "tips")) "Params.tipOrder" -}}
+{{- $intel := where $articles "Params.tags" "intersect" (slice "in-product-intelligence") -}}
+{{- $pieces := $tips | append ($intel.ByDate.Reverse) -}}
+<main id="main" class="page resources-page articles-page">
+  <div class="wrap">
+    <p class="eyebrow">Resources</p>
+    <h1>{{ .Title }}</h1>
+    <p class="lead">{{ .Params.lead | default .Description }}</p>
+
+    <div class="collection-tools">
+      <label class="collection-search">
+        <span class="sr-only">Search tips and intelligence</span>
+        <input type="search" placeholder="Search tips and intelligence" data-collection-search>
+      </label>
+      <div class="tag-chips-row" role="group" aria-label="Filter by column">
+        <ul class="tag-chips">
+          {{- range slice "desk-of-the-general" "boot-camp" "from-the-field" }}
+          <li><button type="button" class="tag-chip" data-tag-chip="column:{{ . }}" aria-pressed="false">{{ partial "column-label.html" . }}</button></li>
+          {{- end }}
+        </ul>
+      </div>
+      <p class="collection-status" data-collection-status role="status"></p>
+    </div>
+
+    <div class="articles-list" data-collection-grid data-collection-noun="pieces">
+      {{- range $pieces }}{{ partial "article-card.html" . }}{{ end }}
+    </div>
+  </div>
+</main>
+{{ end }}
+
+{{ define "scripts" }}
+    {{- $js := resources.Get "js/resources.js" | minify | fingerprint }}
+    <script src="{{ $js.RelPermalink }}" defer></script>
+{{ end }}

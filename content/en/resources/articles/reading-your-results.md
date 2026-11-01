@@ -5,6 +5,7 @@ date: 2026-10-14
 author: "Blowhorn team"
 layout: article
 tags: ["in-product-intelligence", "reading-results"]
+column: "from-the-field"
 ---
 
 A finished activity tells a simple story on the surface: the post went out. Underneath, the numbers on that activity are the feedback loop for everything you schedule next. Reading them well takes five minutes a week, and it beats any amount of guessing about what your audience wants.

@@ -19,6 +19,13 @@
           {{- end }}
         </ul>
       </div>
+      <div class="tag-chips-row" role="group" aria-label="Filter by column">
+        <ul class="tag-chips">
+          {{- range slice "desk-of-the-general" "boot-camp" "from-the-field" }}
+          <li><button type="button" class="tag-chip" data-tag-chip="column:{{ . }}" aria-pressed="false">{{ partial "column-label.html" . }}</button></li>
+          {{- end }}
+        </ul>
+      </div>
       <p class="collection-status" data-collection-status role="status"></p>
     </div>
 

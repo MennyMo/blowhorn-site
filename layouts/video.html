@@ -31,6 +31,7 @@
           </video>
         </div>
         <p class="vs-meta">
+          {{- with partial "column-label.html" (.Params.column | default "") }}<span>{{ . }}</span>{{ end }}
           {{- with .Params.duration }}<span>Duration {{ . }}</span>{{ end }}
           <span>Published {{ .Date.Format "January 2, 2006" }}</span>
           {{- with .GetTerms "tags" }}<span>Tags: {{ range $i, $t := . }}{{ if $i }}, {{ end }}<a href="{{ $t.RelPermalink }}">{{ $t.Title }}</a>{{ end }}</span>{{ end }}

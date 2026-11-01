@@ -5,6 +5,7 @@ date: 2026-10-30
 author: "Blowhorn team"
 layout: article
 tags: ["in-product-intelligence", "agents"]
+column: "desk-of-the-general"
 ---
 
 When you manage accounts for other people, the cost of a mistake is not yours alone. A post to the wrong brand is an awkward call to a client. An assistant makes that risk bigger and smaller at once: bigger because it works faster than you read, smaller if you set up the boundaries before it starts. This article is about those boundaries.

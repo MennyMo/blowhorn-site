@@ -5,6 +5,7 @@ date: 2026-10-28
 author: "Blowhorn team"
 layout: article
 tags: ["in-product-intelligence", "reading-results"]
+column: "from-the-field"
 ---
 
 "A post is won or lost in its first hour" is one of the most repeated lines in social media advice. As a rule of thumb, it is useful. As a law, it is wrong often enough to mislead you. This article covers what sits behind it, what the platforms have actually said, and what to do about it.

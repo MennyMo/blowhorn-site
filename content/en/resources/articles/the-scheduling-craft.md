@@ -5,6 +5,7 @@ date: 2026-10-21
 author: "Blowhorn team"
 layout: article
 tags: ["in-product-intelligence", "scheduling"]
+column: "boot-camp"
 ---
 
 Nobody gets flagged for one post. Accounts get into trouble for patterns: twenty posts in four minutes, the same link five times in an hour, activity at 3 a.m. from an account that has slept for a year. Scheduling is the craft of keeping your activity shaped like a person, even when a computer is doing the typing.

@@ -6,6 +6,7 @@ author: "Blowhorn team"
 seo_title: "Your first Blowhorn dry run in five minutes"
 layout: article
 tags: ["in-product-intelligence", "agents"]
+column: "boot-camp"
 ---
 
 You ship things alone, and your launch posts are the part you least want to babysit. The quickest way to see whether an assistant can help is to try it once, on something harmless. This is the shortest path: a few exact steps, then your first write as a rehearsal. The [step-by-step tutorial](/docs/tutorials/first-mcp-connection/) covers the same ground with more detail.

@@ -49,6 +49,28 @@ Copy `template-article.md`. Every field in it is required:
 - `author`: the byline, normally "Blowhorn team".
 - `layout`: always `article`.
 - `tags`: at least one tag. See the tagging rules below.
+- `column`: exactly one of `desk-of-the-general` (From the Desk of the
+  General - direction and strategy), `boot-camp` (From Boot Camp -
+  Major Blowhorn's drill instruction) or `from-the-field` (From the
+  Field - reports from active use). Every tip and every dated resource
+  carries one; the feeds carry it as a `column:<value>` category
+  element, and the desktop app labels pieces by it.
+
+### Tips: two more required fields
+
+A tip (an article tagged `tips`) also carries:
+
+- `tipOrder`: its place in the bundled curriculum the desktop app
+  teaches - the next free positive integer. Tips are bundled into the
+  app and shown in this order, each one once.
+- `video`: a tip never publishes without a video. Self-hosted files
+  under `static/assets/video/tips/`: an `mp4`, a `webm`, and a 16:9
+  `poster` image, plus a `duration` in `m:ss`. Keep tip videos short -
+  one idea, under a minute. The tip page plays the video above the
+  text, and the desktop bundle carries the same reference.
+  `check_tips.py` (part of `make check`) fails a published tip with
+  no video, a missing file, or a duplicated `tipOrder`, and fails any
+  published article or video with no column or an unknown one.
 
 Write the body in Markdown, short paragraphs, headings at `##` level, and
 advice a reader can act on today. The article layout adds a Keep reading rail
@@ -69,6 +91,8 @@ annotated in the template:
   hosts, so the first embedded video ships with a privacy-page update in the
   same change, per the site's third-party rule. Self-hosted videos need no
   privacy update, and their posters are the site's own files.
+- `column`: exactly one of `desk-of-the-general`, `boot-camp` or
+  `from-the-field`, as for articles above.
 - `categories`: the display name of the category folder the file lives in.
   The folder is the category; keep them equal. There is deliberately no
   categories taxonomy: a video's categories stay a plain parameter.
@@ -108,8 +132,14 @@ Publishing a resource puts it in the feeds automatically:
 - `/resources/feed.xml`: everything in Resources, newest first.
 - `/resources/tags/<tag>/feed.xml`: one feed per tag.
 - Feed items carry `title`, `link`, `description` (the article summary or
-  video description), `pubDate` (from `date`) and the item's tags as
-  `category` elements.
+  video description), `pubDate` (from `date`), the item's tags as
+  `category` elements, and its column as one more category element,
+  `column:<value>`.
+
+The Tips section at `/resources/tips/` lists every in-product
+intelligence piece - the tips in `tipOrder` order, then the dated
+Product intelligence pieces, newest first - each with its column, and
+its column chips filter the list.
 
 The desktop contract is `https://blowhorn.ai/resources/tags/in-product-intelligence/feed.xml`.
 Any change to that URL or to the item shape must be flagged on the desktop

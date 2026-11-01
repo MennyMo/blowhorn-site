@@ -5,6 +5,13 @@ date: 2026-10-26
 author: "Blowhorn team"
 layout: article
 tags: ["tips"]
+column: "boot-camp"
+tipOrder: 1
+video:
+  mp4: "assets/video/tips/tip-approve-first-run.mp4"
+  webm: "assets/video/tips/tip-approve-first-run.webm"
+  poster: "assets/video/tips/tip-approve-first-run-poster.webp"
+  duration: "0:20"
 ---
 
 A new troop is a bundle of untested decisions: the target list, the wording, the pace, the platform. Approval mode makes the first runs cheap to get wrong. Each post waits for your yes, so a wrong list or an awkward template costs you a rejected post instead of a published one.

@@ -1,0 +1,4 @@
+{{- /* The display label for a piece's column (blowhorn #1555): every tip
+       and dated resource carries exactly one. Returns "" for no column. */ -}}
+{{- $labels := dict "desk-of-the-general" "From the Desk of the General" "boot-camp" "From Boot Camp" "from-the-field" "From the Field" -}}
+{{- return (index $labels (. | default "")) -}}

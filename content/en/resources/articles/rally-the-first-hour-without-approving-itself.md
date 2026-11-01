@@ -5,6 +5,7 @@ date: 2026-10-30
 author: "Blowhorn team"
 layout: article
 tags: ["in-product-intelligence", "agents"]
+column: "from-the-field"
 ---
 
 The company page posts, and then a quiet hour follows. Your teammates meant to react; they were in meetings. The usual fix is a pinned Slack message that says "can everyone like this?", which works once and then becomes noise. A better fix is to plan the first hour before the post goes out, with the people who agreed to take part, and to let an assistant do the tedious scheduling while a person keeps the final say.

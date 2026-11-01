@@ -11,7 +11,10 @@ desktop homepage reads https://blowhorn.ai/resources/tags/in-product-intelligenc
 Every item in every feed must carry the fields the contract promises -
 title, link, description (the summary, not a teaser), pubDate, and the
 item's tags as category elements - and the contract feed may contain
-only items tagged in-product-intelligence.
+only items tagged in-product-intelligence. Since the in-product
+intelligence rework (blowhorn #1555), every item must also carry
+exactly one column category, "column:<slug>", with a slug from
+COLUMNS: the desktop labels and groups feed items by their column.
 
 Usage: check_feeds.py [BUILD_DIR]
 """
@@ -26,6 +29,7 @@ from pathlib import Path
 
 REQUIRED_FIELDS = ("title", "link", "description", "pubDate")
 CONTRACT_TAG = "in-product-intelligence"
+COLUMNS = ("desk-of-the-general", "boot-camp", "from-the-field")
 CONTRACT_FEED = Path("resources/tags") / CONTRACT_TAG / "feed.xml"
 RESOURCES_FEED = Path("resources/feed.xml")
 ATOM = "{http://www.w3.org/2005/Atom}"
@@ -73,8 +77,14 @@ def check_feed(
                 parsedate_to_datetime(pub.text.strip())
             except (TypeError, ValueError):
                 problems.append(f"{label}: item {i} has an unparseable <pubDate>: {pub.text.strip()!r}")
+        cats = [(c.text or "").strip() for c in item.findall("category")]
+        column_cats = [c for c in cats if c.startswith("column:")]
+        if len(column_cats) != 1 or column_cats[0][len("column:"):] not in COLUMNS:
+            problems.append(
+                f"{label}: item {i} must carry exactly one <category>column:<slug></category>"
+                f" with a slug from {', '.join(COLUMNS)}; found {column_cats}"
+            )
         if contract:
-            cats = [(c.text or "").strip() for c in item.findall("category")]
             if CONTRACT_TAG not in cats:
                 problems.append(
                     f"{label}: item {i} lacks <category>{CONTRACT_TAG}</category>;"

@@ -5,6 +5,13 @@ date: 2026-10-27
 author: "Blowhorn team"
 layout: article
 tags: ["tips", "scheduling"]
+column: "boot-camp"
+tipOrder: 3
+video:
+  mp4: "assets/video/tips/tip-post-at-their-hour.mp4"
+  webm: "assets/video/tips/tip-post-at-their-hour.webm"
+  poster: "assets/video/tips/tip-post-at-their-hour-poster.webp"
+  duration: "0:20"
 ---
 
 The moment you write a post is the moment it is convenient for you. Your audience reads on their own schedule: the morning commute, the lunch scroll, the evening wind-down. A post fired at your convenience lands in an empty room.

@@ -21,6 +21,23 @@ author: "Blowhorn team"
 # existing set before inventing a new one; a new tag also needs a
 # feed page under content/en/resources/tags/.
 tags: ["in-product-intelligence"]
+# Required: exactly one column - the taxonomy every tip and dated
+# resource carries (blowhorn #1555). One of:
+# "desk-of-the-general" (From the Desk of the General),
+# "boot-camp" (From Boot Camp), "from-the-field" (From the Field).
+# Feeds carry it as a "column:<value>" category element.
+column: "boot-camp"
+# Tips only (tag "tips"): required. The tip's place in the desktop
+# app's bundled curriculum order - the next free integer.
+# tipOrder: 7
+# Tips only: required, enforced by check_tips.py - a tip never
+# publishes without a video (#1554). Self-hosted files under
+# static/assets/video/tips/, with a 16:9 poster; duration "m:ss".
+# video:
+#   mp4: "assets/video/tips/<slug>.mp4"
+#   webm: "assets/video/tips/<slug>.webm"
+#   poster: "assets/video/tips/<slug>-poster.webp"
+#   duration: "0:20"
 ---
 
 Write the article here, in Markdown. Short paragraphs, headings at

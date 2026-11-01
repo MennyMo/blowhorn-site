@@ -19,6 +19,9 @@
       {{- range .Params.tags }}
       <category>{{ . }}</category>
       {{- end }}
+      {{- with .Params.column }}
+      <category>column:{{ . }}</category>
+      {{- end }}
     </item>
     {{- end }}
   </channel>

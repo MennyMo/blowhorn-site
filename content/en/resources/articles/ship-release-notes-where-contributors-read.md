@@ -5,6 +5,7 @@ date: 2026-10-30
 author: "Blowhorn team"
 layout: article
 tags: ["in-product-intelligence", "agents"]
+column: "from-the-field"
 ---
 
 You tagged the release. The changelog is merged. Now the people who use and contribute to your project need to hear about it, and they are in five different rooms with five different manners. The tempting habit is to write one announcement and paste it. That works badly, because every room has its own expectations, and readers can tell when a post was written for somewhere else.
