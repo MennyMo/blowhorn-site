@@ -183,7 +183,10 @@ cannot do is refused by name.
 When a run needs the extension and finds no bridge while Chrome is not
 running, Blowhorn opens Chrome on the run's mapped profile, with no
 address, so the profile's own startup pages and session restore are left
-alone. It says once, on stderr, `Google Chrome was not running; opening
+alone. On a Mac it asks macOS to open Chrome in the background (`open -g`), so
+Chrome is meant to stay behind the app you are using and a scheduled run
+that starts while you type elsewhere should leave your keystrokes where they
+were. It says once, on stderr, `Google Chrome was not running; opening
 it with profile <name> (blowhorn-engine-1000).`, and the run resumes as
 soon as the Blowhorn extension reports in: the native host announces
 itself the moment its bridge is up, so the run never waits on a timer.
