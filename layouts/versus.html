@@ -10,6 +10,17 @@
 {{- end }}
 {{ define "main" }}
     {{- $p := .Params -}}
+    {{- /* Platform logo lookup for the optional network_logos strip. Files are
+      the platforms' own art under static/assets/platforms/, unmodified. */ -}}
+    {{- $platLogos := dict
+      "linkedin" (dict "src" "assets/platforms/linkedin-in-bug.png" "alt" "LinkedIn")
+      "x" (dict "src" "assets/platforms/x-logo-black.png" "alt" "X")
+      "reddit" (dict "src" "assets/platforms/reddit-logo.png" "alt" "Reddit")
+      "hacker-news" (dict "src" "assets/platforms/hacker-news-y18.svg" "alt" "Hacker News")
+      "github" (dict "src" "assets/platforms/github-invertocat-black.svg" "alt" "GitHub")
+      "bluesky" (dict "src" "assets/platforms/bluesky-butterfly-blue.svg" "alt" "Bluesky")
+      "slack" (dict "src" "assets/platforms/slack-mark.svg" "alt" "Slack")
+    -}}
     <main id="main" class="page agent-page versus-page">
       <div class="wrap">
         <header class="agent-hero glass">
@@ -39,6 +50,14 @@
             <div class="versus-col versus-us">
               <h3 class="h3">Choose Blowhorn if</h3>
               <ul class="versus-list">{{ range $p.us }}<li>{{ . }}</li>{{ end }}</ul>
+              {{- with $p.network_logos }}
+              <ul class="army-plats versus-plats" aria-label="Networks Blowhorn covers">
+                {{- range . -}}
+                  {{- $logo := index $platLogos . -}}
+                  {{- with $logo }}<li><img src="{{ .src | relURL }}" alt="{{ .alt }}" width="28" height="28" loading="lazy"></li>{{ end -}}
+                {{- end }}
+              </ul>
+              {{- end }}
               <p class="ui"><a href="{{ "download/" | relURL }}">Get Blowhorn</a></p>
             </div>
           </div>
@@ -59,10 +78,32 @@
         </section>
         {{- end }}
 
+        {{- /* Optional cast or scene art: one figure per page, from the
+          approved catalog, with the catalog's alt text. */ -}}
+        {{- with $p.art }}
+        <section class="agent-section versus-art" aria-label="Illustration">
+          <figure class="versus-figure glass">
+            <img src="{{ .src | relURL }}" alt="{{ .alt }}" loading="lazy">
+            {{- with .caption }}<figcaption class="muted">{{ . }}</figcaption>{{ end }}
+          </figure>
+        </section>
+        {{- end }}
+
+        {{- /* Optional terminal code card: one CLI or MCP example that shows
+          the difference better than words. */ -}}
+        {{- with $p.codecard }}
+        <section class="agent-section" aria-labelledby="codecard-title">
+          <div class="section-head">
+            <h2 id="codecard-title" class="h2">{{ .heading | default "See it in the terminal" }}</h2>
+          </div>
+          {{ partial "code-card.html" (dict "code" .code "title" (.title | default "terminal") "lang" (.lang | default "bash") "prompt" true) }}
+        </section>
+        {{- end }}
+
         <section class="agent-section" aria-labelledby="table-title">
           <div class="section-head">
             <h2 id="table-title" class="h2">Side by side</h2>
-            <p class="muted">{{ $p.competitor }} pricing as of Oct 2026: {{ $p.price_them }} (<a href="{{ $p.price_src }}" rel="noopener">source</a>). Blowhorn: free plan available, see <a href="{{ "pricing/" | relURL }}">pricing</a>.</p>
+            <p class="muted">{{ $p.competitor }} pricing as of {{ dateFormat "Jan 2006" $p.lastmod }}: {{ $p.price_them }} (<a href="{{ $p.price_src }}" rel="noopener">source</a>). Blowhorn: free plan available, see <a href="{{ "pricing/" | relURL }}">pricing</a>.</p>
           </div>
           <div class="compare-scroll versus-table-wrap">
             <table class="compare-table versus-table">
