@@ -63,6 +63,21 @@
           </div>
         </section>
 
+        {{- with $p.art }}
+        {{- /* Optional page art: one approved cast or troops image with a
+          real-text caption. Renders only on pages that set `art`. */ -}}
+        <section class="agent-section" aria-labelledby="art-title">
+          {{- with .heading }}
+          <div class="section-head">
+            <h2 id="art-title" class="h2">{{ . }}</h2>
+          </div>
+          {{- end }}
+          <figure class="versus-art glass">
+            <img src="{{ .src | relURL }}" alt="{{ .alt }}" loading="lazy">
+            {{- with .caption }}<figcaption class="muted">{{ . }}</figcaption>{{ end }}
+          </figure>
+        </section>
+        {{- end }}
 
         {{- if $p.wins }}
         <section class="agent-section" aria-labelledby="wins-title">
@@ -76,17 +91,6 @@
               <ul class="versus-marks">{{ range $p.loses }}<li><span class="versus-mark" aria-hidden="true"></span>{{ . }}</li>{{ end }}</ul>
             </div>
           </div>
-        </section>
-        {{- end }}
-
-        {{- /* Optional cast or scene art: one figure per page, from the
-          approved catalog, with the catalog's alt text. */ -}}
-        {{- with $p.art }}
-        <section class="agent-section versus-art">
-          <figure class="versus-figure glass">
-            <img src="{{ .src | relURL }}" alt="{{ .alt }}" loading="lazy">
-            {{- with .caption }}<figcaption class="muted">{{ . }}</figcaption>{{ end }}
-          </figure>
         </section>
         {{- end }}
 
