@@ -9,13 +9,7 @@
   {{- partial "section-index.html" . -}}
 </div>
 
-{{- if eq .Parent.RelPermalink "/docs/reference/platforms/" -}}
+{{- if ne .Parent.RelPermalink "/docs/" -}}
   {{- partial "docs-sibling-pager.html" . -}}
-{{- else if ne .Parent.RelPermalink "/docs/" -}}
-  {{- if eq .Parent.Parent.RelPermalink "/docs/" -}}
-    {{- partial "docs-sibling-pager.html" . -}}
-  {{- else -}}
-    {{- partial "pager.html" . -}}
-  {{- end -}}
 {{- end -}}
 {{ end -}}
