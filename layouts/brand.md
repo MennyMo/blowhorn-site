@@ -3,7 +3,7 @@
 > {{ .Params.lead }}
 
 {{ with .Params.kits -}}
-- Download full brand kit: [{{ .full.url | absURL }}]({{ .full.url | absURL }}) (ZIP, {{ .full.size }}). Logos, colors, type, usage rules, Major Blowhorn, the troops and Old Thunderlung.
+- Download full brand kit: [{{ .full.url | absURL }}]({{ .full.url | absURL }}) (ZIP, {{ .full.size }}). Logos, colors, type, usage rules, Major Blowhorn, the troops, Old Thunderlung, the scenes and the launch press graphics.
 - Download logos only: [{{ .logos.url | absURL }}]({{ .logos.url | absURL }}) (ZIP, {{ .logos.size }}). Logos, icons and wordmarks in SVG and PNG, light and dark.
 {{- end }}
 
@@ -48,6 +48,25 @@ It only sounds for real messages to real ears, so bots and bought crowds can't h
 {{- end }}
 
 The red cord and tassels are its uniform. The plain version is for small or busy spaces.
+
+## The cast
+
+Major Blowhorn does not work alone. These are the troops who carry each message out, the barnyard recruits who joined them, and the troublemakers they keep out.
+
+### The troops
+{{ range .Params.troops }}
+- {{ .name }}{{ with .note }} ({{ . }}){{ end }}: [WebP]({{ printf "assets/brand/troops/%s.webp" .file | absURL }})
+{{- end }}
+
+### Barnyard recruits
+{{ range .Params.recruits }}
+- {{ .name }}{{ with .note }} ({{ . }}){{ end }}: [WebP]({{ printf "assets/brand/troops/%s.webp" .file | absURL }})
+{{- end }}
+
+### Troublemakers
+{{ range .Params.troublemakers }}
+- {{ .name }}{{ with .note }} ({{ . }}){{ end }}: [WebP]({{ printf "assets/brand/troops/%s.webp" .file | absURL }})
+{{- end }}
 
 ## Usage
 
