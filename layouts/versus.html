@@ -51,7 +51,7 @@
               <h3 class="h3">Choose Blowhorn if</h3>
               <ul class="versus-list">{{ range $p.us }}<li>{{ . }}</li>{{ end }}</ul>
               {{- with $p.network_logos }}
-              <ul class="army-plats versus-plats" aria-label="Networks Blowhorn covers">
+              <ul class="army-plats versus-plats">
                 {{- range . -}}
                   {{- $logo := index $platLogos . -}}
                   {{- with $logo }}<li><img src="{{ .src | relURL }}" alt="{{ .alt }}" width="28" height="28" loading="lazy"></li>{{ end -}}
@@ -66,7 +66,7 @@
         {{- with $p.art }}
         {{- /* Optional page art: one approved cast or troops image with a
           real-text caption. Renders only on pages that set `art`. */ -}}
-        <section class="agent-section versus-art" aria-label="Illustration">
+        <section class="agent-section versus-art">
           <figure class="versus-figure">
             <img src="{{ .src | relURL }}" alt="" loading="lazy">
             <figcaption class="muted">{{ .caption }}</figcaption>
@@ -92,7 +92,7 @@
         {{- /* Optional cast or scene art: one figure per page, from the
           approved catalog, with the catalog's alt text. */ -}}
         {{- with $p.art }}
-        <section class="agent-section versus-art" aria-label="Illustration">
+        <section class="agent-section versus-art">
           <figure class="versus-figure glass">
             <img src="{{ .src | relURL }}" alt="{{ .alt }}" loading="lazy">
             {{- with .caption }}<figcaption class="muted">{{ . }}</figcaption>{{ end }}
