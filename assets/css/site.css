@@ -2714,6 +2714,11 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 .page .versus-table tbody tr:hover > * { background: color-mix(in srgb, var(--surface-tint) 35%, transparent); }
 .page .versus-table tbody tr:hover > .compare-us { background: var(--surface-tint); }
 
+/* Versus page illustration: one catalog figure per page, glass framed. */
+.versus-figure { max-width: 40rem; margin-inline: auto; padding: var(--card-pad, var(--space-6)); text-align: center; }
+.versus-figure img { max-width: 100%; height: auto; }
+.versus-figure figcaption { margin-top: var(--space-3); }
+
 .versus-belief {
   padding-left: var(--space-6);
   border-left: 3px solid var(--teal);
