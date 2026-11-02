@@ -565,6 +565,27 @@ startup:
 ~/.local/bin/blowhorn-mcp --transport http
 ```
 
+### The interim hosted gateway
+
+Until Cloud serves `/mcp` itself, an interim, read-only gateway runs at
+`https://mcp.blowhorn.ai/mcp` (`hosted/` in blowhorn-ai/blowhorn-mcp). It
+takes your Cloud API token as `Authorization: Bearer <token>` and offers four
+read tools. Every `tools/call` it serves is recorded as one event in your
+Cloud activity, written with your own token:
+
+| Field | Value |
+|---|---|
+| `category` / `action` | `mcp` / `tool_called` |
+| `severity` | `informational` on success, `warning` for a caller fault (unknown tool, invalid arguments, a refused request, a Cloud 4xx), `error` when Cloud or the path to it failed |
+| `operationId` | The request's W3C `traceparent` trace id, else a random UUID per request |
+| `metadata` | Tool, outcome, HTTP status, duration, the arguments with secret-named values redacted, and on failure `error`: a MeshKit error with a `blowhorn-mcp-1000` to `blowhorn-mcp-1009` code, probable causes and suggested remediations |
+
+The event is posted after the tool result and never delays or changes it. A
+call with a missing or malformed token, or one Cloud answers `401`, records
+nothing in Cloud. `initialize` and `tools/list` record nothing. The codes are
+provisional until the structured error code registry (#1662) allocates
+them.
+
 If the token this server uses leaks, see
 [Revoke a leaked token](/docs/how-to/set-up/connect-mcp-client/#revoke-a-leaked-token).
 

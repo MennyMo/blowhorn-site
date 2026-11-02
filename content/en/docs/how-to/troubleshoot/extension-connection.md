@@ -27,9 +27,12 @@ itself on demand: it repairs the native host, registers the extension for
 the mapped profile's data directory when nothing is there yet, and
 re-probes hello once. Ahead of a run, ensure it for one mapped profile
 with `blowhorn chrome extension-install --profile <name> --ensure`.
-If the socket is still missing after the ensure, launch or relaunch
-Chrome with that profile (or accept the install offer). While another
-run holds the bridge, no ensure runs: wait for it to finish and recheck.
+If the socket is still missing after the ensure and Chrome is running,
+relaunch Chrome with that profile (or accept the install offer). When
+Chrome is closed, the run opens it on that profile itself and says so
+(see [Opening Chrome when it is closed](/docs/reference/chrome/#opening-chrome-when-it-is-closed)).
+While another run holds the bridge, no ensure runs: wait for it to finish
+and recheck.
 
 ## Version mismatch after an update
 
