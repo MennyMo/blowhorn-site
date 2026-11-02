@@ -1,4 +1,7 @@
 ---
+build:
+  render: never
+  list: never
 title: "Blowhorn: Figma Home V1, Molly-inspired SaaS"
 description: "Preview only. Home V1 from the Blowhorn Figma file: centered SaaS hero, film, agents, model or ours, platforms, real you."
 layout: home-figma

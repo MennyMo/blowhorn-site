@@ -1,4 +1,7 @@
 ---
+build:
+  render: never
+  list: never
 title: "Blowhorn: Figma Home V2, Editorial ink"
 description: "Preview only. Home V2 from the Blowhorn Figma file: editorial ink hero, agents proof band, voice on every channel."
 layout: home-figma
