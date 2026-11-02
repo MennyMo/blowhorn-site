@@ -10,8 +10,8 @@
             <p class="body-lg muted">{{ $a.subhead }}</p>
           </div>
           <ul class="grid grid-3 section-body ai-agent-cards">
-            {{- range $a.cards }}
-            <li class="card">
+            {{- range $i, $ac := $a.cards }}
+            <li class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $a.cards)) }}">
               <h3 class="h3">{{ .title }}</h3>
               {{- with .tag }}
               <p class="label">{{ . }}</p>

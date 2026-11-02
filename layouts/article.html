@@ -36,8 +36,9 @@
     {{- with first 3 ($related.ByDate.Reverse) }}
     <section class="video-related" aria-labelledby="article-related-title">
       <h2 id="article-related-title">Keep reading</h2>
+      {{- $deal := partial "card-deal.html" (dict "n" (len .) "grid" "stack" "variants" (slice "card-field" "card-plain")) }}
       <div class="articles-list">
-        {{- range . }}{{ partial "article-card.html" . }}{{ end }}
+        {{- range $i, $v := . }}{{ partial "article-card.html" (dict "page" $v "i" $i "deal" $deal) }}{{ end }}
       </div>
     </section>
     {{- end }}

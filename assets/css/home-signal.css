@@ -124,12 +124,45 @@
 html[data-machines="battalion-map"] #how .section-head { margin-inline: auto; text-align: center; }
 html[data-machines="battalion-map"] #how .section-head .body-lg { margin-inline: auto; }
 .machines-card {
-  background: #000;
-  color: var(--app-ink, #E9EFED);
-  border: 1px solid var(--app-line, #26302D);
   border-radius: 14px;
   padding: var(--card-pad);
   text-align: left;
+}
+/* A dispatch card is dark in both themes, so the app-window tokens inside it
+   are always the dark set (themes.css), never the light-mode window's. */
+.machines-card.card-dispatch {
+  --app-canvas: #0E1312;
+  --app-rail: #141B19;
+  --app-line: #26302D;
+  --app-control: #22302C;
+  --app-selected: #1F2A27;
+  --app-ink: #E9EFED;
+  --app-muted: #9AA8A4;
+  --app-live: #6AE3B6;
+  --app-pending: #E8B04A;
+  --app-tint: rgba(106, 227, 182, 0.10);
+}
+/* Paper is light in both themes, so the app-window tokens inside it are always
+   the light set. */
+.machines-card.card-paper {
+  --app-canvas: #EDF3F0;
+  --app-rail: #E1EBE5;
+  --app-line: #C9D8D2;
+  --app-control: #DCE7E1;
+  --app-selected: #CDE8DB;
+  --app-ink: #0C1512;
+  --app-muted: #4E5D58;
+  --app-live: var(--teal-deep);
+  --app-pending: #A86E0D;
+  --app-tint: rgba(0, 179, 159, 0.10);
+}
+/* Gold and teal text (a teammate, a pending step, a beat tag, the + tile). The
+   brand yellow and teal read on a dark card; on a light one they fall under
+   3:1, so light cards set them in leather and teal-deep. */
+.machines-panel { --machines-gold: var(--yellow); --machines-teal: var(--teal); }
+.machines-card.card-paper { --machines-gold: var(--leather); --machines-teal: var(--teal-deep); }
+@media (prefers-color-scheme: light) {
+  .machines-card:not(.card-dispatch) { --machines-gold: var(--leather); --machines-teal: var(--teal-deep); }
 }
 .machines-card-head {
   display: flex;
@@ -165,12 +198,12 @@ html[data-machines="battalion-map"] #how .section-head .body-lg { margin-inline:
   margin: 0;
 }
 .machines-pill.is-enlist {
-  color: var(--yellow);
+  color: var(--machines-gold);
   background: transparent;
   border-color: color-mix(in srgb, var(--yellow) 55%, transparent);
 }
 .machines-pill.is-pending {
-  color: var(--yellow);
+  color: var(--machines-gold);
   background: color-mix(in srgb, var(--yellow) 10%, transparent);
   border-color: color-mix(in srgb, var(--yellow) 35%, transparent);
 }
@@ -228,9 +261,9 @@ html[data-machines="battalion-map"] #how .section-head .body-lg { margin-inline:
   display: grid;
   place-items: center;
   aspect-ratio: 16 / 9;
-  border: 1px dashed color-mix(in srgb, var(--teal) 60%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--machines-teal) 60%, transparent);
   border-radius: 6px;
-  color: var(--teal);
+  color: var(--machines-teal);
   font-size: 22px;
 }
 .machines-formation-front {
@@ -309,7 +342,7 @@ html[data-machines="battalion-map"] #how .section-head .body-lg { margin-inline:
 .machines-report-list time { font: 400 11px var(--font-mono); color: var(--app-muted, #9AA8A4); padding-top: 2px; }
 .machines-report-list span { color: var(--app-muted, #9AA8A4); font-size: 13.5px; }
 .machines-report-list b { display: block; color: var(--app-ink, #E9EFED); font-size: 13.5px; }
-.machines-report-list li.is-mate b, .machines-report-list li.is-mate time { color: var(--yellow); }
+.machines-report-list li.is-mate b, .machines-report-list li.is-mate time { color: var(--machines-gold); }
 .machines-legend {
   display: flex;
   margin-top: var(--space-2);
@@ -387,7 +420,7 @@ html[data-machines="battalion-map"] #how .section-head .body-lg { margin-inline:
   font: 500 10.5px var(--font-mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--teal);
+  color: var(--machines-teal);
   margin: 0;
 }
 .machines-beat > img, .machines-beat-duo img { width: 100%; border-radius: 6px; display: block; }
@@ -459,10 +492,10 @@ html[data-machines="battalion-map"] #how .section-head .body-lg { margin-inline:
 .machines-roll li.is-new, .machines-panel.is-armed:not(.is-live) .machines-roll li.is-new { opacity: 1; animation: machines-row-in 420ms ease-out both; }
 .machines-add[hidden], .machines-pill[hidden] { display: none; }
 button.machines-add, button.machines-pill { cursor: pointer; font: inherit; }
-button.machines-add { width: 100%; background: transparent; font-size: 22px; color: var(--teal); }
+button.machines-add { width: 100%; background: transparent; font-size: 22px; color: var(--machines-teal); }
 button.machines-pill { font: 500 10.5px/1 var(--font-mono); }
 button.machines-add:hover, button.machines-pill:hover { background: color-mix(in srgb, var(--teal) 14%, transparent); }
-button.machines-add:focus-visible, button.machines-pill:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+button.machines-add:focus-visible, button.machines-pill:focus-visible { outline: 2px solid var(--machines-teal); outline-offset: 2px; }
 .machines-formation-front { position: relative; flex-wrap: wrap; }
 .machines-say { visibility: hidden; opacity: 0; font-size: 14px; flex: 1 1 12rem; max-width: 18rem; margin: 0 0 var(--space-2) auto; align-self: center; }
 .machines-say.is-on { visibility: visible; opacity: 1; }

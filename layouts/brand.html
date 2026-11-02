@@ -138,6 +138,7 @@
           <a href="#thunderlung">Old Thunderlung</a>
           <a href="#cast">The cast</a>
           <a href="#bubbles">Speech bubbles</a>
+          <a href="#cards">Cards</a>
           <a href="#usage">Usage</a>
         </nav>
 
@@ -231,9 +232,10 @@
           {{- range first 2 $colors.groups }}
           <h3 class="h3 brand-subhead">{{ .name }}</h3>
           <ul class="swatches">
-            {{- range .colors }}
+            {{- $n := len .colors }}
+            {{- range $i, $c := .colors }}
             {{- $rgb := delimit .rgb ", " }}
-            <li class="swatch">
+            <li class="swatch {{ partial "card-variant.html" (dict "i" $i "grid" "swatches" "n" $n) }}">
               <span class="swatch-chip chip-{{ .token }}" aria-hidden="true"></span>
               <div class="swatch-meta">
                 <p class="ui swatch-name">{{ .name }}</p>
@@ -268,8 +270,8 @@
             <p class="muted">Three families, all free under the SIL Open Font License. The logo files don't need any of them: every letter is outlined.</p>
           </div>
           <ul class="grid grid-3 type-grid">
-            {{- range .Params.fonts }}
-            <li class="card type-card">
+            {{- range $i, $f := .Params.fonts }}
+            <li class="card type-card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $.Params.fonts)) }}">
               <p class="type-aa {{ .class }}" aria-hidden="true">Aa</p>
               <p class="label">{{ .role }}</p>
               <h3 class="h3">{{ .family }}</h3>
@@ -286,7 +288,7 @@
             <h2 id="major-title" class="h2">Major Blowhorn</h2>
             <p class="muted">The mascot. Drill sergeant, rooster, part of the brand whether you asked or not. <a href="{{ (site.GetPage "/major").RelPermalink }}">Meet the Major</a></p>
           </div>
-          <div class="major-card brand-major">
+          <div class="major-card card-paper brand-major">
             <figure class="major-figure">
               <img src="{{ printf "%slocked-6/major-6-hat-left.webp" $mascot | relURL }}" alt="Major Blowhorn, a teal rooster in a drill sergeant's campaign hat, pointing and shouting into his bullhorn" width="657" height="560">
             </figure>
@@ -344,6 +346,50 @@
             <li>Neutral is for quotes and lists of lines, where colour would get noisy.</li>
             <li>Paper, mint and command keep their colours in dark mode; neutral follows the theme.</li>
             <li>Don't put links or buttons in a bubble, don't mix variants in one list, and don't draw a tail as a separate shape: use the bubble partial.</li>
+          </ul>
+        </section>
+
+        <section id="cards" class="brand-section" aria-labelledby="cards-title">
+          <div class="section-head">
+            <h2 id="cards-title" class="h2">Cards</h2>
+            <p class="muted">Five surfaces for cards, one for a floating panel. Pick the variant by what the content is, and never give two neighbours in a row or a column the same one. No card has a stripe on one edge.</p>
+          </div>
+          <ul class="card-specimens">
+            <li class="card card-paper">
+              <p class="label">Field order</p>
+              <p class="ui"><code>card-paper</code></p>
+              <p class="caption">Major's voice, testimonials, the one featured item in a section. Cream paper, near-black outline, hard shadow. Keeps its colours in dark mode.</p>
+            </li>
+            <li class="card card-dispatch">
+              <p class="label">Dispatch</p>
+              <p class="ui"><code>card-dispatch</code></p>
+              <p class="caption">Developer notes, API and JSON facts, commands. Near-black with a dashed teal edge and a mono prompt.</p>
+            </li>
+            <li class="card card-stamp">
+              <p class="label">Stamp</p>
+              <p class="ui"><code>card-stamp</code></p>
+              <p class="caption">Facts, stats, guarantees, proof points, compliance. No fill, a 2px ink edge, a boxed label.</p>
+            </li>
+            <li class="card card-field">
+              <p class="label">Field</p>
+              <p class="ui"><code>card-field</code></p>
+              <p class="caption">Feature and explanation grids, the common case. A flat tint with no edge.</p>
+            </li>
+            <li class="card card-plain">
+              <p class="label">Plain</p>
+              <p class="ui"><code>card-plain</code></p>
+              <p class="caption">Secondary lists and link lists. No fill, one hairline on every side.</p>
+            </li>
+          </ul>
+          <div class="card card-glass card-specimen-glass">
+            <p class="label">Glass</p>
+            <p class="ui"><code>card-glass</code></p>
+            <p class="caption">The liquid glass surface, for one floating panel over content: a menu, the header, a hero. Never a card in a grid.</p>
+          </div>
+          <ul class="brand-rules">
+            <li>Every card link lifts 2px and brightens its edge on hover. There is no glow, and nothing moves under reduced motion.</li>
+            <li>Structure stays on the card (padding, radius, gaps). The variant only sets the look.</li>
+            <li>The full rules and contrast ratios are in DESIGN.md, "Cards".</li>
           </ul>
         </section>
 
@@ -408,11 +454,11 @@
           <p class="muted brand-note">And no retired marks or old names. If it isn't in the kit, it isn't the logo.</p>
 
           <div class="grid grid-2 brand-name">
-            <div class="card">
+            <div class="card card-field">
               <h3 class="h3">The name</h3>
               <p>Blowhorn. One word, capital B. Always just Blowhorn, in formal copy too. Never BlowHorn, never Blow Horn.</p>
             </div>
-            <div class="card">
+            <div class="card card-plain">
               <h3 class="h3">The tagline</h3>
               <p>One message out, many ears in. Set it in Bricolage Grotesque, sentence case, and let it stand on its own.</p>
             </div>

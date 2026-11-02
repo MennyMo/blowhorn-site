@@ -29,8 +29,7 @@
       specificity the brand's element rules (body, code, lists) win, while
       the docs skin's classes win everywhere else. */ -}}
     {{- partialCached "head-css.html" . "docs-head-css" }}
-    {{- $site := slice (resources.Get "css/site.css") (resources.Get "css/themes.css") (resources.Get "css/home-signal.css") (resources.Get "css/action-matrix.css") (resources.Get "css/resources.css") | resources.Concat "css/site.css" | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $site.RelPermalink }}">
+    {{- partial "brand-css.html" . }}
     {{- $jquery := resources.Get "js/vendor/jquery.min.js" | fingerprint }}
     <script src="{{ $jquery.RelPermalink }}"></script>
     {{- $lunr := resources.Get "js/vendor/lunr.min.js" | fingerprint }}

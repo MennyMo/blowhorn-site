@@ -27,7 +27,7 @@
           <div class="agent-hero-copy">
             <p class="label"><a href="{{ (site.GetPage "/compare").RelPermalink }}">Compare</a> &middot; {{ $p.group }}</p>
             <h1 id="versus-title" class="display">{{ .Title }}</h1>
-            <p class="body-lg versus-verdict">{{ $p.verdict }}</p>
+            <p class="body-lg versus-verdict card-paper">{{ $p.verdict }}</p>
           </div>
           <div class="agent-hero-art" aria-hidden="true">
             <span class="agent-mark agent-mark-xl">{{ $p.mark }}</span>
@@ -42,12 +42,12 @@
             <p class="muted">If {{ $p.competitor }} is the better fit, go use it. We mean that.</p>
           </div>
           <div class="versus-split versus-fit">
-            <div class="versus-col">
+            <div class="card card-plain versus-col">
               <h3 class="h3">Choose {{ $p.competitor }} if</h3>
               <ul class="versus-list">{{ range $p.them }}<li>{{ . }}</li>{{ end }}</ul>
               <p class="ui"><a href="{{ $p.site_url }}" rel="noopener">Go to {{ $p.competitor }}</a></p>
             </div>
-            <div class="versus-col versus-us">
+            <div class="card card-paper versus-col versus-us">
               <h3 class="h3">Choose Blowhorn if</h3>
               <ul class="versus-list">{{ range $p.us }}<li>{{ . }}</li>{{ end }}</ul>
               {{- with $p.network_logos }}
@@ -161,8 +161,8 @@
             <h2 id="faq-title" class="h2">Frequently Asked Questions</h2>
           </div>
           <div class="agent-faq versus-faq">
-            {{- range $p.faq }}
-            <details class="glass"><summary class="ui">{{ .q }}</summary><p>{{ .a }}{{ with .link }} <a href="{{ cond (eq .href site.Data.tells.url) (partial "tells-link.html" (dict "placement" "compare")) .href }}">{{ .label }}</a>{{ end }}</p></details>
+            {{- range $i, $f := $p.faq }}
+            <details class="card {{ partial "card-variant.html" (dict "i" $i "grid" "stack" "n" (len $p.faq) "variants" (slice "card-field" "card-plain")) }}"><summary class="ui">{{ .q }}</summary><p>{{ .a }}{{ with .link }} <a href="{{ cond (eq .href site.Data.tells.url) (partial "tells-link.html" (dict "placement" "compare")) .href }}">{{ .label }}</a>{{ end }}</p></details>
             {{- end }}
           </div>
         </section>

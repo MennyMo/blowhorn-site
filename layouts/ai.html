@@ -43,8 +43,8 @@
         <section class="agent-section" aria-labelledby="ai-ways-title">
           <div class="section-head"><h2 id="ai-ways-title" class="h2">{{ $p.ways_title }}</h2></div>
           <ul class="grid grid-2 ai-ways">
-            {{- range . }}
-            <li class="card glass">
+            {{- range $i, $w := . }}
+            <li class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-2" "n" (len $p.ways)) }}">
               <p class="ai-status{{ if .soon }} ai-soon{{ end }}">{{ .status }}</p>
               <h3 class="h3"><a href="{{ (site.GetPage .path).RelPermalink }}">{{ .t }}</a></h3>
               <p>{{ .b }}</p>
@@ -62,8 +62,8 @@
         <section class="agent-section" aria-labelledby="ai-cards-title">
           <div class="section-head"><h2 id="ai-cards-title" class="h2">{{ $p.cards_title }}</h2></div>
           <div class="grid {{ if eq (len .) 4 }}grid-2 ai-grid-4{{ else }}grid-3{{ end }}">
-            {{- range . }}
-            <div class="card glass"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
+            {{- range $i, $c := . }}
+            <div class="card {{ partial "card-variant.html" (dict "i" $i "grid" (cond (eq (len $p.cards) 4) "grid-2" "grid-3") "n" (len $p.cards)) }}"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
             {{- end }}
           </div>
         </section>
@@ -73,8 +73,8 @@
         <section class="agent-section" aria-labelledby="ai-rules-title">
           <div class="section-head"><h2 id="ai-rules-title" class="h2">{{ $p.rules_title }}</h2></div>
           <div class="grid grid-3">
-            {{- range . }}
-            <div class="card glass"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
+            {{- range $i, $c := . }}
+            <div class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $p.rules)) }}"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
             {{- end }}
           </div>
         </section>

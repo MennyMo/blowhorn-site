@@ -18,8 +18,8 @@
         <section class="agent-section" aria-labelledby="why-title">
           <div class="section-head"><h2 id="why-title" class="h2">Why it works with any agent</h2></div>
           <div class="grid grid-3">
-            {{- range .Params.pillars }}
-            <div class="card glass"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
+            {{- range $i, $pl := .Params.pillars }}
+            <div class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $.Params.pillars)) }}"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
             {{- end }}
           </div>
         </section>

@@ -68,9 +68,12 @@
       <h2 id="users-title" class="display">Fewer tabs. More reach.</h2>
       <p class="body-lg muted">What users say after a launch or two.</p>
     </div>
+    {{- /* The first quote is the paper feature across the whole first row; the rest
+      are dealt as their own grid. Paper is last in their order, so the deal never
+      reaches it in the row under the feature. */}}
     <ul class="proof-grid section-body">
       {{- range $i, $t := . }}
-      <li class="proof-card{{ if eq $i 0 }} proof-card-feature{{ end }}">
+      <li class="proof-card{{ if eq $i 0 }} proof-card-feature card-paper{{ else }} {{ partial "card-variant.html" (dict "i" (sub $i 1) "grid" "proof-grid" "n" (sub (len $items) 1) "variants" (slice "card-stamp" "card-field" "card-plain" "card-paper")) }}{{ end }}">
         {{- if $t.placeholder }}
         <span class="proof-flag">Placeholder</span>
         {{- end }}
@@ -88,8 +91,8 @@
 </section>
 {{- else if eq $slot "closing" -}}
 <div class="proof-band" role="group" aria-label="Blowhorn users">
-  {{- range first 3 . }}
-  <figure>
+  {{- range $i, $t := first 3 . }}
+  <figure class="{{ partial "card-variant.html" (dict "i" $i "grid" "proof-band" "n" (len (first 3 $items)) "variants" (slice "card-stamp" "card-field" "card-plain")) }}">
     <blockquote class="h3">{{ .quote | truncate 80 }}</blockquote>
     <figcaption class="caption muted">{{ .name }}, {{ .company }}{{ if .placeholder }} <span class="proof-flag">Placeholder</span>{{ end }}</figcaption>
   </figure>
@@ -103,7 +106,7 @@
   </div>
   <div class="proof-rotate" data-proof-rotate>
     {{- range $i, $t := . }}
-    <figure class="proof-rotate-item{{ if eq $i 0 }} is-current{{ end }}"{{ if ne $i 0 }} aria-hidden="true"{{ end }}>
+    <figure class="proof-rotate-item card-paper{{ if eq $i 0 }} is-current{{ end }}"{{ if ne $i 0 }} aria-hidden="true"{{ end }}>
       <blockquote class="body-lg">{{ $t.quote }}</blockquote>
       <figcaption class="proof-who"><span class="proof-avatar" aria-hidden="true">
         {{- with $t.picture }}

@@ -1,9 +1,14 @@
 {{- /* One article (or tip) in a collection grid. data-* attributes feed
        the client-side search and tag filter in resources.js. */ -}}
+{{- /* Context: dict "page" (the article), "i" (its index in the list) and "deal"
+  (the list's variants from card-deal.html, one per card, also printed on a
+  filtered list as data-card-deal so a filter can hand them out again). */ -}}
+{{- $variant := index .deal .i }}
+{{- with .page }}
 {{- $tags := .Params.tags | default slice }}
 {{- $column := .Params.column | default "" }}
 {{- $columnLabel := partial "column-label.html" $column }}
-<article class="article-card" data-card data-tags="{{ delimit $tags " " }}{{ with $column }} column:{{ . }}{{ end }}" data-column="{{ $column }}" data-search="{{ lower (printf "%s %s %s %s" .Title .Params.summary (delimit $tags " ") $columnLabel) }}">
+<article class="article-card {{ $variant }}" data-card data-tags="{{ delimit $tags " " }}{{ with $column }} column:{{ . }}{{ end }}" data-column="{{ $column }}" data-search="{{ lower (printf "%s %s %s %s" .Title .Params.summary (delimit $tags " ") $columnLabel) }}">
   <p class="article-card-kicker">
     {{ if in $tags "tips" }}Tip{{ else }}Article{{ end }}
     <span aria-hidden="true">·</span>
@@ -26,3 +31,4 @@
   </div>
   {{- end }}
 </article>
+{{- end }}

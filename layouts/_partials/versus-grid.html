@@ -19,9 +19,9 @@
   {{- end -}}
 {{- end -}}
 <ul class="agent-grid">
-  {{- range $pages }}
+  {{- range $i, $pg := $pages }}
   <li>
-    <a class="agent-tile glass" href="{{ .RelPermalink }}">
+    <a class="agent-tile {{ partial "card-variant.html" (dict "i" $i "grid" "agent-grid" "n" (len $pages)) }}" href="{{ .RelPermalink }}">
       <span class="agent-mark" aria-hidden="true">{{ .Params.mark }}</span>
       <span class="agent-tile-copy">
         <span class="h3">vs {{ .Params.competitor }}</span>

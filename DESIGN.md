@@ -31,21 +31,50 @@ Rules:
 Two rules, from the owner's order of 2 Nov 2026:
 
 1. **No stripe on one edge.** A card, callout, quote, table row or panel never carries a coloured stripe on one side: no `border-left` or `border-right` (or inline start or end) in a colour, no inset shadow down one side, no `::before` bar, and no hard offset shadow (an outer shadow with no blur pushed off one or two edges, the retired `shadow-pop` sticker that the Download button and the Major card wore; Lee, 2 Nov 2026). Depth is the soft `--glass-shadow`. A card keeps an even border on all sides, or none. Emphasis comes from the eyebrow label, the type and the fill. Neutral 1px column rules, the selected-tab mark and checkmarks are structure, not stripes.
-2. **No single generic card.** Pick the variant by what the content is. Neighbours in a row never share a variant: a grid either alternates two variants (a checkerboard, so a row and a column never repeat) or names each card's variant in the template.
+2. **No single generic card.** Pick the variant by what the content is. No two cards in the same row share a variant, and no card shares one with the card directly above it, at any width the grid is shown at: a 3-column grid that drops to 2 columns on a tablet and 1 on a phone has to hold at all three.
 
-Cards are built from a small set of named variants (paper, dispatch, stamp, field, plain and glass), each picked for a kind of content. The variant definitions, their contrast table and a live specimen on /brand/#cards land with the card-variant change; until then, follow the two rules above.
+The variants live once, in `assets/css/cards.css`. The same file is published unminified at `/assets/brand/cards.css` for tells.blowhorn.ai. `.card` (padding, radius, gaps) stays the structural base in `site.css`; a variant only sets the look.
+
+How a grid gets its variants:
+
+- **A loop** calls `layouts/_partials/card-variant.html` with the card's index, the grid (`"grid" "grid-3"`, or `"cols"` with every column count it shows), the number of cards (`"n"`, required) and, if the default does not fit the content, the variants in order of preference. `card-deal.html` deals them card by card: each card takes the first variant that no card in its row and not the card above it holds, at any of those widths, and the build fails when the variants run out. A grid that shows 3 or 4 across needs four variants once it has a second row.
+- **A grid class** that holds cards lists its column counts in `card-deal.html`, so keep that map in step with the CSS. Card grids use fixed breakpoints, not `auto-fill`, so the counts are known.
+- **A filter** that hides cards (`resources.js`, `action-filter.js`) hands the variants out again: the grid prints its deal as `data-card-deal`, and `assets/js/card-deal.js` gives its first k entries to the k visible cards after each change (the deal for fewer cards is always the start of the deal for more). Load the filter through `layouts/_partials/filter-script.html`.
+- **Docs cards** come from the synced Markdown without a variant; `layouts/_partials/docs-content.html` deals each grid of them for the columns its container shows.
+- **A hand-written grid** names each card's variant; or, better, calls the helper with literal indexes; check it at every width the grid shows. Count only the cards drawn: collect a filtered list first, then range over it.
+
+Paper and Dispatch keep one palette in both themes, so they also set `--ink`, `--ink-muted`, `--link`, `--line` and `--surface-tint` for everything inside them. A component rule that reads those tokens stays legible inside either card without a per-variant override. A card link's round arrow chip fills with `--card-chip`, which defaults to `--surface-tint`; Field, whose own fill is that tint, sets it to `--surface` so the chip still shows.
+
+| Class | Name | Use for | Fill | Edge | Text (light / dark) | Contrast |
+|---|---|---|---|---|---|---|
+| `card-paper` | Field order | Major's voice, testimonials, the one featured item in a section | cream in both themes | 1.5px near-black, no shadow | near-black ink, charcoal muted | ink 15.2:1, muted 8.6:1 in both themes |
+| `card-dispatch` | Dispatch | developer notes, API and JSON facts, commands | near-black in both themes | 1px dashed teal-shade (#008F80) | cream ink, mint muted, teal-bright mono `>` label | ink 15.2:1, muted 12.1:1, label 8.5:1 |
+| `card-stamp` | Stamp | facts, stats, guarantees, proof points, compliance | none (the page shows through) | 2px ink (1px border plus a 1px inset ring, so the box matches the other variants); label boxed in mono caps | ink, ink-muted | 16.3:1 and 5.6 / 7.2:1 for muted; edge 16.3:1 |
+| `card-field` | Field | feature and explanation grids, the common case | surface-tint | none; the hover edge is line-strong | ink, ink-muted | 14.2 / 12.4:1 ink; 4.9 / 5.5:1 muted |
+| `card-plain` | Plain | secondary lists, link lists, low emphasis | none | 1px line-strong on all sides | ink, ink-muted | 16.3 / 16.3:1 ink; 5.6 / 7.2:1 muted; edge 3.7 / 4.4:1 |
+| `card-glass` | Glass | one floating surface over content: a menu, the header, a hero. Also the `.glass` panel class. Never on a grid | liquid glass (sheen, blur, rim) | rim highlight, no solid edge | ink, ink-muted | 16.0 / 15.0:1 ink; 5.5 / 6.6:1 muted |
+
+Ratios are WCAG 2.1 for the pair named, computed for light and dark. Two edges are deliberate:
+
+- **Paper in dark mode** keeps a near-black outline on a near-black page, so the edge you see is the cream fill against the page (15.2:1).
+- **Plain uses line-strong, not `--line`.** `--line` is 1.4:1 on white, under the 3:1 a UI boundary needs.
 
 Do:
 
-- Pick the look by content, then check its neighbours in the row.
+- Pick the variant by content, then check every card in its row and the card above it at 390, 820 and 1440px.
+- Give every card link the same hover: a 2px lift and a stronger edge, no glow. Nothing moves under reduced motion.
+- Let a featured item be paper, and let one stat row be stamps.
 - Let a featured item stand out by fill and type, never by a stripe.
 
 Don't:
 
 - Draw a stripe on one edge, on a card, a quote, a table row or a callout.
 - Give a button, card or tile a hard offset shadow (`4px 4px 0 0`); a primary button stands out by its teal fill and gloss.
-- Give two neighbours in a row the same look, or make a whole grid one look.
-- Hard-code a card's colours in a template.
+- Put the same variant on two cards in a row or on a card and the one above it, or make a whole grid one variant.
+- Put glass on a grid of cards, or on anything that is not a floating surface.
+- Hard-code a card's colours in a template: add a variant, or use an existing one.
+
+Live specimen: /brand/#cards.
 
 ## Concision
 
@@ -63,7 +92,7 @@ Say less, more clearly. Turn the verbosity dial down a notch from your first dra
 - [ ] New sections use the shared section and `.section-head` classes, not page-specific spacing
 - [ ] Sections are clearly separated (whitespace, then divider or background shift if needed)
 - [ ] Paragraphs stay within `--text-measure`; cards use `--card-pad` and `--grid-gap`
-- [ ] No coloured stripe on one edge of a card, callout, quote, table row or panel, and no hard offset shadow; no two neighbours in a row share a card variant
+- [ ] No coloured stripe on one edge of a card, callout, quote, table row or panel, and no hard offset shadow; no two cards in a row, and no card and the one above it, share a card variant, at any width the grid shows
 - [ ] Checked at 1280, 390 and 320 px, light and dark
 - [ ] Intros <= 2 sentences, card bodies <= ~30 words, one idea per sentence
 - [ ] No em dashes; no trailing periods on section titles
@@ -72,7 +101,7 @@ Say less, more clearly. Turn the verbosity dial down a notch from your first dra
 
 Rule (Lee, 12 Oct 2026): **anywhere the site shows a command a reader might run, it can be copied in one click.** Source: `layouts/_partials/code-card.html`, `layouts/_markup/render-codeblock.html`, `assets/js/code-card.js` and the "Terminal code card" section of `assets/css/site.css`.
 
-1. **Every code block is a terminal code card:** title bar with three dots, a file or `terminal` label, a language pill and a Copy button, in a window that is light in light mode and near-black in dark mode (a window, not a card; see Cards). Docs fences get it through the render hook; layouts call the partial.
+1. **Every code block is a terminal code card:** title bar with three dots, a file or `terminal` label, a language pill and a Copy button, in a window that is light in light mode and near-black in dark mode (a window, not a card variant; see Cards). Docs fences get it through the render hook; layouts call the partial.
 2. **Declare the language.** Each card names the language of its actual content (`bash`, `markdown`, `json`, `toml`, `yaml`...) so Chroma highlights it with the brand token colours. Markdown front matter is highlighted as YAML.
 3. **Prompts and output are never copied.** Shell cards draw a `$` before each command line (not before comments, blank lines or continuation lines) as an unselectable element that copy drops. Untyped or `text` fences are sample output: labelled `output`, muted, no copy button.
 4. **Inline commands in prose** (`blowhorn ...` in backticks) get a small copy button after them. Commands with placeholders such as `<url>` are not copyable; show them in a card with the placeholder explained instead.

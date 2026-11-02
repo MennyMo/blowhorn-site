@@ -16,7 +16,7 @@
             {{- /* data/hero.json tagline: one plain line under every headline. */}}
             <p class="body-lg hero-sub hero-tagline">{{ $rot.tagline }}</p>
             <div class="hero-actions">
-              <a class="button button-primary button-pop" href="{{ "download/" | relURL }}">
+              <a class="button button-primary" href="{{ "download/" | relURL }}">
                 <svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#glyph-download"></use></svg>
                 Download for Mac
               </a>
@@ -137,19 +137,19 @@
           </div>
           <ul class="grid grid-3 section-body">
             <li>
-              <div class="card">
+              <div class="card card-field">
                 <h3 class="h3">Schedule it once</h3>
                 <p>Queue the launch post and its reposts, quotes and reactions ahead of time. Each fires from whichever computer is awake.</p>
               </div>
             </li>
             <li>
-              <div class="card">
+              <div class="card card-plain">
                 <h3 class="h3">Bring your people</h3>
                 <p>Teammates and supporters add their profiles to your account. Every profile joins the same wave.</p>
               </div>
             </li>
             <li>
-              <div class="card">
+              <div class="card card-stamp">
                 <h3 class="h3">One blast, no echoes</h3>
                 <p>Coordinated so the same post isn't sent twice. Pause the whole wave with one command.</p>
               </div>
@@ -164,7 +164,7 @@
 
       <section class="section" aria-label="Major Blowhorn">
         <div class="wrap">
-          <div class="major-card">
+          <div class="major-card card-paper">
             <figure class="major-figure">
               <img src="{{ "assets/brand/mascot/locked-6/major-6-hat-left.webp" | relURL }}" alt="Major Blowhorn, a teal rooster in a drill sergeant's campaign hat, pointing and shouting into his bullhorn" width="657" height="560">
             </figure>
@@ -194,15 +194,15 @@
             <p class="body-lg muted">Many public voices, one coordinated queue, every action on your own computer.</p>
           </div>
           <ul class="grid grid-3 section-body">
-            <li class="card">
+            <li class="card card-field">
               <h3 class="h3">Every action happens on your own computer</h3>
               <p>Blowhorn never acts for you from a server. The app on your computer does the work, in <a href="{{ (site.GetPage "/docs/explanation/your-own-chrome").RelPermalink }}">your own browser</a> where a platform needs it (see the <a href="{{ (site.GetPage "/legal/privacy").RelPermalink }}">privacy page</a>).</p>
             </li>
-            <li class="card">
+            <li class="card card-plain">
               <h3 class="h3">One queue and one set of credentials, on any computer</h3>
               <p>Your queue, profiles, run history and results stay in sync in your account. Add any number of computers, yours or your teammates', to one fleet: coordinated so the same post isn't sent from two of them. See <a href="{{ (site.GetPage "/docs/explanation/your-data").RelPermalink }}">where your data lives</a>.</p>
             </li>
-            <li class="card">
+            <li class="card card-stamp">
               <h3 class="h3">Hacker News: submit and comment only</h3>
               <p>Blowhorn submits stories and comments. It never votes, and caps each profile at 2 link submissions a day. <a href="{{ (site.GetPage "/docs/how-to/publish/post-to-hacker-news").RelPermalink }}">Post to Hacker News</a>.</p>
             </li>
@@ -220,19 +220,19 @@
           </div>
           <ul class="grid grid-3 section-body">
             <li>
-              <a class="card card-link" href="{{ (site.GetPage "/docs/explanation/reliability-and-anti-bot-design").RelPermalink }}">
+              <a class="card card-link card-field" href="{{ (site.GetPage "/docs/explanation/reliability-and-anti-bot-design").RelPermalink }}">
                 <h3 class="h3">Will I get banned?</h3>
                 <p>Blowhorn works at a human pace you choose and never solves a CAPTCHA for you.</p>
               </a>
             </li>
             <li>
-              <a class="card card-link" href="{{ (site.GetPage "/docs/explanation/never-twice").RelPermalink }}">
+              <a class="card card-link card-plain" href="{{ (site.GetPage "/docs/explanation/never-twice").RelPermalink }}">
                 <h3 class="h3">Will it post twice?</h3>
                 <p>Your computers coordinate through one queue, so the same post isn't sent from two of them.</p>
               </a>
             </li>
             <li>
-              <a class="card card-link" href="{{ (site.GetPage "/docs/how-to/schedule/pause").RelPermalink }}">
+              <a class="card card-link card-stamp" href="{{ (site.GetPage "/docs/how-to/schedule/pause").RelPermalink }}">
                 <h3 class="h3">What if an AI agent is driving?</h3>
                 <p>Agents get the same queue and limits you do. Only approved posts go out.</p>
               </a>
@@ -254,7 +254,7 @@
               <p class="body-lg muted">One disk image for Apple silicon and Intel, plus a browser extension. About a minute to set up.</p>
             </div>
             <p class="download-cta-actions">
-              <a class="button button-primary button-pop" href="{{ "download/" | relURL }}">
+              <a class="button button-primary" href="{{ "download/" | relURL }}">
                 <svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#glyph-download"></use></svg>
                 Get Blowhorn for Mac
               </a>

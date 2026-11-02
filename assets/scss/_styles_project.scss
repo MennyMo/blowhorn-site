@@ -109,7 +109,7 @@
 // state rides on .docs-wrap and persists across docs pages
 // (assets/js/docs-toggle.js). Collapsed, the TOC column shrinks to a
 // narrow rail holding only the toggle, and the content takes the freed
-// width — the same trade the internal layout makes for a page with no
+// width - the same trade the internal layout makes for a page with no
 // table of contents at all. Below 1280px the TOC is hidden anyway and
 // the class is inert.
 .td-toc-toggle {
@@ -201,7 +201,7 @@
 // Start here is a single-column list, not a three-column grid: inside
 // the docs column (sidebar plus table of contents) three columns land
 // around 200px wide, tall and skinny. Each Start item is a
-// full-width row — title left, description right — stacking on narrow
+// full-width row - title left, description right - stacking on narrow
 // viewports. The old .docs-start class keeps working until the product
 // sync brings the new .docs-start-list markup, and vice versa.
 // NOTE: site.css (loaded after this skin) defines .grid/.grid-3, so a
@@ -221,7 +221,6 @@ div.docs-start-list {
   flex-direction: column;
   gap: var(--space-1);
   padding: var(--space-4) var(--space-6);
-  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
 }
 
@@ -244,33 +243,38 @@ div.docs-start-list {
   }
 }
 
-// Quadrants: auto-fit with a 280px floor collapses to one column
-// instead of going skinny. Div-qualified for the same reason as above:
-// site.css's .grid-2 would otherwise win on load order.
+// Quadrants: one column, then 2 x 2 from 640px. Fixed columns, not auto-fit,
+// so the card variants dealt for 1 and 2 across (docs-content.html,
+// card-deal.html "docs-quadrants") hold at every width. Div-qualified for
+// the same reason as above: site.css's .grid-2 would otherwise win on load order.
 div.docs-quadrants {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   margin-top: var(--space-6);
 }
 
+@media (min-width: 640px) {
+  div.docs-quadrants {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .docs-quadrants .docs-card {
   padding: var(--space-4) var(--space-6);
-  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
 }
 
+// The fill, edge, text colour and hover lift are the card variant each card is
+// dealt (layouts/_partials/docs-content.html, assets/css/cards.css).
 .docs-card {
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  color: var(--ink);
 }
 
 .docs-card:hover {
-  background: var(--surface-tint);
   text-decoration: none;
-  color: var(--ink);
 }
 
 .docs-card > span {

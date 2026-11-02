@@ -6,7 +6,7 @@
 # Run through make (see the npm-* targets); publish-blowhorn-axi.yml calls the same targets.
 set -euo pipefail
 if [ -n "$SHA256" ]; then echo "$SHA256  $TARBALL" | sha256sum -c -; fi
-tar -xzf "$TARBALL" package/package.json -O > pkg.json
+tar -xzOf "$TARBALL" package/package.json > pkg.json
 name=$(node -p "require('./pkg.json').name")
 ver=$(node -p "require('./pkg.json').version")
 repo=$(node -p "(require('./pkg.json').repository||{}).url||''")

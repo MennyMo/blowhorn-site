@@ -28,8 +28,8 @@
             <label for="billing-annual">Yearly <span class="save-badge">2 months free</span></label>
           </div>
           <ul class="pricing-grid">
-            {{- range .Params.tiers }}
-            <li class="plan card{{ if .featured }} plan-featured{{ end }}">
+            {{- range $i, $t := .Params.tiers }}
+            <li class="plan card{{ if .featured }} plan-featured card-paper{{ else }} {{ partial "card-variant.html" (dict "i" $i "grid" "pricing-grid" "n" (len $.Params.tiers)) }}{{ end }}">
               {{- with .badge }}<p class="plan-badge caption">{{ . }}</p>{{ end }}
               <h3 class="h3 plan-name">{{ .name }}</h3>
               <p class="plan-blurb">{{ .blurb }}</p>
@@ -55,8 +55,8 @@
             <p class="muted">The things that keep your accounts safe are never an upsell.</p>
           </div>
           <ul class="grid grid-4 pricing-included">
-            {{- range .Params.included }}
-            <li class="card">
+            {{- range $i, $inc := .Params.included }}
+            <li class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-4" "n" (len $.Params.included)) }}">
               <h3 class="h3">{{ .title }}</h3>
               <p>{{ .body }}</p>
             </li>
@@ -85,8 +85,8 @@
             <h2 id="faq-title" class="h2">Frequently Asked Questions</h2>
           </div>
           <div class="agent-faq">
-            {{- range .Params.faq }}
-            <details class="glass">
+            {{- range $i, $f := .Params.faq }}
+            <details class="card {{ partial "card-variant.html" (dict "i" $i "grid" "stack" "n" (len $.Params.faq) "variants" (slice "card-field" "card-plain")) }}">
               <summary>{{ .q }}</summary>
               <p>{{ .a }}</p>
             </details>

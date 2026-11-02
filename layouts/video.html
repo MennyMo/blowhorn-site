@@ -39,8 +39,9 @@
         {{ .Content }}
         {{- with $related }}
         <h2>Related videos</h2>
+        {{- $deal := partial "card-deal.html" (dict "n" (len (first 3 .)) "grid" "video-grid") }}
         <ul class="video-grid" data-video-grid>
-          {{- range first 3 . }}{{ partial "video-card.html" . }}{{ end -}}
+          {{- range $i, $v := first 3 . }}{{ partial "video-card.html" (dict "page" $v "i" $i "deal" $deal) }}{{ end -}}
         </ul>
         {{- end }}
       </div>
@@ -49,6 +50,5 @@
 {{ end }}
 
 {{ define "scripts" }}
-    {{- $js := resources.Get "js/resources.js" | minify | fingerprint }}
-    <script src="{{ $js.RelPermalink }}" defer></script>
+    {{- partial "filter-script.html" "js/resources.js" }}
 {{ end }}

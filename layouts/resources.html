@@ -19,7 +19,7 @@
 
         <ul class="resource-types">
           <li>
-            <a class="resource-type-card" href="{{ $videosSection.RelPermalink }}">
+            <a class="resource-type-card card-field" href="{{ $videosSection.RelPermalink }}">
               <p class="label rt-kind">Watch</p>
               <h2>Videos</h2>
               <p>Short films and walkthroughs: what Blowhorn does, and how to get the most from it.</p>
@@ -27,7 +27,7 @@
             </a>
           </li>
           <li>
-            <a class="resource-type-card" href="{{ $articlesSection.RelPermalink }}">
+            <a class="resource-type-card card-plain" href="{{ $articlesSection.RelPermalink }}">
               <p class="label rt-kind">Read</p>
               <h2>Articles</h2>
               <p>Product intelligence and tips: reading your results, scheduling craft and the changes platforms make that affect your posts.</p>
@@ -35,7 +35,7 @@
             </a>
           </li>
           <li>
-            <a class="resource-type-card" href="{{ (site.GetPage "/field-manual").RelPermalink }}">
+            <a class="resource-type-card card-stamp" href="{{ (site.GetPage "/field-manual").RelPermalink }}">
               <p class="label rt-kind">Reference</p>
               <h2>Field Manual</h2>
               <p>What each feed rewards and punishes, platform by platform.</p>
@@ -43,7 +43,7 @@
             </a>
           </li>
           <li>
-            <a class="resource-type-card" href="{{ (site.GetPage "/docs").RelPermalink }}">
+            <a class="resource-type-card card-dispatch" href="{{ (site.GetPage "/docs").RelPermalink }}">
               <p class="label rt-kind">Reference</p>
               <h2>Docs</h2>
               <p>Set up, how-to guides and the full reference.</p>
@@ -56,16 +56,18 @@
 
         {{- with $videos }}
         <h2>Latest videos</h2>
-        <ul class="video-grid" data-collection-grid data-collection-noun="videos">
-          {{- range first 3 (.ByDate.Reverse) }}{{ partial "video-card.html" . }}{{ end -}}
+        {{- $deal := partial "card-deal.html" (dict "n" (len (first 3 .)) "grid" "video-grid") }}
+        <ul class="video-grid" data-collection-grid data-collection-noun="videos" data-card-deal="{{ delimit $deal " " }}">
+          {{- range $i, $v := first 3 (.ByDate.Reverse) }}{{ partial "video-card.html" (dict "page" $v "i" $i "deal" $deal) }}{{ end -}}
         </ul>
         <p><a href="{{ $videosSection.RelPermalink }}">All videos</a></p>
         {{- end }}
 
         {{- with $intel }}
         <h2>Latest from Product intelligence</h2>
+        {{- $deal := partial "card-deal.html" (dict "n" (len (first 3 .)) "grid" "stack" "variants" (slice "card-field" "card-plain")) }}
         <div class="articles-list">
-          {{- range first 3 (.ByDate.Reverse) }}{{ partial "article-card.html" . }}{{ end -}}
+          {{- range $i, $v := first 3 (.ByDate.Reverse) }}{{ partial "article-card.html" (dict "page" $v "i" $i "deal" $deal) }}{{ end -}}
         </div>
         <p><a href="{{ $articlesSection.RelPermalink }}">All articles</a></p>
         {{- end }}
@@ -77,6 +79,5 @@
 {{ end }}
 
 {{ define "scripts" }}
-    {{- $js := resources.Get "js/resources.js" | minify | fingerprint }}
-    <script src="{{ $js.RelPermalink }}" defer></script>
+    {{- partial "filter-script.html" "js/resources.js" }}
 {{ end }}

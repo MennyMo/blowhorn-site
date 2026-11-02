@@ -4,17 +4,18 @@
 {{- $kind := .kind -}}
 {{- $meta := partial "cast-kind.html" (dict "kind" $kind) -}}
 {{- $prefix := $meta.labelPrefix -}}
+{{- /* Collect first so the variant index counts only the cards drawn. */ -}}
+{{- $pages := slice -}}
+{{- range .section.Pages.ByWeight }}{{ if ne . $cur }}{{ $pages = $pages | append . }}{{ end }}{{ end -}}
 <ul class="grid grid-3 role-list">
-  {{- range .section.Pages.ByWeight }}
-  {{- if ne . $cur }}
+  {{- range $i, $rp := $pages }}
   {{- $item := partial "role-data.html" (dict "page" . "kind" $kind) }}
   <li>
-    <a class="card card-link glass role-card" href="{{ .RelPermalink }}">
+    <a class="card card-link role-card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $pages)) }}" href="{{ .RelPermalink }}">
       <img src="{{ $item.art.src | relURL }}" alt="" width="960" height="540" loading="lazy">
       <span class="label">{{ $prefix }}{{ $item.name }}</span>
       <span class="h3">{{ $item.headline }}</span>
     </a>
   </li>
-  {{- end }}
   {{- end }}
 </ul>

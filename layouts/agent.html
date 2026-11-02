@@ -28,12 +28,12 @@
             {{- /* steps: optional per-page override of the three default steps. */}}
             {{- with $p.steps }}
             {{- range $i, $st := . }}
-            <li class="card glass"><span class="agent-step-n">{{ add $i 1 }}</span><h3 class="h3">{{ $st.t }}</h3><p>{{ $st.b }}</p></li>
+            <li class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $p.steps)) }}"><span class="agent-step-n">{{ add $i 1 }}</span><h3 class="h3">{{ $st.t }}</h3><p>{{ $st.b }}</p></li>
             {{- end }}
             {{- else }}
-            <li class="card glass"><span class="agent-step-n">1</span><h3 class="h3">Install Blowhorn</h3><p>Blowhorn for your computer and the Blowhorn browser extension. Your posts go out from your own signed-in browser.</p></li>
-            <li class="card glass"><span class="agent-step-n">2</span><h3 class="h3">{{ $p.wire_title }}</h3><p>{{ $p.hook }}. A few lines and {{ $p.tool }} knows the commands.</p></li>
-            <li class="card glass"><span class="agent-step-n">3</span><h3 class="h3">Say what you want</h3><p>{{ $p.tool }} turns it into blowhorn commands. You approve what publishes.</p></li>
+            <li class="card card-field"><span class="agent-step-n">1</span><h3 class="h3">Install Blowhorn</h3><p>Blowhorn for your computer and the Blowhorn browser extension. Your posts go out from your own signed-in browser.</p></li>
+            <li class="card card-plain"><span class="agent-step-n">2</span><h3 class="h3">{{ $p.wire_title }}</h3><p>{{ $p.hook }}. A few lines and {{ $p.tool }} knows the commands.</p></li>
+            <li class="card card-stamp"><span class="agent-step-n">3</span><h3 class="h3">Say what you want</h3><p>{{ $p.tool }} turns it into blowhorn commands. You approve what publishes.</p></li>
             {{- end }}
           </ol>
         </section>
@@ -82,8 +82,8 @@
             <h2 id="uses-title" class="h2">Where it pays off</h2>
           </div>
           <div class="grid grid-3">
-            {{- range $p.uses }}
-            <div class="card glass"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
+            {{- range $i, $u := $p.uses }}
+            <div class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $p.uses)) }}"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
             {{- end }}
           </div>
         </section>
@@ -95,8 +95,8 @@
             <h2 id="faq-title" class="h2">Frequently Asked Questions</h2>
           </div>
           <div class="agent-faq">
-            {{- range $p.faq }}
-            <details class="glass"><summary class="ui">{{ .q }}</summary><p>{{ .a | markdownify }}</p></details>
+            {{- range $i, $f := $p.faq }}
+            <details class="card {{ partial "card-variant.html" (dict "i" $i "grid" "stack" "n" (len $p.faq) "variants" (slice "card-field" "card-plain")) }}"><summary class="ui">{{ .q }}</summary><p>{{ .a | markdownify }}</p></details>
             {{- end }}
           </div>
         </section>
@@ -110,7 +110,7 @@
             <h2 id="platforms-title" class="h2">What {{ $who }} can do on each platform</h2>
             <p class="muted">Every action below is a blowhorn command {{ $who }} can run for you. Each platform's <a href="{{ with $platformsDocs }}{{ .RelPermalink }}{{ end }}">docs page</a> has the details.</p>
           </div>
-          <div class="agent-actions-wrap glass">
+          <div class="agent-actions-wrap card-plain">
           <table class="agent-actions-table">
             <thead><tr><th scope="col">Platform</th><th scope="col">Action</th><th scope="col">How it behaves</th><th scope="col">Limits</th></tr></thead>
             <tbody>

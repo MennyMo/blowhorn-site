@@ -1,0 +1,40 @@
+{{- /* A docs page's content, with a card variant dealt to each docs card. The
+  docs Markdown is synced from the product repository and writes its cards as
+  class="card docs-card ...", with no variant. Each grid of them (a run of
+  cards with nothing but whitespace between one </a> and the next card) gets
+  its own deal from card-deal.html, for the columns its container class
+  shows: the start list is a stack, the quadrants and the grid-2 platform
+  cards go 1 and 2 across. An unknown container is dealt for 1, 2 and 3
+  across, which also holds at 1 or 2. Context: the page. See DESIGN.md, "Cards". */ -}}
+{{- $marker := `class="card docs-card` -}}
+{{- $parts := split (string .Content) $marker -}}
+{{- $grids := dict "docs-start-list" "stack" "docs-start" "stack" "docs-quadrants" "docs-quadrants" "platform-cards" "grid-2" -}}
+{{- /* Count the cards in each run first: a part that ends in </a> and the
+  start of the next card continues its run. */ -}}
+{{- $runs := slice -}}
+{{- $count := 0 -}}
+{{- range $i, $part := after 1 $parts -}}
+  {{- $count = add $count 1 -}}
+  {{- $last := eq (add $i 2) (len $parts) -}}
+  {{- if or $last (not (findRE `</a>\s*<a\s*$` $part 1)) }}{{ $runs = $runs | append $count }}{{ $count = 0 }}{{ end -}}
+{{- end -}}
+{{- $out := index $parts 0 -}}
+{{- $run := 0 -}}
+{{- $k := 0 -}}
+{{- $deal := slice -}}
+{{- range $i, $part := after 1 $parts -}}
+  {{- if eq $k 0 -}}
+    {{- /* A new grid: its container is the last <div class="..."> before it. */ -}}
+    {{- $before := index $parts $i -}}
+    {{- $grid := "" -}}
+    {{- range findRE `<div class="[^"]*"` $before }}{{ $grid = . }}{{ end -}}
+    {{- $name := "" -}}
+    {{- with $grid }}{{ range $cls, $g := $grids }}{{ if in (split (replaceRE `^<div class="|"$` "" $grid) " ") $cls }}{{ $name = $g }}{{ end }}{{ end }}{{ end -}}
+    {{- $n := index $runs $run -}}
+    {{- if $name }}{{ $deal = partial "card-deal.html" (dict "grid" $name "n" $n) }}{{ else }}{{ $deal = partial "card-deal.html" (dict "cols" (slice 1 2 3) "n" $n) }}{{ end -}}
+  {{- end -}}
+  {{- $out = printf "%s%s %s%s" $out $marker (index $deal $k) $part -}}
+  {{- $k = add $k 1 -}}
+  {{- if eq $k (index $runs $run) }}{{ $k = 0 }}{{ $run = add $run 1 }}{{ end -}}
+{{- end -}}
+{{- $out | safeHTML -}}

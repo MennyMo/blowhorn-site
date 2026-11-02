@@ -138,13 +138,13 @@
           </div>
           <div class="fig-grid fig-grid-3">
             {{- if eq $variant "v4" }}
-            <div class="fig-card"><span class="fig-step-num">01</span><h3 class="fig-h3">Write or import</h3><p>Draft a post, paste a changelog, or hand the queue to an agent.</p></div>
-            <div class="fig-card"><span class="fig-step-num">02</span><h3 class="fig-h3">Schedule and approve</h3><p>Pick the moment. Nothing leaves until you say so.</p></div>
-            <div class="fig-card"><span class="fig-step-num">03</span><h3 class="fig-h3">Runs from your browser</h3><p>Your computers post as you, signed in, exactly as written.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 0 "grid" "fig-grid-3" "n" 3) }}"><span class="fig-step-num">01</span><h3 class="fig-h3">Write or import</h3><p>Draft a post, paste a changelog, or hand the queue to an agent.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 1 "grid" "fig-grid-3" "n" 3) }}"><span class="fig-step-num">02</span><h3 class="fig-h3">Schedule and approve</h3><p>Pick the moment. Nothing leaves until you say so.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 2 "grid" "fig-grid-3" "n" 3) }}"><span class="fig-step-num">03</span><h3 class="fig-h3">Runs from your browser</h3><p>Your computers post as you, signed in, exactly as written.</p></div>
             {{- else }}
-            <div class="fig-card"><h3 class="fig-h3">Write or import</h3><p>Draft in the app, CLI, or hand an agent the order.</p></div>
-            <div class="fig-card"><h3 class="fig-h3">Schedule and approve</h3><p>Orders wait in one queue until you say go.</p></div>
-            <div class="fig-card"><h3 class="fig-h3">Runs from your browser</h3><p>Posted as you, from your own signed-in browser.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 0 "grid" "fig-grid-3" "n" 3) }}"><h3 class="fig-h3">Write or import</h3><p>Draft in the app, CLI, or hand an agent the order.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 1 "grid" "fig-grid-3" "n" 3) }}"><h3 class="fig-h3">Schedule and approve</h3><p>Orders wait in one queue until you say go.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 2 "grid" "fig-grid-3" "n" 3) }}"><h3 class="fig-h3">Runs from your browser</h3><p>Posted as you, from your own signed-in browser.</p></div>
             {{- end }}
           </div>
           <p class="fig-note"><a class="fig-link" href="{{ "docs/" | relURL }}">See how it works &rarr;</a></p>
@@ -173,8 +173,8 @@
           <div class="fig-grid fig-grid-3">
             {{- $cards := $agents.cards -}}
             {{- if eq $variant "v1" }}{{ $cards = first 3 $cards }}{{ end -}}
-            {{- range $cards }}
-            <div class="fig-card">
+            {{- range $i, $c := $cards }}
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" $i "grid" "fig-grid-3" "n" (len $cards)) }}">
               <span class="fig-tag">{{ .tag }}</span>
               <h3 class="fig-h3">{{ .title }}</h3>
               <p>{{ .body }}</p>
@@ -199,8 +199,8 @@
             <p class="fig-lead">{{ $content.subhead }}</p>
           </div>
           <div class="fig-grid fig-grid-2">
-            {{- range $content.offers }}
-            <div class="fig-card">
+            {{- range $i, $c := $content.offers }}
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" $i "grid" "fig-grid-2" "n" (len $content.offers)) }}">
               <span class="fig-tag">{{ .tag }}</span>
               <h3 class="fig-h3">{{ .title }}</h3>
               <p>{{ .body }}</p>
@@ -274,13 +274,13 @@
           </div>
           <div class="fig-grid fig-grid-3">
             {{- if eq $variant "v4" }}
-            <div class="fig-card"><span class="fig-tag">Product note</span><h3 class="fig-h3">Deterministic actions, optional AI</h3><p>Scripted clicks mean an agent never has to guess the UI.</p></div>
-            <div class="fig-card"><span class="fig-tag">Safety note</span><h3 class="fig-h3">Dry runs before fire</h3><p>Every agent path rehearses against your limits first.</p></div>
-            <div class="fig-card"><span class="fig-tag">Trust note</span><h3 class="fig-h3">Your browser stays yours</h3><p>Posts leave from computers you own, signed in as you.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 0 "grid" "fig-grid-3" "n" 3) }}"><span class="fig-tag">Product note</span><h3 class="fig-h3">Deterministic actions, optional AI</h3><p>Scripted clicks mean an agent never has to guess the UI.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 1 "grid" "fig-grid-3" "n" 3) }}"><span class="fig-tag">Safety note</span><h3 class="fig-h3">Dry runs before fire</h3><p>Every agent path rehearses against your limits first.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 2 "grid" "fig-grid-3" "n" 3) }}"><span class="fig-tag">Trust note</span><h3 class="fig-h3">Your browser stays yours</h3><p>Posts leave from computers you own, signed in as you.</p></div>
             {{- else }}
-            <div class="fig-card"><h3 class="fig-h3">Dry run before fire</h3><p>Limits travel with every order.</p></div>
-            <div class="fig-card"><h3 class="fig-h3">Your browser, your session</h3><p>Nobody else logs in as you.</p></div>
-            <div class="fig-card"><h3 class="fig-h3">Stand down any time</h3><p>Reenlist later.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 0 "grid" "fig-grid-3" "n" 3) }}"><h3 class="fig-h3">Dry run before fire</h3><p>Limits travel with every order.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 1 "grid" "fig-grid-3" "n" 3) }}"><h3 class="fig-h3">Your browser, your session</h3><p>Nobody else logs in as you.</p></div>
+            <div class="fig-card {{ partial "card-variant.html" (dict "i" 2 "grid" "fig-grid-3" "n" 3) }}"><h3 class="fig-h3">Stand down any time</h3><p>Reenlist later.</p></div>
             {{- end }}
           </div>
           {{- if eq $variant "v4" }}<p class="fig-note"><a class="fig-link" href="{{ (site.GetPage "/docs/explanation/reliability-and-anti-bot-design").RelPermalink }}">Read the notes &rarr;</a></p>{{ end }}

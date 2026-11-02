@@ -9,9 +9,10 @@
           <h1 class="display">{{ .Title }}</h1>
           <p class="body-lg muted lede">{{ .Description }}</p>
         </header>
+        {{- $deal := partial "card-deal.html" (dict "n" (len .RegularPages) "grid" "video-grid") }}
         <ul class="video-grid" data-video-grid>
-          {{- range .RegularPages.ByDate.Reverse }}
-          {{ partial "video-card.html" . }}
+          {{- range $i, $v := .RegularPages.ByDate.Reverse }}
+          {{ partial "video-card.html" (dict "page" $v "i" $i "deal" $deal) }}
           {{- end }}
         </ul>
         <p><a href="{{ (site.GetPage "/resources/videos").RelPermalink }}">All videos</a></p>
@@ -21,6 +22,5 @@
 {{ end }}
 
 {{ define "scripts" }}
-    {{- $js := resources.Get "js/resources.js" | minify | fingerprint }}
-    <script src="{{ $js.RelPermalink }}" defer></script>
+    {{- partial "filter-script.html" "js/resources.js" }}
 {{ end }}

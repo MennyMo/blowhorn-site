@@ -12,8 +12,9 @@
         </header>
         {{- $videos := where .Pages "Layout" "video" -}}
         {{- with $videos }}
+        {{- $deal := partial "card-deal.html" (dict "n" (len .) "grid" "video-grid") }}
         <ul class="video-grid" data-video-grid>
-          {{- range .ByDate.Reverse }}{{ partial "video-card.html" . }}{{ end -}}
+          {{- range $i, $v := .ByDate.Reverse }}{{ partial "video-card.html" (dict "page" $v "i" $i "deal" $deal) }}{{ end -}}
         </ul>
         {{- end }}
         {{- $others := where .Pages "Layout" "ne" "video" -}}
@@ -31,6 +32,5 @@
 {{ end }}
 
 {{ define "scripts" }}
-    {{- $js := resources.Get "js/resources.js" | minify | fingerprint }}
-    <script src="{{ $js.RelPermalink }}" defer></script>
+    {{- partial "filter-script.html" "js/resources.js" }}
 {{ end }}

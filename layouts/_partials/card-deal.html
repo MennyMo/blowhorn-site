@@ -1,0 +1,68 @@
+{{- /* The variants for one card grid, dealt card by card: a list of "n" variant
+  classes, one per card, in which no two cards in the same row share a
+  variant, and no card shares one with the card directly above it, at every
+  column count the grid is shown at. card-variant.html picks one card's
+  class from it; a grid that a filter can thin out prints it as
+  data-card-deal, and assets/js/card-deal.js hands it out again to the
+  visible cards. See DESIGN.md, "Cards".
+
+  Context: dict
+    "grid"     a grid class named below, or
+    "cols"     a slice of every column count the grid shows (1 for a stack);
+    "n"        how many cards the grid draws (0 gives an empty deal);
+    "variants" optional: variant classes in order of preference.
+
+  How the deal works: card i, shown c across, has row mates i-1 back to the
+  start of its row (i mod c of them) and sits under card i-c. Each card takes
+  the first variant, in order of preference, that none of those cards holds
+  at any of the grid's column counts. The deal for n cards begins with the
+  deal for fewer, so a filter that shows k cards hands out its first k
+  entries. A grid that shows 3 across needs at least three variants and,
+  with a second row, four; the build fails when the variants run out.
+
+  Column counts per grid class. Keep in step with the grid's CSS: */ -}}
+{{- $grids := dict
+  "stack"          (slice 1)
+  "grid-2"         (slice 1 2)
+  "grid-3"         (slice 1 2 3)
+  "grid-4"         (slice 1 2 4)
+  "agent-grid"     (slice 1 2 4)
+  "video-grid"     (slice 1 2 3)
+  "mm-cards"       (slice 1 2 3)
+  "pricing-grid"   (slice 1 2 4)
+  "proof-grid"     (slice 1 2 3)
+  "proof-band"     (slice 1 2 3)
+  "swatches"       (slice 1 2 4)
+  "fig-grid-2"     (slice 1 2)
+  "fig-grid-3"     (slice 1 3)
+  "docs-quadrants" (slice 1 2)
+-}}
+{{- $cols := .cols -}}
+{{- with .grid -}}
+  {{- $cols = index $grids . -}}
+  {{- if not $cols }}{{ errorf "card-deal.html: unknown grid %q; add its column counts to the map" . }}{{ $cols = slice 1 }}{{ end -}}
+{{- end -}}
+{{- if not $cols }}{{ errorf "card-deal.html: pass \"grid\" or \"cols\"" }}{{ $cols = slice 1 }}{{ end -}}
+{{- if not (reflect.IsSlice $cols) }}{{ $cols = slice $cols }}{{ end -}}
+{{- $cols = slice 1 | append $cols | uniq -}}
+{{- $variants := .variants | default (slice "card-field" "card-plain" "card-stamp" "card-dispatch") -}}
+{{- if lt (len $variants) 2 }}{{ errorf "card-deal.html: a grid needs at least two variants, got %v" $variants }}{{ end -}}
+{{- if not (isset . "n") }}{{ errorf "card-deal.html: pass \"n\", the number of cards the grid draws (grid %v)" $cols }}{{ end -}}
+{{- $n := int (.n | default 0) -}}
+{{- if lt $n 0 }}{{ errorf "card-deal.html: \"n\" is %d; a grid draws zero or more cards (grid %v)" $n $cols }}{{ end -}}
+{{- $deal := slice -}}
+{{- if gt $n 0 -}}
+  {{- range $i := seq 0 (sub $n 1) -}}
+    {{- $taken := slice -}}
+    {{- range $c := $cols -}}
+      {{- $pos := mod $i $c -}}
+      {{- if gt $pos 0 }}{{ range $k := seq 1 $pos }}{{ $taken = $taken | append (index $deal (sub $i $k)) }}{{ end }}{{ end -}}
+      {{- if ge $i $c }}{{ $taken = $taken | append (index $deal (sub $i $c)) }}{{ end -}}
+    {{- end -}}
+    {{- $pick := "" -}}
+    {{- range $variants }}{{ if and (not $pick) (not (in $taken .)) }}{{ $pick = . }}{{ end }}{{ end -}}
+    {{- if not $pick }}{{ errorf "card-deal.html: card %d of %d in a grid shown %v across needs more than the %d variants given (%v)" (add $i 1) $n $cols (len $variants) $variants }}{{ $pick = index $variants 0 }}{{ end -}}
+    {{- $deal = $deal | append $pick -}}
+  {{- end -}}
+{{- end -}}
+{{- return $deal -}}

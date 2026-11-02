@@ -128,27 +128,26 @@
   .fig .fig-grid-2 { grid-template-columns: repeat(2, 1fr); }
 }
 .fig .fig-card {
-  border: 1px solid var(--fig-line); border-radius: 16px; padding: var(--card-pad);
-  background: #fff; color: #1e2117;
-}
-@media (prefers-color-scheme: dark) {
-  .fig .fig-card { background: #2a2e25; color: #f4f7f6; }
+  border-radius: 16px; padding: var(--card-pad);
 }
 .fig .fig-card h3 { margin: 0 0 12px; }
-.fig .fig-card p { margin: 0; color: #3c494f; }
-@media (prefers-color-scheme: dark) {
-  .fig .fig-card p { color: #d5dedd; }
-}
+.fig .fig-card p { margin: 0; }
 .fig .fig-tag { display: block; color: var(--fig-teal-deep); font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
 @media (prefers-color-scheme: dark) {
   .fig .fig-tag { color: var(--fig-teal-bright); }
 }
 
 /* Dark sections (agents, V1 platforms, V3/V4 close) */
-.fig .fig-dark { background: #1e2117; color: #f4f7f6; }
+/* A dark section is dark in both themes, so it carries the dark theme tokens:
+   a card variant inside it (cards.css) reads them and stays legible. */
+.fig .fig-dark {
+  background: #1e2117; color: #f4f7f6;
+  --ink: #FFFFFF; --ink-muted: #A3AEB2; --ink-wordmark: #FFFFFF;
+  --surface: #1E2117; --surface-raised: #2A2E25; --surface-tint: #173A34;
+  --line: #3C494F; --link: var(--teal-bright); --link-hover: var(--mint);
+}
 .fig .fig-dark p, .fig .fig-dark .fig-lead { color: #d5dedd; }
-.fig .fig-dark .fig-card { background: #2a2e25; border-color: #3c494f; color: #f4f7f6; }
-.fig .fig-dark .fig-card p { color: #d5dedd; }
+.fig .fig-dark .fig-card p { color: var(--ink-muted); }
 .fig .fig-dark .fig-tag { color: var(--fig-teal-bright); }
 .fig .fig-dark a { color: var(--fig-teal-bright); }
 

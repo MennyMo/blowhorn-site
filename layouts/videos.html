@@ -55,10 +55,14 @@
         </ul>
         <p class="collection-status" data-collection-status aria-live="polite"></p>
 
-        <ul class="video-grid" data-collection-grid data-collection-noun="videos">
+        {{- $all := slice }}{{ range .Sections.ByWeight }}{{ $all = $all | append .RegularPages }}{{ end }}
+        {{- $deal := partial "card-deal.html" (dict "n" (len $all) "grid" "video-grid") }}
+        <ul class="video-grid" data-collection-grid data-collection-noun="videos" data-card-deal="{{ delimit $deal " " }}">
+          {{- $.Scratch.Set "card" 0 }}
           {{- range .Sections.ByWeight }}
             {{- range .RegularPages.ByDate.Reverse }}
-          {{ partial "video-card.html" . }}
+          {{ partial "video-card.html" (dict "page" . "i" ($.Scratch.Get "card") "deal" $deal) }}
+            {{- $.Scratch.Add "card" 1 }}
             {{- end }}
           {{- end }}
         </ul>
@@ -72,6 +76,5 @@
 {{ end }}
 
 {{ define "scripts" }}
-    {{- $js := resources.Get "js/resources.js" | minify | fingerprint }}
-    <script src="{{ $js.RelPermalink }}" defer></script>
+    {{- partial "filter-script.html" "js/resources.js" }}
 {{ end }}

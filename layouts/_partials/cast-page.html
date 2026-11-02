@@ -31,8 +31,8 @@
         <section class="agent-section" aria-labelledby="pains-title">
           <div class="section-head"><h2 id="pains-title" class="h2">Sound familiar?</h2></div>
           <ul class="grid grid-3">
-            {{- range $item.pains }}
-            <li class="card glass"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></li>
+            {{- range $i, $pa := $item.pains }}
+            <li class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $item.pains)) }}"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></li>
             {{- end }}
           </ul>
         </section>
@@ -40,8 +40,8 @@
         <section class="agent-section" aria-labelledby="gets-title">
           <div class="section-head"><h2 id="gets-title" class="h2">{{ $meta.getsTitle }}</h2></div>
           <ul class="grid {{ if eq (len $item.gets) 4 }}grid-4{{ else }}grid-3{{ end }}">
-            {{- range $item.gets }}
-            <li class="card glass"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></li>
+            {{- range $i, $ge := $item.gets }}
+            <li class="card {{ partial "card-variant.html" (dict "i" $i "grid" (cond (eq (len $item.gets) 4) "grid-4" "grid-3") "n" (len $item.gets)) }}"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></li>
             {{- end }}
           </ul>
         </section>
@@ -94,8 +94,8 @@
         <section class="agent-section" aria-labelledby="faq-title">
           <div class="section-head"><h2 id="faq-title" class="h2">Frequently Asked Questions</h2></div>
           <div class="agent-faq">
-            {{- range $item.faq }}
-            <details class="glass"><summary class="ui">{{ .q }}</summary><p>{{ .a }}{{ with .link }} <a href="{{ .href }}">{{ .label }}</a>{{ end }}</p></details>
+            {{- range $i, $f := $item.faq }}
+            <details class="card {{ partial "card-variant.html" (dict "i" $i "grid" "stack" "n" (len $item.faq) "variants" (slice "card-field" "card-plain")) }}"><summary class="ui">{{ .q }}</summary><p>{{ .a }}{{ with .link }} <a href="{{ .href }}">{{ .label }}</a>{{ end }}</p></details>
             {{- end }}
           </div>
         </section>

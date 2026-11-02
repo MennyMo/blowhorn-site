@@ -61,8 +61,6 @@ html[data-theme="signal"] {
   --app-live: #0B8A5F;
   --app-pending: #A86E0D;
   --app-tint: rgba(0, 179, 159, 0.10);
-
-  --card-cue-edge: color-mix(in srgb, var(--teal) 35%, transparent);
 }
 
 /* No Signal chrome or ambient overrides: the header, footer and the
@@ -146,13 +144,16 @@ html[data-theme="signal"] .stage .stage-ground { stroke: var(--line); stroke-wid
   html[data-theme="signal"] #platforms .logo-tile img[src*="x-logo-black"],
   html[data-theme="signal"] #platforms .logo-tile img[src*="github-invertocat-black"] { filter: invert(1) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45)); }
 
-  html[data-theme="signal"] { --card-cue-edge: color-mix(in srgb, var(--teal-bright) 30%, transparent); }
-
   html[data-theme="signal"] a.card-link::after,
   html[data-theme="signal"] a.docs-card::after,
   html[data-theme="signal"] a.platform::after,
   html[data-theme="signal"] a.agent-tile::after {
     --card-cue-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%2300D3A9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  /* Paper stays light in dark mode, so its chip keeps the light arrow. */
+  html[data-theme="signal"] a.card-paper::after {
+    --card-cue-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%2300756A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
 
   html[data-theme="signal"] a.docs-card.platform-card:hover::after,

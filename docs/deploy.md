@@ -181,7 +181,9 @@ The public URLs are a contract, checked by `make site-check`:
   Blowhorn (no early-access form: anyone without a plan starts the beta
   there), whose URL is `params.cloud_url` in `hugo.toml` alone. None of these
   is listed in `sitemap.xml` or `llms.txt`.
-- `/assets/brand/...` (from `static/assets/brand/`), `/favicon.ico`, `/CNAME`.
+- `/assets/brand/...` (from `static/assets/brand/`), `/assets/brand/cards.css`
+  (the card variants, published from `assets/css/cards.css` for tells.blowhorn.ai;
+  [DESIGN.md](../DESIGN.md), Cards), `/favicon.ico`, `/CNAME`.
 - The two brand kits on `/brand/`: `/brand/blowhorn-brand-kit.zip` (the full kit,
   the URL the kit has always had) and `/brand/blowhorn-logo-kit.zip`.
 - Generated: `/sitemap.xml`, `/robots.txt` (which names the sitemap),

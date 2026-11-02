@@ -1,12 +1,16 @@
-{{- /* Every other page in the Agentic AI Marketing section, as glass tiles.
+{{- /* Every other page in the Agentic AI Marketing section, as tiles.
   Context: the current page (or the section, which lists them all). */ -}}
 {{- $cur := . -}}
-{{- $section := site.GetPage "/agents" -}}
+{{- /* Collect the tiles first so the variant index counts only the tiles
+  drawn (the current page is skipped) and the cycle knows how many there are. */ -}}
+{{- $pages := slice -}}
+{{- range (site.GetPage "/agents").Pages.ByWeight }}
+  {{- if ne .RelPermalink $cur.RelPermalink }}{{ $pages = $pages | append . }}{{ end }}
+{{- end -}}
 <ul class="agent-grid">
-  {{- range $section.Pages.ByWeight }}
-  {{- if ne .RelPermalink $cur.RelPermalink }}
+  {{- range $i, $pg := $pages }}
   <li>
-    <a class="agent-tile glass" href="{{ .RelPermalink }}">
+    <a class="agent-tile {{ partial "card-variant.html" (dict "i" $i "grid" "agent-grid" "n" (len $pages)) }}" href="{{ .RelPermalink }}">
       {{ partial "agents/mark.html" (dict "page" .) }}
       <span class="agent-tile-copy">
         <span class="h3">{{ .Params.tool }}</span>
@@ -14,6 +18,5 @@
       </span>
     </a>
   </li>
-  {{- end }}
   {{- end }}
 </ul>

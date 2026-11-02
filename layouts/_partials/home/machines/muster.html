@@ -10,7 +10,7 @@
 {{- range $troops }}{{ $urls = $urls | append (printf "assets/brand/cast/%s.webp" . | relURL) }}{{ end -}}
 <div class="machines-panel" data-machines-only="muster">
   <div class="machines-split">
-    <div class="machines-card machines-rollcall">
+    <div class="machines-card card-dispatch machines-rollcall">
       <div class="machines-card-head"><span>Roll call</span><span><span data-muster="count">11</span> present</span></div>
       <ol class="machines-roll">
         <li><span class="machines-roll-n">01</span><span class="machines-roll-name">Desk rig</span><span class="machines-pill"><span class="machines-dot" aria-hidden="true"></span>Present</span></li>
@@ -24,7 +24,7 @@
         <a class="button button-secondary" href="{{ (site.GetPage "/docs/how-to/set-up/first-run-setup").RelPermalink }}">How install works</a>
       </div>
     </div>
-    <figure class="machines-card machines-formation">
+    <figure class="machines-card card-stamp machines-formation">
       <p class="machines-strength"><span class="machines-dot" aria-hidden="true"></span><span data-muster="unit">Squad</span> strength: <span data-muster="count">11</span> computers</p>
       <div class="machines-formation-grid" data-troops="{{ delimit $urls " " }}">
         {{- range $i, $_ := seq 11 }}<img src="{{ index $urls (mod $i (len $urls)) }}" alt="" width="480" height="270" loading="lazy">{{ end }}

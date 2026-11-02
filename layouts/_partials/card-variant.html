@@ -1,0 +1,10 @@
+{{- /* One card's variant class in a grid: entry i of the grid's deal
+  (card-deal.html), so no card shares a variant with a card in its row or
+  the card above it, at any width. Context: dict "i" (0-based index of the
+  card among the cards drawn), plus the grid's "grid" or "cols", "n" and
+  optional "variants", exactly as card-deal.html takes them. The deal is
+  worked out once per grid and cached. See DESIGN.md, "Cards". */ -}}
+{{- $args := dict "grid" .grid "cols" .cols "n" .n "variants" .variants -}}
+{{- $deal := partialCached "card-deal.html" $args (printf "%v|%v|%v|%v" .grid .cols .n .variants) -}}
+{{- if ge .i (len $deal) }}{{ errorf "card-variant.html: card index %d is outside the grid's %d cards; pass the grid's real \"n\"" .i (len $deal) }}{{ end -}}
+{{- index $deal (mod .i (len $deal)) -}}

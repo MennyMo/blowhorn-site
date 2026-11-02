@@ -98,12 +98,13 @@
             <h2 id="roles-title" class="display">Built for the people, and the agents, who carry the message.</h2>
           </div>
           <ul class="grid grid-3 section-body signal-roles">
-            {{- range $role := sort site.Data.roles.roles "weight" }}
+            {{- $roles := sort site.Data.roles.roles "weight" }}
+            {{- range $i, $role := $roles }}
             {{- /* The whole card is the link (a.card-link: pointer, arrow
               cue chip, hover lift). No separate "Blowhorn for X" link: it
               only repeated the card's own title. */}}
             <li>
-              <a class="role-card card card-link" href="{{ printf "for/%s/" $role.slug | relURL }}">
+              <a class="role-card card card-link {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $roles)) }}" href="{{ printf "for/%s/" $role.slug | relURL }}">
                 <span class="role-art">
                   <img src="{{ $role.art.src | relURL }}" alt="{{ $role.art.alt }}" width="320" height="240" loading="lazy">
                 </span>
@@ -131,7 +132,7 @@
 
       <section class="section" aria-label="Major Blowhorn">
         <div class="wrap">
-          <div class="major-card">
+          <div class="major-card card-paper">
             <figure class="major-figure">
               {{- /* Eager, matching Reveille: native loading=lazy is skipped by Playwright full-page screenshots, which never scroll this card into view, so Chromium never fetches the webp and only the yellow disc paints. */ -}}
               <img src="{{ "assets/brand/mascot/locked-6/major-6-hat-left.webp" | relURL }}" alt="Major Blowhorn, a teal rooster in a drill sergeant's campaign hat, pointing and shouting into his bullhorn" width="657" height="560">
@@ -164,19 +165,19 @@
             <p class="body-lg muted">Many public voices, one coordinated queue, every action on your own computer.</p>
           </div>
           <ul class="grid grid-2 section-body">
-            <li class="card">
+            <li class="card card-field">
               <h3 class="h3">Human pace, always</h3>
               <p>Blowhorn works at a pace you choose and never solves a CAPTCHA for you. <a href="{{ (site.GetPage "/docs/explanation/reliability-and-anti-bot-design").RelPermalink }}">Will I get banned?</a></p>
             </li>
-            <li class="card">
+            <li class="card card-plain">
               <h3 class="h3">Never twice</h3>
               <p>Your computers coordinate through one queue, so the same post isn't sent from two of them. <a href="{{ (site.GetPage "/docs/explanation/never-twice").RelPermalink }}">Never twice</a></p>
             </li>
-            <li class="card">
+            <li class="card card-stamp">
               <h3 class="h3">Hacker News, by the rules</h3>
               <p>Submit and comment only. It never votes, and caps each profile at 2 link submissions a day. <a href="{{ (site.GetPage "/docs/how-to/publish/post-to-hacker-news").RelPermalink }}">Post to Hacker News</a></p>
             </li>
-            <li class="card">
+            <li class="card card-field">
               <h3 class="h3">AI on a short leash</h3>
               <p>AI agents get the same queue, limits and dry run you do. Only approved posts go out. <a href="{{ (site.GetPage "/docs/how-to/schedule/pause").RelPermalink }}">You're in control</a></p>
             </li>
@@ -190,7 +191,7 @@
       {{ partial "home/ai-content.html" . }}
       <section id="pricing" class="section" aria-labelledby="pricing-title">
         <div class="wrap">
-          <div class="pricing-signal card">
+          <div class="pricing-signal card card-field">
             <div class="section-head">
               <p class="label">Pricing</p>
               <h2 id="pricing-title" class="display">Priced per profile, not per channel.</h2>
