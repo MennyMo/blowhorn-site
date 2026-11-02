@@ -63,6 +63,17 @@
           </div>
         </section>
 
+        {{- with $p.art }}
+        {{- /* Optional page art: one approved cast or troops image with a
+          real-text caption. Renders only on pages that set `art`. */ -}}
+        <section class="agent-section versus-art" aria-label="Illustration">
+          <figure class="versus-figure">
+            <img src="{{ .src | relURL }}" alt="" loading="lazy">
+            <figcaption class="muted">{{ .caption }}</figcaption>
+          </figure>
+        </section>
+        {{- end }}
+
         {{- if $p.wins }}
         <section class="agent-section" aria-labelledby="wins-title">
           <div class="versus-ledger glass">
@@ -128,6 +139,18 @@
           <p>{{ site.Params.versus_belief }}</p>
           <p>{{ $p.signal }}</p>
         </section>
+
+        {{- with $p.code }}
+        {{- /* Optional terminal code card: one CLI example that shows the
+          difference better than words. Renders only on pages that set `code`. */ -}}
+        <section class="agent-section versus-code" aria-labelledby="code-title">
+          <div class="section-head">
+            <h2 id="code-title" class="h2">{{ .heading }}</h2>
+            <p class="muted">{{ .lede }}</p>
+          </div>
+          {{ partial "code-card.html" (dict "title" "terminal" "lang" "bash" "code" .code "prompt" true) }}
+        </section>
+        {{- end }}
 
         {{ partial "major-says.html" (dict "line" $p.major) }}
 
