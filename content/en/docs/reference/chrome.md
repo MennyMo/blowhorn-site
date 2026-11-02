@@ -103,9 +103,10 @@ key Blowhorn keeps on this computer (`chrome_pairing.key`, readable only by you)
 it carries no account data. The extension keeps it in its own storage (the
 `storage` permission, which shows no install warning) and reports it when a run
 connects. Blowhorn opens the page behind the app in front, and once the token is
-stored the page closes its own tab. The tab stays open, with a note saying it is
-safe to close, only when Google Chrome refuses to close it, or on Windows and
-Linux when it is the last tab open, since closing it would quit Google Chrome.
+stored the page closes its own tab when the Chrome profile has another tab open.
+When it is the profile's only tab it stays open: closing it would close the
+profile's last window, and with it the extension's connection to the Blowhorn
+app. It also stays when Google Chrome refuses to close it.
 
 Before any action, a run checks the token. It refuses with one sentence when
 the Chrome profile is not paired, is paired to another Blowhorn profile (the
