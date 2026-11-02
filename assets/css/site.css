@@ -1449,10 +1449,12 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 }
 .footer-tm { flex-basis: 100%; }
 @media (min-width: 720px) {
-  .footer-top { grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); align-items: center; gap: var(--space-8); }
   .footer-cols { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .footer-col-wide ul { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, auto); }
   .footer-col-tools ul { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 960px) {
+  .footer-top { grid-template-columns: minmax(240px, 1fr) minmax(0, 26rem); align-items: center; gap: var(--space-8); }
 }
 @media (min-width: 1080px) {
   .footer-panel { padding: var(--space-12); gap: var(--space-8); }
