@@ -2,15 +2,15 @@
   "title": "Blowhorn vs Claude in Chrome",
   "linkTitle": "Claude in Chrome",
   "seo_title": "Blowhorn vs Claude in Chrome: honest comparison",
-  "description": "Claude in Chrome is a general browser agent that can do almost anything you can, in your own logins. Blowhorn is a dedicated social tool: queue, schedule, amplify, scripted and rehearsable, and Claude can drive it.",
+  "description": "Claude in Chrome is a general browser agent that can do almost anything you can, in your own logins. Blowhorn is a dedicated social tool with a queue, a schedule, amplification and scripted, rehearsable actions, and Claude Code can drive it.",
   "layout": "versus",
   "weight": 51,
-  "lastmod": "2026-10-12",
+  "lastmod": "2026-11-02",
   "competitor": "Claude in Chrome",
   "mark": "CiC",
   "site_url": "https://claude.com/claude-in-chrome",
   "group": "AI-native agent tools",
-  "verdict": "Claude in Chrome is a general browser agent that can do almost anything you can, in your own logins. Blowhorn is a dedicated social tool: queue, schedule, amplify, scripted and rehearsable, and Claude can drive it.",
+  "verdict": "Claude in Chrome is a general browser agent that can do almost anything you can, in your own logins, and it is genuinely good at that. Blowhorn isn't a bot. It's you: a dedicated social tool with a queue, a schedule, amplification and scripted, rehearsable actions, and Claude Code can drive it from the command line.",
   "them": [
     "You want one assistant for any browser task, not just social",
     "Occasional, one-off posts are all you need",
@@ -35,13 +35,13 @@
       "b": "Your computers, in your own signed-in browser or platform APIs"
     },
     {
-      "f": "Queue, schedule, profiles",
-      "t": "No",
-      "b": "Yes"
+      "f": "Scheduling",
+      "t": "Scheduled tasks, recorded workflows and saved shortcuts, all inside one open browser",
+      "b": "A queue and schedule shared across every computer; any awake one picks up what is due"
     },
     {
       "f": "Many computers on one queue",
-      "t": "No",
+      "t": "No: one signed-in browser profile, one computer",
       "b": "Unlimited computers on one queue, coordinated so the same post isn't sent from two computers"
     },
     {
@@ -60,7 +60,7 @@
       "b": "None. Blowhorn sells no followers, likes or reposts"
     }
   ],
-  "signal": "A browser agent is a wonderful generalist. For a voice that matters, though, you want predictable, paced actions and real people in the replies. Blowhorn gives Claude a clean set of commands so it can help you do exactly that.",
+  "signal": "Platforms are cracking down on bots, and the usual fixes look like bots too. For a voice that matters, you want predictable, paced actions from your own signed-in browser and real people in the replies. Blowhorn gives Claude a clean set of commands so it can help you do exactly that.",
   "faq": [
     {
       "q": "Is Claude in Chrome better than Blowhorn?",
@@ -75,5 +75,25 @@
   "sitemap": {
     "changefreq": "monthly",
     "priority": 0.5
-  }
+  },
+  "art": {
+    "src": "assets/brand/cast/keyboard-warrior-base.webp",
+    "alt": "Keyboard Warrior (the command line), base",
+    "caption": "Claude Code drives Blowhorn from the command line. No clicking required."
+  },
+  "codecard": {
+    "title": "terminal",
+    "lang": "bash",
+    "heading": "Give your agent a script, not a mouse",
+    "code": "# Your agent rehearses the post before anything clicks\ncat order.json | blowhorn post --dry-run --payload-stdin --json"
+  },
+  "network_logos": [
+    "linkedin",
+    "x",
+    "reddit",
+    "hacker-news",
+    "github",
+    "bluesky",
+    "slack"
+  ]
 }
