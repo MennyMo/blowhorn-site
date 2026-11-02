@@ -611,11 +611,13 @@ How these rules fit together is in
 
 ### Hidden tools
 
-Five tools are hidden by default, because each removes or replaces
-your Blowhorn install or signs you out: `uninstall`,
-`service_uninstall`, `auth_logout`, `desktop_build` and
-`desktop_install`. Your assistant cannot see or call them. To serve
-one, name it in the server's arguments with `--allow-hidden-tool`
+Seven tools are hidden by default, because each removes or replaces
+your Blowhorn install, removes a background service or LaunchAgent, or
+signs you out: `uninstall`, `service_uninstall`, `service_adopt`,
+`auth_logout`, `desktop_build`, `desktop_install` and
+`chrome_attach_chrome_uninstall_agent`. Your assistant cannot see or
+call them. To serve one, name it in the server's arguments with
+`--allow-hidden-tool`
 (repeat it for more), or list names, comma-separated, in
 `BLOWHORN_MCP_ALLOW_HIDDEN_TOOLS` in the client's `env`. For example,
 to let an assistant uninstall the background service:
