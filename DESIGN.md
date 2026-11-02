@@ -26,6 +26,26 @@ Rules:
 - Never hard-code a margin or padding in px on a page template. Add or reuse a token.
 - Check 1280, 390 and 320 widths, light and dark, before merging.
 
+## Cards
+
+Two rules, from the owner's order of 2 Nov 2026:
+
+1. **No stripe on one edge.** A card, callout, quote, table row or panel never carries a coloured stripe on one side: no `border-left` or `border-right` (or inline start or end) in a colour, no inset shadow down one side, no `::before` bar. A card keeps an even border on all sides, or none. Emphasis comes from the eyebrow label, the type and the fill. Neutral 1px column rules, the selected-tab mark and checkmarks are structure, not stripes.
+2. **No single generic card.** Pick the variant by what the content is. Neighbours in a row never share a variant: a grid either alternates two variants (a checkerboard, so a row and a column never repeat) or names each card's variant in the template.
+
+Cards are built from a small set of named variants (paper, dispatch, stamp, field, plain and glass), each picked for a kind of content. The variant definitions, their contrast table and a live specimen on /brand/#cards land with the card-variant change; until then, follow the two rules above.
+
+Do:
+
+- Pick the look by content, then check its neighbours in the row.
+- Let a featured item stand out by fill and type, never by a stripe.
+
+Don't:
+
+- Draw a stripe on one edge, on a card, a quote, a table row or a callout.
+- Give two neighbours in a row the same look, or make a whole grid one look.
+- Hard-code a card's colours in a template.
+
 ## Concision
 
 Say less, more clearly. Turn the verbosity dial down a notch from your first draft.
@@ -36,12 +56,13 @@ Say less, more clearly. Turn the verbosity dial down a notch from your first dra
 - Keep facts, guardrail wording and SEO terms; cut the padding around them. Don't shorten legal text substantively.
 - No em dashes. No period at the end of a section title.
 
-## PR checklist: whitespace and concision
+## PR checklist: whitespace, cards and concision
 
 - [ ] Every heading has at least `--head-gap` before its content; nothing touches
 - [ ] New sections use the shared section and `.section-head` classes, not page-specific spacing
 - [ ] Sections are clearly separated (whitespace, then divider or background shift if needed)
 - [ ] Paragraphs stay within `--text-measure`; cards use `--card-pad` and `--grid-gap`
+- [ ] No coloured stripe on one edge of a card, callout, quote, table row or panel; no two neighbours in a row share a card variant
 - [ ] Checked at 1280, 390 and 320 px, light and dark
 - [ ] Intros <= 2 sentences, card bodies <= ~30 words, one idea per sentence
 - [ ] No em dashes; no trailing periods on section titles
@@ -50,7 +71,7 @@ Say less, more clearly. Turn the verbosity dial down a notch from your first dra
 
 Rule (Lee, 12 Oct 2026): **anywhere the site shows a command a reader might run, it can be copied in one click.** Source: `layouts/_partials/code-card.html`, `layouts/_markup/render-codeblock.html`, `assets/js/code-card.js` and the "Terminal code card" section of `assets/css/site.css`.
 
-1. **Every code block is a terminal code card:** title bar with three dots, a file or `terminal` label, a language pill and a Copy button, on a glass window that is light in light mode and near-black in dark mode. Docs fences get it through the render hook; layouts call the partial.
+1. **Every code block is a terminal code card:** title bar with three dots, a file or `terminal` label, a language pill and a Copy button, in a window that is light in light mode and near-black in dark mode (a window, not a card; see Cards). Docs fences get it through the render hook; layouts call the partial.
 2. **Declare the language.** Each card names the language of its actual content (`bash`, `markdown`, `json`, `toml`, `yaml`...) so Chroma highlights it with the brand token colours. Markdown front matter is highlighted as YAML.
 3. **Prompts and output are never copied.** Shell cards draw a `$` before each command line (not before comments, blank lines or continuation lines) as an unselectable element that copy drops. Untyped or `text` fences are sample output: labelled `output`, muted, no copy button.
 4. **Inline commands in prose** (`blowhorn ...` in backticks) get a small copy button after them. Commands with placeholders such as `<url>` are not copyable; show them in a card with the placeholder explained instead.
