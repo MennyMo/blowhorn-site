@@ -2718,6 +2718,22 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   padding-left: var(--space-6);
   border-left: 3px solid var(--teal);
 }
+
+/* Optional per-page art on versus pages: one approved cast or troops image
+   with a real-text caption. Renders only when the page sets `art`. */
+.versus-figure {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+  justify-items: center;
+  text-align: center;
+}
+.versus-figure img {
+  width: min(44rem, 100%);
+  height: auto;
+  border-radius: var(--radius-xl);
+}
+.versus-figure figcaption { max-width: var(--text-measure, 40rem); }
 /* The rule hugs the text, so the section trades its padding for margin. */
 .page .agent-section.versus-belief { padding-block: 0; margin-block: var(--section-y); background-image: none; }
 .versus-belief > * + * { margin-top: var(--space-4); }
