@@ -41,7 +41,7 @@
                   {{ $icon | safeHTML }}
                   Download full brand kit
                 </a>
-                <p class="caption muted">ZIP, {{ .full.size }}. Logos, colors, type, usage rules, Major Blowhorn, the troops and Old Thunderlung.</p>
+                <p class="caption muted">ZIP, {{ .full.size }}. Logos, colors, type, usage rules, Major Blowhorn, the troops, Old Thunderlung, the scenes and the launch press graphics.</p>
               </div>
               <div class="brand-download">
                 <a class="button button-secondary" href="{{ .logos.url | relURL }}" download>
@@ -72,6 +72,30 @@
                   {{- range slice (dict "ext" "png" "label" "PNG") (dict "ext" "webp" "label" "WebP") }}
                   <a class="asset-get caption{{ if eq .ext "png" }} asset-get-primary{{ end }}" href="{{ printf "%s%s.%s" $.dir $file .ext | relURL }}" download aria-label="Download {{ $name }} as {{ .label }}">{{ .label }}</a>
                   {{- end }}
+                </span>
+              </div>
+            </li>
+            {{- end }}
+          </ul>
+{{- end -}}
+{{- /* Cast tiles on a dark stage with a WebP download. Takes items (name, note,
+  file, alt, w, h) from static/assets/brand/troops/ and who (the label prefix). */ -}}
+{{- define "partials/brand-troop-grid.html" -}}
+          <ul class="mascot-grid troop-grid">
+            {{- range .items }}
+            <li class="asset">
+              <div class="asset-stage troop-stage">
+                <img src="{{ printf "assets/brand/troops/%s-640.webp" .file | relURL }}" alt="{{ .alt }}" width="{{ .w }}" height="{{ .h }}" loading="lazy">
+              </div>
+              <div class="asset-meta">
+                <div>
+                  <p class="ui asset-name">{{ .name }}</p>
+                  {{- with .note }}
+                  <p class="caption muted">{{ . }}</p>
+                  {{- end }}
+                </div>
+                <span class="asset-gets" role="group" aria-label="Download {{ .name }}">
+                  <a class="asset-get caption asset-get-primary" href="{{ printf "assets/brand/troops/%s.webp" .file | relURL }}" download aria-label="Download {{ .name }} as WebP">WebP</a>
                 </span>
               </div>
             </li>
@@ -112,6 +136,7 @@
           <a href="#type">Type</a>
           <a href="#major">Major Blowhorn</a>
           <a href="#thunderlung">Old Thunderlung</a>
+          <a href="#cast">The cast</a>
           <a href="#bubbles">Speech bubbles</a>
           <a href="#usage">Usage</a>
         </nav>
@@ -288,6 +313,19 @@
           <p class="caption muted brand-note">The red cord and tassels are its uniform. The plain version is for small or busy spaces.</p>
         </section>
 
+        <section id="cast" class="brand-section" aria-labelledby="cast-title">
+          <div class="section-head">
+            <h2 id="cast-title" class="h2">The cast</h2>
+            <p class="muted">Major Blowhorn does not work alone. These are the troops who carry each message out, the barnyard recruits who joined them, and the troublemakers they keep out.</p>
+          </div>
+          <h3 class="h3 troop-group">The troops</h3>
+          {{- partial "brand-troop-grid.html" (dict "items" .Params.troops) }}
+          <h3 class="h3 troop-group">Barnyard recruits</h3>
+          {{- partial "brand-troop-grid.html" (dict "items" .Params.recruits) }}
+          <h3 class="h3 troop-group">Troublemakers</h3>
+          {{- partial "brand-troop-grid.html" (dict "items" .Params.troublemakers) }}
+        </section>
+
         <section id="bubbles" class="brand-section" aria-labelledby="bubbles-title">
           <div class="section-head">
             <h2 id="bubbles-title" class="h2">Speech bubbles</h2>
@@ -384,7 +422,7 @@
         <section class="brand-cta" aria-labelledby="cta-title">
           <div class="brand-cta-copy">
             <h2 id="cta-title" class="h2">Take it with you</h2>
-            <p class="muted">Every file on this page, in SVG and PNG, plus the colors, the cast and a PDF of these rules.</p>
+            <p class="muted">The kit has the logos in SVG and PNG, the cast, scenes and press graphics in WebP, the colors and a PDF of the rules.</p>
           </div>
           {{- partial "brand-kit-downloads.html" .Params.kits }}
         </section>
