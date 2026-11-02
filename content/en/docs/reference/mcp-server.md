@@ -299,10 +299,11 @@ Every tool carries the standard MCP hints, and they follow from
 `destructiveHint` tells a client whether a changing tool can take
 something away. False means the tool only adds new things, such as a
 post, a comment, a follow, a star, a Slack message, an accepted
-invitation or a new record. Blowhorn's own bookkeeping on the record
-it just acted on, such as marking a content item as posted, does not
-count as changing what exists. True means it may delete, overwrite, replace or undo existing
-state: an upsert, a set, an edit, a delete, an unfollow, a withdrawal,
+invitation, a new record or a reaction. Blowhorn's own bookkeeping on
+the record it just acted on, such as marking a content item as posted,
+does not count as changing what exists. True means it may delete,
+overwrite, replace or undo existing state: an upsert, a set, an edit,
+a delete, an unfollow, a withdrawal,
 a pause or a stop. Where the command's code leaves it unclear, the
 tool is marked destructive. A client may use the hint to ask you
 before a destructive call; an additive call still reaches the outside
@@ -311,20 +312,50 @@ world, so it is still a dry run until `confirm` is true.
 The additive tools are `accept`, `chrome_create_profile`,
 `chrome_extension_enable`, `chrome_open_profile`, `comment`,
 `diagnostics_opened`, `diagnostics_support`, `find`, `follow`, `post`,
-`profile_create`, `risk_grid`, `slack_send` and `star`. Two of them,
-`find` and `risk_grid`, create nothing: they only read, and are listed
-as not destructive because they write nothing. Every other changing
-tool is destructive. Some that mostly add are destructive
-because one of their flags removes something: `slack_react`
-(`--remove`) and `schedule_bootstrap` (`--replace`).
+`profile_create`, `slack_react`, `slack_send` and `star`, and the
+page-invitation tool described in the next paragraph. Every other
+changing tool is destructive. `risk_grid` is read-only: it only reads
+your profiles and runs, so it runs for real with no `confirm`. `find`
+stays a preview: it writes nothing to your profiles, but every call
+signs in to Bluesky live, so it is a dry run until `confirm` is true,
+like any other changing tool.
+
+Two commands are split into two tools, so the form that only adds keeps
+the additive label. The page-invitation command is additive, and its
+held-entry form, `invite_held`, carries `--requeue` and `--dismiss` (a
+destructive tool, because it removes a held entry or rewrites its
+note). `slack_react` is additive, and `slack_unreact` carries `--remove`
+(it deletes a reaction). The base tool does not accept the split-out
+arguments: a call to `slack_react` that names `remove` is refused as an
+unknown argument, and the refusal says `remove belongs to slack_unreact`.
+The base tool's description ends by naming each split-out argument and
+the tool that takes it, since the command summary it shares with the CLI
+still mentions them.
+
+When the tool that owns a split-out argument is [hidden](#hidden-tools)
+and not served, the refusal says that tool is labeled experimental and
+is not available for use, as `chrome_attach_chrome` does for `action`
+`uninstall-agent`. A split-out tool needs its own form: `slack_unreact`
+requires `remove`, and `invite_held` refuses a call with neither
+`requeue` nor `dismiss`. Apart from those, a split-out tool takes every
+argument its base tool takes. The command line does not change; the
+split is only in the MCP tools. Other commands are destructive when one
+of their flags removes something, such as `schedule_bootstrap`
+(`--replace`).
 
 ### Hidden tools
 
-Five tools are hidden from MCP clients by default, because each
-removes or replaces your Blowhorn install or signs you out:
-`uninstall`, `service_uninstall`, `auth_logout`, `desktop_build` and
-`desktop_install`. They are not in `tools/list` and a call to one
-answers `unknown tool`. Their `x-mcp` says `expose: false`.
+Seven tools are hidden from MCP clients by default, because each
+removes or replaces your Blowhorn install, removes a background
+service or a LaunchAgent, or signs you out: `uninstall`,
+`service_uninstall`, `service_adopt`, `auth_logout`, `desktop_build`,
+`desktop_install`, and `chrome_attach_chrome_uninstall_agent`, which is
+the `uninstall-agent` action of `blowhorn chrome attach-chrome` split
+out of that command. They are not in `tools/list`, and a call to one
+answers that the tool is labeled experimental and is not available for
+use. The answer never says how to enable it: that is the operator's
+choice, below. Their `x-mcp` (or the `x-mcp` variant that
+names them) says `expose: false`.
 
 To serve one, name it when the server starts, with
 `--allow-hidden-tool NAME` (repeat the flag for more) or
@@ -550,7 +581,7 @@ scrape_configs:
 | Batches | A JSON-RPC batch (an array) is refused with `-32600` (invalid request). |
 | Protocol versions | `2024-11-05`, `2025-03-26`, `2025-06-18` and `2025-11-25`. A client asking for one of these gets it; any other request gets `2025-11-25`. |
 | Server info | Name `blowhorn-mcp`; version is the Blowhorn release, or `0.0.0` when it cannot be read. |
-| Annotations | Each tool's four hints come from its operation's `x-mcp` in the bundle, never from a list in the server. A tool whose `x-mcp` says `readOnly`: `readOnlyHint` and `idempotentHint` true, `destructiveHint` and `openWorldHint` false. Any other tool: `readOnlyHint` and `idempotentHint` false, `openWorldHint` true, and `destructiveHint` true only when `x-mcp` also says `destructive`; see [Destructive and additive tools](#destructive-and-additive-tools). An operation with `expose` false is no tool unless it is [opted in](#hidden-tools); one with no `x-mcp`, or one that does not match `McpOperation`, stops the server from starting. |
+| Annotations | Each tool's four hints come from its operation's `x-mcp` in the bundle (or, for a split tool, from its own variant), never from a list in the server. A tool whose `x-mcp` says `readOnly`: `readOnlyHint` and `idempotentHint` true, `destructiveHint` and `openWorldHint` false. Any other tool: `readOnlyHint` and `idempotentHint` false, `openWorldHint` true, and `destructiveHint` true only when `x-mcp` also says `destructive`; see [Destructive and additive tools](#destructive-and-additive-tools). A tool with `expose` false is no tool unless it is [opted in](#hidden-tools); one with no `x-mcp`, or one that does not match `McpOperation`, stops the server from starting. |
 | Results | A text content item with the command's output; a `--json` command's output is the JSON text. A session on `2025-06-18` or later also gets `outputSchema` on each JSON tool and `structuredContent` in its results; see [Structured output](#structured-output). |
 | Errors | A command that exits nonzero returns `isError` true with its exit code and its stderr (or stdout), redacted and cut to 4000 characters. A command that runs past the timeout returns `isError` true with a timed-out message only, no exit code or output. An unknown tool name also returns `isError` true, not a protocol error. |
 
@@ -583,8 +614,7 @@ Cloud activity, written with your own token:
 The event is posted after the tool result and never delays or changes it. A
 call with a missing or malformed token, or one Cloud answers `401`, records
 nothing in Cloud. `initialize` and `tools/list` record nothing. The codes are
-provisional until the structured error code registry allocates
-them.
+provisional until the structured error code registry allocates them.
 
 If the token this server uses leaks, see
 [Revoke a leaked token](/docs/how-to/set-up/connect-mcp-client/#revoke-a-leaked-token).
