@@ -574,7 +574,7 @@ own after a change to anything the internal build is made from:
   minutes under a mounted path (`marketing/strategy/**`,
   `marketing/capability-comparison/**`, `marketing/brand/**` including the
   asset catalog, `marketing/cast/**`, `marketing/assets.manifest.json`, or
-  `internal/{engineering,design,specs,plans,research}/**`). If so it deploys
+  `internal/{engineering,design,specs,plans,research,features}/**`). If so it deploys
   that `master` SHA. The run fails, rather than skipping, when
   `DMG_SOURCE_TOKEN` is missing or cannot read the repository. Polling keeps
   the work on this public repository's free minutes; the private repository
@@ -619,7 +619,7 @@ The workflow, in order (each step is a make target):
    `marketing/capability-comparison`, `marketing/brand`, `marketing/cast`,
    `marketing/assets.manifest.json`, `internal/engineering`,
    `internal/design`, `internal/specs`, `internal/plans`,
-   `internal/research`) with the read-only deploy key.
+   `internal/research`, `internal/features`) with the read-only deploy key.
 5. `site-internal-build` with `BASE_URL=https://internal.blowhorn.ai/`, output
    suppressed.
 6. `site-internal-worker-deploy`: `wrangler deploy` with a filtered summary,

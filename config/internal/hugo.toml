@@ -109,6 +109,23 @@ renderSegments = ["internal"]
       source = "marketing/cast"
       target = "static/internal/marketing-assets/cast"
       files = ["**/*-640.webp"]
+    # Feature index page and its data for /internal/features/ (same pattern
+    # as the persona matrix above: the YAML mounts into assets and the
+    # internal-features shortcode unmarshals it).
+    [[module.imports.mounts]]
+      source = "internal/features/hugo/features"
+      target = "content/internal/features"
+    [[module.imports.mounts]]
+      source = "internal/features/features.yaml"
+      target = "assets/internal/features.yaml"
+    # Core messaging page and its source file for /internal/messaging/ (the
+    # internal-markdown shortcode renders the file, so it is never copied).
+    [[module.imports.mounts]]
+      source = "marketing/brand/hugo/messaging"
+      target = "content/internal/messaging"
+    [[module.imports.mounts]]
+      source = "marketing/brand/core-messaging.md"
+      target = "assets/internal/core-messaging.md"
     # Engineering research pages (Hugo markdown and page bundles).
     [[module.imports.mounts]]
       source = "internal/engineering/hugo/engineering"

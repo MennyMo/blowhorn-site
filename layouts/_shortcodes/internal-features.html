@@ -1,0 +1,115 @@
+{{- /* The feature index from the blowhorn repository
+  internal/features/features.yaml, mounted at assets/internal/features.yaml by
+  config/internal/hugo.toml. Families come in file order, each with a table of
+  its features. Every feature row carries its stable id as the row's anchor, so
+  /internal/features/#<id> links straight to it; every family heading is
+  #family-<id>. Source paths link to the blowhorn repository, or to
+  blowhorn-mcp for a "blowhorn-mcp:<path>" entry. Docs and Field Manual paths
+  link to the public site. A feature's video id resolves through the videos
+  list, and links to its issue when the entry has one. The table scrolls
+  sideways inside its own region. */ -}}
+{{- $yaml := resources.Get "internal/features.yaml" -}}
+{{- if not $yaml }}{{ errorf "internal-features: assets/internal/features.yaml is not mounted (run make site-internal)" }}{{ end -}}
+{{- $data := $yaml | transform.Unmarshal -}}
+{{- $videos := dict -}}
+{{- range $data.videos }}{{ $videos = merge $videos (dict .id .) }}{{ end -}}
+{{- $total := 0 -}}{{- $shipped := 0 -}}{{- $beta := 0 -}}{{- $soon := 0 -}}
+{{- range $data.families -}}
+  {{- range .features -}}
+    {{- $total = add $total 1 -}}
+    {{- if eq .status "shipped" }}{{ $shipped = add $shipped 1 }}{{ else if eq .status "beta" }}{{ $beta = add $beta 1 }}{{ else if eq .status "coming-soon" }}{{ $soon = add $soon 1 }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- $labels := dict "shipped" "Shipped" "beta" "Beta" "coming-soon" "Coming soon" -}}
+<style>
+.prose:has(> .feat-block) { max-width: none; }
+.prose:has(> .feat-block) > :not(.feat-block) { max-width: var(--text-measure); }
+.feat-block h2 { scroll-margin-top: var(--space-8); }
+.feat-block tr[id] { scroll-margin-top: var(--space-8); }
+.feat-block tr:target > * { background: color-mix(in srgb, var(--surface-tint) 70%, transparent); }
+.feat-toc { columns: 14rem; column-gap: var(--space-6); padding-left: 0; }
+.feat-toc li { list-style: none; break-inside: avoid; padding-block: var(--space-1); }
+.feat-count { color: var(--ink-muted); }
+.feat-scroll { overflow-x: auto; border-radius: var(--radius-lg); }
+.feat-scroll:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.page .feat-table { max-width: none; min-width: 72rem; }
+.feat-table th { white-space: nowrap; vertical-align: bottom; }
+.feat-table td { vertical-align: top; }
+.feat-name { font-weight: 600; white-space: nowrap; }
+.feat-name a { color: var(--ink); }
+.feat-what { min-width: 18rem; }
+.feat-list { display: grid; gap: var(--space-1); }
+.feat-list code { overflow-wrap: anywhere; }
+.feat-muted { color: var(--ink-muted); }
+.feat-pill {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.feat-pill.shipped { color: var(--on-teal); background: var(--teal); }
+.feat-pill.beta { color: var(--on-yellow); background: var(--yellow); }
+.feat-pill.coming-soon { color: var(--ink-muted); background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.feat-pill.operator { color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1px var(--line-strong); }
+.feat-status { display: grid; gap: var(--space-1); justify-items: start; }
+</style>
+<div class="feat-block">
+<p>{{ $total }} features: {{ $shipped }} shipped, {{ $beta }} beta, {{ $soon }} coming soon.</p>
+<nav aria-label="Feature families">
+<ul class="feat-toc">
+{{- range $data.families }}
+<li><a href="#family-{{ .id }}">{{ .name }}</a> <span class="feat-count">({{ len .features }})</span></li>
+{{- end }}
+</ul>
+</nav>
+{{- range $data.families }}
+<h2 id="family-{{ .id }}">{{ .name }}</h2>
+<p>{{ .summary }}</p>
+<div class="compare-scroll feat-scroll" role="region" aria-label="{{ .name }} features" tabindex="0"><table class="feat-table">
+<thead><tr><th scope="col">Feature</th><th scope="col">What it does</th><th scope="col">Where</th><th scope="col">Status</th><th scope="col">Source</th><th scope="col">Docs</th><th scope="col">Field Manual</th><th scope="col">Video</th></tr></thead>
+<tbody>
+{{- range .features }}
+<tr id="{{ .id }}">
+<th scope="row" class="feat-name"><a href="#{{ .id }}">{{ .name }}</a></th>
+<td class="feat-what">{{ .summary }}</td>
+<td>{{ delimit .surfaces ", " }}</td>
+<td><span class="feat-status"><span class="feat-pill {{ .status }}">{{ index $labels .status | default .status }}</span>{{ if eq .audience "operator" }}<span class="feat-pill operator">Operator only</span>{{ end }}</span></td>
+<td><span class="feat-list">
+{{- range .source }}
+  {{- if hasPrefix . "blowhorn-mcp:" }}
+    {{- $path := strings.TrimPrefix "blowhorn-mcp:" . -}}
+    <a href="https://github.com/blowhorn-ai/blowhorn-mcp/blob/master/{{ $path }}"><code>{{ $path }}</code></a>
+  {{- else -}}
+    <a href="https://github.com/blowhorn-ai/blowhorn/blob/master/{{ . }}"><code>{{ . }}</code></a>
+  {{- end }}
+{{- end -}}
+</span></td>
+<td><span class="feat-list">
+{{- range .docs }}<a href="https://blowhorn.ai{{ . }}">{{ . }}</a>{{ end -}}
+</span></td>
+<td>
+{{- if .field_manual -}}
+<span class="feat-list">
+{{- range .field_manual }}
+  {{- $label := strings.TrimPrefix "/field-manual/" . -}}
+  {{- if or (eq $label "") (hasPrefix $label "#") }}{{ $label = "Field Manual" }}{{ end -}}
+  <a href="https://blowhorn.ai{{ . }}">{{ $label }}</a>
+{{- end -}}
+</span>
+{{- else -}}
+<span class="feat-muted">None yet</span>
+{{- end -}}
+</td>
+<td>
+{{- with .video }}{{ with index $videos . }}
+  {{- if .issue }}<a href="https://github.com/blowhorn-ai/blowhorn/issues/{{ .issue }}">{{ .title }}</a>{{ else }}{{ .title }}{{ end -}}
+{{- end }}{{ end -}}
+</td>
+</tr>
+{{- end }}
+</tbody></table></div>
+{{- end }}
+</div>
