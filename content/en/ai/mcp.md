@@ -1,14 +1,14 @@
 {
   "title": "Blowhorn MCP server",
   "linkTitle": "MCP server",
-  "seo_title": "The Blowhorn MCP server - every Blowhorn action for any AI assistant",
-  "description": "The Blowhorn MCP server lets your AI assistant draft and rehearse your marketing, then act only when you give the order. 113 tools, every write a dry run first, all on your own computer.",
+  "seo_title": "The Blowhorn MCP server - Blowhorn for any AI assistant",
+  "description": "The Blowhorn MCP server lets your AI assistant draft and rehearse your marketing, then act only when you give the order. One tool per command, every write a dry run first, risky tools hidden until you opt in, all on your own computer.",
   "tool": "MCP",
   "who": "your assistant",
   "mark": "MCP",
   "weight": 20,
-  "lead": "Your assistant drafts and rehearses. You give the order. The Blowhorn MCP server gives any MCP assistant a tool for every Blowhorn command, and every write comes back as a dry run until you say go.",
-  "hook": "One local command, 113 tools",
+  "lead": "Your assistant drafts and rehearses. You give the order. The Blowhorn MCP server gives any MCP assistant a tool for each Blowhorn command, keeps five risky ones hidden until you opt in, and every write comes back as a dry run until you say go.",
+  "hook": "One local command, one tool per command",
   "crumb_label": "AI native",
   "crumb_url": "/ai/",
   "steps": [
@@ -33,7 +33,7 @@
   "extra_file": ".cursor/mcp.json",
   "extra_lang": "json",
   "extra_code": "{\n  \"mcpServers\": {\n    \"blowhorn\": {\n      \"command\": \"/Users/you/.local/bin/blowhorn-mcp\"\n    }\n  }\n}",
-  "wire_note": "Claude Desktop takes the same command in its config file. New to this? [Connect an assistant and send your first post](/docs/tutorials/first-mcp-connection/) walks through it. [Connect an AI assistant over MCP](/docs/how-to/set-up/connect-mcp-client/) has the steps for every client, including [Claude Code](/docs/how-to/set-up/connect-mcp-client/#claude-code), [Claude Desktop](/docs/how-to/set-up/connect-mcp-client/#claude-desktop), [Cursor](/docs/how-to/set-up/connect-mcp-client/#cursor) and [VS Code](/docs/how-to/set-up/connect-mcp-client/#vs-code-with-github-copilot). [Source and listings](https://github.com/blowhorn-ai/blowhorn-mcp): the launcher, plugin manifests and listing files live in the public blowhorn-mcp repo.",
+  "wire_note": "Claude Desktop takes the same command in its config file. New to this? [Connect an assistant and send your first post](/docs/tutorials/first-mcp-connection/) walks through it. [Connect an AI assistant over MCP](/docs/how-to/set-up/connect-mcp-client/) has the steps for every client, including [Claude Code](/docs/how-to/set-up/connect-mcp-client/#claude-code), [Claude Desktop](/docs/how-to/set-up/connect-mcp-client/#claude-desktop), [Cursor](/docs/how-to/set-up/connect-mcp-client/#cursor) and [VS Code](/docs/how-to/set-up/connect-mcp-client/#vs-code-with-github-copilot). [Source and listings](https://github.com/blowhorn-ai/blowhorn-mcp): the launcher, plugin manifests and listing files live in the public blowhorn-mcp repo. Five risky tools, the ones that uninstall Blowhorn, rebuild or reinstall the app, or sign you out, are [hidden by default](/docs/how-to/set-up/connect-mcp-client/#hidden-tools); that section shows how to serve one by name.",
   "prompts": [
     "Draft a release post from my personal profile for Tuesday at 9:00 and queue it. Dry run first, show me what would be queued, and wait for my go before you confirm.",
     "Someone asked whether the new release works offline. Draft a reply from my company profile that answers that one question. Show me the dry run and wait for my go.",
@@ -44,7 +44,7 @@
   "commands_file": "assistant",
   "commands_lang": "text",
   "commands_prompt": false,
-  "commands": "# claude mcp list\nblowhorn: /Users/you/.local/bin/blowhorn-mcp - Connected\n\n# the tools it calls, one per Blowhorn command\npost                dry_run: true     (confirm: true after your go)\ncontent_upsert      dry_run: true     (confirm: true after your go)\nanalytics_history   read only, runs as asked\nschedule_pause      dry_run: true     (confirm: true after your go)",
+  "commands": "# claude mcp list\nblowhorn: /Users/you/.local/bin/blowhorn-mcp - Connected\n\n# the tools it calls, one per Blowhorn command\npost                dry_run: true     (confirm: true after your go)\ncontent_upsert      dry_run: true     (confirm: true after your go)\nanalytics_history   read only, runs as asked\nschedule_pause      dry_run: true     (confirm: true after your go)\n\n# hidden until you opt in by name with --allow-hidden-tool\nuninstall  service_uninstall  auth_logout  desktop_build  desktop_install",
   "uses": [
     {
       "t": "Release day",

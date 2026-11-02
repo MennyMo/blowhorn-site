@@ -73,7 +73,7 @@
     },
     {
       "q": "Does Blowhorn have an MCP server?",
-      "a": "Yes. A local MCP server ships with the desktop app (blowhorn-mcp, 113 tools). Every write is a dry run until the assistant confirms it, and an agent can never approve its own content. Postiz is ahead on hosted MCP today; Blowhorn's hosted server is coming soon."
+      "a": "Yes. A local MCP server ships with the desktop app (blowhorn-mcp, one tool per command, with five risky ones hidden until you opt in). Every write is a dry run until the assistant confirms it, and an agent can never approve its own content. Postiz is ahead on hosted MCP today; Blowhorn's hosted server is coming soon."
     }
   ],
   "major": "Respect to a worthy rival. Now, who's actually holding the horn?",
