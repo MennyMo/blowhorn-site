@@ -583,7 +583,7 @@ Cloud activity, written with your own token:
 The event is posted after the tool result and never delays or changes it. A
 call with a missing or malformed token, or one Cloud answers `401`, records
 nothing in Cloud. `initialize` and `tools/list` record nothing. The codes are
-provisional until the structured error code registry (#1662) allocates
+provisional until the structured error code registry allocates
 them.
 
 If the token this server uses leaks, see

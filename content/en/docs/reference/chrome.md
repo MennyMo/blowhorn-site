@@ -221,6 +221,30 @@ without the extension connected keeps the reload-the-extension message,
 with no code yet, and so does a missing launcher, which keeps its
 re-install message: opening Chrome would not fix either.
 
+The opening, the wait and every code above can also be handled by a
+compiled helper, `blowhorn-chrome-start`, instead of the Python code
+that handles them by default. It is opt-in while the two are compared:
+
+| `BLOWHORN_CHROME_START` | What opens Chrome when it is closed |
+|---|---|
+| unset, or `python` | The built-in Python cold start (the default). |
+| `rust` | `blowhorn-chrome-start`, built in a checkout with `cargo build --release -p blowhorn-chrome-start` in `engine/rust`. |
+
+Any other value stops a run that needs to open Chrome, and names the two choices. With `rust`
+selected and the helper not built, the run stops and says how to build it;
+nothing falls back to the Python cold start. Either way the line on
+stderr, the codes and the messages are the same, with two known
+exceptions while the two are compared: an announcement that carries
+`NaN` or `Infinity` is `blowhorn-engine-1006` from both, worded as a
+damaged announcement by the helper and as a mismatch by the built-in;
+and when the bridge or Chrome itself comes up in the moment between
+Blowhorn's check and the helper's, the helper opens nothing and you see
+the reload-the-extension message, where the built-in one would open
+Chrome. On macOS the helper
+opens Chrome in the background (`open -g`), so it does not take focus from
+the app you are using. A helper built from an older checkout, whose codes
+no longer match this one, is refused by name.
+
 Under the extension default, `blowhorn profile auth` is a sign-in by
 hand: it opens the platform's sign-in page once in your mapped Chrome
 profile, types nothing, and waits a bounded time for you to finish
