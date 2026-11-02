@@ -133,9 +133,9 @@ longer need them. Pass `ONBOARDING_E2E_ARTIFACTS` to put the screenshots and
 the log in a directory you choose; `run.json` is then written only if that
 directory is inside `data/cache/e2e/` or `BLOWHORN_LIVE_EVIDENCE_DIR`.
 
-A desktop release runs this check after the app is built and before it
-packages the DMG. The verify phase runs it again with `--app` pointed at
-the app inside the mounted DMG. A broken onboarding stops the release there.
+A desktop release runs this check once, after it makes the DMG, with
+`--app` pointed at the app inside the mounted DMG. A broken onboarding
+stops the release there, before anything is published.
 The same script is what `make onboarding-e2e` runs.
 
 A program the check starts opens the sign-in URL. Your default browser

@@ -484,7 +484,7 @@ page covers the local server only.
 ### Revoke a leaked token
 
 The local server uses the token that sign-in saved on this computer.
-If that token, or any other Blowhorn API token, leaks, revoke it
+If that token, or any other API token for your Blowhorn account, leaks, revoke it
 at once. Having the token is enough; no sign-in is needed:
 
 ```bash

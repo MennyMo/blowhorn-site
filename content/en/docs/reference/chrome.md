@@ -160,7 +160,11 @@ Chromium: a headless run would announce itself to every site.
 
 ### The extension default
 
-The extension driver starts no Chrome and launches no Playwright. One
+The extension driver launches no Playwright. It starts Chrome in one
+case: when Chrome is closed and the extension's bridge is missing, a run
+opens Chrome on its mapped profile and waits for the extension to come
+up (see [Opening Chrome when it is closed](#opening-chrome-when-it-is-closed)).
+Otherwise it starts nothing. One
 mapped profile holds the bridge per run; a second run that wants it
 while it is held stops with `another blowhorn run holds the Chrome
 extension bridge (pid <pid>)`, naming the run that holds it, and does
@@ -173,6 +177,46 @@ run cannot wedge the runs behind it. A hello that omits the run's
 version, or an installed extension older than the run needs, stops as
 `extension_outdated` naming both versions. Anything the extension
 cannot do is refused by name.
+
+### Opening Chrome when it is closed
+
+When a run needs the extension and finds no bridge while Chrome is not
+running, Blowhorn opens Chrome on the run's mapped profile, with no
+address, so the profile's own startup pages and session restore are left
+alone. It says once, on stderr, `Google Chrome was not running; opening
+it with profile <name> (blowhorn-engine-1000).`, and the run resumes as
+soon as the Blowhorn extension reports in: the native host announces
+itself the moment its bridge is up, so the run never waits on a timer.
+Blowhorn opens Chrome without asking, and never closes or restarts it.
+Before it opens Chrome it reads the extension's entry in that profile's
+`Secure Preferences` and `Preferences`, as
+[`blowhorn chrome extension-status`](#blowhorn-chrome-extension-status)
+does, and nothing else there.
+
+The run stops at once, naming the cause and what to do, when one of the
+following happens. Each has its own error code, printed after the
+summary line (`accept: error: chrome unavailable (blowhorn-engine-1003)`)
+and given as `code` beside `error` in a `--json` answer:
+
+| Code | When |
+|---|---|
+| `blowhorn-engine-1001` | Google Chrome is not installed. |
+| `blowhorn-engine-1002` | Chrome fails to open, or the session cannot reach your login keychain (SSH, CI, no desktop session). |
+| `blowhorn-engine-1003` | Chrome quits before the extension connects. |
+| `blowhorn-engine-1004` | The Blowhorn extension is turned off or was removed in the mapped Chrome profile. Nothing is opened: turn it on at `chrome://extensions` in that profile, then run again. |
+| `blowhorn-engine-1005` | Chrome opened, but the extension did not connect within the last-resort limit. |
+| `blowhorn-engine-1006` | The native host's announcement does not validate, or arrives cut short or damaged. |
+
+The last-resort limit is 90 seconds. It is a safety net for a Chrome
+that opens but never brings the extension up, not how the run learns it
+is ready. When it ends the wait, Blowhorn tries the extension once more;
+if that reaches the extension and fails for another reason, such as an
+outdated extension, you see that reason instead. When the mapped profile
+had no Blowhorn extension yet, the message asks you to accept Chrome's
+install prompt in that profile. A Chrome that is running
+without the extension connected keeps the reload-the-extension message,
+with no code yet, and so does a missing launcher, which keeps its
+re-install message: opening Chrome would not fix either.
 
 Under the extension default, `blowhorn profile auth` is a sign-in by
 hand: it opens the platform's sign-in page once in your mapped Chrome
@@ -259,7 +303,8 @@ launcher when missing or stale, registers the extension for that
 profile's data directory when nothing is there yet, and re-probes hello
 once. If the socket is still missing, the run fails naming what was
 repaired and the one remaining step, usually to launch or relaunch
-Chrome with that profile. A profile already carrying a Chrome Web Store
+Chrome with that profile; when Chrome is closed, the run opens it
+instead (see [Opening Chrome when it is closed](#opening-chrome-when-it-is-closed)). A profile already carrying a Chrome Web Store
 install is left alone: Chrome's updater owns it, and Blowhorn never
 forces a store update. While another run holds the bridge, no ensure
 runs. The same ensure runs ahead of a run with
