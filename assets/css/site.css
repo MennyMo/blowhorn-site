@@ -2673,6 +2673,22 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   .versus-ledger-gap { border-top: 0; border-left: var(--stroke-hairline) solid var(--line); }
 }
 .versus-ledger-win { background: color-mix(in srgb, var(--surface-tint) 55%, transparent); }
+/* Versus spotlight: the optional per-page art-and-proof section (front matter
+  `spotlight`). A glass panel: cast art as the focal element, copy, an optional
+  CLI code card and the official platform logo tiles (white tiles, both themes). */
+.versus-spotlight {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--card-pad, var(--space-6));
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+@media (min-width: 720px) { .versus-spotlight { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: center; } }
+.versus-spotlight-art { margin: 0; }
+.versus-spotlight-art img { display: block; width: 100%; height: auto; border-radius: var(--radius-md); }
+.versus-spotlight-art figcaption { margin-top: var(--space-2); }
+.versus-spotlight-copy > * + * { margin-top: var(--space-4); }
+.versus-platforms { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0 0; padding: 0; list-style: none; }
 .versus-marks { display: grid; gap: var(--space-3); padding: 0; list-style: none; }
 .versus-marks li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--space-3); align-items: start; color: var(--ink); }
 .versus-ledger-gap .versus-marks li { color: var(--ink-muted); }
@@ -2714,31 +2730,10 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 .page .versus-table tbody tr:hover > * { background: color-mix(in srgb, var(--surface-tint) 35%, transparent); }
 .page .versus-table tbody tr:hover > .compare-us { background: var(--surface-tint); }
 
-/* Versus page illustration: one catalog figure per page, glass framed. */
-.versus-figure { max-width: 40rem; margin-inline: auto; padding: var(--card-pad, var(--space-6)); text-align: center; }
-.versus-figure img { max-width: 100%; height: auto; }
-.versus-figure figcaption { margin-top: var(--space-3); }
-
 .versus-belief {
   padding-left: var(--space-6);
   border-left: 3px solid var(--teal);
 }
-
-/* Optional per-page art on versus pages: one approved cast or troops image
-   with a real-text caption. Renders only when the page sets `art`. */
-.versus-figure {
-  margin: 0;
-  display: grid;
-  gap: var(--space-3);
-  justify-items: center;
-  text-align: center;
-}
-.versus-figure img {
-  width: min(44rem, 100%);
-  height: auto;
-  border-radius: var(--radius-xl);
-}
-.versus-figure figcaption { max-width: var(--text-measure, 40rem); }
 /* The rule hugs the text, so the section trades its padding for margin. */
 .page .agent-section.versus-belief { padding-block: 0; margin-block: var(--section-y); background-image: none; }
 .versus-belief > * + * { margin-top: var(--space-4); }
