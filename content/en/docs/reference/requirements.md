@@ -22,11 +22,9 @@ macOS 13 is the floor the desktop build declares
 The engine underneath also runs on Linux; the desktop app needs a Mac.
 Windows is not supported.
 
-Use the real Google Chrome, not Chromium and not a headless
-build. Blowhorn drives the Chrome profiles you already use, so install
-Google Chrome the normal way and sign in before you map anything. The extension
-needs Chrome profiles to attach to; without Chrome every browser run
-refuses before it acts.
+Install the real Google Chrome the normal way and sign in before you map
+anything; the requirement in full is in the
+[Chrome reference](/docs/reference/chrome/#requirements).
 
 The app carries its engine and Python, so your computer needs no git and no
 Python. A contributor running the engine from a checkout instead needs

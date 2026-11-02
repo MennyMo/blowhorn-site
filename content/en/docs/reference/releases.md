@@ -6,10 +6,10 @@ draft: true
 ---
 
 
-What changed in each version of Blowhorn. This page is held as a draft
-until the first public release: there are no public releases to list
-yet, and the notes will be written from the release tags when they
-land.
+What changed in each version of Blowhorn. After an update, Blowhorn
+shows you what's new in the version you now have, once. To read it again,
+open your account menu and choose **What's new**. This page is held as a
+draft until it lists every public release.
 
 ## Related
 

@@ -1,6 +1,6 @@
 ---
 title: "Chrome reference"
-description: "The mapping commands, the two launch modes, the extension default, and Linux differences."
+description: "The requirements, the mapping commands, the launch modes, the extension default, and Linux differences."
 weight: 224
 ---
 
@@ -9,6 +9,25 @@ How Blowhorn finds and reaches your Google Chrome. Every browser run
 reads the profile mapping first and refuses a profile without one,
 before anything opens. This page describes; the steps live in the
 how-to guides under Related.
+
+## Requirements
+
+Install the real Google Chrome, 142 or newer, and sign in before you map
+anything: not Chromium, not Chrome for Testing, not a headless build. Blowhorn
+drives the Chrome profiles you already use, so without Chrome every browser run
+refuses before it acts.
+
+Blowhorn looks for `/Applications/Google Chrome.app` or
+`~/Applications/Google Chrome.app` on macOS, and for `google-chrome` or
+`google-chrome-stable` on `PATH` or `/opt/google/chrome/chrome` on Linux
+([Linux](#linux)). A path that resolves to Chromium or Chrome for Testing, such
+as a `google-chrome` symlink onto Chromium, does not count as installed; when
+Chrome is missing, every browser-backed command refuses with one sentence
+instead of starting a bundled browser.
+
+The CLI runs on macOS and Linux: the `extension` and `persistent` drivers run on
+both, the `cdp` attach driver is macOS only. The desktop app needs macOS 13 or
+newer.
 
 ## What it reads, and what it never reads
 
@@ -102,19 +121,24 @@ Blowhorn profile and the Chrome directory. The token is derived from a random
 key Blowhorn keeps on this computer (`chrome_pairing.key`, readable only by you);
 it carries no account data. The extension keeps it in its own storage (the
 `storage` permission, which shows no install warning) and reports it when a run
-connects. Blowhorn opens the page behind the app in front, and once the token is
-stored the page closes its own tab when the Chrome profile has another tab open.
-When it is the profile's only tab it stays open: closing it would close the
-profile's last window, and with it the extension's connection to the Blowhorn
-app. It also stays when Google Chrome refuses to close it.
+connects. Blowhorn opens the page behind the app in front. Once the token is
+stored the page shows an Open the side panel button, which opens the Blowhorn
+side panel in that window (Google Chrome opens a side panel only on a click).
+When Blowhorn opens the page itself to repair a lost connection, the page
+closes its own tab instead, as long as the Chrome profile has another tab open:
+closing the profile's last window would end the extension's connection to the
+Blowhorn app.
 
 Before any action, a run checks the token. It refuses with one sentence when
 the Chrome profile is not paired, is paired to another Blowhorn profile (the
 sentence names both and the Chrome directory to switch to), or is paired to a
 mapping this computer no longer has.
 
-The same key also guards the bridge between a run and the extension. The
-socket the run connects to (`chrome_extension.sock`, beside the key) is
+The same key also guards the bridge between a run and the extension. Each
+Chrome profile has its own bridge socket beside the key (`ext-<key>.sock`,
+the key made from the Chrome directory and the profile's folder), so a run
+reaches only the profile it is mapped to, and closing one profile leaves
+the others' bridges up. Each socket is
 readable and writable only by you, and the native host forwards nothing a
 run sends until that run's first message proves it knows a secret made
 from the key. The secret is per install, not per profile, and the host
@@ -184,16 +208,21 @@ cannot do is refused by name.
 
 ### Opening Chrome when it is closed
 
-When a run needs the extension and finds no bridge while Chrome is not
-running, Blowhorn opens Chrome on the run's mapped profile, with no
+When a run needs the extension and finds no bridge for its mapped
+profile, Blowhorn opens that profile, with no
 address, so the profile's own startup pages and session restore are left
 alone. On a Mac it asks macOS to open Chrome in the background (`open -g`), so
 Chrome is meant to stay behind the app you are using and a scheduled run
 that starts while you type elsewhere should leave your keystrokes where they
 were. It says once, on stderr, `Google Chrome was not running; opening
-it with profile <name> (blowhorn-engine-1000).`, and the run resumes as
-soon as the Blowhorn extension reports in: the native host announces
-itself the moment its bridge is up, so the run never waits on a timer.
+it with profile <name> (blowhorn-engine-1000).` When Chrome is running
+on other profiles only, the mapped profile is not open, so Blowhorn opens
+that profile's window in the running Chrome, in the background too, and
+says `Google Chrome profile '<folder>' for <name> was not open; opening it
+in the background.` Either way the run resumes as
+soon as the Blowhorn extension reports in: that profile's native host
+announces itself the moment its bridge is up, so the run never waits on a
+timer.
 Blowhorn opens Chrome without asking, and never closes or restarts it.
 Before it opens Chrome it reads the extension's entry in that profile's
 `Secure Preferences` and `Preferences`, as
@@ -220,10 +249,20 @@ is ready. When it ends the wait, Blowhorn tries the extension once more;
 if that reaches the extension and fails for another reason, such as an
 outdated extension, you see that reason instead. When the mapped profile
 had no Blowhorn extension yet, the message asks you to accept Chrome's
-install prompt in that profile. A Chrome that is running
-without the extension connected keeps the reload-the-extension message,
-with no code yet, and so does a missing launcher, which keeps its
-re-install message: opening Chrome would not fix either.
+install prompt in that profile. A missing launcher keeps its re-install
+message, with no code yet: opening Chrome would not fix it.
+
+A scheduled run checks this before it is claimed. While a pairing page
+is still connecting the profile, the run waits rather than starting.
+The mapped profile counts as connected only when its host answers on
+its own socket; a socket file left by a host that crashed does not
+count. When the mapped profile is not connected, Blowhorn repairs the
+native host if its manifest or launcher is missing or out of date, then
+opens the profile in the background; when it still does not connect,
+the run is held, not failed, with one line saying Blowhorn could not
+open the profile and that you can reconnect it, and Blowhorn tries
+again on its own ten minutes later. A pass that is cancelled, stopped
+or paused, and an activity paused on its own, open nothing.
 
 The opening, the wait and every code above can also be handled by a
 compiled helper, `blowhorn-chrome-start`, instead of the Python code
@@ -237,14 +276,13 @@ that handles them by default. It is opt-in while the two are compared:
 Any other value stops a run that needs to open Chrome, and names the two choices. With `rust`
 selected and the helper not built, the run stops and says how to build it;
 nothing falls back to the Python cold start. Either way the line on
-stderr, the codes and the messages are the same, with two known
-exceptions while the two are compared: an announcement that carries
+stderr, the codes and the messages are the same, with one known
+exception while the two are compared: an announcement that carries
 `NaN` or `Infinity` is `blowhorn-engine-1006` from both, worded as a
-damaged announcement by the helper and as a mismatch by the built-in;
-and when the bridge or Chrome itself comes up in the moment between
-Blowhorn's check and the helper's, the helper opens nothing and you see
-the reload-the-extension message, where the built-in one would open
-Chrome. On macOS the helper
+damaged announcement by the helper and as a mismatch by the built-in.
+When the profile's bridge comes up in the moment between
+Blowhorn's check and the helper's, the helper opens nothing and the run
+connects to it. On macOS the helper
 opens Chrome in the background (`open -g`), so it does not take focus from
 the app you are using. A helper built from an older checkout, whose codes
 no longer match this one, is refused by name.

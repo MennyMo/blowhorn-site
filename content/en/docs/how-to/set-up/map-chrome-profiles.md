@@ -183,10 +183,10 @@ Mapping also pairs the profile. The command opens the Blowhorn extension's
 pairing page in that Chrome profile and prints:
 
 ```
-opened the pairing page in chrome profile 'Profile 2'; it closes itself once paired, and then runs for profile ada are checked against that chrome profile
+opened the pairing page in chrome profile 'Profile 2'; once paired it offers the Blowhorn side panel, and then runs for profile ada are checked against that chrome profile
 ```
 
-The page closes its own tab once the profile is paired, unless it is the only tab that Chrome profile has open. From then on a run for `ada`
+Once the profile is paired the page offers to open the Blowhorn side panel in that window. From then on a run for `ada`
 refuses before it does anything if Chrome is on another profile. When the page
 could not be opened, the command says why and what to run once Chrome is open
 on that profile. See [Pairing](/docs/reference/chrome/#pairing).
