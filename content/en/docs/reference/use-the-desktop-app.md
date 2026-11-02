@@ -42,6 +42,10 @@ until Blowhorn reopens. An installed Blowhorn that finds such a release when it 
 asks in the console window, before the download, with **Update now**, **Later**
 and a **?** help icon;
 what each does is under [Update](/docs/how-to/set-up/install-the-app/#update).
+With **UI sounds** on in Settings, a new version gets a short announcement when the prompt
+first shows, the update plays quiet music while it downloads and installs, and a finished
+update plays a short chime: on the new version's first launch when Blowhorn relaunched to
+finish. Turning UI sounds off silences all three.
 
 ## The console
 
@@ -304,6 +308,16 @@ is the **+** button or a button in the header, such as **collect now** on
 Performance, the note names it rather than repeating it. With **Major
 Blowhorn** off in Settings, the same note and action show without the art and
 the line. A filter that matches nothing just says so.
+
+On the guided setup's steps, Major Blowhorn's portrait in the left rail is
+alive. His eyes and head follow your pointer, and now and then he looks
+around, pulls a face, polishes his bugle or gives a thumbs up. Click him and
+he sounds his bugle, double-click him and he lets Old Thunderlung rip; he only
+makes a sound when you click him, and only with **UI sounds** on. Leave him
+alone and he points at the step's button, then turns into one of his oil
+paintings until you come back. With **Major Blowhorn** off in Settings the
+rail shows no portrait, and with **Reduce motion** on in your Mac's
+accessibility settings he holds still.
 
 ## Setup
 
