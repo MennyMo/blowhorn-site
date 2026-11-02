@@ -9,5 +9,7 @@
   {{ .Content -}}
   {{- partial "section-index.html" . -}}
 </div>
-{{ partial "pager.html" . -}}
+{{- if ne .Parent.RelPermalink "/docs/" -}}
+  {{ partial "pager.html" . -}}
+{{- end -}}
 {{ end -}}
