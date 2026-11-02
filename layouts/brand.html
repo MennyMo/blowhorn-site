@@ -37,7 +37,7 @@
 {{- $icon := `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11"></path><path d="M7 11l5 5 5-5"></path><path d="M4 19h16"></path></svg>` -}}
             <div class="brand-downloads">
               <div class="brand-download">
-                <a class="button button-primary button-pop" href="{{ .full.url | relURL }}" download>
+                <a class="button button-primary" href="{{ .full.url | relURL }}" download>
                   {{ $icon | safeHTML }}
                   Download full brand kit
                 </a>

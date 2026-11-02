@@ -86,7 +86,6 @@
   --link-hover: var(--near-black);
   --line: #D5DEDD;
   --focus-ring: var(--teal-deep);
-  --shadow-pop: 4px 4px 0 0 #1E2117;
   --shadow-soft: 0 8px 24px rgba(30, 33, 23, 0.12);
 
   /* Liquid glass (light). Translucent surfaces over the ambient field; text
@@ -153,7 +152,6 @@
     --link-hover: var(--mint);
     --line: #3C494F;
     --focus-ring: var(--teal-bright);
-    --shadow-pop: 4px 4px 0 0 #00D3A9;
     --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.45);
 
     --glass-fill: rgba(42, 46, 37, 0.52);
@@ -376,11 +374,6 @@ pre code { background: none; padding: 0; }
   color: var(--on-teal);
 }
 .button-primary:hover { background: var(--teal-shade); border-color: var(--teal-shade); }
-.button-pop { box-shadow: var(--shadow-pop); }
-.button-pop:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 var(--near-black); }
-@media (prefers-color-scheme: dark) {
-  .button-pop:hover { box-shadow: 2px 2px 0 0 var(--teal-bright); }
-}
 .button-secondary {
   background: transparent;
   border-color: var(--line-strong);
@@ -1116,7 +1109,7 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   padding: var(--space-8) var(--space-6);
   border-radius: var(--radius-xl);
   background: var(--surface-tint);
-  box-shadow: var(--shadow-pop);
+  box-shadow: var(--glass-shadow);
   overflow: hidden;
 }
 .major-figure {
@@ -1673,11 +1666,6 @@ body { background: var(--surface); }
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55), inset 0 -1px 0 0 rgba(0, 0, 0, 0.10), 0 8px 18px -8px rgba(0, 143, 128, 0.65);
 }
 .button-primary:hover { background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%); }
-.button-pop { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55), var(--shadow-pop); }
-.button-pop:hover { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55), 2px 2px 0 0 var(--near-black); }
-@media (prefers-color-scheme: dark) {
-  .button-pop:hover { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55), 2px 2px 0 0 var(--teal-bright); }
-}
 .button-secondary {
   border-color: transparent;
   background:
@@ -1722,14 +1710,15 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   background-position: top center;
 }
 
-/* The Major card keeps its tint and pop shadow (the brand moment), on glass. */
+/* The Major card keeps its tint (the brand moment), on glass, with the soft glass shadow:
+   no hard offset shadow anywhere (DESIGN.md, one-edge accents). */
 .major-card {
   background:
     linear-gradient(180deg, var(--glass-sheen), transparent 50%),
     color-mix(in srgb, var(--surface-tint) 82%, transparent);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  box-shadow: inset 0 1px 0 0 var(--glass-specular), var(--shadow-pop);
+  box-shadow: inset 0 1px 0 0 var(--glass-specular), var(--glass-shadow);
 }
 
 /* Docs: the sidebar search field and code blocks get the same quiet glass. */
@@ -2198,7 +2187,7 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   .site-header, .site-footer, .brand-index, .brand-hero-actions, .brand-cta, .asset-gets, .asset-get, .copy, .skip-link { display: none !important; }
   .brand-section { break-inside: auto; padding-block: var(--space-8); }
   .asset, .swatch, .rule, .type-card, .major-card, .clear-grid { break-inside: avoid; }
-  .button-pop, .major-card { box-shadow: none; }
+  .major-card { box-shadow: none; }
 }
 
 /* ---------- Compare (/compare/) ----------
@@ -2949,7 +2938,7 @@ a.card.docs-card > * { margin-top: 0; }
   padding: var(--space-2) var(--space-3);
   background: var(--surface); color: inherit; font: inherit; text-align: left;
   border: 2px solid var(--near-black); border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-pop); cursor: pointer;
+  cursor: pointer;
 }
 .army-src .soldier { width: 44px; height: 44px; flex: none; object-fit: contain; }
 .army-src:hover { background: var(--surface-raised); }
@@ -2990,7 +2979,7 @@ a.card.docs-card > * { margin-top: 0; }
 .army-mac {
   display: grid; justify-items: center; gap: 2px; padding: var(--space-3) var(--space-2);
   background: var(--surface); border: 2px solid var(--near-black); border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-pop); font-weight: 600; transition: transform 0.3s, background 0.3s;
+  font-weight: 600; transition: transform 0.3s, background 0.3s;
 }
 .army-mac .soldier { width: 40px; height: 40px; object-fit: contain; }
 .army-mac-tag { font-size: 0.8125rem; font-weight: 400; color: var(--ink-muted); }
@@ -3031,14 +3020,14 @@ a.card.docs-card > * { margin-top: 0; }
 .army-packet.is-flying { opacity: 1; }
 .army-sources, .army-hq, .army-macs { z-index: 1; }
 .army-orders { padding: var(--space-4); background: var(--glass-fill-solid); }
-.army-cic { position: relative; z-index: 1; display: grid; gap: var(--stack-gap); padding: var(--space-4); background: var(--glass-fill-solid); border: 2px solid var(--near-black); border-radius: var(--radius-lg); box-shadow: var(--shadow-pop); }
+.army-cic { position: relative; z-index: 1; display: grid; gap: var(--stack-gap); padding: var(--space-4); background: var(--glass-fill-solid); border: 2px solid var(--near-black); border-radius: var(--radius-lg); }
 .army-cic-who { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .army-cic-who > span:nth-child(2) { flex: 1 1 12rem; }
 .army-cic-star { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--yellow); color: var(--near-black); border: 2px solid var(--near-black); font-size: 1.4rem; }
 .army-halt {
   min-width: 8rem; min-height: 48px; padding: var(--space-2) var(--space-6);
   background: var(--coral); color: #fff; font: 800 1.125rem/1 var(--font-display); letter-spacing: 0.06em; text-transform: uppercase;
-  border: 2px solid var(--near-black); border-radius: 999px; box-shadow: var(--shadow-pop); cursor: pointer;
+  border: 2px solid var(--near-black); border-radius: 999px; cursor: pointer;
 }
 .army-halt:hover { background: var(--coral-shade); }
 .army-halt:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; }

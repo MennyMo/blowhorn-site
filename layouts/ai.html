@@ -13,8 +13,8 @@
             <h1 id="ai-title" class="display">{{ $p.lead }}</h1>
             <p class="body-lg muted">{{ $p.intro | default .Description }}</p>
             <p class="actions">
-              {{- if $p.soon }}<a class="button button-primary button-pop" href="{{ "ai/blowhorn-axi/" | relURL }}">Use blowhorn-axi today</a>
-              {{- else }}<a class="button button-primary button-pop" href="{{ "download/" | relURL }}">Download free</a>{{ end }}
+              {{- if $p.soon }}<a class="button button-primary" href="{{ "ai/blowhorn-axi/" | relURL }}">Use blowhorn-axi today</a>
+              {{- else }}<a class="button button-primary" href="{{ "download/" | relURL }}">Download free</a>{{ end }}
               <a class="button" href="{{ (site.GetPage "/agents").RelPermalink }}">Agentic AI marketing</a>
             </p>
             {{- if not $p.soon }}

@@ -30,7 +30,7 @@ Rules:
 
 Two rules, from the owner's order of 2 Nov 2026:
 
-1. **No stripe on one edge.** A card, callout, quote, table row or panel never carries a coloured stripe on one side: no `border-left` or `border-right` (or inline start or end) in a colour, no inset shadow down one side, no `::before` bar. A card keeps an even border on all sides, or none. Emphasis comes from the eyebrow label, the type and the fill. Neutral 1px column rules, the selected-tab mark and checkmarks are structure, not stripes.
+1. **No stripe on one edge.** A card, callout, quote, table row or panel never carries a coloured stripe on one side: no `border-left` or `border-right` (or inline start or end) in a colour, no inset shadow down one side, no `::before` bar, and no hard offset shadow (an outer shadow with no blur pushed off one or two edges, the retired `shadow-pop` sticker that the Download button and the Major card wore; Lee, 2 Nov 2026). Depth is the soft `--glass-shadow`. A card keeps an even border on all sides, or none. Emphasis comes from the eyebrow label, the type and the fill. Neutral 1px column rules, the selected-tab mark and checkmarks are structure, not stripes.
 2. **No single generic card.** Pick the variant by what the content is. Neighbours in a row never share a variant: a grid either alternates two variants (a checkerboard, so a row and a column never repeat) or names each card's variant in the template.
 
 Cards are built from a small set of named variants (paper, dispatch, stamp, field, plain and glass), each picked for a kind of content. The variant definitions, their contrast table and a live specimen on /brand/#cards land with the card-variant change; until then, follow the two rules above.
@@ -43,6 +43,7 @@ Do:
 Don't:
 
 - Draw a stripe on one edge, on a card, a quote, a table row or a callout.
+- Give a button, card or tile a hard offset shadow (`4px 4px 0 0`); a primary button stands out by its teal fill and gloss.
 - Give two neighbours in a row the same look, or make a whole grid one look.
 - Hard-code a card's colours in a template.
 
@@ -62,7 +63,7 @@ Say less, more clearly. Turn the verbosity dial down a notch from your first dra
 - [ ] New sections use the shared section and `.section-head` classes, not page-specific spacing
 - [ ] Sections are clearly separated (whitespace, then divider or background shift if needed)
 - [ ] Paragraphs stay within `--text-measure`; cards use `--card-pad` and `--grid-gap`
-- [ ] No coloured stripe on one edge of a card, callout, quote, table row or panel; no two neighbours in a row share a card variant
+- [ ] No coloured stripe on one edge of a card, callout, quote, table row or panel, and no hard offset shadow; no two neighbours in a row share a card variant
 - [ ] Checked at 1280, 390 and 320 px, light and dark
 - [ ] Intros <= 2 sentences, card bodies <= ~30 words, one idea per sentence
 - [ ] No em dashes; no trailing periods on section titles

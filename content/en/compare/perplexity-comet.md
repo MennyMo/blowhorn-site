@@ -36,7 +36,7 @@
     },
     {
       "f": "Many computers on one queue",
-      "t": "No: Comet is one browser on your machine, heavier work hands off to Perplexity Computer in the cloud",
+      "t": "No: Comet is one browser on your computer, heavier work hands off to Perplexity Computer in the cloud",
       "b": "Unlimited computers on one queue, coordinated so the same post isn't sent from two computers"
     },
     {

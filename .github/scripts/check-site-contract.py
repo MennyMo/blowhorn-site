@@ -18,6 +18,9 @@ from pathlib import Path
 
 # Published path -> ids that must exist on that page: the section anchors other
 # pages link to, and the sprite symbols and labels the page itself references.
+# The preview home pages (/home-reveille/, /home-oil/) are not listed: they were
+# noindex previews, out of the sitemap and llms.txt, and are no longer built
+# (`build: render: never`), so they were never part of the public contract.
 PAGES = {
     "index.html": [
         "glyph-menubar", "glyph-terminal", "glyph-clock", "glyph-extension",
@@ -31,18 +34,11 @@ PAGES = {
         "action-react", "action-follow", "action-unfollow", "action-accept",
         "action-withdraw", "action-find", "action-analytics",
     ],
-    "home-reveille/index.html": [
-        "main", "hero-title", "hero-art-title", "fan-title", "platforms", "platforms-title", "how",
-        "how-title", "teams", "teams-title", "trust", "trust-title", "download", "download-title",
-    ],
     "download/index.html": [
         "main", "glyph-download", "download-title", "download-status",
     ],
     "download/thanks/index.html": [
         "main", "thanks-title", "steps", "download-fallback", "updates-email",
-    ],
-    "home-oil/index.html": [
-        "main", "hero-title", "platforms", "sound-wave", "how", "signal", "trust", "control", "download", "download-title",
     ],
     "legal/index.html": [
         "main", "glance", "policies",
