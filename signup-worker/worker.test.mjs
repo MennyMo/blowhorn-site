@@ -239,3 +239,16 @@ test('GET /api/unsubscribe on an already unsubscribed token shows unsubscribed',
   const text = await res.text();
   assert.match(text, /You are unsubscribed/);
 });
+
+test('GET /api/unsubscribe with missing or unknown token returns 400 or 404', async () => {
+  const db = fakeDb();
+  const handle = createHandler(db);
+
+  const resMissing = await handle(new Request('https://api.blowhorn.ai/api/unsubscribe'));
+  assert.equal(resMissing.status, 400);
+  assert.match(await resMissing.text(), /incomplete/);
+
+  const resUnknown = await handle(new Request('https://api.blowhorn.ai/api/unsubscribe?token=nope'));
+  assert.equal(resUnknown.status, 404);
+  assert.match(await resUnknown.text(), /not recognized/);
+});
