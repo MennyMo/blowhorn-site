@@ -18,6 +18,7 @@ tiers:
     annual: "0"
     unit_m: forever
     unit_a: forever
+    cta: Download free
     features:
       - 1 profile
       - LinkedIn and X

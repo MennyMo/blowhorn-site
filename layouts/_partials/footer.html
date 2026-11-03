@@ -28,7 +28,7 @@
             <div class="footer-col">
               <h2 class="footer-title">Product</h2>
               <ul>
-                <li>{{ partial "download-button.html" (dict "kind" "text") }}</li>
+                <li><a href="{{ "download/" | relURL }}">Download</a></li>
                 <li><a href="{{ "pricing/" | relURL }}">Pricing</a></li>
                 <li><a href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">Browser extension</a></li>
                 <li><a href="{{ site.Params.github_repo }}/releases">Releases</a></li>

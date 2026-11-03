@@ -116,7 +116,7 @@
       }
     },
     "callouts": {
-      "description": "Copy for layouts/_partials/tells-callout.html: compare on every /compare/<slug>/ page, agents on /ai/ only.",
+      "description": "Copy for layouts/_partials/tells-callout.html: compare on every /compare/<slug>/ page, agents on /ai/ and /agents/.",
       "type": "object",
       "additionalProperties": false,
       "required": ["compare", "agents"],

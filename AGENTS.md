@@ -94,10 +94,6 @@ regenerate them. Claims on every page come from the product repository's
   repository's brand build (`tools/scripts/brand/build-brand-kit.py`, output in
   `marketing/brand/kit/`); copy them over unchanged, then set both sizes under `kits:` in
   `content/en/brand/_index.md` (`make check-brand-kits` fails a stale one).
-- **One install call per view.** Every install link says "Download" and comes from
-  `layouts/_partials/download-button.html`; a view has one teal primary (`.button-primary`) in
-  its main content. `make check-install-cta` (in `make check`) enforces it, skipping docs and
-  the home page until its rebuild (#418). See DESIGN.md "Install call to action".
 - **The product name is Blowhorn.** "Outbox" is the product's old internal name; never put
   it on a public page.
 - **Browser wording depends on the page.** Marketing and value pages (home, `/for`, `/ai`,

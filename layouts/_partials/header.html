@@ -187,10 +187,10 @@
             </li>
             <li class="mm-item"><a class="mm-top mm-top-tells" href="{{ $tellsURL }}"><span class="mm-top-label">{{ $tells.nav.label }} <span class="mm-pill">{{ $tells.nav.pill }}</span></span></a></li>
             <li class="mm-item"><a class="mm-top" href="{{ "pricing/" | relURL }}">Pricing</a></li>
-            <li class="mm-item mm-item-download">{{ partial "download-button.html" (dict "kind" "secondary" "class" "mm-download") }}</li>
+            <li class="mm-item mm-item-download"><a class="button button-primary mm-download" href="{{ "download/" | relURL }}">Download</a></li>
           </ul>
         </nav>
-        {{ partial "download-button.html" (dict "kind" "secondary" "class" "site-cta") }}
+        <a class="button button-primary site-cta" href="{{ "download/" | relURL }}">Download</a>
       </div>
     </header>
     {{- $nav := resources.Get "js/nav.js" | minify | fingerprint }}

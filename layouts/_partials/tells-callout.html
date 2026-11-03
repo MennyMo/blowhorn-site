@@ -1,12 +1,11 @@
 {{- /* A Blowhorn Tells callout section: Sleeper Cell's art, a heading, one
-  line and a text link to the free Am I a Bot? check. The check is a text
-  link, never a primary button, so the view's one primary stays the install
-  call to action. Used on every /compare/<slug>/ page (versus.html) and /ai/.
+  line and a button to the free Am I a Bot? check. Used on every
+  /compare/<slug>/ page (versus.html), /ai/ and /agents/.
   Context: dict
     "id"        unique id prefix for the heading (required)
     "placement" utm_content for the links (required, see data/tells.json)
     "heading", "body", "cta"   copy (required)
-    "secondary" optional text link after the check, to "secondary_page"
+    "secondary" optional text link after the button, to "secondary_page"
                 (a data/tells.json page; default agents)
   A callout from data/tells.json callouts passes straight through with
   merge: (merge site.Data.tells.callouts.compare (dict "id" .. "placement" ..)). */ -}}
@@ -20,7 +19,7 @@
             <h2 id="{{ $id }}" class="h2">{{ .heading }}</h2>
             <p class="muted">{{ .body }}</p>
             <p class="tells-actions">
-              <a class="tells-callout-cta ui" href="{{ partial "tells-link.html" (dict "placement" .placement) }}">{{ .cta }}</a>
+              <a class="button button-primary" href="{{ partial "tells-link.html" (dict "placement" .placement) }}">{{ .cta }}</a>
               {{- with .secondary }}
               <a class="tells-callout-more ui" href="{{ partial "tells-link.html" (dict "placement" $.placement "page" ($.secondary_page | default "agents")) }}">{{ . }}</a>
               {{- end }}
