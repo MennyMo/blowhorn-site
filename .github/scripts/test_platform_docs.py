@@ -29,6 +29,15 @@ Intro.
 - [All platforms](/docs/reference/platforms/)
 """
 
+# A coming-soon table's one row: the compact cast empty state (art and copy).
+COMING_SOON_ROW = (
+    '<tr class="supported-actions-empty"><td colspan="3">'
+    '<div class="cast-empty cast-empty-compact">'
+    '<img class="cast-empty-art" src="/assets/brand/cast/robo-recruit-base.webp" alt="">'
+    '<p class="cast-empty-text ui">Its actions show up here when it ships.</p>'
+    "</div></td></tr>"
+)
+
 COMING_SOON_PAGE = """---
 title: YouTube
 ---
@@ -171,11 +180,7 @@ class PlatformDocsCheckTest(unittest.TestCase):
                 if examples is not None:
                     after = examples
             else:
-                body = (
-                    '<tr><th scope="row">None yet</th>'
-                    '<td data-label="What it does">Coming soon.</td>'
-                    '<td data-label="Limits / notes">None</td></tr>'
-                )
+                body = COMING_SOON_ROW
                 after = ""
             write(
                 check.built_page(build, item["docs"]),
@@ -274,7 +279,7 @@ class PlatformDocsCheckTest(unittest.TestCase):
         problems = check.check_built(build, self.tmp)
         self.assertTrue(any("'Status' column" in p for p in problems), problems)
 
-    def test_built_html_coming_soon_icon_passes(self):
+    def coming_soon_page(self, body):
         build = self.build_pages()
         data = json.loads((self.tmp / "data/integrations.json").read_text(encoding="utf-8"))
         soon = next(i for i in data["platforms"] if i["status"] == "coming-soon")
@@ -284,14 +289,33 @@ class PlatformDocsCheckTest(unittest.TestCase):
             f'<section data-supported-actions="{soon["id"]}" aria-label="Supported actions">'
             '<table class="supported-actions"><thead><tr>'
             + "".join(f'<th scope="col">{h}</th>' for h in check.REQUIRED_HEADERS)
-            + '</tr></thead><tbody><tr><th scope="row">None yet <span role="img" '
-            'aria-label="Coming soon" title="Coming soon" data-action-status="coming-soon">'
-            '<svg aria-hidden="true"></svg></span></th>'
-            '<td data-label="What it does">This platform isn\'t available yet.</td>'
-            '<td data-label="Limits / notes">None</td></tr></tbody></table></section>'
+            + f"</tr></thead><tbody>{body}</tbody></table></section>"
             "</body></html>",
         )
+        return build
+
+    def test_built_html_coming_soon_cast_row_passes(self):
+        build = self.coming_soon_page(COMING_SOON_ROW)
         self.assertEqual(check.check_built(build, self.tmp), [])
+
+    def test_built_html_coming_soon_row_without_art_fails(self):
+        build = self.coming_soon_page(COMING_SOON_ROW.replace('<img class="cast-empty-art" src="/assets/brand/cast/robo-recruit-base.webp" alt="">', ""))
+        problems = check.check_built(build, self.tmp)
+        self.assertTrue(any("missing its cast empty state row" in p for p in problems), problems)
+
+    def test_built_html_coming_soon_none_yet_row_fails(self):
+        build = self.coming_soon_page(
+            '<tr><th scope="row">None yet</th>'
+            '<td data-label="What it does">Coming soon.</td>'
+            '<td data-label="Limits / notes">None</td></tr>'
+        )
+        problems = check.check_built(build, self.tmp)
+        self.assertTrue(any("missing its cast empty state row" in p for p in problems), problems)
+
+    def test_built_html_coming_soon_row_with_actions_fails(self):
+        build = self.coming_soon_page(COMING_SOON_ROW + COMING_SOON_ROW)
+        problems = check.check_built(build, self.tmp)
+        self.assertTrue(any("missing its cast empty state row" in p for p in problems), problems)
 
     def test_built_html_missing_column_fails(self):
         build = self.build_pages(headers=("Action", "What it does"))

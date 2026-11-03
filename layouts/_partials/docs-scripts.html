@@ -3,6 +3,8 @@
   pulls in Bootstrap's JavaScript, whose comments name documentation hosts,
   and base.js, which only drives Docsy's navbar. jQuery and lunr load in the
   head (layouts/_partials/docs-head.html). */ -}}
+{{- /* The offline search's no-results state. assets/js/offline-search.js clones this template and fills the query, so the markup lives only here. */ -}}
+<template id="cast-empty-search">{{ partial "cast-empty-state.html" (dict "character" "trench-trooper-periscope.webp" "text" `No page matches "{query}".` "action" (dict "label" "browse the docs" "href" ("docs/" | relURL))) }}</template>
 {{- $jsSearch := resources.Get "js/offline-search.js" }}
 {{- $jsToggle := resources.Get "js/docs-toggle.js" }}
 {{- $jsCode := resources.Get "js/code-card.js" }}

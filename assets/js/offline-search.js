@@ -145,9 +145,10 @@
       $box.append($searchResultBody);
 
       if (results.length === 0) {
-        $searchResultBody.append(
-          $('<p>').text(`No results found for query "${searchQuery}"`)
-        );
+        // The cast empty state, from the template in docs-scripts.html.
+        const $empty = $(document.getElementById('cast-empty-search').content.firstElementChild.cloneNode(true));
+        $empty.find('[data-cast-query]').text(searchQuery);
+        $searchResultBody.append($empty);
       } else {
         results.forEach((r) => {
           const doc = resultDetails.get(r.ref);

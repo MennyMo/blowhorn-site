@@ -1558,6 +1558,13 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   padding: var(--space-3) var(--space-4);
 }
 
+/* Cast empty state (layouts/_partials/cast-empty-state.html): the art is black, so it is its own dark stage. */
+.cast-empty { display: grid; justify-items: center; gap: var(--space-4); padding-block: var(--space-6); text-align: center; }
+.cast-empty-art { display: block; width: min(100%, 220px); height: auto; border-radius: var(--radius-md); }
+.cast-empty-text { margin: 0; color: var(--ink); }
+.cast-empty-action { margin: 0; }
+.cast-empty-compact .cast-empty-art { width: min(100%, 160px); }
+
 /* 404 */
 .empty-state {
   display: grid;
@@ -3240,6 +3247,8 @@ a.docs-card.platform-card:hover::after, a.docs-card.platform-card:focus-visible:
     font-weight: 600;
     color: var(--ink-wordmark);
   }
+  /* The coming-soon row is one cell across the table, not a label and a value. */
+  .supported-actions tbody tr.supported-actions-empty td { display: block; padding: var(--space-4) 0 0; }
 }
 
 /* Tabbed examples: tokens only, so the one theme picks them up.

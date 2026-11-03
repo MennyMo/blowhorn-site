@@ -42,8 +42,8 @@ include .github/build/Makefile.show-help.mk
 #   check-urls         Production build, then fail on a lost public URL or anchor.
 #   site-check         Production build once, then validate-html, check-links,
 #                      check-third-party, check-urls, check-no-internal,
-#                      check-theme, check-platform-docs, check-naming
-#                      check-action-matrix and check-download-links (site.yml).
+#                      check-theme, check-platform-docs, check-naming,
+#                      check-empty-states, check-action-matrix and check-download-links (site.yml).
 #   check-no-internal  Fail if the production build contains /internal/.
 #   check-platform-docs Production build, then fail if a supported platform
 #                      lacks a docs page, a page skips the shared actions
@@ -309,7 +309,7 @@ check-action-matrix: site-build
 	python3 .github/scripts/check_action_matrix.py $(BUILD_DIR)
 
 ## Build for production once, then validate-html, check-links, check-third-party and check-urls, plus check-schemas (what site.yml runs).
-site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-download-links check-feeds check-brand-kits check-tells check-tips
+site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-empty-states check-action-matrix check-download-links check-feeds check-brand-kits check-tells check-tips
 
 ## Production build, then fail if any built page or script links to /releases/latest/download (an axi release can hold Latest; build download URLs from data/download.json).
 check-download-links: site-build
@@ -334,6 +334,10 @@ check-tells: site-build
 ## Production build, then fail if a page says Layer5 Cloud or Blowhorn Cloud, or names Layer5 outside the footer and the legal pages (users see Blowhorn).
 check-naming: site-build
 	python3 .github/scripts/check_naming.py $(BUILD_DIR)
+
+## Production build, then fail if an empty state (the docs search, the example panes, the action table) shows its copy without its cast character.
+check-empty-states: site-build
+	python3 .github/scripts/check_empty_states.py $(BUILD_DIR)
 
 ## Build for production, then fail if the /internal/ section leaked into it.
 check-no-internal: site-build
@@ -481,6 +485,7 @@ clean:
 	check-schemas \
 	check-brand-kits \
 	check-naming \
+	check-empty-states \
 	check-download-links \
 	check-feeds \
 	check-tips \

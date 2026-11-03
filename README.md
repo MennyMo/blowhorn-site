@@ -75,6 +75,7 @@ Every CI step that runs repository logic is a make target, and the workflow call
 | `check-urls` | every published URL and anchor still exists | `site-check` |
 | `check-no-internal` | the public build holds nothing from `/internal/` | `site-check` |
 | `check-naming` | no page says Layer5 Cloud or Blowhorn Cloud, names Layer5 outside the footer and legal pages, says machines, or says Macs in marketing copy; the docs say Chrome profile and Chrome extension | `site-check` |
+| `check-empty-states` | every empty state (the docs search, the example panes, the action table) shows its copy with its cast character | `site-check` |
 | `check-download-links` | no page or script links to `/releases/latest/download` | `site-check` |
 | `check-feeds` | the Resources RSS feeds validate | `site-check` |
 | `check-brand-kits` | the Brand page links only kit zips the build publishes, at their real sizes | `site-check` |
