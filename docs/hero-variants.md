@@ -81,8 +81,7 @@ anchor): its secondary button beside Download. Without it the button reads
 "See how it works" and goes to `#how`. A path that is not a page fails the build.
 
 The platforms section headline lives in `data/integrations.json` (`headline`).
-It is not a hero. The old line "Say it once. Say it everywhere." stays on the
-Reveille homepage only.
+It is not a hero.
 
 At page load each visitor gets one of
 
@@ -196,7 +195,7 @@ ignored and the time rule applies.
 
 ## Cycling heroes by keyboard
 
-On the home page and on `/home-reveille/`, type the letters `cycle`, in
+On the home page, type the letters `cycle`, in
 order, to move to the next hero in place, without reloading. The order
 is the full hero list (rotating heroes first, then the rest), wrapping
 from the last hero back to the first. The URL is updated in place to
@@ -205,7 +204,7 @@ from the last hero back to the first. The URL is updated in place to
 The sequence ignores modifier keys and any typing inside a form field,
 a text box, or an editable area, and it resets if more than 2 seconds
 pass between letters. It is implemented in `assets/js/hero-cycle.js`,
-loaded by `layouts/home.html` and `layouts/home-reveille.html`, using
+loaded by `layouts/home.html`, using
 the hero list the pre-paint picker exposes as `window.blowhornHeroes`
 in `layouts/_partials/hero-rotation-head.html`.
 
@@ -228,8 +227,8 @@ change with it.
 Press `h` on the home page to advance to the next rendered hero, in render
 order (rotating heroes first, then the rest, including the 12 from issue
 #254). Press Shift+h to go back one. The hotkey is in
-`layouts/_partials/hero-rotation-head.html`, so it works on the Signal home
-page and the Reveille preview page, and it swaps headline, secondary button, art and media together,
+`layouts/_partials/hero-rotation-head.html`, so it works on the home
+page, and it swaps headline, secondary button, art and media together,
 because they all key off the same `data-hero` attribute. It updates
 `?hero=<id>` in the address bar, so the shown hero survives a reload and can
 be shared. It does nothing while typing in a form field, while a dialog is

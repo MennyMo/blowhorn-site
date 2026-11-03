@@ -31,11 +31,9 @@ The marketing and legal pages do not use Docsy's templates: they render through
 
 Themes are schema-driven (`data/themes.json`, `schemas/themes.schema.json`). A
 theme is tokens, CSS and layout partials over the same data and content.
-Reveille copy is approved; do not add a per-theme content file (`check_theme.py`
-fails those except `content/en/home-reveille.md`). Site default is Reveille
-(today's look: light, dark follows the OS). The public home page sets front
-matter `theme: signal`. Docs, legal, pricing and download stay Reveille.
-`?theme=` swaps the token layer only, not homepage layout. Homepage variants
+The site is one theme, Signal: do not add a per-theme content file
+(`check_theme.py` fails those). Site default is Signal (light, dark follows
+the OS). `?theme=` swaps the token layer only, not homepage layout. Homepage variants
 live in `layouts/_partials/home/`. Platform counts and the platforms section
 treatments come from `data/integrations.json` plus `data/platforms/*.yaml`;
 the By role treatment and the "Who it's for" cards list every role in

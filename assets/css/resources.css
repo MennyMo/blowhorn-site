@@ -377,7 +377,7 @@ a.tag-chip {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: #000;
+  background: var(--video-matte);
 }
 
 .video-dialog-bar {

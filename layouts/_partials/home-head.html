@@ -1,5 +1,4 @@
-{{- /* Shared Open Graph, JSON-LD and hero-rotation head for the home page
-  and the Reveille preview. */ -}}
+{{- /* Shared Open Graph, JSON-LD and hero-rotation head for the home page. */ -}}
     {{- $hero := partial "hero-variant.html" . }}
     {{- $heroDesc := printf "%s %s" $hero.headline ($hero.subhead | default site.Data.hero.tagline) }}
     {{- partial "hero-rotation-head.html" . }}

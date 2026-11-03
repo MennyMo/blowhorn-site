@@ -1,18 +1,12 @@
 {
   "$schema": "../schemas/themes.schema.json",
-  "default": "reveille",
+  "default": "signal",
   "previewParam": "theme",
   "themes": [
     {
       "id": "signal",
       "name": "Signal",
       "home": "signal",
-      "colorScheme": "light-dark"
-    },
-    {
-      "id": "reveille",
-      "name": "Reveille",
-      "home": "reveille",
       "colorScheme": "light-dark"
     }
   ]
