@@ -28,7 +28,9 @@ accessible name and tooltip and no text label. A Status column with no
 exception in it fails too.
 
 When every surface of an example is `placeholder`, its tabs open on
-`defaultSurface` (`cli`), which reads "Not in the CLI yet" with the CLI notes.
+`defaultSurface` (`cli`), which reads "Not in the CLI yet." with a cast character.
+Every placeholder surface is a cast empty state (`layouts/_partials/cast-empty-state.html`);
+its copy is fixed in the pane, so the YAML `notes` do not show there.
 
 ## Add or fill an example
 

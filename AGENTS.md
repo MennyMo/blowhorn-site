@@ -111,6 +111,10 @@ regenerate them. Claims on every page come from the product repository's
   stay as they are. `check_naming.py` fails a "for now" requirement and "browser profile" or
   "browser extension" in the docs. Docs copy is synced from the product repository's `docs/`:
   change it there, then sync.
+- **Every empty state has a cast character.** Render it through
+  `layouts/_partials/cast-empty-state.html` (the docs search's no-results template, the action
+  example panes and the action table all do); `params.castArt` in `hugo.toml` switches the art off.
+  `make check-empty-states` fails copy shown without its character.
 - **The product repository is private.** Never link its files, issues or pull requests
   from a page; every reader would get a 404.
 - **Every Hugo run cleans its destination.** Each `hugo` invocation in `package.json`

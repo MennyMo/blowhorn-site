@@ -1,0 +1,16 @@
+{{- /* The cast empty state (the app's CastEmptyState, Figma 644:142): one cast character on a dark stage, one line of copy, at most one action. Every empty state on the site renders through here.
+  Input dict: character (a file in assets/brand/cast/, e.g. "robo-recruit-base.webp"), text (one line), action (optional: label, href), class (optional).
+  "{query}" in text becomes <span data-cast-query></span>, which assets/js/offline-search.js fills with the query.
+  The art is decorative: the copy carries the meaning. Set params.castArt = false in hugo.toml to drop the art and keep the copy and action. */ -}}
+{{- if not .character }}{{ errorf "cast-empty-state: set character" }}{{ end -}}
+{{- if not (os.FileExists (printf "static/assets/brand/cast/%s" .character)) }}{{ errorf "cast-empty-state: no cast art %q" .character }}{{ end -}}
+{{- $text := replace .text "{query}" `<span data-cast-query></span>` | safeHTML -}}
+<div class="cast-empty{{ with .class }} {{ . }}{{ end }}">
+  {{- if site.Params.castArt }}
+  <img class="cast-empty-art" src="{{ printf "assets/brand/cast/%s" .character | relURL }}" alt="" width="960" height="540" loading="lazy">
+  {{- end }}
+  <p class="cast-empty-text ui">{{ $text }}</p>
+  {{- with .action }}
+  <p class="cast-empty-action"><a class="button button-secondary" href="{{ .href }}">{{ .label }}</a></p>
+  {{- end }}
+</div>
