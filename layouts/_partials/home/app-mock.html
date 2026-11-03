@@ -1,0 +1,43 @@
+{{- /* The hero product mock: the app's real shell, with example data
+  (data/home.json mock). Rail: Dashboard, Activity, Profiles, Performance,
+  Posture; no Home item, and the logo is not a link. Cmd-K sits upper right
+  and the New activity button is the 56px FAB lower right. Text is 13px or
+  more, except the uppercase mono time. Platform marks come from
+  data/integrations.json (integration-row.html). */ -}}
+{{- $m := site.Data.home.mock -}}
+<figure class="app-mock" aria-labelledby="app-mock-title">
+  <figcaption id="app-mock-title" class="visually-hidden">{{ $m.ariaLabel }}</figcaption>
+  <div class="app-mock-bar" aria-hidden="true">
+    <span class="app-mock-lights"><i></i><i></i><i></i></span>
+    <span class="app-mock-search"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>{{ $m.search }} <kbd>{{ $m.shortcut }}</kbd></span>
+  </div>
+  <div class="app-mock-body">
+    <div class="app-mock-rail" aria-hidden="true">
+      <p class="app-mock-logo"><span class="app-mock-dot"></span>Blowhorn</p>
+      <ul class="app-mock-places">
+        {{- range $m.rail }}
+        <li{{ if eq . $m.active }} class="is-on"{{ end }}>{{ . }}</li>
+        {{- end }}
+      </ul>
+      <p class="app-mock-account"><span class="app-mock-avatar">EO</span>{{ $m.account }}</p>
+    </div>
+    <div class="app-mock-main">
+      <p class="app-mock-title" aria-hidden="true">{{ $m.title }}</p>
+      <ul class="app-mock-list">
+        {{- range $m.rows }}
+        {{- $p := index (where site.Data.integrations.platforms "id" .platform) 0 }}
+        {{- $row := partial "integration-row.html" $p }}
+        <li class="app-mock-row">
+          <span class="logo-tile" aria-hidden="true"><img src="{{ $row.logo | relURL }}" alt="" width="16" height="16"></span>
+          <span class="app-mock-text"><b>{{ .title }}</b><span>{{ .sub }}</span></span>
+          <time class="app-mock-time">{{ .time }}</time>
+          <span class="app-mock-status">{{ .status }}</span>
+        </li>
+        {{- end }}
+      </ul>
+      <span class="app-mock-fab" role="img" aria-label="{{ $m.newActivity }}">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
+      </span>
+    </div>
+  </div>
+</figure>

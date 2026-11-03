@@ -1,0 +1,185 @@
+{
+  "$schema": "../schemas/home.schema.json",
+  "hero": {
+    "headline": "Automate your social voice.",
+    "subhead": "One message out, posted as you on every network, from your own computer.",
+    "secondary": {
+      "label": "See how it works",
+      "href": "#how"
+    },
+    "major": {
+      "src": "assets/brand/mascot/locked-6/major-6-hat-right.webp",
+      "alt": "Major Blowhorn, a teal rooster in a drill sergeant's campaign hat, pointing and shouting into his bullhorn",
+      "width": 657,
+      "height": 560
+    }
+  },
+  "ticker": {
+    "label": "Used by teams at"
+  },
+  "mock": {
+    "ariaLabel": "The Blowhorn app's Activity list. Example data.",
+    "rail": [
+      "Dashboard",
+      "Activity",
+      "Profiles",
+      "Performance",
+      "Posture"
+    ],
+    "active": "Activity",
+    "account": "Example org",
+    "title": "Activity",
+    "search": "Search",
+    "shortcut": "⌘K",
+    "newActivity": "New activity",
+    "rows": [
+      {
+        "platform": "linkedin",
+        "title": "v2.0 ships today",
+        "sub": "Post, as you",
+        "time": "9:02 AM",
+        "status": "Went out"
+      },
+      {
+        "platform": "x",
+        "title": "v2.0 ships today",
+        "sub": "Amplify, 12 teammates",
+        "time": "9:30 AM",
+        "status": "7 of 12"
+      },
+      {
+        "platform": "github",
+        "title": "Rally the release issue",
+        "sub": "React, 12 profiles",
+        "time": "9:45 AM",
+        "status": "Scheduled"
+      },
+      {
+        "platform": "hacker-news",
+        "title": "Reply on the HN thread",
+        "sub": "Comment, as you",
+        "time": "11:10 AM",
+        "status": "Scheduled"
+      }
+    ]
+  },
+  "how": {
+    "label": "How it works",
+    "headline": "Write it once. Blowhorn carries it.",
+    "feature": {
+      "title": "Schedule once. It goes out on time, as you.",
+      "body": "Pick the moment. Each network posts from your own browser, at a human pace.",
+      "art": {
+        "src": "assets/brand/cast/sleeper-cell-base.webp",
+        "alt": "Sleeper Cell, a sheep agent in black tactical gear, aiming a radar beam",
+        "width": 960,
+        "height": 540
+      }
+    },
+    "stat": {
+      "label": "networks from one queue",
+      "link": {
+        "label": "See every network",
+        "href": "integrations/"
+      },
+      "actions": {
+        "label": "See every action",
+        "href": "integrations/actions/"
+      }
+    },
+    "mockup": {
+      "title": "Every computer, one queue.",
+      "body": "Add your laptop and a desktop. They share the work, so nothing goes out twice, and one switch pauses the whole fleet.",
+      "figures": [
+        {
+          "value": "12",
+          "label": "went out today"
+        },
+        {
+          "value": "3",
+          "label": "coming up"
+        }
+      ],
+      "toggles": [
+        "This computer",
+        "Fleet"
+      ]
+    }
+  },
+  "ai": {
+    "label": "AI native",
+    "headline": "Plug in your AI agent.",
+    "subhead": "Your agent drafts and queues. Nothing goes out until you approve the preview.",
+    "links": [
+      {
+        "label": "MCP server",
+        "href": "ai/mcp/"
+      },
+      {
+        "label": "Command line",
+        "href": "ai/blowhorn-axi/"
+      },
+      {
+        "label": "REST API",
+        "href": "ai/"
+      }
+    ],
+    "code": {
+      "title": "terminal",
+      "command": "blowhorn post \"v2.0 is out\" --dry-run",
+      "result": "Queued for your approval on 4 networks"
+    },
+    "art": {
+      "src": "assets/brand/cast/robo-recruit-base.webp",
+      "alt": "Robo-Recruit, a squad of armoured rooster recruits carrying trumpet-shaped blasters",
+      "width": 960,
+      "height": 540
+    }
+  },
+  "trust": {
+    "label": "Trust",
+    "headline": "Yours to keep. Yours to control.",
+    "art": {
+      "src": "assets/brand/cast/trench-trooper-base.webp",
+      "alt": "Trench Trooper, a pig soldier with a teal-bladed spear",
+      "width": 960,
+      "height": 540
+    },
+    "points": [
+      {
+        "title": "Human pace, always",
+        "body": "It works at a pace you choose and never solves a CAPTCHA for you.",
+        "link": {
+          "label": "Will I get banned?",
+          "href": "docs/explanation/reliability-and-anti-bot-design/"
+        }
+      },
+      {
+        "title": "Your own computer",
+        "body": "Every action runs in your own browser. Your logins never leave it.",
+        "link": {
+          "label": "How custody works",
+          "href": "docs/explanation/your-own-chrome/"
+        }
+      },
+      {
+        "title": "Your posture, your limits",
+        "body": "Choose how cautious each profile is. Dry run anything first.",
+        "link": {
+          "label": "Set your posture",
+          "href": "docs/how-to/settings/choose-your-rules-of-engagement/"
+        }
+      }
+    ]
+  },
+  "proof": {
+    "label": "Blowhorn users"
+  },
+  "closing": {
+    "headline": "Own your voice. Command your agents.",
+    "secondary": {
+      "label": "Read the docs",
+      "href": "docs/"
+    }
+  }
+}

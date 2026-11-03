@@ -1,104 +1,19 @@
-{{- /* Social proof. Call with (dict "slot" "ticker|interlude|grid|closing|rotating").
-   "rotating" ignores placements and renders every
-   testimonial as one-at-a-time carousel: the first quote shows with no
-   JavaScript, and assets/js/proof-rotation.js (loaded by
+{{- /* Social proof for the cast pages: call with (dict "slot" "rotating").
+   "rotating" renders every testimonial as one-at-a-time carousel: the first
+   quote shows with no JavaScript, and assets/js/proof-rotation.js (loaded by
    layouts/solution.html) cycles it, with Previous/Next buttons.
-   Quote entries live in data/testimonials.json. An entry
-   with placeholder: true is a made-up draft: it renders only in
-   non-production builds (hugo server, deploy previews) and wears a
-   visible PLACEHOLDER badge. Production builds drop it, and a slot with
-   no remaining entries renders nothing at all.
-   The "ticker" slot is the logo strip: it renders data/user_logos.json,
-   not the testimonials. The logos sit bare, no plates: each file
-   (static/assets/orgs/) is grayscale with its canvas trimmed to the
-   art, at one height; white lockups are stored inverted, and dark
-   mode inverts the whole strip, so both schemes get their contrast.
-   Sources and treatment: static/assets/brand/LICENSES.md. */ -}}
-{{- $slot := .slot -}}
-{{- $want := $slot -}}
+   Quote entries live in data/testimonials.json. An entry with
+   placeholder: true is a made-up draft: it renders only in non-production
+   builds (hugo server, deploy previews) and wears a visible PLACEHOLDER
+   badge. Production builds drop it. The home page's logo ticker and quotes
+   are in layouts/_partials/home/signal.html. */ -}}
 {{- $items := slice -}}
 {{- range (index site.Data "testimonials").items -}}
-  {{- if and (in .placements $want) (or (not .placeholder) (not hugo.IsProduction)) -}}
+  {{- if or (not .placeholder) (not hugo.IsProduction) -}}
     {{- $items = $items | append . -}}
   {{- end -}}
 {{- end -}}
-{{- if eq $slot "rotating" -}}
-  {{- $items = slice -}}
-  {{- range (index site.Data "testimonials").items -}}
-    {{- if or (not .placeholder) (not hugo.IsProduction) -}}
-      {{- $items = $items | append . -}}
-    {{- end -}}
-  {{- end -}}
-{{- end -}}
-{{- if eq $slot "ticker" -}}
-{{- with (index site.Data "user_logos").items }}
-{{- $logos := . }}
-<div class="proof-ticker" role="group" aria-label="Organisations Blowhorn users work at">
-  <p class="proof-ticker-label caption">Blowhorn users work at</p>
-  <div class="proof-ticker-viewport">
-    <ul class="proof-ticker-track">
-      {{- range $pass := slice 1 2 }}
-      {{- range $logos }}
-      <li class="proof-ticker-item"{{ if eq $pass 2 }} aria-hidden="true"{{ end }}>
-        <img class="proof-ticker-logo" src="{{ .logo | relURL }}" alt="{{ if eq $pass 1 }}{{ .name }}{{ end }}" loading="lazy">
-      </li>
-      {{- end }}
-      {{- end }}
-    </ul>
-  </div>
-</div>
-{{- end }}
-{{- else -}}
 {{- with $items -}}
-{{- if eq $slot "interlude" -}}
-{{- $t := index . 0 -}}
-<section class="section proof-interlude" aria-label="A Blowhorn user, in their own words">
-  <div class="wrap">
-    <figure class="proof-big">
-      <blockquote class="display">{{ $t.quote }}</blockquote>
-      <figcaption class="label">{{ $t.name }} · {{ $t.role }}, {{ $t.company }}{{ if $t.placeholder }} <span class="proof-flag">Placeholder</span>{{ end }}</figcaption>
-    </figure>
-  </div>
-</section>
-{{- else if eq $slot "grid" -}}
-<section id="users" class="section proof-section" aria-labelledby="users-title">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="label">Blowhorn users</p>
-      <h2 id="users-title" class="display">Fewer tabs. More reach.</h2>
-      <p class="body-lg muted">What users say after a launch or two.</p>
-    </div>
-    {{- /* The first quote is the paper feature across the whole first row; the rest
-      are dealt as their own grid. Paper is last in their order, so the deal never
-      reaches it in the row under the feature. */}}
-    <ul class="proof-grid section-body">
-      {{- range $i, $t := . }}
-      <li class="proof-card{{ if eq $i 0 }} proof-card-feature card-paper{{ else }} {{ partial "card-variant.html" (dict "i" (sub $i 1) "grid" "proof-grid" "n" (sub (len $items) 1) "variants" (slice "card-stamp" "card-field" "card-plain" "card-paper")) }}{{ end }}">
-        {{- if $t.placeholder }}
-        <span class="proof-flag">Placeholder</span>
-        {{- end }}
-        <span class="proof-mark" aria-hidden="true">&ldquo;</span>
-        <blockquote class="body-lg">{{ $t.quote }}</blockquote>
-        <p class="proof-who"><span class="proof-avatar" aria-hidden="true">
-          {{- with $t.picture }}
-          <img src="{{ . | relURL }}" alt="">
-          {{- end }}
-        </span><span><strong>{{ $t.name }}</strong><br><span class="caption muted">{{ $t.role }}, {{ $t.company }}</span></span></p>
-      </li>
-      {{- end }}
-    </ul>
-  </div>
-</section>
-{{- else if eq $slot "closing" -}}
-<div class="proof-band" role="group" aria-label="Blowhorn users">
-  {{- range $i, $t := first 3 . }}
-  <figure class="{{ partial "card-variant.html" (dict "i" $i "grid" "proof-band" "n" (len (first 3 $items)) "variants" (slice "card-stamp" "card-field" "card-plain")) }}">
-    <blockquote class="h3">{{ .quote | truncate 80 }}</blockquote>
-    <figcaption class="caption muted">{{ .name }}, {{ .company }}{{ if .placeholder }} <span class="proof-flag">Placeholder</span>{{ end }}</figcaption>
-  </figure>
-  {{- end }}
-</div>
-{{- else if eq $slot "rotating" -}}
 <section class="agent-section proof-rotating" aria-labelledby="proof-title">
   <div class="section-head">
     <p class="label">Blowhorn users</p>
@@ -121,6 +36,4 @@
     </div>
   </div>
 </section>
-{{- end -}}
-{{- end -}}
 {{- end -}}

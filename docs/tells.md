@@ -19,7 +19,7 @@ data file.
 Build a link with the partial; never hard-code a Tells URL in a template:
 
 ```go-html-template
-<a href="{{ partial "tells-link.html" (dict "placement" "home" "page" "checks") }}">What each check means</a>
+<a href="{{ partial "tells-link.html" (dict "placement" "nav" "page" "checks") }}">What each check means</a>
 ```
 
 `page` is `home` (default), `checks` (`/checks/`, "What each check means") or
@@ -32,7 +32,6 @@ Build a link with the partial; never hard-code a Tells URL in a template:
 | Placement | Where | Template |
 | --- | --- | --- |
 | `nav` | Top-level "Am I a Bot?" item in the header, after Pricing; the only header link to Tells | `header.html` |
-| `home` | Band after Trust on the Signal home page (Sleeper Cell art) | `home/tells.html` |
 | `compare` | Callout before the FAQ on every `/compare/<slug>/` page, and the FAQ links that point at Tells | `tells-callout.html` in `versus.html` |
 | `ai` | Callout after the first section of `/ai/` (the only page with the "Your AI agent swears it's human" promo) | `tells-callout.html` in `ai.html` |
 | `thanks` | Card after the install steps on `/download/thanks/` | `download-thanks.html` |

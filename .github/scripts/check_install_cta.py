@@ -14,8 +14,6 @@ fails when:
   "Install the CLI" as a primary.
 
 Docs pages are synced from the product repository and are skipped. The home
-page is exempt from both rules (PENDING_HOME) until its rebuild (#418) lands:
-remove it from PENDING_HOME then.
 
 Usage: check_install_cta.py [BUILD_DIR]
 """
@@ -38,7 +36,6 @@ OLD_LABELS = (
 )
 OLD_PRIMARY_LABELS = ("Install the CLI",)
 SKIP_PREFIXES = ("docs/",)
-PENDING_HOME = ("index.html",)
 
 
 class Controls(HTMLParser):
@@ -104,7 +101,7 @@ def check(build_dir: Path) -> list[str]:
     problems = []
     for path in sorted(build_dir.rglob("*.html")):
         rel = path.relative_to(build_dir).as_posix()
-        if rel.startswith(SKIP_PREFIXES) or rel in PENDING_HOME:
+        if rel.startswith(SKIP_PREFIXES):
             continue
         problems.extend(problems_in(rel, path.read_text(encoding="utf-8", errors="replace")))
     return problems

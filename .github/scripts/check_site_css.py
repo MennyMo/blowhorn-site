@@ -36,11 +36,9 @@ ROOT_PX = 16.0
 # Files the check reads, relative to the repository root.
 GLOBS = ("assets/css/*.css", "assets/scss/*.scss")
 
-# Files that are not yet checked, with the reason. Empty unless a file is
-# owned by another change that has not landed.
-ALLOWLIST: dict[str, str] = {
-    "assets/css/home-signal.css": "home CSS is rebuilt by #418; remove this entry when that lands",
-}
+# Files that are not yet checked, with the reason. Empty: every site stylesheet
+# is checked.
+ALLOWLIST: dict[str, str] = {}
 
 # Selectors whose text is a picture of the product, not reader copy: the
 # miniature interface art (ia-*, iface-art) is aria-hidden and drawn at about

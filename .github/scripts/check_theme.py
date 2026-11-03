@@ -20,7 +20,6 @@ Usage: check_theme.py BUILD_DIR
 
 import json
 import re
-import subprocess
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -65,52 +64,6 @@ def yaml_action_ids(platform_id: str):
 def theme_ids():
     data = json.loads((ROOT / "data/themes.json").read_text(encoding="utf-8"))
     return [theme["id"] for theme in data["themes"]]
-
-
-HOME_SIGNAL_JS = ROOT / "assets/js/home-signal.js"
-HOME_SIGNAL_HARNESS = Path(__file__).resolve().parent / "home_signal_harness.js"
-
-
-def run_platforms_js(scenario: dict, script: Path = HOME_SIGNAL_JS) -> dict:
-    """Run home-signal.js in home_signal_harness.js's fake DOM and return what
-    the platforms section shows: selected tab, visible panels, aria-selected."""
-    result = subprocess.run(
-        ["node", str(HOME_SIGNAL_HARNESS), str(script), json.dumps(scenario)],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"home-signal.js harness failed: {result.stderr.strip()}")
-    return json.loads(result.stdout)
-
-
-def platforms_scenario(**extra) -> dict:
-    """The platforms tabs as data/integrations.json renders them."""
-    data = json.loads((ROOT / "data/integrations.json").read_text(encoding="utf-8"))
-    scenario = {
-        "tabs": [t["id"] for t in data["treatments"]],
-        "on": data["defaultTreatment"],
-    }
-    scenario.update(extra)
-    return scenario
-
-
-def platforms_default_problems(script: Path = HOME_SIGNAL_JS) -> list:
-    """With no hash, the script must show exactly the default treatment's panel."""
-    scenario = platforms_scenario()
-    want = scenario["on"]
-    try:
-        got = run_platforms_js(scenario, script)
-    except (OSError, RuntimeError) as err:
-        return [str(err)]
-    visible = sorted(k for k, v in got["panels"].items() if v)
-    problems = []
-    if got["tab"] != want or got["ariaSelected"] != [want]:
-        problems.append(f"home-signal.js selects {got['tab']!r} with no hash, want {want!r}")
-    if visible != [want]:
-        problems.append(f"home-signal.js shows panels {visible} with no hash, want [{want!r}]")
-    return problems
 
 
 def extra_theme_content(root=ROOT):
@@ -238,21 +191,19 @@ def main(root: Path) -> int:
             problems.append(
                 f"/index.html data-theme is {page.html_theme!r}, want {want_theme}"
             )
-        if "Priced per profile, not per channel." not in html:
-            problems.append("/index.html is missing the pricing headline")
-        check_counts(page, want_counts, "/index.html", problems)
-        if 'data-demo-card="github"' in html:
-            problems.append("/index.html demo posts to GitHub")
-        if ">Say it once. Say it everywhere.<" in html:
-            problems.append("/index.html still uses the old platforms headline")
-        if "Write it once. Deploy to every front." not in html:
-            problems.append("/index.html lost the Major card headline")
-        if "Tab after tab. One post. Somebody call a medic." in html:
-            problems.append("/index.html still uses the old Major card line")
-        panels = html.count('data-plat-panel="')
-        if panels != 4:
-            problems.append(f"/index.html has {panels} platform panels, want 4")
-        problems.extend(platforms_default_problems())
+        if "Automate your social voice." not in html:
+            problems.append("/index.html lost the fixed headline")
+        if "data-hero-only" in html or "data-machines-only" in html:
+            problems.append("/index.html still rotates its headline or How it works copy")
+        stat = re.search(r'<p class="home-stat-numeral">(\d+)</p>', html)
+        if not stat:
+            problems.append("/index.html has no network stat numeral")
+        elif stat.group(1) != str(want_counts[0]):
+            problems.append(f"/index.html stat is {stat.group(1)!r} networks, want {want_counts[0]}")
+        if "data-demo-card" in html or "data-plat-panel" in html:
+            problems.append("/index.html still has the demo or the platform panels")
+        if "Coming soon" in html or "invites soon" in html:
+            problems.append("/index.html still shows a coming-soon teaser")
 
     catalog = root / "integrations/index.html"
     if not catalog.is_file():

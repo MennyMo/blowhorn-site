@@ -53,6 +53,8 @@ Paper and Dispatch keep one palette in both themes, so they also set `--ink`, `-
 | `card-field` | Field | feature and explanation grids, the common case | surface-tint | none; the hover edge is line-strong | ink, ink-muted | 14.2 / 12.4:1 ink; 4.9 / 5.5:1 muted |
 | `card-plain` | Plain | secondary lists, link lists, low emphasis | none | 1px line-strong on all sides | ink, ink-muted | 16.3 / 16.3:1 ink; 5.6 / 7.2:1 muted; edge 3.7 / 4.4:1 |
 | `card-glass` | Glass | one floating surface over content: a menu, the header, a hero. Also the `.glass` panel class. Never on a grid | solid `--surface` (flat, no blur) | even 1px `--glass-edge` on all sides, soft shadow | ink, ink-muted | 16.0 / 15.0:1 ink; 5.5 / 6.6:1 muted |
+| `card-cream` | Signal feature | a feature with its art (How it works span 7) | cream (surface-raised in dark) | none | near-black ink, charcoal muted (page ink in dark) | as Paper, without the outline |
+| `card-raised` | Signal mockup | a mock sitting on the page as a card (How it works, span 12) | surface-raised | none | ink, ink-muted | as Field |
 
 Ratios are WCAG 2.1 for the pair named, computed for light and dark. Two edges are deliberate:
 
@@ -134,12 +136,12 @@ Rule (Lee, 12 Oct 2026): **anywhere the site shows a command a reader might run,
 
 ## Interface art
 
-The miniature product UI in the homepage "Ways in" section is one partial, `layouts/_partials/interface-art.html` (styles under "Interface art" in `assets/css/site.css`). It is drawn from the real surfaces, never invented:
+The miniature product UI in the AI page's "Ways in" section is one partial, `layouts/_partials/interface-art.html` (styles under "Interface art" in `assets/css/site.css`). It is drawn from the real surfaces, never invented:
 
 - **Desktop app** copies the console: lights at the top of the left rail (hidden-inset title bar, no URL bar), the Crowhorn and wordmark, "+ New activity", the places (Dashboard, Activity, Profiles, Performance, Posture) and the "on watch" status line, beside Activity's Upcoming list. Sources in the product repository: `desktop/src/renderer/console/ConsoleRail.tsx`, `places.ts` and `desktop/src/ui/PlatformIcon.tsx`. When the app's rail or vocabulary changes, update the art.
 - **Web app** and **Chrome extension** share a Chrome-on-Mac frame (`interface-art-browser.html`): lights at the far left of the tab strip, back/forward/reload, the omnibox, a bookmarks bar; the extension adds the pinned Blowhorn icon.
 - Platform marks are the app's monoline marks (`interface-art-mark.html`), not filled brand logos. App labels say "activity", never "post".
-- The Product menu is cards only (no art, no intro copy). The art appears on the home page only, and a container query in the same CSS keeps each piece legible at its narrow sizes. Check both widths, light and dark.
+- The Product menu is cards only (no art, no intro copy). The art appears on the AI page only, and a container query in the same CSS keeps each piece legible at its narrow sizes. Check both widths, light and dark.
 
 ## Mascot consistency
 

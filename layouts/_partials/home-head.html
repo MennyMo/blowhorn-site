@@ -1,8 +1,5 @@
-{{- /* Shared Open Graph, JSON-LD and hero-rotation head for the home page. */ -}}
-    {{- $hero := partial "hero-variant.html" . }}
-    {{- $heroDesc := printf "%s %s" $hero.headline ($hero.subhead | default site.Data.hero.tagline) }}
-    {{- partial "hero-rotation-head.html" . }}
-    {{- partial "machines-rotation-head.html" . }}
+{{- /* Shared Open Graph and JSON-LD head for the home page. */ -}}
+    {{- $heroDesc := printf "%s %s" site.Data.home.hero.headline site.Data.home.hero.subhead }}
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Blowhorn">
     <meta property="og:title" content="Blowhorn: one message, many ears">
