@@ -10,7 +10,7 @@ site and fails when:
 - a link to the Tells host carries UTM parameters other than the ones in
   data/tells.json, or a utm_content that is not a listed placement;
 - a placement is missing from a page that must carry it (REQUIRED below):
-  the header, bar and footer on the home page, the home band, the callout on
+  the header on the home page, the home band, the callout on
   every /compare/<slug>/ page and /ai/, the thanks card, the card on
   every docs page and the 404 line.
 
@@ -33,10 +33,10 @@ DEFAULT_DATA = ROOT / "data" / "tells.json"
 
 # Page (relative to the build) -> placements whose links it must carry.
 REQUIRED = {
-    "index.html": {"nav", "bar", "footer", "home"},
+    "index.html": {"nav", "home"},
     "ai/index.html": {"ai"},
     "download/thanks/index.html": {"thanks"},
-    "404.html": {"404", "bar"},
+    "404.html": {"404"},
 }
 # Every page (index.html) under a prefix must carry the placement. The
 # /compare/ hub is a matrix page, not a comparison, so only its children

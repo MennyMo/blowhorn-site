@@ -1,105 +1,44 @@
-{{- /* One footer for every page: a top band with the brand on the left and
-  the newsletter on the right, then one row of short titled link columns
-  (Compare spans two and lists in two columns; below 1080px Free tools and
-  Compare each take a full row), and a bottom bar with the
-  copyright, the "Status" pill and the trademark note. The header menus carry
-  the longer lists (roles, agent guides) with a line about each. The 404 page
-  keeps only the bottom bar. Off the home page the in-page links lead back to
-  the home page's sections. */ -}}
-{{- $home := cond .IsHome "" ("" | relURL) -}}
+{{- /* One footer for every page, reduced to three rows: the tagline with the
+  newsletter, one link row (Docs, Pricing, Brand, Trust Center, Status and the
+  cookie preferences), and a legal bar with the copyright and a short
+  trademark note. The header carries every other destination, so the footer
+  repeats none of them. The 404 page keeps only the legal bar, with the Status
+  link and the cookie preferences. */ -}}
 {{- $status := `<a class="status-link" href="https://layer5.statuspage.io" target="_blank" rel="noreferrer">Status <span class="pulse-icon" aria-hidden="true"></span></a>` -}}
+{{- $consent := partial "analytics-enabled.html" . -}}
 <footer class="site-footer">
       <div class="wrap">
         {{- if ne .Kind "404" }}
         <div class="footer-panel glass">
           <div class="footer-top">
-            <div class="footer-brand">
-              <a class="footer-logo" href="{{ "" | relURL }}" aria-label="Blowhorn home">
-                <img class="logo-on-light" src="{{ "assets/brand/logo/layer5-blowhorn-lockup.svg" | relURL }}" alt="Layer5 Blowhorn" width="220" height="60">
-                <img class="logo-on-dark" src="{{ "assets/brand/logo/layer5-blowhorn-lockup-on-dark.svg" | relURL }}" alt="" width="220" height="60">
-              </a>
-              <p class="footer-tagline">One message out, many ears in.</p>
-            </div>
+            <p class="footer-tagline">One message out, many ears in.</p>
             <div class="footer-news">
               {{ partial "newsletter.html" . }}
             </div>
           </div>
-          <nav class="footer-cols" aria-label="Footer">
-            <div class="footer-col">
-              <h2 class="footer-title">Product</h2>
-              <ul>
-                <li>{{ partial "download-button.html" (dict "kind" "text") }}</li>
-                <li><a href="{{ "pricing/" | relURL }}">Pricing</a></li>
-                <li><a href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">Browser extension</a></li>
-                <li><a href="{{ site.Params.github_repo }}/releases">Releases</a></li>
-                <li><a href="{{ $home }}#platforms">Platforms</a></li>
-                {{- with site.Data.integrations.matrix }}
-                <li><a href="{{ (strings.TrimPrefix "/" .path) | relURL }}">{{ .label }}</a></li>
-                {{- end }}
-              </ul>
-            </div>
-            <div class="footer-col">
-              <h2 class="footer-title">Resources</h2>
-              <ul>
-                <li><a href="{{ (site.GetPage "/resources").RelPermalink }}">Resources</a></li>
-                <li><a href="{{ (site.GetPage "/resources/videos").RelPermalink }}">Videos</a></li>
-                <li><a href="{{ (site.GetPage "/resources/articles").RelPermalink }}">Articles</a></li>
-                <li><a href="{{ (site.GetPage "/docs").RelPermalink }}">Docs</a></li>
-                <li><a href="{{ (site.GetPage "/docs/reference/support").RelPermalink }}">Get help</a></li>
-                <li><a href="{{ (site.GetPage "/field-manual").RelPermalink }}">Field Manual</a></li>
-                <li><a href="{{ (site.GetPage "/major").RelPermalink }}">Meet Major</a></li>
-                <li><a href="{{ (site.GetPage "/brand").RelPermalink }}">Brand</a></li>
-              </ul>
-            </div>
-            <div class="footer-col">
-              <h2 class="footer-title">Trust</h2>
-              <ul>
-                <li><a href="{{ (site.GetPage "/legal").RelPermalink }}">Trust Center</a></li>
-                <li><a href="{{ (site.GetPage "/legal/privacy").RelPermalink }}">Privacy</a></li>
-                <li><a href="{{ (site.GetPage "/legal/terms").RelPermalink }}">Terms</a></li>
-                <li><a href="mailto:security@blowhorn.ai">Security</a></li>
-              </ul>
-            </div>
-            <div class="footer-col">
-              <h2 class="footer-title">AI native</h2>
-              <ul>
-                <li><a href="{{ "ai/" | relURL }}">AI native</a></li>
-                <li><a href="{{ "ai/blowhorn-axi/" | relURL }}">blowhorn-axi</a></li>
-                <li><a href="{{ "ai/mcp/" | relURL }}">MCP server</a></li>
-                <li><a href="{{ (site.GetPage "/agents").RelPermalink }}">Agent guides</a></li>
-              </ul>
-            </div>
-            {{- with site.Data.tells.footer }}
-            <div class="footer-col footer-col-tools">
-              <h2 class="footer-title">{{ .title }}</h2>
-              <ul>
-                {{- range .links }}
-                <li><a href="{{ partial "tells-link.html" (dict "placement" "footer" "page" .page) }}">{{ .label }}</a></li>
-                {{- end }}
-              </ul>
-            </div>
-            {{- end }}
-            <div class="footer-col footer-col-wide">
-              <h2 class="footer-title">Compare</h2>
-              <ul>
-                <li><a href="{{ (site.GetPage "/compare").RelPermalink }}">How we compare</a></li>
-                {{- range where (site.GetPage "/compare").Pages.ByWeight "Params.featured" true }}
-                <li><a href="{{ .RelPermalink }}" aria-label="Blowhorn vs {{ .Params.competitor }}">{{ .LinkTitle }}</a></li>
-                {{- end }}
-                <li><a href="{{ "versus/" | relURL }}">All comparisons</a></li>
-              </ul>
-            </div>
+          <nav class="footer-links" aria-label="Footer">
+            <ul>
+              <li><a href="{{ (site.GetPage "/docs").RelPermalink }}">Docs</a></li>
+              <li><a href="{{ "pricing/" | relURL }}">Pricing</a></li>
+              <li><a href="{{ (site.GetPage "/brand").RelPermalink }}">Brand</a></li>
+              <li><a href="{{ (site.GetPage "/legal").RelPermalink }}">Trust Center</a></li>
+              <li>{{ $status | safeHTML }}</li>
+              {{- if $consent }}
+              <li><button type="button" class="footer-consent" data-consent-open aria-controls="consent">Cookie preferences</button></li>
+              {{- end }}
+            </ul>
           </nav>
         </div>
         {{- end }}
         <div class="footer-bottom caption">
           <span>&copy; 2026 {{ site.Params.copyright }}</span>
+          {{- if ne .Kind "404" }}
+          <span>All product names are trademarks of their respective owners. Blowhorn is not affiliated with or endorsed by them.</span>
+          {{- else }}
           {{ $status | safeHTML }}
-          {{- if partial "analytics-enabled.html" . }}
+          {{- if $consent }}
           <button type="button" class="footer-consent" data-consent-open aria-controls="consent">Cookie preferences</button>
           {{- end }}
-          {{- if ne .Kind "404" }}
-          <span class="footer-tm">LinkedIn, X, Reddit, Hacker News, Slack, Bluesky, GitHub, YouTube, Instagram, TikTok and Facebook are trademarks of their respective owners. Blowhorn is not affiliated with or endorsed by any of them.</span>
           {{- end }}
         </div>
       </div>

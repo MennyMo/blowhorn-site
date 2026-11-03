@@ -1,14 +1,13 @@
-{{- /* The site header: lockup, primary navigation and the Download button.
-  Five groups open a panel under the bar (Product, Solutions, Compare, Resources,
-  Trust); Am I a Bot? (the free Blowhorn Tells check, with a Free pill),
-  and Pricing are plain links. Below 1080px a Menu button opens the
-  same groups as a sheet, and Download leaves the bar to close the sheet as its
-  last item. Behaviour in assets/js/nav.js: click, Enter or Space
-  opens a group, Escape closes it, a mouse can also hover. Without the script,
-  hover and keyboard focus still open each panel, and on small screens the
-  groups are listed open. Off the home page the section links lead back to the
-  home page's sections. */ -}}
-{{- $home := cond .IsHome "" ("" | relURL) -}}
+{{- /* The site header: lockup (plain, not a link), primary navigation and the
+  Download button. Four groups open a panel under the bar (Product, Solutions,
+  Resources; Compare and Pricing are plain links), then Am I a Bot? (the free
+  Blowhorn Tells check) and Download. Each destination appears once here: the
+  footer carries only its own link row. Product is cards only, no intro copy
+  and no app mock. Below 1080px a Menu button opens the same groups as a sheet,
+  and Download leaves the bar to close the sheet as its last item. Behaviour in
+  assets/js/nav.js: click, Enter or Space opens a group, Escape closes it, a
+  mouse can also hover. Without the script, hover and keyboard focus still open
+  each panel, and on small screens the groups are listed open. */ -}}
 {{- $useCases := site.Data.use_cases.use_cases -}}
 {{- $solutions := site.Data.solutions.solutions -}}
 {{- $compare := site.GetPage "/compare" -}}
@@ -20,10 +19,10 @@
 {{- end -}}
 <header class="site-header">
       <div class="wrap">
-        <a class="brand" href="{{ "" | relURL }}" aria-label="Blowhorn home">
+        <span class="brand">
           <img class="logo-on-light" src="{{ "assets/brand/logo/blowhorn-lockup-horizontal.svg" | relURL }}" alt="Blowhorn" width="176" height="44">
           <img class="logo-on-dark" src="{{ "assets/brand/logo/blowhorn-lockup-horizontal-on-dark.svg" | relURL }}" alt="" width="176" height="44">
-        </a>
+        </span>
         <button type="button" class="mm-toggle" aria-expanded="false" aria-controls="site-menu" hidden>
           <span class="mm-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
           <span class="mm-toggle-text">Menu</span>
@@ -33,60 +32,28 @@
             <li class="mm-item">
               <button type="button" class="mm-trigger" aria-expanded="false" aria-controls="mm-product">Product<span class="mm-chev" aria-hidden="true"></span></button>
               <div class="mm-panel mm-panel-cards" id="mm-product">
-                <div class="mm-intro">
-                  <p class="mm-intro-title">Product</p>
-                  <p class="mm-intro-text">One product. Every way in.</p>
-                  <p class="mm-intro-sub">Not a shelf of products to buy one by one. One subscription, and every interface below is included: same queue, same profiles, same limits.</p>
-                  <p class="mm-intro-more"><a href="{{ "pricing/" | relURL }}">See the one plan</a></p>
-                </div>
-                <div class="mm-cards-wrap">
-                  <ul class="mm-cards">
-                    <li><a class="mm-card card-field" href="{{ "download/" | relURL }}">
-                      {{ partial "interface-art.html" "desktop" }}
-                      <span class="mm-card-title">Desktop app</span>
-                      <span class="mm-card-desc">The full console on your computer: queue, profiles, approvals</span>
-                      <span class="mm-card-arrow" aria-hidden="true"></span>
-                    </a></li>
-                    <li><a class="mm-card card-stamp" href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">
-                      {{ partial "interface-art.html" "extension" }}
-                      <span class="mm-card-title">Browser extension</span>
-                      <span class="mm-card-desc">Blowhorn inside your own browser, where the work happens</span>
-                      <span class="mm-card-arrow" aria-hidden="true"></span>
-                    </a></li>
-                    <li><a class="mm-card card-plain" href="https://cloud.blowhorn.ai">
-                      {{ partial "interface-art.html" "web" }}
-                      <span class="mm-card-title">Web app</span>
-                      <span class="mm-card-desc">Your queue from any browser, at cloud.blowhorn.ai</span>
-                      <span class="mm-card-arrow" aria-hidden="true"></span>
-                    </a></li>
-                    <li><a class="mm-card card-dispatch" href="{{ "ai/blowhorn-axi/" | relURL }}">
-                      {{ partial "interface-art.html" "cli" }}
-                      <span class="mm-card-title">Command line</span>
-                      <span class="mm-card-desc">Every action as a command: for you, scripts and agents</span>
-                      <span class="mm-card-arrow" aria-hidden="true"></span>
-                    </a></li>
-                    <li><a class="mm-card card-field" href="{{ "ai/mcp/" | relURL }}">
-                      {{ partial "interface-art.html" "mcp" }}
-                      <span class="mm-card-title">MCP server</span>
-                      <span class="mm-card-desc">Plug Blowhorn into Claude and other AI assistants</span>
-                      <span class="mm-card-arrow" aria-hidden="true"></span>
-                    </a></li>
-                    <li><a class="mm-card mm-card-plan card-stamp" href="{{ "pricing/" | relURL }}">
-                      <span class="mm-card-plan-mark" aria-hidden="true">1</span>
-                      <span class="mm-card-title">One subscription</span>
-                      <span class="mm-card-desc">Every way in, one subscription</span>
-                      <span class="mm-card-arrow" aria-hidden="true"></span>
-                    </a></li>
-                  </ul>
-                  <p class="mm-cards-foot">
-                    <a href="{{ printf "%s#platforms" $home }}">Platforms</a>
-                    {{- with site.Data.integrations.matrix }}
-                    <a href="{{ (strings.TrimPrefix "/" .path) | relURL }}">{{ .label }}</a>
-                    {{- end }}
-                    <a href="{{ printf "%s#how" $home }}">How you run it</a>
-                    <a href="{{ printf "%s/releases" site.Params.github_repo }}">Releases</a>
-                  </p>
-                </div>
+                <ul class="mm-cards">
+                  <li><a class="mm-card card-stamp" href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">
+                    <span class="mm-card-title">Browser extension</span>
+                    <span class="mm-card-desc">Blowhorn inside your own browser, where the work happens</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                  <li><a class="mm-card card-plain" href="https://cloud.blowhorn.ai">
+                    <span class="mm-card-title">Web app</span>
+                    <span class="mm-card-desc">Your queue from any browser, at cloud.blowhorn.ai</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                  <li><a class="mm-card card-dispatch" href="{{ "ai/blowhorn-axi/" | relURL }}">
+                    <span class="mm-card-title">Command line</span>
+                    <span class="mm-card-desc">Every action as a command: for you, scripts and agents</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                  <li><a class="mm-card card-field" href="{{ "ai/mcp/" | relURL }}">
+                    <span class="mm-card-title">MCP server</span>
+                    <span class="mm-card-desc">Plug Blowhorn into Claude and other AI assistants</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                </ul>
               </div>
             </li>
             <li class="mm-item">
@@ -119,14 +86,11 @@
                 <div class="mm-group">
                   <p class="mm-group-title"><a href="{{ "ai/" | relURL }}">AI native</a></p>
                   <ul class="mm-links">
-                    {{- partial "mm-link.html" (dict "href" ("ai/" | relURL) "title" "AI native" "desc" "Built so agents can run it safely") }}
-                    {{- partial "mm-link.html" (dict "href" ("ai/blowhorn-axi/" | relURL) "title" "blowhorn-axi" "desc" "The command line made for agents") }}
-                    {{- partial "mm-link.html" (dict "href" ("ai/mcp/" | relURL) "title" "MCP server" "desc" "Plug Blowhorn into any MCP client") }}
                     {{- partial "mm-link.html" (dict "href" $agents.RelPermalink "title" "Agentic AI marketing" "desc" "Let your AI agent run the launch") }}
                   </ul>
                 </div>
                 <div class="mm-group">
-                  <p class="mm-group-title"><a href="{{ $agents.RelPermalink }}">Works with</a></p>
+                  <p class="mm-group-title">Works with</p>
                   <ul class="mm-links mm-compact">
                     {{- range $agents.Pages.ByWeight }}
                     {{- partial "mm-link.html" (dict "href" .RelPermalink "title" .Params.tool) }}
@@ -135,29 +99,11 @@
                 </div>
               </div>
             </li>
-            <li class="mm-item">
-              <button type="button" class="mm-trigger" aria-expanded="false" aria-controls="mm-compare">Compare<span class="mm-chev" aria-hidden="true"></span></button>
-              <div class="mm-panel" id="mm-compare">
-                <div class="mm-intro">
-                  <p class="mm-intro-title"><a href="{{ $compare.RelPermalink }}">How Blowhorn compares</a></p>
-                  <p class="mm-intro-text">Side by side with schedulers, LinkedIn tools, advocacy suites and AI agents. Where they win too.</p>
-                  <p class="mm-intro-more"><a href="{{ "versus/" | relURL }}">All comparisons</a></p>
-                </div>
-                <ul class="mm-links mm-cols-3 mm-compact">
-                  {{- range where $compare.Pages.ByWeight "Params.featured" true }}
-                  {{- partial "mm-link.html" (dict "href" .RelPermalink "title" .LinkTitle) }}
-                  {{- end }}
-                </ul>
-              </div>
-            </li>
+            <li class="mm-item"><a class="mm-top" href="{{ $compare.RelPermalink }}">Compare</a></li>
             <li class="mm-item">
               <button type="button" class="mm-trigger" aria-expanded="false" aria-controls="mm-resources">Resources<span class="mm-chev" aria-hidden="true"></span></button>
-              <div class="mm-panel" id="mm-resources">
-                <div class="mm-intro">
-                  <p class="mm-intro-title"><a href="{{ (site.GetPage "/resources").RelPermalink }}">Resources</a></p>
-                  <p class="mm-intro-text">Guides, answers and the story behind the horn.</p>
-                </div>
-                <ul class="mm-links mm-cols-2">
+              <div class="mm-panel mm-panel-links" id="mm-resources">
+                <ul class="mm-links mm-cols-3">
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/docs").RelPermalink "title" "Docs" "desc" "Set up, how-to guides and reference") }}
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/resources/videos").RelPermalink "title" "Videos" "desc" "Short films and walkthroughs") }}
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/resources/articles").RelPermalink "title" "Articles" "desc" "Product intelligence and tips") }}
@@ -165,28 +111,11 @@
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/docs/reference/support").RelPermalink "title" "Get help" "desc" "Support and troubleshooting") }}
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/major").RelPermalink "title" "Meet Major" "desc" "Our mascot and his troops") }}
                   {{- partial "mm-link.html" (dict "href" (site.GetPage "/brand").RelPermalink "title" "Brand" "desc" "Logo, colors and the brand kit") }}
-                  {{- partial "mm-link.html" (dict "href" $tellsURL "title" $tells.nav.label "desc" "Free check: what sites can see about your browser") }}
                 </ul>
               </div>
             </li>
-            <li class="mm-item">
-              <button type="button" class="mm-trigger" aria-expanded="false" aria-controls="mm-trust">Trust<span class="mm-chev" aria-hidden="true"></span></button>
-              <div class="mm-panel" id="mm-trust">
-                <div class="mm-intro">
-                  <p class="mm-intro-title">Trust</p>
-                  <p class="mm-intro-text">Every action runs on your own computer. Here is how we handle the rest.</p>
-                </div>
-                <ul class="mm-links mm-cols-2">
-                  {{- partial "mm-link.html" (dict "href" (site.GetPage "/legal").RelPermalink "title" "Trust Center" "desc" "Your data, sessions and accounts") }}
-                  {{- partial "mm-link.html" (dict "href" (printf "%s#trust" $home) "title" "Yours to keep" "desc" "Why your accounts stay yours") }}
-                  {{- partial "mm-link.html" (dict "href" (site.GetPage "/legal/privacy").RelPermalink "title" "Privacy" "desc" "What we collect and why") }}
-                  {{- partial "mm-link.html" (dict "href" (site.GetPage "/legal/terms").RelPermalink "title" "Terms" "desc" "The rules for using Blowhorn") }}
-                  {{- partial "mm-link.html" (dict "href" "mailto:security@blowhorn.ai" "title" "Security" "desc" "Report a security issue") }}
-                </ul>
-              </div>
-            </li>
-            <li class="mm-item"><a class="mm-top mm-top-tells" href="{{ $tellsURL }}"><span class="mm-top-label">{{ $tells.nav.label }} <span class="mm-pill">{{ $tells.nav.pill }}</span></span></a></li>
             <li class="mm-item"><a class="mm-top" href="{{ "pricing/" | relURL }}">Pricing</a></li>
+            <li class="mm-item"><a class="mm-top" href="{{ $tellsURL }}">{{ $tells.nav.label }}</a></li>
             <li class="mm-item mm-item-download">{{ partial "download-button.html" (dict "kind" "secondary" "class" "mm-download") }}</li>
           </ul>
         </nav>
