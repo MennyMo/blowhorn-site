@@ -13,15 +13,23 @@
   },
   "placements": [
     "nav",
+    "bar",
     "home",
+    "footer",
     "compare",
     "ai",
     "thanks",
     "docs",
     "404"
   ],
+  "bar": {
+    "storage_key": "bh-tells-bar-v1",
+    "text": "Free tool: find out what websites can tell about your browser. Spoiler: plenty.",
+    "link": "Am I a Bot?"
+  },
   "nav": {
-    "label": "Am I a Bot?"
+    "label": "Am I a Bot?",
+    "pill": "Free"
   },
   "home": {
     "eyebrow": "Free tool",
@@ -34,6 +42,23 @@
     "art": "assets/brand/cast/sleeper-cell-bot-radar.webp",
     "art_640": "assets/brand/cast/sleeper-cell-bot-radar-640.webp",
     "art_alt": "Sleeper Cell, the unit's privacy scout, spotting a bot on the radar"
+  },
+  "footer": {
+    "title": "Free tools",
+    "links": [
+      {
+        "page": "home",
+        "label": "Am I a Bot?"
+      },
+      {
+        "page": "checks",
+        "label": "What each check means"
+      },
+      {
+        "page": "agents",
+        "label": "For AI agents and scripts"
+      }
+    ]
   },
   "callouts": {
     "compare": {

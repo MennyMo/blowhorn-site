@@ -1,0 +1,19 @@
+{{- /* The site-wide announcement bar for Blowhorn Tells, the free Am I a Bot?
+  check: one slim line above the header on every public page. Copy and the
+  localStorage key are in data/tells.json. It scrolls away with the page, so
+  the sticky header and the cookie notice at the bottom never overlap it.
+  tells-bar-head.html hides it before first paint once dismissed; the close
+  button stays hidden until assets/js/tells-bar.js can remember the choice. */ -}}
+{{- if partial "tells-show.html" . }}
+{{- $t := site.Data.tells.bar }}
+    <aside class="tells-bar" aria-label="Announcement" data-tells-bar data-key="{{ $t.storage_key }}">
+      <div class="wrap tells-bar-inner">
+        <p class="tells-bar-text">{{ $t.text }} <a class="tells-bar-link" href="{{ partial "tells-link.html" (dict "placement" "bar") }}">{{ $t.link }}<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"></path></svg></a></p>
+        <button type="button" class="tells-bar-close" aria-label="Dismiss" hidden>
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+      </div>
+    </aside>
+    {{- $js := resources.Get "js/tells-bar.js" | minify | fingerprint }}
+    <script src="{{ $js.RelPermalink }}" defer></script>
+{{- end }}

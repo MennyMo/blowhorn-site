@@ -16,6 +16,7 @@
     {{- if eq hugo.Environment "internal" }}
     {{- partial "header-internal.html" . }}
     {{- else }}
+    {{- partial "tells-bar.html" . }}
     {{- partial "header.html" . }}
     {{- end }}
     <div class="wrap docs-wrap">

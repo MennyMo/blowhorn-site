@@ -80,7 +80,7 @@ Every CI step that runs repository logic is a make target, and the workflow call
 | `check-install-cta` | no page (docs excepted) has more than one teal primary button in its main content, and no link or button reads an old install label ("Download free", "Get Blowhorn", "Enlist a computer"); the home page is exempt until its rebuild (#418) | `site-check` |
 | `check-feeds` | the Resources RSS feeds validate | `site-check` |
 | `check-brand-kits` | the Brand page links only kit zips the build publishes, at their real sizes | `site-check` |
-| `check-tells` | every Blowhorn Tells placement in `data/tells.json` is still on its page (header, home band, compare, `/ai/`, thanks, docs, 404), and every tagged Tells link carries the right UTM parameters ([docs/tells.md](docs/tells.md)) | `site-check` |
+| `check-tells` | every Blowhorn Tells placement in `data/tells.json` is still on its page (header, bar, footer, home band, compare, `/ai/`, thanks, docs, 404), and every tagged Tells link carries the right UTM parameters ([docs/tells.md](docs/tells.md)) | `site-check` |
 | `dmg-resolve`, `dmg-download`, `dmg-package`, `dmg-verify`, `dmg-release` | the five steps of publishing a DMG release, each reading its inputs from the environment ([docs/distribution.md](docs/distribution.md#local-checks)) | `publish-dmg.yml` |
 | `dmg-check DMG=...` | sanity-check a disk image before publishing | `dmg-package` runs the same script (`check-dmg.sh`) |
 | `dmg-sync-docs` | after a public release, start `sync-docs.yml` at the product tag `desktop-<version>` | `publish-dmg.yml` |

@@ -491,20 +491,24 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
   .mm-item.is-open > .mm-panel { animation: mm-in 160ms ease-out; }
   @keyframes mm-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 }
+.mm-intro-title,
 .mm-group-title {
   margin: 0;
-  /* A section label: the shared label style (small uppercase). */
-  font-family: var(--font-label, var(--font-mono));
-  font-optical-sizing: auto;
+  font-family: var(--font-mono);
   font-size: 11px;
   line-height: 16px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-muted);
 }
+.mm-intro-title a,
 .mm-group-title a { color: inherit; }
+.mm-intro-title a:hover,
 .mm-group-title a:hover { color: var(--link); }
+.mm-intro-text { margin: var(--space-3) 0 0; font-family: var(--font-display); font-weight: 700; font-size: 18px; line-height: 24px; color: var(--ink-wordmark); max-width: 22rem; }
+.mm-intro-more { margin: var(--space-4) 0 0; font-size: 14px; font-weight: 600; }
+.mm-intro-more a::after { content: " \2192"; }
 .mm-links { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-1) var(--space-4); align-content: start; }
 .mm-group .mm-links { margin-top: var(--space-3); }
 .mm-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -523,23 +527,23 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 .mm-link:hover .mm-link-title { color: var(--link); }
 .mm-link-desc { font-size: 13px; line-height: 18px; color: var(--ink-muted); }
 .mm-compact .mm-link { padding-block: 6px; }
+.mm-intro-sub { margin: var(--space-3) 0 0; font-size: 14px; line-height: 20px; color: var(--ink-muted); max-width: 22rem; }
 
-/* Product panel as a card grid: the ways in to one product, cards only (no
-   intro copy and no app mock; the home page carries the mock). Link-only
-   panels (Resources) take one full-width row of links. */
-.mm-panel-cards { grid-template-columns: minmax(0, 1fr); }
-.mm-panel-links { grid-template-columns: minmax(0, 1fr); }
-.mm-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+/* Product panel as a card grid: the ways in to one product, each with its
+   own small animated illustration (interface-art.html). The sixth card is
+   the point of the whole panel: one subscription, not six products. */
+.mm-panel-cards { grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); }
+.mm-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
 .mm-card {
   position: relative; display: grid; gap: var(--space-2); align-content: start;
   padding: var(--space-4); border-radius: var(--radius-lg); color: var(--ink);
 }
-.mm-card-title { grid-row: 1; grid-column: 1; font-size: 15px; line-height: 21px; font-weight: 700; padding-right: var(--space-6); }
+.mm-card-title { grid-row: 2; grid-column: 1; font-size: 15px; line-height: 21px; font-weight: 700; padding-right: var(--space-6); }
 .mm-card:hover .mm-card-title { color: var(--link); }
-.mm-card-desc { grid-row: 2; grid-column: 1; font-size: 13px; line-height: 18px; color: var(--ink-muted); }
-/* The arrow sits at the card's right edge, beside the title and description. */
+.mm-card-desc { font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+/* The arrow rides the title's row (the title keeps room for it), never the art. */
 .mm-card-arrow {
-  grid-row: 1 / span 2; grid-column: 2; justify-self: end; align-self: center; width: 22px; height: 22px; border-radius: var(--radius-pill);
+  grid-row: 2; grid-column: 1; justify-self: end; align-self: center; width: 22px; height: 22px; border-radius: var(--radius-pill);
   background-color: var(--card-chip, var(--surface-tint)); background-repeat: no-repeat; background-position: center; background-size: 12px 12px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%2300756A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   transition: background-color 160ms ease, transform 160ms ease;
@@ -560,10 +564,18 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
   .mm-card-plan-mark, .ways-card-plan .mm-card-plan-mark { border-color: var(--cream); }
   .mm-card-arrow { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%2300D3A9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
 }
+.mm-cards-foot { margin: var(--space-4) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); font-size: 13px; font-weight: 600; }
+.mm-cards-foot a { color: var(--ink-muted); }
+.mm-cards-foot a:hover { color: var(--link); }
 @media (max-width: 1079px) {
   .mm-cards { grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
-  .mm-card { padding: var(--space-3); }
+  .mm-card { grid-template-columns: auto minmax(0, 1fr); column-gap: var(--space-3); align-items: center; padding: var(--space-3); }
+  .mm-card .iface-art { grid-row: span 2; width: 92px; }
+  .mm-card-title { grid-row: 1; grid-column: 2; }
+  .mm-card-desc { grid-column: 2; }
   .mm-card-arrow { display: none; }
+  .mm-intro-sub { display: none; }
+  .mm-cards-foot { gap: var(--space-3) var(--space-4); }
 }
 @media (min-width: 600px) and (max-width: 1079px) {
   .mm-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -769,7 +781,7 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
   @keyframes ia-travel { 0% { left: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { left: calc(100% - 6px); opacity: 0; } }
 }
 
-/* Narrow art (the home page ways-in cards): the console keeps its
+/* The Product menu's narrow rows draw the art at 92px: the console keeps its
    rail, the browser its lights, active tab, omnibox and pin, the MCP diagram
    its three named chips. */
 .iface-art { container-type: inline-size; }
@@ -868,6 +880,7 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
     animation: none !important;
   }
   .site-header:not(.is-enhanced) .mm-panel { display: grid; }
+  .mm-intro-text { display: none; }
   .mm-cols-2 { grid-template-columns: minmax(0, 1fr); }
   .mm-cols-3,
   .mm-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1332,9 +1345,9 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 }
 
 /* ---------- Footer ----------
-   A glass panel: a top band (the tagline left, the newsletter right), one row
-   of links, then the legal bar. The panel is a glass surface (see "Liquid
-   glass" below). */
+   A glass panel: a top band (brand left, newsletter right), then one row of
+   short titled columns with Compare spanning two, then a bottom bar. The
+   panel is a glass surface (see "Liquid glass" below). */
 .site-footer {
   padding-block: var(--space-12) var(--space-8);
   color: var(--ink-muted);
@@ -1351,8 +1364,10 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   padding-bottom: var(--space-8);
   border-bottom: var(--stroke-hairline) solid var(--line);
 }
+.footer-logo { display: inline-block; }
+.footer-logo img { width: 200px; height: auto; }
 .footer-tagline {
-  margin: 0;
+  margin-top: var(--space-3);
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 18px;
@@ -1361,17 +1376,31 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   color: var(--ink-wordmark);
 }
 .footer-news .newsletter { margin-top: 0; max-width: none; }
-.footer-links ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-6);
+.footer-cols {
+  display: grid;
+  gap: var(--space-8) var(--space-6);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.footer-links a,
-.footer-links .footer-consent {
+.footer-col-wide { grid-column: 1 / -1; }
+.footer-col-wide ul { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(6, auto); grid-auto-flow: column; }
+/* Free tools (data/tells.json footer) takes its own row below 1080px, its
+   links on Compare's columns, so no column is left alone in a half-empty row. */
+.footer-col-tools { grid-column: 1 / -1; }
+.footer-col-tools ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 399px) { .footer-col-tools ul { grid-template-columns: minmax(0, 1fr); } }
+.footer-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.footer-col ul { margin-top: var(--space-3); display: grid; row-gap: var(--space-1); column-gap: var(--space-6); align-content: start; }
+.footer-col a {
+  display: inline-block;
+  padding-block: var(--space-1);
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
@@ -1379,8 +1408,7 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   text-decoration: none;
   white-space: nowrap;
 }
-.footer-links a:hover,
-.footer-links .footer-consent:hover { color: var(--link); }
+.footer-col a:hover { color: var(--link); }
 .footer-bottom {
   margin-top: var(--space-6);
   padding-inline: var(--space-2);
@@ -1389,11 +1417,25 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   align-items: center;
   gap: var(--space-2) var(--space-6);
 }
+.footer-tm { flex-basis: 100%; }
+@media (min-width: 720px) {
+  .footer-cols { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .footer-col-wide ul { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, auto); }
+  .footer-col-tools ul { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
 @media (min-width: 960px) {
   .footer-top { grid-template-columns: minmax(240px, 1fr) minmax(0, 26rem); align-items: center; gap: var(--space-8); }
 }
 @media (min-width: 1080px) {
   .footer-panel { padding: var(--space-12); gap: var(--space-8); }
+  /* One row, each column as wide as its longest link and the slack spread
+     between them: equal tracks cut "For AI agents and scripts" (and
+     "Chrome extension") short of their nowrap width. */
+  .footer-cols { grid-template-columns: repeat(6, max-content); justify-content: space-between; }
+  .footer-col-wide,
+  .footer-col-tools { grid-column: auto; }
+  .footer-col-tools ul { grid-template-columns: max-content; }
+  .footer-col-wide ul { grid-template-columns: repeat(2, max-content); grid-template-rows: repeat(6, auto); }
 }
 /* Service status: ported from a shared footer pattern (
    src/sections/General/Footer/footer.style.js, .status-link and .pulse-icon). */
@@ -3361,11 +3403,28 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
 
 
 /* ---------- Blowhorn Tells, the free Am I a Bot? check (data/tells.json) ----------
-   One look for every place the site points at Tells: the header item, the home
-   page band, the callout on compare, /ai/ and /agents/, and the card on
-   /download/thanks/. Sleeper Cell's art keeps its black ground in a rounded
-   frame, like the cast pages. The docs card lives with the docs layout
-   (assets/scss/_styles_project.scss). */
+   One look for every place the site points at Tells: a slim bar above the
+   header, a Free pill on the header item, the home page band, the callout on
+   compare, /ai/ and /agents/, and the card on /download/thanks/. Sleeper Cell's
+   art keeps its black ground in a rounded frame, like the cast pages. The docs
+   card lives with the docs layout (assets/scss/_styles_project.scss). */
+.tells-bar {
+  background: var(--surface-tint);
+  color: var(--ink);
+  box-shadow: inset 0 -1px 0 0 var(--glass-edge);
+}
+/* Dismissed: tells-bar-head.html sets this before first paint. */
+html[data-tells-bar="off"] .tells-bar { display: none; }
+.tells-bar-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding-block: var(--space-2);
+  padding-right: calc(var(--gutter) + var(--space-8));
+}
+.tells-bar-text { margin: 0; font-size: 13px; line-height: 18px; font-weight: 500; }
+.tells-bar-link,
 .tells-docs-card-link a {
   display: inline-flex;
   align-items: center;
@@ -3377,11 +3436,54 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
   text-decoration-thickness: var(--stroke-hairline);
   text-underline-offset: 3px;
 }
+.tells-bar-link:hover,
 .tells-docs-card-link a:hover { color: var(--link-hover); }
+.tells-bar-link svg,
 .tells-docs-card-link svg { flex: none; fill: none; stroke: currentColor; stroke-width: var(--stroke-icon); stroke-linecap: round; stroke-linejoin: round; }
 @media (prefers-reduced-motion: no-preference) {
+  .tells-bar-link svg,
   .tells-docs-card-link svg { transition: transform 160ms ease; }
+  .tells-bar-link:hover svg,
   .tells-docs-card-link a:hover svg { transform: translateX(2px); }
+}
+.tells-bar-close {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--gutter) - var(--space-2));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.tells-bar-close[hidden] { display: none; }
+.tells-bar-close:hover { background: var(--glass-sheen); color: var(--ink); }
+.tells-bar-close svg { fill: none; stroke: currentColor; stroke-width: var(--stroke-icon); stroke-linecap: round; }
+@media (min-width: 720px) {
+  .tells-bar-inner { justify-content: center; padding-left: calc(var(--gutter) + var(--space-8)); text-align: center; }
+}
+
+/* Header item: the label with a small Free pill. */
+.mm-top-label { display: inline-flex; align-items: center; gap: 6px; }
+.mm-pill {
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--teal-deep);
+  color: var(--white);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+@media (prefers-color-scheme: dark) {
+  .mm-pill { background: var(--teal-bright); color: var(--near-black); }
 }
 
 /* Home band (layouts/_partials/home/tells.html) and the callout
