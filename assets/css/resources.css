@@ -257,7 +257,7 @@ a.tag-chip {
   border-radius: var(--radius-sm);
   background: var(--surface-raised);
   color: var(--ink);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .video-card-body {
@@ -302,7 +302,7 @@ a.tag-chip {
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
   color: var(--ink-muted);
-  font-size: 13px;
+  font-size: 12px;
   text-decoration: none;
 }
 
@@ -377,7 +377,7 @@ a.tag-chip {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: var(--video-matte);
+  background: #000;
 }
 
 .video-dialog-bar {

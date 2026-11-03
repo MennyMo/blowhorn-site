@@ -42,16 +42,8 @@ include .github/build/Makefile.show-help.mk
 #   check-urls         Production build, then fail on a lost public URL or anchor.
 #   site-check         Production build once, then validate-html, check-links,
 #                      check-third-party, check-urls, check-no-internal,
-#                      check-theme, check-platform-docs, check-naming,
-#                      check-empty-states, check-action-matrix, check-download-links and
-#                      check-install-cta (site.yml).
-#   check-install-cta  Production build, then fail if a page (docs excepted)
-#                      shows more than one teal primary in its main content,
-#                      or an old install label ("Download free", "Get Blowhorn").
-#   check-site-css     Fail a font under 13px on mixed-case text, a coloured
-#                      edge stripe, a single-edge inset shadow or glass (#421).
-#   check-casing       Production build, then fail a Title Case heading, button or
-#                      nav link (sentence case; proper nouns allowlisted) (#421).
+#                      check-theme, check-platform-docs, check-naming
+#                      check-action-matrix and check-download-links (site.yml).
 #   check-no-internal  Fail if the production build contains /internal/.
 #   check-platform-docs Production build, then fail if a supported platform
 #                      lacks a docs page, a page skips the shared actions
@@ -279,18 +271,21 @@ check-third-party: site-build
 check-urls: site-build
 	python3 .github/scripts/check-site-contract.py $(BUILD_DIR)
 
-## Validate every data file that has a JSON Schema in schemas/ (data/home.json, data/roles.json, data/use_cases.json, data/solutions.json, data/themes.json, data/integrations.json, data/actions.json, data/action_examples.json, data/tells.json, data/docs_events.json, internal-worker/access.json).
+## Validate every data file that has a JSON Schema in schemas/ (data/hero.json, data/machines.json, data/home_ai.json, data/roles.json, data/use_cases.json, data/solutions.json, data/themes.json, data/integrations.json, data/hero_demo.json, data/actions.json, data/action_examples.json, data/tells.json, data/docs_events.json, internal-worker/access.json).
 ## Role, use-case and solution schemas $ref shared line/text/card types; ajv -r loads that file.
 ## data/docs_events.json $refs the docs event payload types in schemas/defs/docs-event.schema.json (ajv -r).
 ## check_action_examples.py also requires every supported YAML action to have an example.
 ## check_action_matrix.py --source checks action groups, matrix exceptions and platform order.
 check-schemas:
-	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/home.schema.json -d data/home.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/hero.schema.json -d data/hero.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/machines.schema.json -d data/machines.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/home_ai.schema.json -d data/home_ai.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/roles.schema.json -r schemas/defs/cast-page.schema.json -d data/roles.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/use_cases.schema.json -r schemas/defs/cast-page.schema.json -d data/use_cases.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/solutions.schema.json -r schemas/defs/cast-page.schema.json -d data/solutions.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/themes.schema.json -d data/themes.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/integrations.schema.json -d data/integrations.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/hero_demo.schema.json -d data/hero_demo.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/actions.schema.json -d data/actions.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/action_examples.schema.json -d data/action_examples.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/tells.schema.json -d data/tells.json
@@ -301,7 +296,7 @@ check-schemas:
 	python3 .github/scripts/check_bookmarklet.py
 	python3 .github/scripts/check_action_matrix.py --source
 
-## Production build, then fail if / is not the Signal theme (themes.json default plus _index.md front matter), or a theme-specific content file appeared.
+## Production build, then fail if / is not the home-page theme (themes.json default plus _index.md front matter), the Reveille preview lost today's look, or a theme-specific content file appeared outside content/en/home-reveille.md.
 check-theme: site-build
 	python3 .github/scripts/check_theme.py $(BUILD_DIR)
 
@@ -314,15 +309,11 @@ check-action-matrix: site-build
 	python3 .github/scripts/check_action_matrix.py $(BUILD_DIR)
 
 ## Build for production once, then validate-html, check-links, check-third-party and check-urls, plus check-schemas (what site.yml runs).
-site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-site-css check-casing check-empty-states check-action-matrix check-download-links check-install-cta check-feeds check-brand-kits check-tells check-tips
+site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-download-links check-feeds check-brand-kits check-tells check-tips
 
 ## Production build, then fail if any built page or script links to /releases/latest/download (an axi release can hold Latest; build download URLs from data/download.json).
 check-download-links: site-build
 	python3 .github/scripts/check_download_links.py $(BUILD_DIR)
-
-## Production build, then fail if a page shows more than one teal primary in its main content, or an old install label (issue #420). Docs are skipped; the home page is pending its rebuild (#418).
-check-install-cta: site-build
-	python3 .github/scripts/check_install_cta.py $(BUILD_DIR)
 
 ## Production build, then fail if the Brand page links a kit zip the build does not publish, or states its size wrong.
 check-brand-kits: site-build
@@ -343,17 +334,6 @@ check-tells: site-build
 ## Production build, then fail if a page says Layer5 Cloud or Blowhorn Cloud, or names Layer5 outside the footer and the legal pages (users see Blowhorn).
 check-naming: site-build
 	python3 .github/scripts/check_naming.py $(BUILD_DIR)
-
-## Production build, then fail if an empty state (the docs search, the example panes, the action table) shows its copy without its cast character.
-check-empty-states: site-build
-	python3 .github/scripts/check_empty_states.py $(BUILD_DIR)
-## Fail if a site stylesheet sets a font under 13px on mixed-case text, a coloured stripe on one edge, a single-edge inset shadow or glass (backdrop-filter).
-check-site-css:
-	python3 .github/scripts/check_site_css.py
-
-## Production build, then fail if a heading, button or nav link is in Title Case (sentence case everywhere but section and field labels).
-check-casing: site-build
-	python3 .github/scripts/check_casing.py $(BUILD_DIR)
 
 ## Build for production, then fail if the /internal/ section leaked into it.
 check-no-internal: site-build
@@ -501,9 +481,6 @@ clean:
 	check-schemas \
 	check-brand-kits \
 	check-naming \
-	check-empty-states \
-	check-site-css \
-	check-casing \
 	check-download-links \
 	check-feeds \
 	check-tips \

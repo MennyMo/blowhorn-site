@@ -31,19 +31,21 @@ The marketing and legal pages do not use Docsy's templates: they render through
 
 Themes are schema-driven (`data/themes.json`, `schemas/themes.schema.json`). A
 theme is tokens, CSS and layout partials over the same data and content.
-The site is one theme, Signal: do not add a per-theme content file
-(`check_theme.py` fails those). Site default is Signal (light, dark follows
-the OS). The home page is `layouts/_partials/home/signal.html` over
-`data/home.json` (schema `schemas/home.schema.json`): one fixed h1, the app mock
-(`home/app-mock.html`), the logo ticker, How it works, AI, Trust, social proof
-and the closing. The cast plan puts one character per section (Major in the
-hero, Sleeper Cell, Robo-Recruit, Trench Trooper). The network stat comes from
-`data/integrations.json` through `platform-counts.html`, never typed in. The
-home's cards are named by hand, with the card system in `assets/css/cards.css`.
+Reveille copy is approved; do not add a per-theme content file (`check_theme.py`
+fails those except `content/en/home-reveille.md`). Site default is Reveille
+(today's look: light, dark follows the OS). The public home page sets front
+matter `theme: signal`. Docs, legal, pricing and download stay Reveille.
+`?theme=` swaps the token layer only, not homepage layout. Homepage variants
+live in `layouts/_partials/home/`. Platform counts and the platforms section
+treatments come from `data/integrations.json` plus `data/platforms/*.yaml`;
+the By role treatment and the "Who it's for" cards list every role in
+`data/roles.json` by weight, and each role's `platforms` decides what it
+highlights, so a new role appears on the home page without another edit.
 The action vocabulary is `data/actions.json`; YAML rows use those ids.
 Examples live in `data/action_examples.json` ([docs/action-examples.md](docs/action-examples.md)).
 Platform docs pages render actions through `{{< supported-actions "id" >}}` (`layouts/_partials/supported-actions.html`); `make check-platform-docs` fails a missing page, a skipped table, or a hand-written action list.
 The central action matrix (`/integrations/actions/`, `layouts/action-matrix.html`) and the docs all-actions table (`{{< all-actions >}}`, `layouts/_partials/action-table.html`) both render from `layouts/_partials/action-matrix.html`: rows are `data/actions.json` (grouped by its `groups`), columns are `data/integrations.json` platforms, page copy is `data/integrations.json` `matrix`. Status is shown by exception: no "Supported" label or check anywhere; a supported cell is a neutral dot, a coming-soon platform gets one clock on its logo. `make check-action-matrix` fails drift or a dead `#action-<id>` link.
+The Signal hero demo is `data/hero_demo.json`.
 Every link to Blowhorn Tells (the free "Am I a Bot?" check) is built by
 `layouts/_partials/tells-link.html` from `data/tells.json`, with UTM tags and a
 placement; never hard-code a Tells URL in a template. `make check-tells` fails a
@@ -94,10 +96,6 @@ regenerate them. Claims on every page come from the product repository's
   repository's brand build (`tools/scripts/brand/build-brand-kit.py`, output in
   `marketing/brand/kit/`); copy them over unchanged, then set both sizes under `kits:` in
   `content/en/brand/_index.md` (`make check-brand-kits` fails a stale one).
-- **One install call per view.** Every install link says "Download" and comes from
-  `layouts/_partials/download-button.html`; a view has one teal primary (`.button-primary`) in
-  its main content. `make check-install-cta` (in `make check`) enforces it, skipping docs and
-  the home page until its rebuild (#418). See DESIGN.md "Install call to action".
 - **The product name is Blowhorn.** "Outbox" is the product's old internal name; never put
   it on a public page.
 - **Browser wording depends on the page.** Marketing and value pages (home, `/for`, `/ai`,
@@ -115,10 +113,6 @@ regenerate them. Claims on every page come from the product repository's
   stay as they are. `check_naming.py` fails a "for now" requirement and "browser profile" or
   "browser extension" in the docs. Docs copy is synced from the product repository's `docs/`:
   change it there, then sync.
-- **Every empty state has a cast character.** Render it through
-  `layouts/_partials/cast-empty-state.html` (the docs search's no-results template, the action
-  example panes and the action table all do); `params.castArt` in `hugo.toml` switches the art off.
-  `make check-empty-states` fails copy shown without its character.
 - **The product repository is private.** Never link its files, issues or pull requests
   from a page; every reader would get a 404.
 - **Every Hugo run cleans its destination.** Each `hugo` invocation in `package.json`

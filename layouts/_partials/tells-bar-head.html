@@ -1,0 +1,13 @@
+{{- /* Hides the Tells announcement bar before first paint once a reader has
+  dismissed it (assets/js/tells-bar.js stores the choice), so a returning
+  reader never sees it flash in and the header never jumps. Inline and in
+  the head on purpose: a deferred script would run after the first paint. */ -}}
+{{- if partial "tells-show.html" . }}
+    <script>
+      (function () {
+        try {
+          if (window.localStorage.getItem({{ site.Data.tells.bar.storage_key }})) document.documentElement.setAttribute('data-tells-bar', 'off');
+        } catch (e) { /* storage blocked: the bar shows, and its close button still hides it for this page */ }
+      })();
+    </script>
+{{- end }}

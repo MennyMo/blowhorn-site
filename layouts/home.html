@@ -1,9 +1,16 @@
 {{- /* blowhorn.ai home page. Anchors (#platforms, #how, #trust, #download,
   #main) are linked from the other pages, the README and outside this repo:
-  keep them. check-site-contract.py fails the build without them. The home
-  page always renders the Signal theme (data/themes.json). */ -}}
+  keep them. check-site-contract.py fails the build without them. Which
+  homepage variant renders is the page's theme (front matter theme:, else
+  data/themes.json default) and that theme's `home` field. The public home
+  page sets theme: signal. Reveille is the site default, so docs, legal,
+  pricing and download stay Reveille. /home-reveille/ uses layout:
+  home-reveille. ?theme= swaps tokens only, not this layout. */ -}}
 {{ define "head" }}
     {{- partial "home-head.html" . }}
+    {{- if or (eq hugo.Environment "development") (eq hugo.Environment "dev") }}
+    {{- partial "hero-switch-css.html" . }}
+    {{- end }}
 {{- end }}
 
 {{ define "sprite" }}
@@ -11,5 +18,26 @@
 {{- end }}
 
 {{ define "main" }}
-    {{ partial "home/signal.html" . }}
+    {{- $theme := partial "theme.html" . -}}
+    {{- if eq $theme.home "reveille" -}}
+      {{ partial "home/reveille.html" . }}
+    {{- else -}}
+      {{ partial "home/signal.html" . }}
+    {{- end -}}
+    {{- if or (eq hugo.Environment "development") (eq hugo.Environment "dev") }}
+    {{- partial "hero-switch.html" . }}
+    {{- end }}
 {{- end }}
+
+{{ define "scripts" }}
+    {{- $theme := partial "theme.html" . -}}
+    {{- if eq $theme.home "reveille" -}}
+    {{- $army := resources.Get "js/army.js" | minify | fingerprint }}
+    <script src="{{ $army.RelPermalink }}" defer></script>
+    {{- else -}}
+    {{- $signal := slice (resources.Get "js/home-signal.js") (resources.Get "js/card-deal.js") (resources.Get "js/action-filter.js") (resources.Get "js/machines.js") (resources.Get "js/hero-video.js") | resources.Concat "js/home-signal.js" | minify | fingerprint }}
+    <script src="{{ $signal.RelPermalink }}" defer></script>
+    {{- end -}}
+    {{- $cycle := resources.Get "js/hero-cycle.js" | minify | fingerprint }}
+    <script src="{{ $cycle.RelPermalink }}" defer></script>
+{{ end }}

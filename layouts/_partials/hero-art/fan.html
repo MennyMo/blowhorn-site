@@ -1,0 +1,7 @@
+{{- /* Hero art "fan", one of the arts a data/hero.json variant can name: the
+  one-to-many fan the hero led with before "Not a bot". While it is the hero, the
+  Platforms section hides its own copy of the fan (".platforms-fan" in site.css). */ -}}
+<figure class="hero-art" data-hero-art-only="fan">
+  {{ partial "fan.html" (dict "titleId" "hero-fan-title") }}
+  <figcaption class="visually-hidden">One message fans out to every platform, each shown with its own logo: LinkedIn, X, Reddit, Slack, Bluesky, Hacker News and GitHub.</figcaption>
+</figure>

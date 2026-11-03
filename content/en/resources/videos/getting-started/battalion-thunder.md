@@ -1,6 +1,6 @@
 ---
-title: Battalion thunder
-linkTitle: Battalion thunder
+title: Battalion Thunder
+linkTitle: Battalion Thunder
 description: "From one recruit to one thunder: install Blowhorn on as many computers as you like, they fall in as one unit, and one order goes out to every channel at once."
 date: 2026-10-27
 layout: video

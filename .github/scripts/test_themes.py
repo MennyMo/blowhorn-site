@@ -165,11 +165,11 @@ class IntegrationsSchemaTest(unittest.TestCase):
 
 
 class ThemeContentSplitTest(unittest.TestCase):
-    def test_no_theme_content_file_approved(self):
+    def test_only_approved_theme_content_file(self):
         import check_theme
 
         self.assertEqual(check_theme.extra_theme_content(), [])
-        self.assertEqual(check_theme.APPROVED_THEME_CONTENT, frozenset())
+        self.assertIn("content/en/home-reveille.md", check_theme.APPROVED_THEME_CONTENT)
 
     def test_home_signal_content_would_fail(self):
         import check_theme
@@ -185,19 +185,91 @@ class ThemeContentSplitTest(unittest.TestCase):
 
 
 
-class HomeSchemaTest(unittest.TestCase):
-    def test_checked_in_home_passes(self):
-        result = ajv(ROOT / "schemas/home.schema.json", ROOT / "data/home.json")
+class HomeSignalPlatformsBehaviorTest(unittest.TestCase):
+    """Run assets/js/home-signal.js in a fake DOM and check what it shows."""
+
+    def run_js(self, **extra):
+        import check_theme
+
+        return check_theme.run_platforms_js(check_theme.platforms_scenario(**extra))
+
+    def visible(self, got):
+        return sorted(k for k, v in got["panels"].items() if v)
+
+    def test_no_hash_shows_only_the_default_treatment(self):
+        import check_theme
+
+        want = check_theme.platforms_scenario()["on"]
+        got = self.run_js()
+        self.assertEqual(got["tab"], want)
+        self.assertEqual(got["ariaSelected"], [want])
+        self.assertEqual(self.visible(got), [want])
+        self.assertTrue(got["enhanced"])
+        self.assertEqual(check_theme.platforms_default_problems(), [])
+
+    def test_no_marked_tab_falls_back_to_the_first(self):
+        tabs = self.run_js()["panels"].keys()
+        got = self.run_js(on="")
+        self.assertEqual(self.visible(got), [list(tabs)[0]])
+
+    def test_panel_hash_opens_that_panel(self):
+        got = self.run_js(hash="#plat-panel-action")
+        self.assertEqual(got["tab"], "action")
+        self.assertEqual(self.visible(got), ["action"])
+
+    def test_action_hash_opens_the_action_panel(self):
+        got = self.run_js(hash="#action-post")
+        self.assertEqual(self.visible(got), ["action"])
+
+    def test_unknown_panel_hash_falls_back_to_default(self):
+        import check_theme
+
+        want = check_theme.platforms_scenario()["on"]
+        got = self.run_js(hash="#plat-panel-nope")
+        self.assertEqual(self.visible(got), [want])
+
+    def test_click_and_arrow_keys_switch_panels(self):
+        import check_theme
+
+        tabs = check_theme.platforms_scenario()["tabs"]
+        got = self.run_js(click=tabs[-1])
+        self.assertEqual(self.visible(got), [tabs[-1]])
+        got = self.run_js(on=tabs[0], key="ArrowRight")
+        self.assertEqual(self.visible(got), [tabs[1]])
+
+    def test_script_that_skips_the_default_fails_the_check(self):
+        import check_theme
+
+        src = (ROOT / "assets/js/home-signal.js").read_text(encoding="utf-8")
+        broken = src.replace("selectTab(section, initial);", "")
+        self.assertNotEqual(src, broken)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "home-signal.js"
+            path.write_text(broken, encoding="utf-8")
+            problems = check_theme.platforms_default_problems(path)
+        self.assertTrue(problems, "a script that never selects a panel must fail")
+
+
+class HeroDemoSchemaTest(unittest.TestCase):
+    def test_checked_in_demo_pass(self):
+        result = ajv(ROOT / "schemas/hero_demo.schema.json", ROOT / "data/hero_demo.json")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
-    def test_the_mock_rail_has_no_home_item(self):
-        # The app's rail is Dashboard, Activity, Profiles, Performance, Posture.
-        payload = json.loads((ROOT / "data/home.json").read_text(encoding="utf-8"))
+    def test_status_steps_are_the_three_states(self):
+        data = json.loads((ROOT / "data/hero_demo.json").read_text(encoding="utf-8"))
+        self.assertEqual(data["statusSteps"], ["Queued", "Posting as you", "Went out"])
+        self.assertIn("Demo", data["label"])
+        self.assertIn("Example", data["exampleLabel"])
+
+    def test_video_mode_is_gone(self):
+        # The hero film lives in data/hero.json media.video; hero_demo.json
+        # is the interactive demo only.
+        payload = json.loads((ROOT / "data/hero_demo.json").read_text(encoding="utf-8"))
         broken = copy.deepcopy(payload)
-        broken["mock"]["rail"][0] = "Home"
+        broken["video"] = {"src": "", "poster": "", "alt": "A video"}
         tmp = write_tmp(broken)
         try:
-            result = ajv(ROOT / "schemas/home.schema.json", tmp)
+            result = ajv(ROOT / "schemas/hero_demo.schema.json", tmp)
             self.assertNotEqual(result.returncode, 0)
         finally:
             tmp.unlink(missing_ok=True)

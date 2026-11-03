@@ -10,7 +10,7 @@
         </header>
         <ul class="tag-chips">
           {{- range .Data.Terms.Alphabetical }}
-          <li><a class="tag-chip" href="{{ .Page.RelPermalink }}">{{ humanize .Page.Data.Term }} ({{ .Count }})</a></li>
+          <li><a class="tag-chip" href="{{ .Page.RelPermalink }}">{{ .Page.Title }} ({{ .Count }})</a></li>
           {{- end }}
         </ul>
       </div>

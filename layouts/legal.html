@@ -8,7 +8,7 @@
     <main id="main" class="page">
       <div class="wrap">
         <div class="page-head">
-          <p class="label"><a href="{{ (site.GetPage "/legal").RelPermalink }}">Trust center</a> <span aria-hidden="true">/</span> {{ .Title }}</p>
+          <p class="label"><a href="{{ (site.GetPage "/legal").RelPermalink }}">Trust Center</a> <span aria-hidden="true">/</span> {{ .Title }}</p>
           <h1 class="h1">{{ .Params.heading }}</h1>
           {{- with .Params.notice }}
           <p class="notice card-field" role="note">{{ . | $.RenderString }}</p>

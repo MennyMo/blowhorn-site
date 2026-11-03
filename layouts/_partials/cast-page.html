@@ -16,7 +16,10 @@
             <h1 id="{{ $meta.titleId }}" class="display">{{ $item.headline }}</h1>
             <p class="body-lg muted">{{ $item.lead }}</p>
             <p class="actions">
-              {{ partial "download-button.html" (dict) }}
+              <a class="button button-primary" href="{{ "download/" | relURL }}">
+                <svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#glyph-download"></use></svg>
+                Download Blowhorn
+              </a>
               <a class="button button-secondary" href="{{ "" | relURL }}#how">See how it works</a>
             </p>
           </div>
@@ -89,7 +92,7 @@
         {{ partial "major-says.html" (dict "line" $item.major) }}
 
         <section class="agent-section" aria-labelledby="faq-title">
-          <div class="section-head"><h2 id="faq-title" class="h2">Questions</h2></div>
+          <div class="section-head"><h2 id="faq-title" class="h2">Frequently Asked Questions</h2></div>
           <div class="agent-faq">
             {{- range $i, $f := $item.faq }}
             <details class="card {{ partial "card-variant.html" (dict "i" $i "grid" "stack" "n" (len $item.faq) "variants" (slice "card-field" "card-plain")) }}"><summary class="ui">{{ .q }}</summary><p>{{ .a }}{{ with .link }} <a href="{{ .href }}">{{ .label }}</a>{{ end }}</p></details>

@@ -12,7 +12,7 @@
   {{- if os.FileExists $file -}}
     {{- $html = printf `<figure class="action-shot"><img src="%s" alt="%s %s in the Blowhorn desktop app" width="1280" height="800"></figure>` ($path | relURL) $platform $name -}}
   {{- else -}}
-    {{- $html = partial "cast-empty-state.html" (dict "character" "platoon-private-base.webp" "text" "Screenshot coming soon.") -}}
+    {{- $html = printf `<div class="tabs-soon"><p class="ui">Screenshot coming soon</p><p class="caption muted">Drop a PNG at <code>%s</code> to fill this pane.</p></div>` $path -}}
   {{- end -}}
 {{- else if eq $id "cli" -}}
   {{- if eq $d.status "available" -}}
@@ -23,13 +23,13 @@
     {{- with $d.cliRef }}{{ $ref = printf `<p class="caption"><a href="%s">CLI reference</a></p>` (. | relURL) }}{{ end -}}
     {{- $html = printf "%s%s%s" $card $note $ref -}}
   {{- else -}}
-    {{- $html = partial "cast-empty-state.html" (dict "character" "keyboard-warrior-base.webp" "text" "Not in the CLI yet.") -}}
+    {{- $html = printf `<div class="tabs-soon"><p class="ui">Not in the CLI yet</p><p class="caption muted">%s</p></div>` ($d.notes | default "This action has no blowhorn command yet.") -}}
   {{- end -}}
 {{- else if eq $id "rest" -}}
   {{- if eq $d.status "available" -}}
     {{- $html = printf `<p class="caption muted">%s</p><p class="caption"><a href="%s">CLI reference</a></p>` ($d.notes | default "This action is on the Blowhorn REST API.") ((site.GetPage "/docs/reference/cli").RelPermalink) -}}
   {{- else -}}
-    {{- $html = partial "cast-empty-state.html" (dict "character" "robo-recruit-base.webp" "text" "This example is coming soon.") -}}
+    {{- $html = printf `<div class="tabs-soon"><p class="ui">Coming soon</p><p class="caption muted">%s</p></div>` ($d.notes | default "The Blowhorn REST API for this action is not published yet.") -}}
   {{- end -}}
 {{- else if eq $id "mcp" -}}
   {{- $prompt := $d.prompt | default (printf "Do the %s action on %s as me." $name $platform) -}}
@@ -37,13 +37,13 @@
   {{- if eq $d.status "available" -}}
     {{- $html = printf `<p class="caption muted">%s <a href="%s">Blowhorn MCP server</a></p>%s` ($d.notes | default "Ask an assistant connected to the Blowhorn MCP server.") ((site.GetPage "/ai/mcp").RelPermalink) $card -}}
   {{- else -}}
-    {{- $html = printf "%s%s" (partial "cast-empty-state.html" (dict "character" "robo-recruit-base.webp" "text" "This example is coming soon.")) $card -}}
+    {{- $html = printf `<div class="tabs-soon"><p class="ui">Coming soon</p><p class="caption muted">%s</p></div>%s` ($d.notes | default "Ask an agent connected to the Blowhorn MCP server.") $card -}}
   {{- end -}}
 {{- else if eq $id "skill" -}}
   {{- if eq $d.status "available" -}}
     {{- $html = printf `<p class="caption muted">%s</p><p class="caption"><a href="%s">Set up the skill</a></p>` ($d.notes | default "The Blowhorn skill covers this action.") ((site.GetPage "/agents/claude-code").RelPermalink) -}}
   {{- else -}}
-    {{- $html = partial "cast-empty-state.html" (dict "character" "robo-recruit-base.webp" "text" "This example is coming soon.") -}}
+    {{- $html = printf `<div class="tabs-soon"><p class="ui">Coming soon</p><p class="caption muted">%s</p></div>` ($d.notes | default "A Blowhorn skill for this action is not available yet.") -}}
   {{- end -}}
 {{- else -}}
   {{- errorf "action-example-pane: unknown surface %q" $id -}}

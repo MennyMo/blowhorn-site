@@ -1,0 +1,28 @@
+{{- /* /home-reveille/: today's homepage as the Reveille theme, for preview
+  and for the per-page override test. Not indexed. layout: home does not
+  bind here in Hugo 0.158 (layouts/home.html is the home kind), so this
+  dedicated layout stays. */ -}}
+{{ define "head" }}
+    {{- partial "home-head.html" . }}
+    {{- if or (eq hugo.Environment "development") (eq hugo.Environment "dev") }}
+    {{- partial "hero-switch-css.html" . }}
+    {{- end }}
+{{- end }}
+
+{{ define "sprite" }}
+    {{ partial "sprite.html" . }}
+{{- end }}
+
+{{ define "main" }}
+{{- partial "home/reveille.html" . -}}
+{{- if or (eq hugo.Environment "development") (eq hugo.Environment "dev") }}
+{{- partial "hero-switch.html" . }}
+{{- end }}
+{{- end }}
+
+{{ define "scripts" }}
+    {{- $army := resources.Get "js/army.js" | minify | fingerprint }}
+    <script src="{{ $army.RelPermalink }}" defer></script>
+    {{- $cycle := resources.Get "js/hero-cycle.js" | minify | fingerprint }}
+    <script src="{{ $cycle.RelPermalink }}" defer></script>
+{{ end }}

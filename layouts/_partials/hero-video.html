@@ -1,0 +1,37 @@
+{{- /* The Signal hero film, from data/hero.json media.video (schema:
+  schemas/hero.schema.json), placement inline-expand. Captions are burned
+  into the picture. It sits small beside the hero copy on its poster with a
+  Play the film button; assets/js/hero-video.js grows the frame into a modal
+  dialog (90% of the window width, full width on small screens) and plays
+  it per media.video.playback (loop, sound, end). Escape, the backdrop or
+  Close shrinks it back. Without JavaScript the native controls show
+  inline. Called with media.video. Its title id hero-art-title is in the
+  site contract. See docs/hero-variants.md. */ -}}
+{{- $pb := .playback -}}
+<figure class="hero-film" data-hero-film data-loop="{{ $pb.loop }}" data-sound="{{ $pb.sound }}" data-end="{{ $pb.end }}" aria-labelledby="hero-art-title">
+  <figcaption class="visually-hidden"><span id="hero-art-title">{{ .label }}</span>. {{ .description }}</figcaption>
+  <div class="hero-film-frame" data-film="frame">
+    <video controls{{ if not $pb.sound }} muted{{ end }}{{ if $pb.loop }} loop{{ end }} playsinline preload="metadata" width="{{ .width }}" height="{{ .height }}" poster="{{ .poster | relURL }}" aria-labelledby="hero-art-title">
+      <source src="{{ .webm | relURL }}" type="video/webm">
+      <source src="{{ .mp4 | relURL }}" type="video/mp4">
+    </video>
+    <button type="button" class="hero-film-start" data-film="start" hidden>
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      <span data-film="start-label">Play the film</span>
+    </button>
+    <div class="hero-film-bar" data-film="bar" hidden>
+      <button type="button" class="hero-film-btn" data-film="sound" aria-pressed="false">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="hero-film-off" d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path class="hero-film-on" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+        <span data-film="sound-label">Sound on</span>
+      </button>
+      <button type="button" class="hero-film-btn" data-film="pause" aria-pressed="false">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path class="hero-film-pause" d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/><path class="hero-film-play" d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        <span data-film="pause-label">Pause</span>
+      </button>
+    </div>
+    <button type="button" class="hero-film-btn hero-film-close" data-film="close" hidden>
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" fill="none"/></svg>
+      <span>Close</span>
+    </button>
+  </div>
+</figure>

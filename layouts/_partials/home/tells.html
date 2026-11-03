@@ -1,0 +1,26 @@
+{{- /* The Signal home page's Am I a Bot? band, right after Trust: the free
+  Blowhorn Tells check, with Sleeper Cell (the unit's privacy scout) beside
+  the copy. Copy in data/tells.json (home); links through tells-link.html. */ -}}
+{{- with site.Data.tells.home }}
+      <section id="tells" class="section tells-band" aria-labelledby="tells-title">
+        <div class="wrap">
+          <div class="tells-panel glass">
+            <div class="tells-copy">
+              <div class="section-head">
+                <p class="label">{{ .eyebrow }}</p>
+                <h2 id="tells-title" class="display">{{ .heading }}</h2>
+                <p class="body-lg muted">{{ .body }}</p>
+              </div>
+              <p class="tells-actions">
+                <a class="button button-primary" href="{{ partial "tells-link.html" (dict "placement" "home") }}">{{ .cta }}</a>
+                <a class="button button-secondary" href="{{ partial "tells-link.html" (dict "placement" "home" "page" "checks") }}">{{ .secondary }}</a>
+              </p>
+              <p class="tells-agents ui muted">{{ .agents_lead }} <a href="{{ partial "tells-link.html" (dict "placement" "home" "page" "agents") }}">{{ .agents_link }}</a></p>
+            </div>
+            <figure class="tells-art">
+              <img src="{{ .art | relURL }}" srcset="{{ .art_640 | relURL }} 640w, {{ .art | relURL }} 1280w" sizes="(min-width: 900px) 40vw, 90vw" alt="{{ .art_alt }}" width="1280" height="720" loading="lazy">
+            </figure>
+          </div>
+        </div>
+      </section>
+{{- end }}

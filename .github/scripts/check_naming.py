@@ -26,7 +26,7 @@ layer5io/... repository links and file names pass.
   URLs are never read. The CLI reference (docs/reference/cli/) is written
   from the CLI's own --help text, so it passes until that text changes.
 - "Macs" or "your Mac" (also "my", "this" or "every" Mac, and "own
-  Mac") fails outside the docs.
+  Mac") fails outside the docs and the archived /home-reveille/ page.
   Blowhorn runs on any number of your computers, so marketing copy says
   computers (or soldiers, recruits, battalion), never Macs (Yi,
   2026-10-20). "macOS", "for Mac" on a download button and the
@@ -69,8 +69,8 @@ CHROME_WORD_RE = re.compile(r"\bbrowser[- ](?:profiles?|extensions?)\b", re.I)
 CHROME_WORDS_PREFIX = "docs/"
 # Pages where "machine" may stay: generated from the CLI's --help text.
 MACHINE_ALLOWED_PREFIXES = ("docs/reference/cli/",)
-# Pages where "Macs" may stay: macOS-specific docs.
-MACS_ALLOWED_PREFIXES = ("docs/",)
+# Pages where "Macs" may stay: macOS-specific docs and the archived original home.
+MACS_ALLOWED_PREFIXES = ("docs/", "home-reveille/")
 # Pages that may name Layer5 (the company). Paths relative to BUILD_DIR.
 COMPANY_ALLOWED = ("legal/index.html", "legal/privacy/index.html", "legal/terms/index.html")
 TEXT_ATTRS = {"alt", "title", "aria-label", "placeholder"}

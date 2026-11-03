@@ -34,9 +34,11 @@ def page(*placements):
 
 def complete_site():
     return {
-        "index.html": page("nav"),
+        "index.html": page("nav", "bar", "footer", "home"),
         "ai/index.html": page("ai"),
+        "agents/index.html": page("agents"),
         "download/thanks/index.html": page("thanks"),
+        "404.html": page("404", "bar"),
         "compare/index.html": page(),
         "compare/phantombuster/index.html": page("compare"),
         "docs/index.html": page("docs"),
@@ -60,10 +62,10 @@ class TellsPlacements(unittest.TestCase):
 
     def test_a_missing_placement_fails(self):
         pages = complete_site()
-        pages["index.html"] = page()
+        pages["index.html"] = page("nav", "bar", "footer")
         failures = self.run_check(pages)
         self.assertEqual(len(failures), 1)
-        self.assertIn("utm_content=nav", failures[0])
+        self.assertIn("utm_content=home", failures[0])
 
     def test_a_compare_page_without_the_callout_fails(self):
         pages = complete_site()
@@ -93,19 +95,19 @@ class TellsPlacements(unittest.TestCase):
 
     def test_a_wrong_utm_value_fails(self):
         pages = complete_site()
-        pages["ai/index.html"] = "<html><body>" + link("ai", utm_medium="email") + "</body></html>"
+        pages["agents/index.html"] = "<html><body>" + link("agents", utm_medium="email") + "</body></html>"
         failures = self.run_check(pages)
         self.assertTrue(any("utm_medium" in f for f in failures))
 
     def test_a_missing_utm_parameter_fails(self):
         pages = complete_site()
-        pages["ai/index.html"] = "<html><body>" + link("ai", utm_campaign=None) + "</body></html>"
+        pages["agents/index.html"] = "<html><body>" + link("agents", utm_campaign=None) + "</body></html>"
         failures = self.run_check(pages)
         self.assertTrue(any("utm_campaign" in f for f in failures))
 
     def test_an_extra_utm_parameter_fails(self):
         pages = complete_site()
-        pages["ai/index.html"] = "<html><body>" + link("ai", utm_term="bots") + "</body></html>"
+        pages["agents/index.html"] = "<html><body>" + link("agents", utm_term="bots") + "</body></html>"
         failures = self.run_check(pages)
         self.assertTrue(any("utm_term" in f for f in failures))
 
@@ -116,7 +118,7 @@ class TellsPlacements(unittest.TestCase):
 
     def test_tells_subpages_count_for_their_placement(self):
         pages = complete_site()
-        pages["ai/index.html"] = "<html><body>" + link("ai", "agents/") + "</body></html>"
+        pages["agents/index.html"] = "<html><body>" + link("agents", "agents/") + "</body></html>"
         self.assertEqual(self.run_check(pages), [])
 
     def test_redirect_pages_are_skipped(self):

@@ -58,7 +58,7 @@
                 {{- end }}
               </ul>
               {{- end }}
-              <p class="ui">{{ partial "download-button.html" (dict "kind" "text") }}</p>
+              <p class="ui"><a href="{{ "download/" | relURL }}">Get Blowhorn</a></p>
             </div>
           </div>
         </section>
@@ -158,7 +158,7 @@
 
         <section class="agent-section" aria-labelledby="faq-title">
           <div class="section-head">
-            <h2 id="faq-title" class="h2">Questions</h2>
+            <h2 id="faq-title" class="h2">Frequently Asked Questions</h2>
           </div>
           <div class="agent-faq versus-faq">
             {{- range $i, $f := $p.faq }}
@@ -170,7 +170,7 @@
         <section class="agent-section agent-cta glass" aria-labelledby="cta-title">
           <h2 id="cta-title" class="h2">One message out, many ears in</h2>
           <p class="muted">If that sounds like what you've been missing, give Blowhorn a try. It's free during early access.</p>
-          <p class="actions">{{ partial "download-button.html" (dict) }}</p>
+          <p class="actions"><a class="button button-primary" href="{{ "download/" | relURL }}">Download Blowhorn</a></p>
         </section>
 
         <section class="agent-section" aria-labelledby="more-title">

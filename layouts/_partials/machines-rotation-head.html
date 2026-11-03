@@ -1,0 +1,30 @@
+{{- /* Picks the home page computers section design before first paint. Put in
+  the page's "head" block. The CSS hides every design's copy and panel
+  ([data-machines-only]) except the one named on <html data-machines>; with
+  no JavaScript the attribute is never set and the default variant shows.
+  The script sets it: ?machines=<n> (1-based) or ?machines=<id> forces a
+  design, for review; otherwise utc-day uses floor(UTC days since the
+  epoch) modulo the number of designs, and interval uses floor(now /
+  intervalSeconds) modulo the number of designs. Config comes from
+  data/machines.json via machines-rotation.html. It runs once, at load:
+  the design never changes under a reader. See docs/machines-variants.md. */ -}}
+{{- $rot := partial "machines-rotation.html" . -}}
+{{- $show := slice (printf `html:not([data-machines]) [data-machines-only="%s"]` $rot.default) -}}
+{{- range $rot.variants }}{{ $show = $show | append (printf `html[data-machines="%s"] [data-machines-only="%s"]` .id .id) }}{{ end -}}
+{{- $picks := slice -}}
+{{- range $rot.variants }}{{ $picks = $picks | append .id }}{{ end }}
+    <style>{{ printf `[data-machines-only] { display: none; } %s { display: revert; }` (delimit $show ", ") | safeCSS }}</style>
+    <script>
+      (function () {
+        var ids = {{ $picks | jsonify | safeJS }}, mode = {{ $rot.mode | jsonify | safeJS }}, seconds = {{ $rot.intervalSeconds }}, i = -1, q = null, k;
+        try { q = new URLSearchParams(window.location.search).get('machines'); } catch (e) {}
+        if (q && /^[0-9]+$/.test(q)) { i = parseInt(q, 10) - 1; }
+        else if (q) { for (k = 0; k < ids.length; k++) { if (ids[k] === q) { i = k; } } }
+        if (!(i >= 0 && i < ids.length)) {
+          i = mode === 'interval'
+            ? Math.floor(Date.now() / (seconds * 1000)) % ids.length
+            : Math.floor(Date.now() / 86400000) % ids.length;
+        }
+        document.documentElement.setAttribute('data-machines', ids[i]);
+      })();
+    </script>

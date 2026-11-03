@@ -14,5 +14,5 @@
 - **[{{ $a.name }}]({{ printf "#%s" $a.slug }})**: {{ $a.description }}{{ with $a.limits }} Limits: {{ . }}{{ end }}
 {{- end }}
 {{- else }}
-- **None yet**: Its actions show up here when it ships.
+- **None yet**: This platform isn't available yet.
 {{- end }}

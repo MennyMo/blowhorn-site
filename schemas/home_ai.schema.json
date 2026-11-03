@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/home_ai.schema.json",
+  "title": "Home page AI sections",
+  "description": "data/home_ai.json: copy for the Signal home page's two AI sections, rendered by layouts/_partials/home/ai-agents.html (agents, after How it works) and layouts/_partials/home/ai-content.html (content, before Pricing). Plain text, hyphens never em dashes. Links are site paths; the layout resolves them with site.GetPage and fails the build when one is missing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agents", "content"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "agents": {
+      "description": "The Built for agents section: every way an AI agent drives Blowhorn.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "headline", "subhead", "cards"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "label": { "$ref": "#/definitions/short" },
+        "headline": { "$ref": "#/definitions/headline" },
+        "subhead": { "$ref": "#/definitions/text" },
+        "cards": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["title", "body"],
+            "properties": {
+              "title": { "$ref": "#/definitions/short" },
+              "tag": { "description": "One-line kicker under the title.", "$ref": "#/definitions/short" },
+              "body": { "$ref": "#/definitions/text" },
+              "href": { "$ref": "#/definitions/path" }
+            }
+          }
+        },
+        "actions": {
+          "type": "array",
+          "maxItems": 2,
+          "items": { "$ref": "#/definitions/link" }
+        },
+        "major": { "description": "Major Blowhorn's line, shown in a speech bubble.", "$ref": "#/definitions/text" }
+      }
+    },
+    "content": {
+      "description": "The content generation teaser: bring your own model, or Blowhorn writes it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "headline", "subhead", "offers"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "label": { "$ref": "#/definitions/short" },
+        "headline": { "$ref": "#/definitions/headline" },
+        "subhead": { "$ref": "#/definitions/text" },
+        "offers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["title", "body", "price"],
+            "properties": {
+              "title": { "$ref": "#/definitions/short" },
+              "tag": { "$ref": "#/definitions/short" },
+              "body": { "$ref": "#/definitions/text" },
+              "price": { "description": "How it is priced, one short sentence.", "$ref": "#/definitions/short" }
+            }
+          }
+        },
+        "note": { "$ref": "#/definitions/text" }
+      }
+    }
+  },
+  "definitions": {
+    "id": { "description": "Section anchor id.", "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "short": { "type": "string", "minLength": 1, "maxLength": 80, "not": { "pattern": "\u2014" } },
+    "headline": { "type": "string", "minLength": 1, "maxLength": 60, "not": { "pattern": "\u2014" } },
+    "text": { "type": "string", "minLength": 1, "maxLength": 240, "not": { "pattern": "\u2014" } },
+    "path": { "description": "A site path, such as /ai or /docs/reference/cli.", "type": "string", "pattern": "^/[a-z0-9/_-]*$" },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "href"],
+      "properties": {
+        "label": { "$ref": "#/definitions/short" },
+        "href": { "$ref": "#/definitions/path" }
+      }
+    }
+  }
+}

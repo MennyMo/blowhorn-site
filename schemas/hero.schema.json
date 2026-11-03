@@ -1,0 +1,176 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/hero.schema.json",
+  "title": "Home page hero variants",
+  "description": "data/hero.json: the headline and art variants of the blowhorn.ai home page hero, the one tagline shown under every headline, which of them rotate, and how. Every rotating variant is rendered into the static HTML and layouts/_partials/hero-rotation-head.html shows one at page load; the default is what no-JS visitors, crawlers and social previews get. See docs/hero-variants.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["default", "tagline", "rotation", "variants"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "default": {
+      "description": "Id of the variant no-JS visitors see, and that the meta, Open Graph and JSON-LD descriptions are built from. Must be one of the rotating ids (the build fails otherwise).",
+      "$ref": "#/definitions/id"
+    },
+    "tagline": {
+      "description": "The one plain description of Blowhorn shown under the h1 for every variant, in sentence case. It replaces the per-variant subhead in the hero. Plain text, hyphens never em dashes.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "not": { "pattern": "\u2014" }
+    },
+    "rotation": { "$ref": "#/definitions/rotation" },
+    "media": { "$ref": "#/definitions/media" },
+    "variants": {
+      "description": "Every variant. Only those listed in rotation.ids are shown; omit ids to rotate every variant.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/variant" }
+    }
+  },
+  "definitions": {
+    "mediaKind": {
+      "description": "What fills the Signal home page's hero visual: video is the hero film from media.video (beside the hero copy, small, on its poster with a Play button that expands it into a dialog), demo is the interactive pseudo-app from data/hero_demo.json under the copy.",
+      "type": "string",
+      "enum": ["video", "demo"]
+    },
+    "media": {
+      "description": "The Signal hero visual. default applies to every variant without its own media; ?hero=<id> picks the variant, and so its media. Without this object the hero shows the demo.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default"],
+      "properties": {
+        "default": { "$ref": "#/definitions/mediaKind" },
+        "video": {
+          "description": "The hero film. Required when any hero uses video (the build fails otherwise). Captions are burned into the picture, so there is no separate track.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mp4", "webm", "poster", "width", "height", "label", "description", "placement", "playback"],
+          "properties": {
+            "placement": { "description": "inline-expand: the film sits small in the hero beside the copy (below it on phones) on its poster with a Play the film button; a click grows it in one motion to 90% of the window width (full width on small screens), centered and fitted to the window height, as a modal dialog over a dimmed backdrop, then plays. Escape, the backdrop or the close button shrinks it back to its spot and pauses it.", "type": "string", "enum": ["inline-expand"] },
+            "playback": {
+              "description": "How the film plays once expanded. Under prefers-reduced-motion it opens and closes without the grow motion. Without JavaScript the native controls show inline.",
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["autoplay", "loop", "sound", "end"],
+              "properties": {
+                "autoplay": { "description": "Always false: the film waits on its poster until the visitor presses Play.", "type": "boolean", "const": false },
+                "loop": { "description": "Replay from the start when it ends.", "type": "boolean" },
+                "sound": { "description": "Play with sound when the visitor presses Play (the click is the user gesture browsers need for audio). false starts it muted; the Sound toggle turns it on.", "type": "boolean" },
+                "end": { "description": "When it ends without loop: poster returns to the poster, last-frame holds the final frame. Either way a Watch again button shows in the open dialog.", "type": "string", "enum": ["poster", "last-frame"] }
+              }
+            },
+            "mp4": { "description": "H.264/AAC MP4 with faststart, a path under static/.", "type": "string", "pattern": "^assets/video/[a-z0-9-]+\\.mp4$" },
+            "webm": { "description": "VP9/Opus WebM of the same film, a path under static/.", "type": "string", "pattern": "^assets/video/[a-z0-9-]+\\.webm$" },
+            "poster": { "description": "Still shown before the film plays and under reduced motion, a path under static/.", "type": "string", "pattern": "^assets/video/[a-z0-9-]+\\.(jpg|png|webp)$" },
+            "width": { "type": "integer", "minimum": 1 },
+            "height": { "type": "integer", "minimum": 1 },
+            "label": { "description": "Short accessible name for the film. Hyphens never em dashes.", "type": "string", "minLength": 1, "maxLength": 80, "not": { "pattern": "\u2014" } },
+            "description": { "description": "What the film shows, read by screen readers. Hyphens never em dashes.", "type": "string", "minLength": 1, "maxLength": 400, "not": { "pattern": "\u2014" } },
+            "source": { "description": "Where the film's sources live, for maintainers. Not rendered.", "type": "string" }
+          }
+        }
+      }
+    },
+    "id": {
+      "description": "URL-safe id, used in ?hero=<id>, data-hero and data-hero-only.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 40
+    },
+    "rotation": {
+      "description": "How and which heroes take turns. utc-day is floor(UTC days since the epoch) modulo the number of rotating ids, so every visitor sees the same hero on the same UTC day. interval is floor(now / intervalSeconds) modulo length. ?hero=<id> or ?hero=<n> overrides either rule.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "description": "utc-day: one hero per UTC day. interval: one hero per intervalSeconds.",
+          "type": "string",
+          "enum": ["utc-day", "interval"]
+        },
+        "intervalSeconds": {
+          "description": "Seconds per slot when mode is interval. Required for interval, unused for utc-day. Must be above 0.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "ids": {
+          "description": "Ids of the variants that rotate, in order. Omit to rotate every variant. Variants not listed stay in the file for later.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/definitions/id" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "mode": { "const": "interval" } },
+            "required": ["mode"]
+          },
+          "then": { "required": ["intervalSeconds"] }
+        }
+      ]
+    },
+    "variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "headline", "differentiators"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "headline": {
+          "description": "The h1. Plain text, hyphens never em dashes.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "not": { "pattern": "\u2014" }
+        },
+        "subhead": {
+          "description": "A longer plain-words description of this hero. Optional. Not rendered in the hero (the tagline is); the default variant's subhead, when set, feeds the meta, Open Graph, Twitter and JSON-LD descriptions. Plain text, hyphens never em dashes.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220,
+          "not": { "pattern": "\u2014" }
+        },
+        "identification": {
+          "description": "The self-identification line for heroes that carry one, in plain words. Optional. Kept for reference, not rendered. Plain text, hyphens never em dashes.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 180,
+          "not": { "pattern": "\u2014" }
+        },
+        "cta": {
+          "description": "This hero's secondary button, beside Download. Without it the button reads See how it works and goes to #how. href is a site path (resolved with relURL) or an on-page anchor.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["label", "href"],
+          "properties": {
+            "label": { "type": "string", "minLength": 1, "maxLength": 32, "not": { "pattern": "\u2014" } },
+            "href": { "type": "string", "pattern": "^(/[a-z0-9/_-]*|#[a-z0-9-]+)$" }
+          }
+        },
+        "art": {
+          "description": "The illustration beside the copy, a partial in layouts/_partials/hero-art/: stage is Major Blowhorn barking into your own browser, fan is one message fanning out to every platform. Defaults to stage.",
+          "type": "string",
+          "enum": ["stage", "fan"]
+        },
+        "media": {
+          "description": "This hero's visual on the Signal home page, overriding media.default.",
+          "$ref": "#/definitions/mediaKind"
+        },
+        "differentiators": {
+          "description": "Numbers of the claims this copy rests on in Blowhorn's canonical differentiators list. Copy may only state what those claims allow.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 1 }
+        },
+        "note": {
+          "description": "Why this variant exists, for reviewers. Not rendered.",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

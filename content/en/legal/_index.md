@@ -1,6 +1,6 @@
 ---
-title: Trust center
-heading: Blowhorn trust center
+title: Trust Center
+heading: Blowhorn Trust Center
 description: How Blowhorn handles your data, sessions and accounts, in plain language, and every policy that covers the Blowhorn website, the Blowhorn app for macOS and the Blowhorn Chrome extension.
 lead: Many public voices, one coordinated queue, every action on your own computer. Every policy for the Blowhorn website, desktop app and Chrome extension, each with a plain-language summary. Where a summary differs from its policy, the policy decides.
 layout: trust-center
@@ -63,7 +63,7 @@ Curious what websites can read about your browser? [Blowhorn Tells](https://tell
 
 If you think you have found a security vulnerability in Blowhorn, send the details privately to [security@blowhorn.ai](mailto:security@blowhorn.ai) rather than opening a public issue. We acknowledge and analyze each report within 10 working days and keep the reporter updated while it is addressed. The [security policy](https://github.com/blowhorn-ai/blowhorn-site/blob/master/SECURITY.md) explains what to report and how fixes are disclosed.
 
-## Questions {#questions}
+## Frequently Asked Questions {#questions}
 
 - About privacy: open an issue on the [site repository](https://github.com/blowhorn-ai/blowhorn-site/issues), or use the contact channels in the account [privacy policy](https://layer5.io/company/legal/privacy/).
 - About the terms: email [legal@blowhorn.ai](mailto:legal@blowhorn.ai).

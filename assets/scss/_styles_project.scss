@@ -43,7 +43,7 @@
 // layouts/_partials/tells-docs-card.html renders twice: under the table of
 // contents (shown from 1280px, unless the column is collapsed) and at the
 // end of the page (everywhere else). Exactly one shows at any width. The
-// link and arrow share their style with the Tells link rules (site.css).
+// link and arrow share their style with the announcement bar (site.css).
 .tells-docs-card {
   max-width: 24rem;
   margin-top: var(--space-12);
@@ -333,7 +333,8 @@ div.docs-quadrants {
   flex: 1 1 auto;
   min-width: 0;
   padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   color: var(--ink);
 }
 
@@ -360,6 +361,7 @@ div.docs-quadrants {
   color: var(--link);
   font-weight: 700;
   background: var(--surface-tint);
+  border-left-color: var(--teal);
 }
 
 .td-sidebar-nav .td-sidebar-link.tree-root {

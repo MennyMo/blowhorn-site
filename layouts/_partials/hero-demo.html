@@ -1,0 +1,94 @@
+{{- /* Signal hero demo: the interactive pseudo-app (data/hero_demo.json),
+  rendered under the copy when a hero's data/hero.json media is demo. The
+  film (media video) sits beside the copy instead, in home/signal.html.
+  hero-rotation-head.html shows the picked hero's visual
+  ([data-hero-media-only]). Destinations with posts:true come from
+  data/integrations.json; name and logo come from hugo.Data.platforms.
+  Always labelled as a demo with example data. */ -}}
+{{- $demo := site.Data.hero_demo -}}
+{{- $dest := slice -}}
+{{- range site.Data.integrations.platforms -}}
+  {{- if and (eq .status "supported") .posts }}{{ $dest = $dest | append (partial "integration-row.html" .) }}{{ end -}}
+{{- end -}}
+{{- $rot := partial "hero-rotation.html" . -}}
+{{- /* hero-art-title is in the site contract: the film carries it when it is
+  rendered, otherwise the demo does. */ -}}
+{{- $artId := cond (in $rot.medias "video") "hero-demo-title" "hero-art-title" -}}
+{{- if in $rot.medias "demo" }}
+<div class="hero-visual wrap">
+  <div data-hero-media-only="demo">
+      <div class="hero-demo" data-hero-demo>
+        <div class="hero-compose">
+          <p class="demo-flag-row"><span class="demo-flag">{{ $demo.label }}</span> <span class="slot-label">{{ $demo.exampleLabel }}</span></p>
+          <form class="demo-compose" data-demo-form>
+            <label class="visually-hidden" for="demo-message">{{ $demo.composeLabel }}</label>
+            <textarea id="demo-message" name="message" rows="3" data-demo-input>{{ $demo.message }}</textarea>
+            <fieldset class="demo-nets">
+              <legend class="visually-hidden">Networks to send to</legend>
+              {{- range $dest }}
+              <label class="demo-chip">
+                <input type="checkbox" name="net-{{ .id }}" value="{{ .id }}" checked data-demo-net="{{ .id }}">
+                <span class="logo-tile"><img src="{{ .logo | relURL }}" alt="" width="16" height="16"></span>
+                <span>{{ .name }}</span>
+              </label>
+              {{- end }}
+            </fieldset>
+            <p class="demo-compose-actions">
+              <button type="submit" class="button button-primary" data-demo-send>{{ $demo.sendLabel }}</button>
+              <span class="caption muted">This is a demo. Nothing is posted.</span>
+            </p>
+          </form>
+        </div>
+        <figure class="app" aria-labelledby="{{ $artId }}" data-component="app-mock">
+          <figcaption id="{{ $artId }}" class="visually-hidden">{{ $demo.ariaLabel }}</figcaption>
+          <div class="app-bar" aria-hidden="true"><span></span><span></span><span></span><em>Blowhorn</em></div>
+          <div class="app-body">
+            <aside class="app-rail" aria-hidden="true">
+              <div class="app-brand"><img src="{{ "assets/brand/logo/blowhorn-icon-on-dark.svg" | relURL }}" alt="" width="20" height="20">Blowhorn</div>
+              <div class="app-new">+ New activity <kbd>&#8984;N</kbd></div>
+              <ul class="app-navlist">
+                <li>Home</li>
+                <li class="is-on">Activity <small>3 today</small></li>
+                <li>Profiles <small><b class="dot dot-pending"></b>1 needs you</small></li>
+                <li>Performance</li>
+              </ul>
+              <div class="app-spacer"></div>
+              <div class="app-watch"><p><b class="dot dot-live"></b>This computer is on watch</p><p class="muted">Next check in 4 min <span class="chip">Pause</span></p></div>
+              <div class="app-acct"><span class="avatar" aria-hidden="true">YO</span><span><b>You</b><small>Example org, Team plan</small></span></div>
+            </aside>
+            <div class="app-list" aria-hidden="true">
+              <div class="app-listhead"><b>Activity</b><kbd>&#8984;K to find</kbd></div>
+              <div class="app-tabs"><span>Upcoming <small>12</small></span><span>Drafts <small>3</small></span><span>Routines <small>4</small></span><span class="is-on">History</span></div>
+              <p class="app-day">Today</p>
+              {{- range $demo.activityRows }}
+              <div class="arow{{ if .on }} is-on{{ end }}"><span class="tag">{{ .tag }}</span><b>{{ .title }}</b><span class="arow-time">{{ .time }}</span><span class="arow-sub">{{ if .on }}{{ len $dest }} networks, as you{{ else }}{{ .sub }}{{ end }}</span><span class="pill pill-sm">{{ .status }}</span></div>
+              {{- end }}
+            </div>
+            <div class="app-detail">
+              <div class="app-crumbs" aria-hidden="true"><span>Activity &#8250; History &#8250; Post</span><span class="chip">Duplicate</span></div>
+              <p class="app-kind"><span class="tag">Post</span><span class="pill pill-sm" data-demo-summary aria-live="polite"><span class="pill-dot"></span><span class="pill-text">{{ index $demo.statusSteps 2 }}</span></span></p>
+              <h3 class="app-title" data-demo-title>{{ $demo.title }}</h3>
+              <p class="app-meta">{{ $demo.meta }}</p>
+              <blockquote class="app-msg" data-demo-msg>{{ $demo.message }}</blockquote>
+              <p class="app-section"><span>1</span>Delivery<em>{{ $demo.exampleLabel }}</em></p>
+              <ul class="app-grid" data-demo-grid>
+                {{- range $dest }}
+                <li class="dcard" data-demo-card="{{ .id }}">
+                  <div class="dcard-head">
+                    <span class="logo-tile"><img src="{{ .logo | relURL }}" alt="" width="16" height="16"></span>
+                    <span class="dcard-name">{{ .name }}</span>
+                    <span class="pill" data-status><span class="pill-dot"></span><span class="pill-text">{{ index $demo.statusSteps 2 }}</span></span>
+                  </div>
+                  <p class="dcard-meta">{{ .demoMeta }}</p>
+                  <p class="dcard-link">{{ .exampleLink }}</p>
+                </li>
+                {{- end }}
+              </ul>
+            </div>
+          </div>
+        </figure>
+        <script type="application/json" id="hero-demo-data">{{ dict "steps" $demo.statusSteps "title" $demo.title | jsonify | safeJS }}</script>
+      </div>
+  </div>
+</div>
+{{- end }}

@@ -1,0 +1,57 @@
+{{- /* The home page hero rotation, from data/hero.json (schema:
+  schemas/hero.schema.json). Returns tagline (the one line under every
+  headline), heroes (id, headline, cta, art, media; rotating ones first, in
+  rotation order, then the rest), rotating (how many rotate), arts (each art
+  once), medias (each Signal hero visual once: video or demo), video
+  (media.video), default (the variant no-JS visitors see), defaultMedia (its
+  visual), mode and intervalSeconds. Fails the build when rotation.ids names an
+  unknown variant or when default is not in the rotation. Mode and interval
+  are schema-checked; this partial only resolves ids. See docs/hero-variants.md. */ -}}
+{{- $data := site.Data.hero -}}
+{{- $cfg := $data.rotation -}}
+{{- $ids := slice -}}
+{{- with $cfg.ids }}{{ $ids = . }}{{ else }}{{ range $data.variants }}{{ $ids = $ids | append .id }}{{ end }}{{ end -}}
+{{- $mediaDefault := "demo" -}}
+{{- with $data.media }}{{ $mediaDefault = .default }}{{ end -}}
+{{- $heroes := slice -}}
+{{- $arts := slice -}}
+{{- $medias := slice -}}
+{{- range $ids -}}
+  {{- $match := where $data.variants "id" . -}}
+  {{- if not $match -}}
+    {{- errorf "data/hero.json: rotation.ids names %q, which is not one of variants[].id" . -}}
+  {{- end -}}
+  {{- $v := index $match 0 -}}
+  {{- $art := $v.art | default "stage" -}}
+  {{- $media := $v.media | default $mediaDefault -}}
+  {{- $heroes = $heroes | append (dict "id" $v.id "headline" $v.headline "cta" ($v.cta | default (dict "label" "See how it works" "href" "#how")) "art" $art "media" $media) -}}
+  {{- if not (in $arts $art) }}{{ $arts = $arts | append $art }}{{ end -}}
+  {{- if not (in $medias $media) }}{{ $medias = $medias | append $media }}{{ end -}}
+{{- end -}}
+{{- /* Variants outside rotation.ids still render after the rotating ones, so
+  ?hero=<id> keeps reaching them for review; the daily pick and ?hero=<n>
+  only use the first $rotating. */ -}}
+{{- $rotating := len $heroes -}}
+{{- range $data.variants -}}
+  {{- if not (in $ids .id) -}}
+    {{- $art := .art | default "stage" -}}
+    {{- $media := .media | default $mediaDefault -}}
+    {{- $heroes = $heroes | append (dict "id" .id "headline" .headline "cta" (.cta | default (dict "label" "See how it works" "href" "#how")) "art" $art "media" $media) -}}
+    {{- if not (in $arts $art) }}{{ $arts = $arts | append $art }}{{ end -}}
+    {{- if not (in $medias $media) }}{{ $medias = $medias | append $media }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- $default := partial "hero-variant.html" . -}}
+{{- if not (in $ids $default.id) -}}
+  {{- errorf "data/hero.json: default %q must be one of the rotating ids, or no-JS visitors would get no hero" $default.id -}}
+{{- end -}}
+{{- $video := dict -}}
+{{- with $data.media }}{{ with .video }}{{ $video = . }}{{ end }}{{ end -}}
+{{- if and (in $medias "video") (not $video.mp4) -}}
+  {{- errorf "data/hero.json: a hero uses media video, but media.video is missing" -}}
+{{- end -}}
+{{- $defaultMedia := $mediaDefault -}}
+{{- with $default.media }}{{ $defaultMedia = . }}{{ end -}}
+{{- $seconds := 0 -}}
+{{- with $cfg.intervalSeconds }}{{ $seconds = . }}{{ end -}}
+{{- return dict "tagline" $data.tagline "heroes" $heroes "arts" $arts "medias" $medias "video" $video "defaultMedia" $defaultMedia "default" $default.id "rotating" $rotating "mode" $cfg.mode "intervalSeconds" (int $seconds) -}}

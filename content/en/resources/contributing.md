@@ -1,5 +1,5 @@
 ---
-title: "Contributing to resources"
+title: "Contributing to Resources"
 description: "How to add an article, a tip or a video to the Blowhorn Resources center: content locations, front matter, templates, tagging rules and feed implications."
 lead: "How to add an article, a tip or a video to Resources, and what happens to it once it is published."
 layout: plain
