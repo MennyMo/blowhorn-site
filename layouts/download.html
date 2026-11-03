@@ -3,7 +3,10 @@
   walks through setup, so it works without script. assets/js/download.js fills
   in the version, size, date and release notes from the newest GitHub release.
   Each card states its own minimum (.download-req), matching the requirements
-  block below it. The Windows card is a placeholder: no link, a disabled
+  block below it. The bookmarklet card's draggable link writes
+  data/bookmarklet.json as a safeHTMLAttr href, because Go templates rewrite
+  javascript: URLs and percent-encode safeURL ones; check_bookmarklet.py keeps
+  the code equal to the docs page. The Windows card is a placeholder: no link, a disabled
   button, and a decorative hanging "Coming soon" sign. */ -}}
 {{ define "sprite" }}
     {{ partial "sprite.html" . }}
@@ -16,7 +19,7 @@
         <header class="section-head download-head">
           <p class="label">Download</p>
           <h1 id="download-title" class="display-xl">Blowhorn for Mac</h1>
-          <p class="body-lg muted">One macOS disk image for Apple silicon and Intel, plus a Chrome extension and the Blowhorn command. Setup takes about a minute.</p>
+          <p class="body-lg muted">One macOS disk image for Apple silicon and Intel, plus a Chrome extension, the Blowhorn command and a capture bookmarklet. Setup takes about a minute.</p>
         </header>
         <div class="download-grid section-body">
           <div id="download-status" class="download-card card-paper" data-repo="blowhorn-ai/blowhorn-site" data-asset="Blowhorn-mac.dmg" aria-live="polite">
@@ -47,6 +50,17 @@
             <p>The Mac app installs the Blowhorn command, so there is nothing else to download. Set it up from the install guide.</p>
             <p class="actions"><a class="button button-primary" href="{{ "docs/how-to/set-up/install-the-app/#the-blowhorn-command" | relURL }}">Install the CLI</a></p>
             <p class="meta caption"><a href="{{ "docs/reference/cli/" | relURL }}">CLI reference</a></p>
+          </div>
+          <div class="download-card card-dispatch">
+            <img class="download-icon" src="{{ "assets/icons/blowhorn-bookmark.svg" | relURL }}" alt="Bookmark" width="72" height="72">
+            <h2 class="h3">The Blowhorn bookmarklet</h2>
+            <p>Click it on any page to start a Blowhorn post from that page, its title and the text you selected.</p>
+            <p class="download-req caption">Requires the Blowhorn Mac app and Google Chrome</p>
+            <p class="actions">
+              <a class="button button-primary" {{ printf "href=\"%s\"" (site.Data.bookmarklet.code | htmlEscape) | safeHTMLAttr }}>{{ site.Data.bookmarklet.name }}</a>
+              <span class="caption muted">Drag to your Google Chrome bookmarks bar</span>
+            </p>
+            <p class="meta caption"><a href="{{ "docs/how-to/publish/manage-the-content-worksheet/#capture-a-page-from-the-browser" | relURL }}">How to add it</a></p>
           </div>
           <div class="download-card card-stamp download-card-soon" aria-disabled="true" aria-labelledby="windows-title">
             <svg class="soon-sign" viewBox="0 0 200 100" aria-hidden="true" focusable="false">
