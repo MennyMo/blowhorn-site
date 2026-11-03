@@ -26,6 +26,7 @@ EMPTY_COPY = [
     "Not in the CLI yet.",
     "Screenshot coming soon.",
     "No actions match.",
+    "This platform isn't available yet.",
 ]
 
 BLOCK = re.compile(r'<div class="cast-empty(?:\s[^"]*)?">(.*?)</div>', re.S)

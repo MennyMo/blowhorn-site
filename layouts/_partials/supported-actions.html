@@ -4,9 +4,8 @@
   drift. Table columns: action, what it does, limits/notes. Each action
   name links to its usage section (#action-<id>) rendered below the table,
   so there is no separate Example column. A listed action is supported, so
-  rows carry no Supported label or check; only an exception (a coming-soon
-  platform) shows a status, as an icon with an accessible name and tooltip.
-  Coming-soon platforms with no YAML still get this table, empty of actions.
+  rows carry no Supported label or check. A coming-soon platform has no action
+  rows: its one row is the cast empty state (cast-empty-state.html, compact).
   Usage: partial "supported-actions.html" (dict "key" "linkedin") */ -}}
 {{- $key := .key -}}
 {{- if not $key }}{{ errorf "supported-actions: set key" }}{{ end -}}
@@ -41,10 +40,8 @@
       </tr>
     {{- end }}
   {{- else }}
-    <tr>
-      <th scope="row">None yet <span class="supported-actions-status" role="img" aria-label="Coming soon" title="Coming soon" data-action-status="coming-soon"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span></th>
-      <td data-label="What it does">This platform isn't available yet.</td>
-      <td data-label="Limits / notes">None</td>
+    <tr class="supported-actions-empty">
+      <td colspan="3">{{ partial "cast-empty-state.html" (dict "character" "robo-recruit-base.webp" "text" "This platform isn't available yet." "size" "compact") }}</td>
     </tr>
   {{- end }}
   </tbody>

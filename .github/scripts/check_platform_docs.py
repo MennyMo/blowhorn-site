@@ -298,6 +298,14 @@ def check_source(root: Path) -> list[str]:
     return problems
 
 
+def coming_soon_has_character(html: str) -> bool:
+    """A coming-soon table's body is one row: the compact cast empty state, with its art and copy."""
+    body = re.search(r"<tbody>(.*?)</tbody>", html, re.S)
+    if not body or body.group(1).count("<tr") != 1:
+        return False
+    return 'class="cast-empty-art"' in body.group(1) and 'class="cast-empty-text' in body.group(1)
+
+
 def check_built(build_dir: Path, root: Path) -> list[str]:
     problems: list[str] = []
     data = integrations(root)
@@ -329,8 +337,8 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
             problems.append(f"{docs} contains an em dash")
         if item["status"] == "supported" and 'id="examples"' not in html:
             problems.append(f"{docs} lost the Examples heading from the shared table")
-        if item["status"] == "coming-soon" and not re.search(r">None yet\s*<", html):
-            problems.append(f"{docs} coming-soon table is missing the None yet row")
+        if item["status"] == "coming-soon" and not coming_soon_has_character(html):
+            problems.append(f"{docs} coming-soon table is missing its cast empty state row")
     return problems
 
 
