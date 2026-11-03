@@ -1,0 +1,15 @@
+{{- /* The one install call to action, labelled "Download", on every template.
+  It links to /download/ unless href says otherwise (the Mac card on /download/
+  links to its thanks page). kind is primary (the view's one teal primary, see
+  check_install_cta.py), secondary (outline, the header's always) or text (a
+  plain link inside running copy). Context: dict
+    "kind"   primary, secondary or text (default primary)
+    "class"  extra classes, e.g. site-cta or mm-download (optional)
+    "href"   target (optional, default /download/) */ -}}
+{{- $kind := .kind | default "primary" -}}
+{{- $href := .href | default ("download/" | relURL) -}}
+{{- if eq $kind "text" -}}
+<a{{ with .class }} class="{{ . }}"{{ end }} href="{{ $href }}">Download</a>
+{{- else -}}
+<a class="button button-{{ $kind }}{{ with .class }} {{ . }}{{ end }}" href="{{ $href }}">Download</a>
+{{- end -}}

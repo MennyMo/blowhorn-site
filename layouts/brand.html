@@ -31,8 +31,9 @@
                 </div>
               </li>
 {{- end -}}
-{{- /* The two kit downloads, in the hero and the closing call to action:
-  the full kit as the primary button, the logos only as the secondary one. */ -}}
+{{- /* The two kit downloads, in the closing call to action (the page's one
+  "Download full brand kit"): the full kit as the primary button, the logos
+  only as the secondary one. */ -}}
 {{- define "partials/brand-kit-downloads.html" -}}
 {{- $icon := `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11"></path><path d="M7 11l5 5 5-5"></path><path d="M4 19h16"></path></svg>` -}}
             <div class="brand-downloads">
@@ -113,9 +114,6 @@
             <p class="label">Version 1 &middot; October 2026</p>
             <h1 class="display">{{ .Title }}</h1>
             <p class="body-lg muted">{{ .Params.lead }}</p>
-            <div class="brand-hero-actions">
-              {{- partial "brand-kit-downloads.html" .Params.kits }}
-            </div>
           </div>
           <figure class="brand-showcase">
             <picture>

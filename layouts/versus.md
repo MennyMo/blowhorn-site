@@ -32,4 +32,4 @@
 {{ range .Params.faq }}
 **{{ .q }}** {{ .a }}{{ with .link }} [{{ .label }}]({{ .href }}){{ end }}
 {{ end }}
-[Download Blowhorn for Mac]({{ "download/" | absURL }})
+[Download]({{ "download/" | absURL }})

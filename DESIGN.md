@@ -76,6 +76,13 @@ Don't:
 
 Live specimen: /brand/#cards.
 
+## Install call to action
+
+- Every install link says "Download" and comes from `layouts/_partials/download-button.html` (kind primary, secondary or text). The header's is always secondary.
+- A view has one teal primary (`.button-primary`) in its main content. A free check is a text link; a second action is an outline button.
+- `make check-install-cta` (in `make check`) fails a second primary or an old label. Docs are skipped; the home page is pending its rebuild (#418).
+- `/download/`: the Mac button is the only primary. The extension, the command and the bookmarklet are outline buttons. Windows is a plain line.
+
 ## Concision
 
 Say less, more clearly. Turn the verbosity dial down a notch from your first draft.
@@ -94,6 +101,7 @@ Say less, more clearly. Turn the verbosity dial down a notch from your first dra
 - [ ] Paragraphs stay within `--text-measure`; cards use `--card-pad` and `--grid-gap`
 - [ ] No coloured stripe on one edge of a card, callout, quote, table row or panel, and no hard offset shadow; no two cards in a row, and no card and the one above it, share a card variant, at any width the grid shows
 - [ ] Checked at 1280, 390 and 320 px, light and dark
+- [ ] One teal primary per view; install links come from `download-button.html` and say "Download"
 - [ ] Intros <= 2 sentences, card bodies <= ~30 words, one idea per sentence
 - [ ] No em dashes; no trailing periods on section titles
 
