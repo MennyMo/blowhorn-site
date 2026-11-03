@@ -38,7 +38,12 @@
                 <span class="price-annual"><span class="price-amount">${{ .annual }}</span> <span class="price-unit">{{ .unit_a }}</span></span>
               </p>
               <p class="plan-note caption"><span class="price-monthly">{{ if eq .monthly "0" }}No card needed{{ else }}Or ${{ .annual }} yearly, 2 months free{{ end }}</span><span class="price-annual">{{ with .note_a }}{{ . }}{{ else }}No card needed{{ end }}</span></p>
+              {{- /* The free plan is the install call to action; the paid plans name their plan. Only the featured plan is the page's primary. */ -}}
+              {{- if eq .monthly "0" }}
+              {{ partial "download-button.html" (dict "kind" "secondary" "class" "plan-cta") }}
+              {{- else }}
               <a class="button{{ if .featured }} button-primary{{ end }} plan-cta" href="{{ $download }}">{{ .cta }}</a>
+              {{- end }}
               <ul class="plan-features">
                 {{- range .features }}
                 <li>{{ . }}</li>
@@ -92,7 +97,7 @@
             </details>
             {{- end }}
           </div>
-          <p class="compare-cta pricing-cta"><a class="button button-primary" href="{{ $download }}">Download Blowhorn free</a> <a class="button" href="{{ (site.GetPage "/compare").RelPermalink }}">See how we compare</a></p>
+          <p class="compare-cta pricing-cta">{{ partial "download-button.html" (dict "kind" "secondary") }} <a class="button" href="{{ (site.GetPage "/compare").RelPermalink }}">See how we compare</a></p>
         </section>
       </div>
     </main>

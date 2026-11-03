@@ -81,7 +81,7 @@
             <li>{{ . }}</li>
             {{- end }}
           </ul>
-          <p class="compare-cta"><a class="button button-primary" href="{{ "download/" | relURL }}">Get Blowhorn</a> <a class="button" href="{{ (site.GetPage "/docs").RelPermalink }}">Read the docs</a></p>
+          <p class="compare-cta">{{ partial "download-button.html" (dict) }} <a class="button" href="{{ (site.GetPage "/docs").RelPermalink }}">Read the docs</a></p>
         </section>
       </div>
     </main>

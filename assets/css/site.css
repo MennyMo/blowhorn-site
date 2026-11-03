@@ -1334,45 +1334,7 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 .download-requirements-list span { color: var(--ink-muted); }
 .download-verify a { color: var(--ink-muted); }
 .download-verify a:hover { color: var(--link); }
-/* Windows is not out yet: a muted card with no link, a disabled button and a
-   red sign hung from a nail on the card's top edge. The sign sits beside the
-   icon, clear of the title, and swings once on load (never under reduced motion). */
-.download-card-soon { position: relative; cursor: default; }
-.download-card-soon .download-icon { filter: grayscale(1) drop-shadow(0 10px 18px rgba(30, 33, 23, 0.16)); opacity: 0.5; }
-.download-card-soon .h3,
-.download-card-soon p { color: var(--ink-muted); }
-.soon-sign {
-  position: absolute;
-  top: calc(-1 * var(--space-3));
-  right: var(--card-pad);
-  width: 168px;
-  height: auto;
-  overflow: visible;
-  transform-origin: 50% 9%;
-  filter: drop-shadow(0 6px 10px rgba(30, 33, 23, 0.22));
-  animation: soon-sign-swing 2.4s ease-out 0.4s both;
-}
-.soon-sign-string { fill: none; stroke: var(--sign-red); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.soon-sign-edge { fill: var(--sign-red-shade); }
-.soon-sign-face { fill: var(--sign-red); }
-.soon-sign-rim { fill: none; stroke: var(--white); stroke-opacity: 0.18; stroke-width: 1.5; }
-.soon-sign-text { fill: var(--white); font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: 0.06em; }
-.soon-sign-nail { fill: var(--charcoal); }
-.soon-sign-glint { fill: var(--white); fill-opacity: 0.55; }
-@keyframes soon-sign-swing {
-  0% { transform: rotate(-6deg); }
-  30% { transform: rotate(4deg); }
-  55% { transform: rotate(-2deg); }
-  78% { transform: rotate(1deg); }
-  100% { transform: rotate(0deg); }
-}
-@media (prefers-color-scheme: dark) {
-  .soon-sign { filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5)); }
-  .soon-sign-nail { fill: var(--line-strong); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .soon-sign { animation: none; }
-}
+.download-windows { margin: var(--space-6) 0 0; color: var(--ink-muted); }
 .download-grid { display: grid; gap: var(--grid-gap); }
 @media (min-width: 720px) {
   .download-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -2148,7 +2110,7 @@ body { background: var(--surface); }
   .brand-page { padding-top: 0; }
   .brand-section { break-before: page; border-top: 0; }
   .brand-section .h2, .brand-subhead, .section-head { break-after: avoid; }
-  .site-header, .site-footer, .brand-index, .brand-hero-actions, .brand-cta, .asset-gets, .asset-get, .copy, .skip-link { display: none !important; }
+  .site-header, .site-footer, .brand-index, .brand-cta, .asset-gets, .asset-get, .copy, .skip-link { display: none !important; }
   .brand-section { break-inside: auto; padding-block: var(--space-8); }
   .asset, .swatch, .rule, .type-card, .major-card, .clear-grid { break-inside: avoid; }
   .major-card { box-shadow: none; }
@@ -3560,7 +3522,7 @@ html[data-tells-bar="off"] .tells-bar { display: none; }
 .tells-callout-copy > * + * { margin-top: var(--intro-gap); }
 .tells-callout-copy p { max-width: var(--text-measure); }
 .tells-callout-copy .tells-actions { margin-top: var(--space-6); column-gap: var(--space-6); }
-.tells-callout-more { color: var(--link); }
+.tells-callout-more, .tells-callout-cta { color: var(--link); }
 @media (min-width: 720px) {
   .tells-callout { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: var(--space-8); }
 }
