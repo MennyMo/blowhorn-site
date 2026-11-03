@@ -2,32 +2,52 @@
   "title": "Blowhorn vs DSMN8",
   "linkTitle": "DSMN8",
   "seo_title": "Blowhorn vs DSMN8: honest comparison",
-  "description": "DSMN8 is an employee advocacy and executive influence platform for mid-market and enterprise. Blowhorn is a lighter way for technical teams to amplify through real people.",
+  "description": "Blowhorn isn't a bot. It's you. DSMN8 is an employee advocacy and executive influence platform for mid-market and enterprise. Blowhorn is a lighter way for small technical teams to amplify through real people.",
   "layout": "versus",
   "weight": 32,
-  "lastmod": "2026-10-12",
+  "lastmod": "2026-11-03",
   "competitor": "DSMN8",
   "mark": "D8",
   "site_url": "https://dsmn8.com/",
   "group": "Employee advocacy",
-  "verdict": "DSMN8 is an employee advocacy and executive influence platform for mid-market and enterprise. Blowhorn is a lighter way for technical teams to amplify through real people.",
+  "verdict": "Blowhorn isn't a bot. It's you. DSMN8 is an employee advocacy and executive influence platform for mid-market and enterprise, with governed programs, approvals and analytics. Blowhorn is a lighter way for small technical teams to amplify through real people on developer networks, free during early access.",
   "them": [
-    "You want an advocacy program with executive influence and newsletters",
-    "Unlimited admin seats and onboarding matter",
-    "Annual contracts suit your procurement"
+    "You want a governed advocacy program: approvals, SSO, audit trails and gamification",
+    "Executive influence and newsletters are part of the program",
+    "Unlimited admin seats and full onboarding matter",
+    "Annual contracts and a demo-led purchase suit your procurement"
   ],
   "us": [
-    "You're a team of 3 to 50, not an enterprise rollout",
-    "Your people talk on Hacker News, Reddit, GitHub, Slack, LinkedIn, X and Bluesky",
-    "You want amplification working today, without a sales call"
+    "You are a small technical team, not an enterprise rollout",
+    "Your audience is on Hacker News, Reddit, GitHub, LinkedIn, X and Bluesky, and you use Slack messages via API",
+    "You want to start free during early access, with no sales call in the way, knowing sessions can break, automation can still be blocked, and a computer must be awake because this is not hosted SaaS"
   ],
-  "price_them": "By quote, annual contract",
+  "network_logos": [
+    "linkedin",
+    "x",
+    "reddit",
+    "hacker-news",
+    "github",
+    "bluesky",
+    "slack"
+  ],
+  "wins": [
+    "Developer networks: Hacker News, Reddit and GitHub, plus Slack messages via API, which DSMN8 does not evidence as publishing surfaces",
+    "Your own computers and signed-in browser, plus API where noted, not a vendor cloud in the middle",
+    "Start free during early access, with no demo, quote or annual contract in the way"
+  ],
+  "loses": [
+    "DSMN8 governs a program: approvals, SAML SSO, role controls, audit trails and gamification. Blowhorn does not claim those here",
+    "DSMN8 reports UTM attribution and earned media value. Blowhorn analytics cover LinkedIn, X and Bluesky",
+    "DSMN8 keeps running while your computers are closed. Blowhorn needs a computer awake"
+  ],
+  "price_them": "Custom quote only, annual contract",
   "price_src": "https://dsmn8.com/pricing/",
   "rows": [
     {
       "f": "Built for",
       "t": "Enterprise programs",
-      "b": "Founders, DevRel and small teams"
+      "b": "Founders, DevRel and small technical teams"
     },
     {
       "f": "Where it acts",
@@ -37,7 +57,17 @@
     {
       "f": "Content library, approvals, gamification",
       "t": "Yes",
-      "b": "No"
+      "b": "Not assessed"
+    },
+    {
+      "f": "Governance",
+      "t": "Approval workflows, SAML SSO, role controls, audit trails, gamification",
+      "b": "Not assessed"
+    },
+    {
+      "f": "Analytics",
+      "t": "UTM tracking, earned media value, CRM attribution",
+      "b": "LinkedIn, X and Bluesky analytics"
     },
     {
       "f": "Many people amplifying one post",
@@ -46,25 +76,29 @@
     },
     {
       "f": "Hacker News, Reddit, GitHub, Slack",
-      "t": "No",
-      "b": "Yes"
+      "t": "Hacker News, Reddit, GitHub: Not assessed. Slack: internal distribution and notification only, not public publishing",
+      "b": "Yes, with limits: GitHub is amplify-only, automation can still be blocked, sessions can break, and a computer must be awake. Slack is a Slack message via API, not a public feed post"
     },
     {
       "f": "Bought engagement",
-      "t": "None",
+      "t": "Not assessed",
       "b": "None. Blowhorn sells no followers, likes or reposts"
     },
     {
       "f": "Price",
-      "t": "Quote or per seat",
+      "t": "Custom quote only",
       "b": "Free during early access"
     }
   ],
-  "signal": "Advocacy works because real people are trusted. Blowhorn keeps that and drops the program overhead for teams that just need their people behind a post.",
+  "signal": "Advocacy works because real people are trusted. DSMN8 governs that trust for large programs. Blowhorn keeps the real-people part and drops the program overhead for teams that just need their people behind a post, free during early access, with no tiers.",
   "faq": [
     {
       "q": "Is DSMN8 better than Blowhorn?",
-      "a": "For a structured advocacy program, yes. For small technical teams who want to start today, we think Blowhorn is the better fit."
+      "a": "For a structured, governed advocacy program, yes. Approvals, SSO, audit trails and gamification are DSMN8 strengths Blowhorn does not claim here. For small technical teams who want to start on developer networks, we think Blowhorn is the better fit."
+    },
+    {
+      "q": "Does DSMN8 publish to Hacker News, Reddit or GitHub?",
+      "a": "Not assessed in the research behind this page, checked 2026-11-03. Its Slack surface is internal distribution and notification only, not public publishing."
     }
   ],
   "major": "Programs need managers. A horn needs a breath.",
