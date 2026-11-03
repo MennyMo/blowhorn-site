@@ -1,0 +1,27 @@
+{
+  "$id": "https://blowhorn.ai/schemas/bookmarklet.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Capture bookmarklet",
+  "description": "data/bookmarklet.json: the bookmarklet shown on the download page. The code must equal the code block under 'Capture a page from the browser' in the content worksheet guide (check_bookmarklet.py fails on drift).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "code"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "description": "The bookmark's name.",
+      "type": "string",
+      "minLength": 1
+    },
+    "code": {
+      "description": "The javascript: address.",
+      "type": "string",
+      "pattern": "^javascript:"
+    }
+  }
+}
