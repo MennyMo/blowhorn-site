@@ -1,7 +1,7 @@
 /* Action matrix (/integrations/actions/, layouts/action-matrix.html) and the
    docs all-actions table (layouts/_partials/action-table.html). Both render
-   from layouts/_partials/action-matrix.html. Theme tokens only, so Reveille
-   (light, dark follows the OS) and Signal both apply with no extra rules. */
+   from layouts/_partials/action-matrix.html. Theme tokens only, so the one
+   theme applies with no extra rules. */
 
 /* ---------- Marks (status by exception) ----------
    Supported is a plain neutral dot, never a check or a word. Coming soon is

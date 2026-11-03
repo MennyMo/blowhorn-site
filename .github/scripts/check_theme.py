@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 """Fail if the built site dropped the theme contract.
 
-The public homepage theme is data/themes.json default, overridden by
-content/en/_index.md front matter theme: when set. Reveille is a look kept
-as a preview (front matter theme: reveille) and via ?theme=, which swaps the
-token layer only, not homepage layout. /home-reveille/ is no longer built
-(build: render: never, #410); when it is built again, its page is checked.
+The site is one theme, Signal: data/themes.json default, overridden by
+content/en/_index.md front matter theme: when set. ?theme= previews the
+token layer only, not homepage layout.
 
 A theme is tokens, CSS and layout partials that read the same data and
-content. Reveille copy is the site's copy. The only approved per-theme
-content file is content/en/home-reveille.md (today's homepage, kept as a
-preview). A new home-signal.md or other theme-named page fails this check.
+content. No per-theme content file is approved: a home-signal.md or other
+theme-named page fails this check.
 
 Activity and platform counts in copy must match supported rows in
 data/integrations.json plus actions in data/platforms/<id>.yaml, and each
@@ -31,7 +28,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 COUNT_ATTRS = ("platforms", "activities", "soon")
-APPROVED_THEME_CONTENT = frozenset({"content/en/home-reveille.md"})
+# No per-theme content file is approved anymore (the Reveille preview is
+# gone); extra_theme_content() fails any content file named for a theme.
+APPROVED_THEME_CONTENT = frozenset()
 
 
 def front_matter_theme(path: Path):
@@ -115,7 +114,7 @@ def platforms_default_problems(script: Path = HOME_SIGNAL_JS) -> list:
 
 
 def extra_theme_content(root=ROOT):
-    """Content files named for a theme, other than the approved Reveille preview."""
+    """Content files named for a theme; none are approved."""
     ids = theme_ids()
     extras = []
     content = root / "content"
@@ -226,7 +225,7 @@ def main(root: Path) -> int:
     for rel in extra_theme_content():
         problems.append(
             f"theme-specific content file {rel}; themes differ by tokens, "
-            "CSS and layout partials only. Approved exception: content/en/home-reveille.md"
+            "CSS and layout partials only"
         )
 
     index = root / "index.html"
@@ -254,20 +253,6 @@ def main(root: Path) -> int:
         if panels != 4:
             problems.append(f"/index.html has {panels} platform panels, want 4")
         problems.extend(platforms_default_problems())
-
-    # The preview is unpublished (build: render: never); check it only when built.
-    reveille = root / "home-reveille/index.html"
-    if reveille.is_file():
-        page = parse(reveille)
-        html = reveille.read_text(encoding="utf-8")
-        if page.html_theme != "reveille":
-            problems.append(
-                f"/home-reveille/index.html data-theme is {page.html_theme!r}, want reveille"
-            )
-        if "Say it once. Say it everywhere." not in html:
-            problems.append("/home-reveille/index.html lost today's platforms headline")
-        if 'id="how"' not in html or "army" not in html:
-            problems.append("/home-reveille/index.html lost the army / how section")
 
     catalog = root / "integrations/index.html"
     if not catalog.is_file():

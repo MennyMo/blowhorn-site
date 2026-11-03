@@ -4,8 +4,8 @@
    look. Pick the variant by what the content is, and never give two
    neighbours in a row or a column the same variant (DESIGN.md, "Cards").
 
-   Every colour is a brand token with a fallback, so the file also works where
-   a token is missing. Each variant sets the --card-* properties; the shared
+   Every colour is a brand token from /assets/brand/tokens.json; the tokens are
+   the single source, with no fallbacks. Each variant sets the --card-* properties; the shared
    rules below read them. No variant draws a stripe on one edge. Every variant
    keeps the same box (a 1px border, or none): a thicker edge is drawn inside
    it, so the content box, and where a label wraps, never depends on the
@@ -19,9 +19,9 @@
    variant below overrides these: zero specificity, so a.docs-card never outranks
    a variant class. */
 :where(.card, a.docs-card) {
-  --card-bg: var(--surface-tint, #DDF4F1);
-  --card-ink: var(--ink, #1E2117);
-  --card-muted: var(--ink-muted, #5B6A70);
+  --card-bg: var(--surface-tint);
+  --card-ink: var(--ink);
+  --card-muted: var(--ink-muted);
   --card-border-color: transparent;
 }
 
@@ -62,13 +62,13 @@ a.docs-card,
    no shadow (a hard offset is banned: DESIGN.md, Cards rule 1). Keeps its colours in dark mode, like the paper speech
    bubble. For Major's voice, testimonials and the one featured item in a section. */
 .card-paper {
-  --card-bg: var(--cream, #FFF6E0);
-  --card-ink: var(--near-black, #1E2117);
-  --card-muted: var(--charcoal, #3C494F);
+  --card-bg: var(--cream);
+  --card-ink: var(--near-black);
+  --card-muted: var(--charcoal);
   --card-border-width: 1.5px;
-  --card-border-color: var(--near-black, #1E2117);
+  --card-border-color: var(--near-black);
   --card-shadow: none;
-  --card-hover-border: var(--near-black, #1E2117);
+  --card-hover-border: var(--near-black);
   --card-hover-shadow: none;
 }
 
@@ -76,18 +76,18 @@ a.docs-card,
    dashed teal border that goes solid on hover, and a mono label with a drawn ">"
    prompt. For developer notes, API and JSON facts, commands. */
 .card-dispatch {
-  --card-bg: var(--near-black, #1E2117);
-  --card-ink: var(--cream, #FFF6E0);
-  --card-muted: var(--mint, #A6EBDF);
+  --card-bg: var(--near-black);
+  --card-ink: var(--cream);
+  --card-muted: var(--mint);
   --card-border-width: 1px;
   --card-border-style: dashed;
-  --card-border-color: var(--teal-shade, #008F80);
-  --card-hover-border: var(--teal-shade, #008F80);
+  --card-border-color: var(--teal-shade);
+  --card-hover-border: var(--teal-shade);
   --card-hover-shadow: none;
 }
 .card-dispatch .label {
   font-family: var(--font-mono, var(--mono, ui-monospace, monospace));
-  color: var(--teal-bright, #00D3A9);
+  color: var(--teal-bright);
 }
 .card-dispatch .label::before {
   content: ">" / "";
@@ -102,11 +102,11 @@ a.docs-card,
    dark one). The focus ring changes only inside the card: the card's own ring
    is drawn on the page, so it keeps the page's colour. */
 .card-paper {
-  --ink: var(--near-black, #1E2117);
-  --ink-muted: var(--charcoal, #3C494F);
-  --ink-wordmark: var(--charcoal, #3C494F);
-  --link: var(--teal-deep, #00756A);
-  --link-hover: var(--near-black, #1E2117);
+  --ink: var(--near-black);
+  --ink-muted: var(--charcoal);
+  --ink-wordmark: var(--charcoal);
+  --link: var(--teal-deep);
+  --link-hover: var(--near-black);
   --line: #D5DEDD;
   --surface-tint: #DDF4F1;
   --surface: #FFFFFF;
@@ -120,13 +120,13 @@ a.docs-card,
   --glass-rim: rgba(255, 255, 255, 0.65);
   --glass-edge: rgba(30, 33, 23, 0.08);
 }
-.card-paper * { --focus-ring: var(--teal-deep, #00756A); }
+.card-paper * { --focus-ring: var(--teal-deep); }
 .card-dispatch {
-  --ink: var(--cream, #FFF6E0);
-  --ink-muted: var(--mint, #A6EBDF);
-  --ink-wordmark: var(--cream, #FFF6E0);
-  --link: var(--teal-bright, #00D3A9);
-  --link-hover: var(--mint, #A6EBDF);
+  --ink: var(--cream);
+  --ink-muted: var(--mint);
+  --ink-wordmark: var(--cream);
+  --link: var(--teal-bright);
+  --link-hover: var(--mint);
   --line: #3C494F;
   --surface-tint: #173A34;
   --surface: #1E2117;
@@ -140,7 +140,7 @@ a.docs-card,
   --glass-rim: rgba(255, 255, 255, 0.08);
   --glass-edge: rgba(0, 0, 0, 0.35);
 }
-.card-dispatch * { --focus-ring: var(--teal-bright, #00D3A9); }
+.card-dispatch * { --focus-ring: var(--teal-bright); }
 
 /* 3. Stamp: no fill, a 2px ink edge, a small radius, and a label boxed in mono
    caps like a rubber stamp. For facts, stats, guarantees, proof, compliance.
@@ -148,12 +148,12 @@ a.docs-card,
    other variants. */
 .card-stamp {
   --card-bg: transparent;
-  --card-ink: var(--ink, #1E2117);
-  --card-muted: var(--ink-muted, #5B6A70);
+  --card-ink: var(--ink);
+  --card-muted: var(--ink-muted);
   --card-border-width: 1px;
-  --card-border-color: var(--ink, #1E2117);
-  --card-shadow: inset 0 0 0 1px var(--ink, #1E2117);
-  --card-hover-border: var(--ink, #1E2117);
+  --card-border-color: var(--ink);
+  --card-shadow: inset 0 0 0 1px var(--ink);
+  --card-hover-border: var(--ink);
   --card-hover-shadow: var(--card-shadow);
   border-radius: var(--radius-sm, 6px);
 }
@@ -162,21 +162,21 @@ a.docs-card,
   width: fit-content;
   max-width: 100%;
   padding: 2px 8px;
-  border: 1px solid var(--ink, #1E2117);
+  border: 1px solid var(--ink);
   border-radius: 2px;
-  color: var(--ink, #1E2117);
+  color: var(--ink);
 }
 
 /* 4. Field: a flat tint, no border, no shadow, no gradient. The common case, for
    feature and explanation grids. The hover border is the only edge it draws.
    The fill is the tint a link's arrow chip uses, so the chip takes --surface. */
 .card-field {
-  --card-bg: var(--surface-tint, #DDF4F1);
-  --card-chip: var(--surface, #FFFFFF);
-  --card-ink: var(--ink, #1E2117);
-  --card-muted: var(--ink-muted, #5B6A70);
+  --card-bg: var(--surface-tint);
+  --card-chip: var(--surface);
+  --card-ink: var(--ink);
+  --card-muted: var(--ink-muted);
   --card-border-color: transparent;
-  --card-hover-border: var(--line-strong, #7A878C);
+  --card-hover-border: var(--line-strong);
   --card-hover-shadow: none;
 }
 
@@ -185,10 +185,10 @@ a.docs-card,
    asks of a UI boundary. */
 .card-plain {
   --card-bg: transparent;
-  --card-ink: var(--ink, #1E2117);
-  --card-muted: var(--ink-muted, #5B6A70);
-  --card-border-color: var(--line-strong, #7A878C);
-  --card-hover-border: var(--ink, #1E2117);
+  --card-ink: var(--ink);
+  --card-muted: var(--ink-muted);
+  --card-border-color: var(--line-strong);
+  --card-hover-border: var(--ink);
   --card-hover-shadow: none;
 }
 
@@ -202,8 +202,8 @@ a.docs-card,
   --card-bg:
     linear-gradient(180deg, var(--glass-sheen, rgba(255, 255, 255, 0.55)), transparent 46%),
     var(--glass-fill, rgba(255, 255, 255, 0.58));
-  --card-ink: var(--ink, #1E2117);
-  --card-muted: var(--ink-muted, #5B6A70);
+  --card-ink: var(--ink);
+  --card-muted: var(--ink-muted);
   --card-border-color: transparent;
   --card-shadow:
     inset 0 1px 0 0 var(--glass-specular, rgba(255, 255, 255, 0.95)),
@@ -269,13 +269,13 @@ a.card-dispatch:is(:hover, :focus-visible) {
   .card-plain,
   .card-glass,
   .glass {
-    --card-bg: var(--surface, #FFFFFF);
-    --card-border-color: var(--ink, #1E2117);
+    --card-bg: var(--surface);
+    --card-border-color: var(--ink);
     --card-blur: none;
   }
-  .card-field { --card-chip: var(--surface-tint, #DDF4F1); }
+  .card-field { --card-chip: var(--surface-tint); }
   .card-glass,
-  .glass { --card-shadow: 0 0 0 1px var(--ink, #1E2117); }
+  .glass { --card-shadow: 0 0 0 1px var(--ink); }
 }
 
 /* Forced colours: fills and shadows are dropped, so every edge is a system colour
@@ -312,9 +312,9 @@ a.card-dispatch:is(:hover, :focus-visible) {
   .card-field,
   .card-plain,
   .card-glass {
-    background: #FFFFFF;
-    color: #000000;
-    border: 1px solid #000000;
+    background: var(--white);
+    color: var(--print-ink);
+    border: 1px solid var(--print-ink);
     box-shadow: none;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;

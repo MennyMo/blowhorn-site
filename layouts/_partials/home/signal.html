@@ -134,7 +134,7 @@
         <div class="wrap">
           <div class="major-card card-paper">
             <figure class="major-figure">
-              {{- /* Eager, matching Reveille: native loading=lazy is skipped by Playwright full-page screenshots, which never scroll this card into view, so Chromium never fetches the webp and only the yellow disc paints. */ -}}
+              {{- /* Eager: native loading=lazy is skipped by Playwright full-page screenshots, which never scroll this card into view, so Chromium never fetches the webp and only the yellow disc paints. */ -}}
               <img src="{{ "assets/brand/mascot/locked-6/major-6-hat-left.webp" | relURL }}" alt="Major Blowhorn, a teal rooster in a drill sergeant's campaign hat, pointing and shouting into his bullhorn" width="657" height="560">
             </figure>
             <div class="major-copy">

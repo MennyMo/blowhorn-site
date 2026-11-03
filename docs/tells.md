@@ -41,8 +41,7 @@ Build a link with the partial; never hard-code a Tells URL in a template:
 | `docs` | Card under the table of contents (1280px and up), else at the end of the page | `tells-docs-card.html` in `docs/baseof.html` |
 | `404` | Line under the 404 message | `404.html` |
 
-The alternate home layouts (`/home-oil/`, `/home-reveille/`) do not render
-`signal.html` and carry no band. Prose links in the docs (synced from the
+Prose links in the docs (synced from the
 product repository), the Field Manual, the Trust Center and the role and
 solution FAQs stay untagged on purpose; `check_tells.py` ignores links without
 UTM parameters.

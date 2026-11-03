@@ -1,10 +1,9 @@
-/* Theme token layers. Both themes follow the visitor's system setting:
-   light tokens by default, dark tokens under prefers-color-scheme: dark,
-   no JavaScript and no manual toggle. Reveille (the site default) is
-   defined in site.css; Signal (the homepage theme) is defined here and
-   carries the same surface and ambient colouring as Reveille, so the
-   home page matches the rest of the site. Brand primitives in site.css
-   are unchanged. */
+/* Theme token layers. The site is one theme, Signal: light tokens by default,
+   dark tokens under prefers-color-scheme: dark, no JavaScript and no manual
+   toggle. The base layer is the :root tokens in site.css; this file carries
+   the homepage's own --app-* tokens (the app-window sections) plus the
+   component overrides that only the Signal homepage needs. Brand primitives
+   in site.css are unchanged. */
 
 /* Logo swap: both themes follow the OS. */
 .logo-on-dark { display: none; }
@@ -15,10 +14,9 @@
 }
 
 /* Signal, light. The homepage carries the same surface and ambient
-   colouring as the rest of the site (the Reveille tokens in site.css), so
-   the home page reads as one theme with the other pages; only the layout
-   and the --app-* tokens (the homepage's app-window sections) are its
-   own. */
+   colouring as the rest of the site, so the home page reads as one theme
+   with the other pages; only the layout and the --app-* tokens (the
+   homepage's app-window sections) are its own. */
 html[data-theme="signal"] {
   color-scheme: light dark;
   --surface: #FFFFFF;
@@ -68,9 +66,9 @@ html[data-theme="signal"] {
 
 html[data-theme="signal"] .stage .stage-ground { stroke: var(--line); stroke-width: var(--stroke-hairline); }
 
-/* Signal, dark. The token layer is the site's dark (Reveille) palette in
-   site.css, copied here so Signal's components keep their dark treatment;
-   the --app-* tokens for the homepage's app-window sections follow. */
+/* Signal, dark. The dark token layer mirrors site.css, copied here so
+   Signal's components keep their dark treatment; the --app-* tokens for
+   the homepage's app-window sections follow. */
 @media (prefers-color-scheme: dark) {
   html[data-theme="signal"] {
     --surface: #1E2117;
@@ -124,18 +122,6 @@ html[data-theme="signal"] .stage .stage-ground { stroke: var(--line); stroke-wid
     --tk-prompt: #00D3A9;
     border-color: rgba(255, 255, 255, 0.08);
   }
-
-  html[data-theme="signal"] .army-src,
-  html[data-theme="signal"] .army-mac,
-  html[data-theme="signal"] .army-plinth { border-color: var(--cream); }
-  html[data-theme="signal"] .army-packet { stroke: var(--cream); }
-
-  html[data-theme="signal"] .army-cic,
-  html[data-theme="signal"] .army-cic-star,
-  html[data-theme="signal"] .army-halt { border-color: var(--cream); }
-
-  html[data-theme="signal"] .ai-status { color: #00D3A9; }
-  html[data-theme="signal"] .ai-soon { color: #FF8A73; }
 
   html[data-theme="signal"] #platforms .logo-tile {
     background: radial-gradient(closest-side, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.04) 62%, transparent 100%);

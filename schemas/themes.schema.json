@@ -16,7 +16,7 @@
     },
     "themes": {
       "type": "array",
-      "minItems": 2,
+      "minItems": 1,
       "uniqueItems": true,
       "items": { "$ref": "#/definitions/theme" }
     }
@@ -24,7 +24,7 @@
   "definitions": {
     "id": {
       "type": "string",
-      "enum": ["signal", "reveille"]
+      "enum": ["signal"]
     },
     "theme": {
       "type": "object",
@@ -41,10 +41,10 @@
         "home": {
           "description": "Homepage variant partial under layouts/_partials/home/.",
           "type": "string",
-          "enum": ["signal", "reveille"]
+          "enum": ["signal"]
         },
         "colorScheme": {
-          "description": "dark is always dark. light-dark follows the OS, which is Reveille (today's look).",
+          "description": "dark is always dark. light-dark follows the OS.",
           "type": "string",
           "enum": ["dark", "light", "light-dark"]
         }
