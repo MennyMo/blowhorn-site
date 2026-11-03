@@ -1,0 +1,10 @@
+{{- /* The home page hero's default variant from data/hero.json (schema:
+  schemas/hero.schema.json). Returns the variant map; fails the build when
+  "default" names no variant. hero-rotation.html builds the rotation around
+  it from rotation.mode and rotation.ids; see docs/hero-variants.md. */ -}}
+{{- $hero := site.Data.hero -}}
+{{- $match := where $hero.variants "id" $hero.default -}}
+{{- if not $match -}}
+  {{- errorf "data/hero.json: default %q is not one of variants[].id" $hero.default -}}
+{{- end -}}
+{{- return index $match 0 -}}

@@ -1,0 +1,43 @@
+{
+  "$schema": "../schemas/hero_demo.schema.json",
+  "label": "Demo",
+  "exampleLabel": "Example data",
+  "ariaLabel": "Interactive demo of the Blowhorn desktop app. Example data. Edit the post, pick networks, press Send, and watch each one go Queued, Posting as you, then Went out.",
+  "composeLabel": "Your announcement",
+  "sendLabel": "Send",
+  "title": "v2.0 ships today",
+  "message": "v2.0 is out. Faster queue, team waves, and a new Hacker News flow. Written by us, posted by us.",
+  "meta": "Tue Oct 20, 9:02 AM CDT as you, ran on Computer 2",
+  "statusSteps": ["Queued", "Posting as you", "Went out"],
+  "activityRows": [
+    {
+      "tag": "Post",
+      "title": "v2.0 ships today",
+      "time": "9:02 AM",
+      "sub": "as you",
+      "status": "Went out",
+      "on": true
+    },
+    {
+      "tag": "Repost wave",
+      "title": "v2.0 ships today",
+      "time": "9:30 AM",
+      "sub": "12 teammates",
+      "status": "7 of 12"
+    },
+    {
+      "tag": "React",
+      "title": "Rally the release issue",
+      "time": "9:45 AM",
+      "sub": "GitHub issue, 12 profiles",
+      "status": "Scheduled"
+    },
+    {
+      "tag": "Comment",
+      "title": "Reply on the HN thread",
+      "time": "11:10 AM",
+      "sub": "Hacker News, as you",
+      "status": "Scheduled"
+    }
+  ]
+}

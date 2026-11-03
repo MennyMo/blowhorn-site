@@ -1,5 +1,0 @@
-{{- /* Attribution for one testimonial (data/testimonials.json entry, the
-  context): the photo, name and company. The photo is decorative; the
-  name says who it is. */ -}}
-<span class="home-who-photo" aria-hidden="true">{{ with .picture }}<img src="{{ . | relURL }}" alt="" width="40" height="40" loading="lazy">{{ end }}</span>
-<span class="home-who-text"><b>{{ .name }}</b><span>{{ .company }}</span></span>

@@ -1,0 +1,8 @@
+{{- /* Split a hero headline on ". " so Signal can accent the second
+  sentence. One-sentence headlines stay whole. */ -}}
+{{- $parts := split . ". " -}}
+{{- if gt (len $parts) 1 -}}
+{{- index $parts 0 }}.<br><span class="accent">{{ delimit (after 1 $parts) ". " }}</span>
+{{- else -}}
+{{- . -}}
+{{- end -}}

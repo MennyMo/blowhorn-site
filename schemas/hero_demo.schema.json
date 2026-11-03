@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/hero_demo.schema.json",
+  "title": "Home page hero demo",
+  "description": "data/hero_demo.json: the interactive pseudo-app demo in the Signal hero (the hero film lives in data/hero.json media.video). Destinations come from data/integrations.json (platforms with posts true). Always labelled as a demo with example data. Hyphens never em dashes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["label", "exampleLabel", "ariaLabel", "composeLabel", "sendLabel", "title", "message", "meta", "statusSteps"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "label": {
+      "description": "Visible badge on the mock, e.g. Demo.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 24,
+      "not": { "pattern": "\u2014" }
+    },
+    "exampleLabel": {
+      "description": "Visible badge that the run is example data, not a live post.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "not": { "pattern": "\u2014" }
+    },
+    "ariaLabel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 280,
+      "not": { "pattern": "\u2014" }
+    },
+    "composeLabel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "not": { "pattern": "\u2014" }
+    },
+    "sendLabel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 24,
+      "not": { "pattern": "\u2014" }
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60,
+      "not": { "pattern": "\u2014" }
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 280,
+      "not": { "pattern": "\u2014" }
+    },
+    "meta": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "not": { "pattern": "\u2014" }
+    },
+    "statusSteps": {
+      "description": "Delivery pill states in order: Queued, Posting as you, Went out.",
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 32,
+        "not": { "pattern": "\u2014" }
+      }
+    },
+    "activityRows": {
+      "description": "Example rows in the Activity list. Decorative. Must stay example data.",
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tag", "title", "time", "sub", "status"],
+        "properties": {
+          "tag": { "type": "string", "minLength": 1, "maxLength": 24, "not": { "pattern": "\u2014" } },
+          "title": { "type": "string", "minLength": 1, "maxLength": 60, "not": { "pattern": "\u2014" } },
+          "time": { "type": "string", "minLength": 1, "maxLength": 16, "not": { "pattern": "\u2014" } },
+          "sub": { "type": "string", "minLength": 1, "maxLength": 80, "not": { "pattern": "\u2014" } },
+          "status": { "type": "string", "minLength": 1, "maxLength": 24, "not": { "pattern": "\u2014" } },
+          "on": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

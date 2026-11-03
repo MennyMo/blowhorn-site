@@ -92,7 +92,7 @@ class Parsing(unittest.TestCase):
         self.assertEqual(rules("/* .a { font-size: 9px; } */ .b { color: red; }"), [])
         self.assertEqual(rules("// border-left: 2px solid var(--teal);\n.b { color: red; }"), [])
 
-    def test_check_files_reads_every_site_stylesheet(self):
+    def test_check_files_reads_the_tree_and_respects_the_allowlist(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "assets" / "css").mkdir(parents=True)
@@ -100,7 +100,7 @@ class Parsing(unittest.TestCase):
             (root / "assets" / "css" / "home-signal.css").write_text(".a { font-size: 9px; }\n", encoding="utf-8")
             paths = sorted((root / "assets" / "css").glob("*.css"))
             findings = check.check_files(paths, root)
-            self.assertEqual(sorted(f.path for f in findings), ["assets/css/home-signal.css", "assets/css/site.css"])
+            self.assertEqual([f.path for f in findings], ["assets/css/site.css"])
             self.assertEqual(findings[0].line, 1)
 
 

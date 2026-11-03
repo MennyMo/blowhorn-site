@@ -5,7 +5,7 @@
   "description": "data/tells.json: where the free Am I a Bot? tool (Blowhorn Tells) lives and the copy for every place the site promotes it. Every link is built by layouts/_partials/tells-link.html from url, pages and utm, with utm_content set to one of placements; the partial fails the build on an unknown page or placement, and .github/scripts/check_tells.py fails it when a placement goes missing from its page. Plain text, hyphens never em dashes. Marketing copy says browser, never Chrome; only the docs card says Chrome profile.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["url", "pages", "utm", "placements", "nav", "callouts", "thanks", "docs"],
+  "required": ["url", "pages", "utm", "placements", "nav", "home", "callouts", "thanks", "docs"],
   "definitions": {
     "text": { "type": "string", "minLength": 1, "not": { "pattern": "\u2014" } },
     "page": { "type": "string", "enum": ["home", "checks", "agents"] },
@@ -61,6 +61,24 @@
       "required": ["label"],
       "properties": {
         "label": { "$ref": "#/definitions/text" }
+      }
+    },
+    "home": {
+      "description": "The Signal home page band after Trust (layouts/_partials/home/tells.html).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eyebrow", "heading", "body", "cta", "secondary", "agents_lead", "agents_link", "art", "art_640", "art_alt"],
+      "properties": {
+        "eyebrow": { "$ref": "#/definitions/text" },
+        "heading": { "$ref": "#/definitions/text" },
+        "body": { "$ref": "#/definitions/text" },
+        "cta": { "$ref": "#/definitions/text" },
+        "secondary": { "$ref": "#/definitions/text" },
+        "agents_lead": { "$ref": "#/definitions/text" },
+        "agents_link": { "$ref": "#/definitions/text" },
+        "art": { "description": "Path under static/ to the 1280x720 art (the 1280w srcset candidate).", "type": "string", "pattern": "^assets/.+\\.webp$" },
+        "art_640": { "description": "Path under static/ to the 640x360 version of the same art (the 640w srcset candidate).", "type": "string", "pattern": "^assets/.+\\.webp$" },
+        "art_alt": { "$ref": "#/definitions/text" }
       }
     },
     "callouts": {

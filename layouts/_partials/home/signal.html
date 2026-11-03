@@ -1,178 +1,229 @@
-{{- /* Signal home, in the order of the Figma frame: hero (one fixed h1, the
-  Major, the app mock), logo ticker, How it works, AI, Trust, social proof
-  (once) and the closing. Copy and art come from data/home.json (schema:
-  schemas/home.schema.json). Card variants are named here by hand: no two
-  cards in a row share one (DESIGN.md, Cards). Anchors #how, #trust,
-  #platforms (the stat card) and #download (the closing) are linked from
-  outside the repo: keep them (check-site-contract.py). */ -}}
-{{- $h := site.Data.home -}}
-{{- if not $h }}{{ errorf "home: data/home.json is missing" }}{{ end -}}
-{{- $nets := (partial "platform-counts.html" .).platforms -}}
-{{- $testimonials := (index site.Data "testimonials").items -}}
-{{- $feature := slice -}}
-{{- $quotes := slice -}}
-{{- range $testimonials }}
-  {{- if in .placements "home-feature" }}{{ $feature = $feature | append . }}{{ end }}
-  {{- if in .placements "home-quote" }}{{ $quotes = $quotes | append . }}{{ end }}
-{{- end }}
-{{- if or (lt (len $feature) 1) (lt (len $quotes) 2) }}{{ errorf "home: data/testimonials.json needs one home-feature and two home-quote entries" }}{{ end -}}
-<main id="main" class="home-signal">
-  <section class="hero hero-signal" aria-labelledby="hero-title">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <h1 id="hero-title" class="display-xl">{{ $h.hero.headline }}</h1>
-          <p class="body-lg hero-sub">{{ $h.hero.subhead }}</p>
-          <div class="hero-actions">
-            {{ partial "download-button.html" (dict "kind" "primary") }}
-            <a class="home-link" href="{{ $h.hero.secondary.href }}">{{ $h.hero.secondary.label }}</a>
-          </div>
-        </div>
-        <figure class="hero-major">
-          <img src="{{ $h.hero.major.src | relURL }}" alt="{{ $h.hero.major.alt }}" width="{{ $h.hero.major.width }}" height="{{ $h.hero.major.height }}">
-        </figure>
-      </div>
-      {{ partial "home/app-mock.html" . }}
-    </div>
-  </section>
-
-  <div class="proof-ticker" role="group" aria-label="{{ $h.ticker.label }}">
-    <p class="proof-ticker-label label">{{ $h.ticker.label }}</p>
-    <div class="proof-ticker-viewport">
-      <ul class="proof-ticker-track">
-        {{- range $pass := slice 1 2 }}
-        {{- range (index site.Data "user_logos").items }}
-        <li class="proof-ticker-item"{{ if eq $pass 2 }} aria-hidden="true"{{ end }}>
-          <img class="proof-ticker-logo" src="{{ .logo | relURL }}" alt="{{ if eq $pass 1 }}{{ .name }}{{ end }}" loading="lazy">
-        </li>
-        {{- end }}
-        {{- end }}
-      </ul>
-    </div>
-  </div>
-
-  <section id="how" class="section" aria-labelledby="how-title">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="label">{{ $h.how.label }}</p>
-        <h2 id="how-title" class="display">{{ $h.how.headline }}</h2>
-      </div>
-      <div class="home-cards section-body">
-        <article class="card card-cream home-card home-card-feature">
-          <div class="home-card-copy">
-            <h3 class="h3">{{ $h.how.feature.title }}</h3>
-            <p>{{ $h.how.feature.body }}</p>
-          </div>
-          <figure class="art-frame">
-            <img src="{{ $h.how.feature.art.src | relURL }}" alt="{{ $h.how.feature.art.alt }}" width="{{ $h.how.feature.art.width }}" height="{{ $h.how.feature.art.height }}" loading="lazy">
-          </figure>
-        </article>
-        <article id="platforms" class="card card-field home-card home-card-stat">
-          <p class="home-stat-numeral">{{ $nets }}</p>
-          <h3 class="h3">{{ $h.how.stat.label }}</h3>
-          <p class="home-stat-logos">
-            {{- range site.Data.integrations.platforms }}
-            {{- if eq .status "supported" }}
-            {{- $row := partial "integration-row.html" . }}
-            <img src="{{ $row.logo | relURL }}" alt="{{ $row.name }}" width="20" height="20" loading="lazy">
-            {{- end }}
-            {{- end }}
-          </p>
-          <p class="home-stat-links"><a href="{{ $h.how.stat.link.href | relURL }}">{{ $h.how.stat.link.label }}</a> <a href="{{ $h.how.stat.actions.href | relURL }}">{{ $h.how.stat.actions.label }}</a></p>
-        </article>
-        <article class="card card-raised home-card home-card-mockup">
-          <div class="home-mockup-copy">
-            <h3 class="h3">{{ $h.how.mockup.title }}</h3>
-            <p>{{ $h.how.mockup.body }}</p>
-          </div>
-          <div class="home-mock-well" aria-hidden="true">
-            <div class="menu-popover">
-              <div class="menu-popover-figures">
-                {{- range $h.how.mockup.figures }}
-                <p><span class="menu-popover-value">{{ .value }}</span><span class="menu-popover-label">{{ .label }}</span></p>
-                {{- end }}
-              </div>
-              <ul class="menu-popover-toggles">
-                {{- range $h.how.mockup.toggles }}
-                <li><span>{{ . }}</span><span class="switch"></span></li>
-                {{- end }}
-              </ul>
+{{- /* Signal homepage. Token layer is html[data-theme="signal"]. Copy counts
+  come from data/integrations.json via platform-counts.html. Hero variants
+  still come from data/hero.json. */ -}}
+    {{- $rot := partial "hero-rotation.html" . -}}
+    {{- $mrot := partial "machines-rotation.html" . -}}
+    <main id="main" class="home-signal">
+      <section class="hero hero-signal" aria-labelledby="hero-title">
+        {{- $film := in $rot.medias "video" }}
+        <div class="wrap hero-grid{{ if $film }} has-film{{ end }}">
+          <div class="hero-copy">
+            <h1 id="hero-title" class="display-xl">
+              {{- range $rot.heroes }}<span data-hero-only="{{ .id }}">{{ partial "hero-headline.html" .headline }}</span>{{ end -}}
+            </h1>
+            {{- /* data/hero.json tagline: one plain line under every headline. */}}
+            <p class="body-lg hero-sub hero-tagline">{{ $rot.tagline }}</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="{{ "download/" | relURL }}">
+                <svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#glyph-download"></use></svg>
+                Download free
+              </a>
+              {{- /* data/hero.json variants[].cta: one secondary button per hero, shown with its copy. The span wrapper takes the rotation's display: revert, so the link keeps its button styles. */}}
+              {{- range $rot.heroes }}
+              {{- $href := .cta.href }}{{ if not (hasPrefix $href "#") }}{{ $href = (site.GetPage $href).RelPermalink }}{{ if not $href }}{{ errorf "data/hero.json: %s cta.href %q is not a page" .id .cta.href }}{{ end }}{{ end }}
+              <span data-hero-only="{{ .id }}"><a class="button button-secondary" href="{{ $href }}">{{ .cta.label }}</a></span>
+              {{- end }}
             </div>
           </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="ai" class="section home-ai" aria-labelledby="ai-title">
-    <div class="wrap home-split">
-      <div class="home-split-copy">
-        <p class="label">{{ $h.ai.label }}</p>
-        <h2 id="ai-title" class="display">{{ $h.ai.headline }}</h2>
-        <p class="body-lg muted">{{ $h.ai.subhead }}</p>
-        <p class="home-links">
-          {{- range $h.ai.links }}
-          <a href="{{ .href | relURL }}">{{ .label }}</a>
-          {{- end }}
-        </p>
-        {{ partial "code-card.html" (dict "code" $h.ai.code.command "title" $h.ai.code.title "lang" "bash" "prompt" true) }}
-        <p class="caption muted">{{ $h.ai.code.result }}</p>
-      </div>
-      <figure class="art-frame home-split-art">
-        <img src="{{ $h.ai.art.src | relURL }}" alt="{{ $h.ai.art.alt }}" width="{{ $h.ai.art.width }}" height="{{ $h.ai.art.height }}" loading="lazy">
-      </figure>
-    </div>
-  </section>
-
-  <section id="trust" class="section" aria-labelledby="trust-title">
-    <div class="wrap home-split home-split-trust">
-      <figure class="art-frame home-split-art">
-        <img src="{{ $h.trust.art.src | relURL }}" alt="{{ $h.trust.art.alt }}" width="{{ $h.trust.art.width }}" height="{{ $h.trust.art.height }}" loading="lazy">
-      </figure>
-      <div class="home-split-copy">
-        <p class="label">{{ $h.trust.label }}</p>
-        <h2 id="trust-title" class="display">{{ $h.trust.headline }}</h2>
-        <ul class="home-points">
-          {{- range $h.trust.points }}
-          <li>
-            <h3 class="h3">{{ .title }}</h3>
-            <p>{{ .body }}</p>
-            <p><a href="{{ .link.href | relURL }}">{{ .link.label }}</a></p>
-          </li>
-          {{- end }}
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="section home-proof" aria-label="{{ $h.proof.label }}">
-    <div class="wrap">
-      <div class="home-cards">
-        {{- with index $feature 0 }}
-        <figure class="card card-field home-card home-card-quote-l">
-          <blockquote class="h2">{{ .quote }}</blockquote>
-          <figcaption class="home-who">{{ partial "home/who.html" . }}</figcaption>
-        </figure>
-        {{- end }}
-        <div class="home-card-stack">
-          {{- range $i, $q := first 2 $quotes }}
-          <figure class="card {{ if eq $i 0 }}card-plain{{ else }}card-paper{{ end }} home-card home-card-quote-s">
-            <blockquote class="body-lg">{{ .quote }}</blockquote>
-            <figcaption class="home-who">{{ partial "home/who.html" . }}</figcaption>
-          </figure>
+          {{- /* data/hero.json media.video (placement inline-expand): the film
+            sits small beside the copy (below it on phones) and expands into
+            a dialog on Play. */ -}}
+          {{- if $film }}
+          <div class="hero-film-cell" data-hero-media-only="video">
+            {{ partial "hero-video.html" $rot.video }}
+          </div>
           {{- end }}
         </div>
-      </div>
-    </div>
-  </section>
+        {{- partial "hero-demo.html" . }}
+      </section>
 
-  <section id="download" class="section cta-signal" aria-labelledby="download-title">
-    <div class="wrap cta-inner">
-      <h2 id="download-title" class="display">{{ $h.closing.headline }}</h2>
-      <p class="hero-actions hero-actions-center">
-        {{ partial "download-button.html" (dict "kind" "secondary") }}
-        <a class="home-link" href="{{ $h.closing.secondary.href | relURL }}">{{ $h.closing.secondary.label }}</a>
-      </p>
-    </div>
-  </section>
-</main>
+      {{- partial "social-proof.html" (dict "slot" "ticker") }}
+
+      {{ partial "home/signal-platforms.html" . }}
+
+      {{- partial "social-proof.html" (dict "slot" "interlude") }}
+
+      <section id="how" class="section" aria-labelledby="how-title">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="label">How it works</p>
+            <h2 id="how-title" class="display">
+              {{- range $mrot.variants }}<span data-machines-only="{{ .id }}">{{ .headline }}</span>{{ end -}}
+            </h2>
+            <p class="body-lg muted">
+              {{- range $mrot.variants }}<span data-machines-only="{{ .id }}">{{ .subhead }}</span>{{ end -}}
+            </p>
+          </div>
+          <div class="section-body">
+            {{ partial "home/machines/muster.html" . }}
+            {{ partial "home/machines/battalion-map.html" . }}
+            {{ partial "home/machines/one-thunder.html" . }}
+            {{ partial "home/machines/call-to-arms.html" . }}
+          </div>
+        </div>
+      </section>
+
+      {{ partial "home/own-connection.html" . }}
+
+      {{ partial "home/ways-in.html" . }}
+
+      {{ partial "home/ai-agents.html" . }}
+
+      <section id="sound-wave" class="section" aria-labelledby="sound-wave-title">
+        <div class="wrap wave-grid">
+          <div class="section-head">
+            <p class="label">Coordinated amplification</p>
+            <h2 id="sound-wave-title" class="display">Real voices make a sound wave.</h2>
+            <p class="body-lg muted">Schedule one message and have every profile you add amplify it at the moment you pick, each profile posting as itself. Queue it yourself, or have your AI agent queue it for your approval. Coordinated so the same post isn't sent twice. Pause the whole wave with one command.</p>
+            <p><a href="{{ (site.GetPage "/docs/how-to/publish/amplify-a-post").RelPermalink }}">How amplification works</a>. Team invites are coming soon.</p>
+          </div>
+          <figure class="wave-example">
+            <figcaption class="visually-hidden">Example repost wave. Example data.</figcaption>
+            <ol class="wave-list">
+              <li><span class="avatar" aria-hidden="true">DE</span><b>Designer</b><span>LinkedIn repost</span><time datetime="09:30">9:30</time></li>
+              <li><span class="avatar" aria-hidden="true">EN</span><b>Engineer</b><span>X quote</span><time datetime="09:31">9:31</time></li>
+              <li><span class="avatar" aria-hidden="true">MK</span><b>Marketer</b><span>Bluesky repost</span><time datetime="09:33">9:33</time></li>
+              <li><span class="avatar" aria-hidden="true">MA</span><b>Maintainer</b><span>GitHub reactions</span><time datetime="09:34">9:34</time></li>
+              <li><span class="avatar" aria-hidden="true">AD</span><b>Advocate</b><span>Reddit comment</span><time datetime="09:41">9:41</time></li>
+              <li class="wave-more">+ 7 more teammates <em>Example data</em></li>
+            </ol>
+          </figure>
+        </div>
+      </section>
+
+      <section id="roles" class="section" aria-labelledby="roles-title">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="label">Who it's for</p>
+            <h2 id="roles-title" class="display">Built for the people, and the agents, who carry the message.</h2>
+          </div>
+          <ul class="grid grid-3 section-body signal-roles">
+            {{- $roles := sort site.Data.roles.roles "weight" }}
+            {{- range $i, $role := $roles }}
+            {{- /* The whole card is the link (a.card-link: pointer, arrow
+              cue chip, hover lift). No separate "Blowhorn for X" link: it
+              only repeated the card's own title. */}}
+            <li>
+              <a class="role-card card card-link {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $roles)) }}" href="{{ printf "for/%s/" $role.slug | relURL }}">
+                <span class="role-art">
+                  <img src="{{ $role.art.src | relURL }}" alt="{{ $role.art.alt }}" width="320" height="240" loading="lazy">
+                </span>
+                <h3 class="h3">{{ $role.name }}</h3>
+                <p>{{ $role.headline }}</p>
+              </a>
+            </li>
+            {{- end }}
+          </ul>
+          <p class="usecases">
+            <span class="label">Use cases</span>
+            {{- range site.Data.use_cases.use_cases }}
+            <a href="{{ printf "use-cases/%s/" .slug | relURL }}">{{ .name }}</a>
+            {{- end }}
+          </p>
+          <p class="usecases">
+            <span class="label">Solutions</span>
+            {{- range sort site.Data.solutions.solutions "weight" }}
+            <a href="{{ printf "solutions/%s/" .slug | relURL }}">{{ .name }}</a>
+            {{- end }}
+            <a href="{{ "solutions/" | relURL }}">All solutions</a>
+          </p>
+        </div>
+      </section>
+
+      <section class="section" aria-label="Major Blowhorn">
+        <div class="wrap">
+          <div class="major-card card-paper">
+            <figure class="major-figure">
+              {{- /* Eager: native loading=lazy is skipped by Playwright full-page screenshots, which never scroll this card into view, so Chromium never fetches the webp and only the yellow disc paints. */ -}}
+              <img src="{{ "assets/brand/mascot/locked-6/major-6-hat-left.webp" | relURL }}" alt="Major Blowhorn, a teal rooster in a drill sergeant's campaign hat, pointing and shouting into his bullhorn" width="657" height="560">
+            </figure>
+            <div class="major-copy">
+              {{- $major := site.Data.integrations.major -}}
+              {{- if not $major }}{{ errorf "signal home: set integrations.major" }}{{ end -}}
+              {{- $named := slice -}}
+              {{- range site.Data.integrations.platforms }}
+                {{- if and (eq .status "supported") (lt (len $named) 3) }}
+                  {{- $p := partial "integration-row.html" . }}
+                  {{- $named = $named | append $p.name }}
+                {{- end }}
+              {{- end -}}
+              {{ partial "bubble.html" (dict "text" $major.headline "class" "h3" "variant" "paper") }}
+              <p class="label">Major Blowhorn</p>
+              <p>{{ printf $major.supporting (delimit $named ", ") }} <a href="{{ (site.GetPage "/major").RelPermalink }}">Meet the Major</a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {{- partial "social-proof.html" (dict "slot" "grid") }}
+
+      <section id="trust" class="section" aria-labelledby="trust-title">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="label">Trust</p>
+            <h2 id="trust-title" class="display">Yours to keep. Yours to control.</h2>
+            <p class="body-lg muted">Many public voices, one coordinated queue, every action on your own computer.</p>
+          </div>
+          <ul class="grid grid-2 section-body">
+            <li class="card card-field">
+              <h3 class="h3">Human pace, always</h3>
+              <p>Blowhorn works at a pace you choose and never solves a CAPTCHA for you. <a href="{{ (site.GetPage "/docs/explanation/reliability-and-anti-bot-design").RelPermalink }}">Will I get banned?</a></p>
+            </li>
+            <li class="card card-plain">
+              <h3 class="h3">Never twice</h3>
+              <p>Your computers coordinate through one queue, so the same post isn't sent from two of them. <a href="{{ (site.GetPage "/docs/explanation/never-twice").RelPermalink }}">Never twice</a></p>
+            </li>
+            <li class="card card-stamp">
+              <h3 class="h3">Hacker News, by the rules</h3>
+              <p>Submit and comment only. It never votes, and caps each profile at 2 link submissions a day. <a href="{{ (site.GetPage "/docs/how-to/publish/post-to-hacker-news").RelPermalink }}">Post to Hacker News</a></p>
+            </li>
+            <li class="card card-field">
+              <h3 class="h3">AI on a short leash</h3>
+              <p>AI agents get the same queue, limits and dry run you do. Only approved posts go out. <a href="{{ (site.GetPage "/docs/how-to/schedule/pause").RelPermalink }}">You're in control</a></p>
+            </li>
+          </ul>
+          <p class="section-body"><a class="button button-secondary" href="{{ (site.GetPage "/legal").RelPermalink }}">Visit the trust center</a></p>
+        </div>
+      </section>
+
+      {{- partial "home/tells.html" . }}
+
+      {{ partial "home/ai-content.html" . }}
+      <section id="pricing" class="section" aria-labelledby="pricing-title">
+        <div class="wrap">
+          <div class="pricing-signal card card-field">
+            <div class="section-head">
+              <p class="label">Pricing</p>
+              <h2 id="pricing-title" class="display">Priced per profile, not per channel.</h2>
+              <p class="body-lg">One subscription. We never charge per activity. On every paid plan, every supported action on every supported network is unlimited, within each network's own safety limits. Bring your appetite and say when.</p>
+            </div>
+            <ul class="pricing-signal-list">
+              <li><b>Free is a taste</b><span>LinkedIn and X only. On every paid plan the rest of the map opens. Team is per seat.</span></li>
+              <li><b>Safety limits stay</b><span>Hacker News stays capped at 2 link submissions a day. Solo includes basic LinkedIn invite tidy-up.</span></li>
+              <li><b>No AI tax</b><span>Actions are scripted, so no model bill hides in your plan. Bring your own model at no extra charge.</span></li>
+              <li><b>You say when</b><span>Like a server grating cheese onto your plate until you tap the table. You are in control.</span></li>
+            </ul>
+            <p><a class="button button-secondary" href="{{ "pricing/" | relURL }}">See the plans</a></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="download" class="section cta-signal" aria-labelledby="download-title">
+        <div class="wrap cta-inner">
+          {{- partial "social-proof.html" (dict "slot" "closing") }}
+          <img class="download-cta-icon" src="{{ "assets/brand/logo/blowhorn-app-icon.svg" | relURL }}" alt="" width="64" height="64" loading="lazy">
+          <div class="section-head section-head-center">
+            <p class="label">Download</p>
+            <h2 id="download-title" class="display">Own your voice. Command your agents.</h2>
+            <p class="body-lg muted">One disk image for Apple silicon and Intel, plus a browser extension. About a minute to set up.</p>
+          </div>
+          <p class="hero-actions hero-actions-center">
+            <a class="button button-primary" href="{{ "download/" | relURL }}">
+              <svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#glyph-download"></use></svg>
+              Download Blowhorn
+            </a>
+            <a class="button button-secondary" href="{{ (site.GetPage "/docs").RelPermalink }}">Read the docs</a>
+          </p>
+        </div>
+      </section>
+    </main>

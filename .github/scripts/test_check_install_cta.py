@@ -87,10 +87,8 @@ class CheckTreeTest(unittest.TestCase):
                 path.write_text(body, encoding="utf-8")
             return check.check(root)
 
-    def test_home_is_checked(self):
-        problems = self.run_on({"index.html": page(PRIMARY + PRIMARY)})
-        self.assertEqual(len(problems), 1)
-        self.assertTrue(problems[0].startswith("index.html:"))
+    def test_home_is_exempt_while_pending(self):
+        self.assertEqual(self.run_on({"index.html": page(PRIMARY + PRIMARY + '<a href="/x/">Enlist a computer</a>')}), [])
 
     def test_docs_pages_are_skipped(self):
         self.assertEqual(self.run_on({"docs/reference/cli/index.html": page(PRIMARY + PRIMARY)}), [])

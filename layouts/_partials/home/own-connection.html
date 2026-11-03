@@ -1,0 +1,36 @@
+{{- /* "Distributed teams": follows #how (any number of computers, one queue)
+  with what that means for a team spread out: every teammate posts from
+  their own computer's internet connection, so there is no proxy to buy,
+  run or explain. Claims and wording rules: differentiator 16 in the
+  product repository's marketing/brand/differentiators.md. The long form
+  is /solutions/distributed-teams/. */ -}}
+{{- $solution := site.GetPage "/solutions/distributed-teams" -}}
+{{- if not $solution }}{{ errorf "home/own-connection.html: /solutions/distributed-teams/ is missing from data/solutions.json" }}{{ end -}}
+<section id="teams" class="section" aria-labelledby="teams-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="label">Distributed teams</p>
+      <h2 id="teams-title" class="display">Your whole team. Their own connections.</h2>
+      <p class="body-lg muted">Teammates in any city run Blowhorn on their own computers, from one shared queue. Every post goes out over the poster's own internet connection.</p>
+    </div>
+    <ul class="grid grid-2 section-body">
+      <li class="card card-field">
+        <h3 class="h3">Their own IP address</h3>
+        <p>Each post leaves from the computer that runs it, over that teammate's own internet connection. Your account never posts.</p>
+      </li>
+      <li class="card card-plain">
+        <h3 class="h3">No proxy bill</h3>
+        <p>No proxy or dedicated IP to buy for each account. The internet your team already has is the one Blowhorn uses.</p>
+      </li>
+      <li class="card card-stamp">
+        <h3 class="h3">Nothing extra to run</h3>
+        <p>No proxy pool to rent, assign, rotate or keep healthy, and no proxy setting to get wrong.</p>
+      </li>
+      <li class="card card-field">
+        <h3 class="h3">Lower risk</h3>
+        <p>No proxy or data center address for a site to flag. Each teammate's own connection is the one the platform already knows.</p>
+      </li>
+    </ul>
+    <p class="section-body"><a class="button button-secondary" href="{{ $solution.RelPermalink }}">Blowhorn for distributed teams</a></p>
+  </div>
+</section>

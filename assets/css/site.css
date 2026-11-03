@@ -488,6 +488,7 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 .mm-group-title a:hover { color: var(--link); }
 .mm-links { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-1) var(--space-4); align-content: start; }
 .mm-group .mm-links { margin-top: var(--space-3); }
+.mm-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .mm-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .mm-link {
   display: grid;
@@ -846,13 +847,15 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
     animation: none !important;
   }
   .site-header:not(.is-enhanced) .mm-panel { display: grid; }
-    .mm-cols-3,
+  .mm-cols-2 { grid-template-columns: minmax(0, 1fr); }
+  .mm-cols-3,
   .mm-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mm-link { margin-inline: 0; padding-inline: 0; min-height: 44px; align-content: center; }
   .mm-link:hover, .mm-link:focus-visible { box-shadow: none; background: transparent; }
 }
 @media (min-width: 600px) and (max-width: 1079px) {
-    .mm-cols-3, .mm-compact { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .mm-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mm-cols-3, .mm-compact { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .mm-panel-wide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mm-panel-wide .mm-compact { grid-template-columns: minmax(0, 1fr); }
 }
@@ -877,12 +880,20 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 .hero-copy .label { margin-top: 0; }
 .hero-copy .display-xl { margin-top: var(--space-3); max-width: 12ch; }
 .hero-copy .body-lg { max-width: 34rem; color: var(--ink-muted); }
+/* data/hero.json tagline: one plain line under every headline, balanced when it wraps on phones. */
+.hero-tagline { text-wrap: balance; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.hero-note { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); }
+.hero-art { position: relative; width: 100%; max-width: 560px; margin-inline: auto; }
 @media (min-width: 900px) {
   .hero { padding-block: var(--space-16); }
   .hero-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 6fr); gap: var(--space-12); }
-  }
+  .hero-art { margin-inline: 0 0; }
+}
 
+/* While the fan is the hero (data/hero.json art "fan"), the Platforms section drops its
+   own copy of it so the page never shows the fan twice. */
+html[data-hero-art="fan"] .platforms-fan { display: none; }
 
 /* The one-to-many motif, after archdev.ai's "signal": one source, thin wires, small
    dots travelling outward, and each platform's official logo on its own white tile.
@@ -925,6 +936,36 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
    Layer5 green: Caribbean Green rings, a Keppel active tab and Post button. */
 .stage { width: 100%; height: auto; display: block; }
 .stage .stage-ground { fill: var(--near-black); }
+.stage .stage-window { fill: var(--surface); filter: drop-shadow(var(--shadow-soft)); }
+.stage .stage-tab { fill: var(--surface-tint); }
+.stage .stage-tab-active { fill: var(--teal); }
+.stage .stage-bar { fill: var(--surface-raised); stroke: var(--line); stroke-width: var(--stroke-hairline); }
+.stage .stage-avatar { fill: var(--yellow); }
+.stage .stage-chip { font: 600 13px var(--font-sans); fill: var(--ink-muted); }
+.stage .stage-post { font: 600 16px var(--font-sans); fill: var(--ink); }
+.stage .stage-caret { fill: var(--teal-deep); }
+.stage .stage-send { fill: var(--teal); }
+.stage .stage-send-label { font: 700 14px var(--font-sans); fill: var(--on-teal); text-anchor: middle; }
+.stage .stage-done rect { fill: var(--near-black); stroke: var(--teal-bright); stroke-width: var(--stroke-hairline); }
+.stage .stage-done text { font: 600 13px var(--font-sans); fill: var(--teal-bright); text-anchor: middle; }
+.stage .stage-rings path {
+  fill: none;
+  stroke: var(--teal-bright);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: wave-pulse 1.4s ease-out infinite;
+}
+.stage .stage-rings path:nth-child(2) { animation-delay: 0.2s; }
+.stage .stage-rings path:nth-child(3) { animation-delay: 0.4s; }
+.stage .stage-major { transform-box: fill-box; transform-origin: 50% 100%; animation: stage-bark 1.4s ease-in-out infinite; }
+.stage .stage-type { transform-box: fill-box; transform-origin: left center; }
+.stage .stage-type-1 { animation: stage-type-1 7s steps(24, end) infinite; }
+.stage .stage-type-2 { animation: stage-type-2 7s steps(28, end) infinite; }
+.stage .stage-caret { animation: stage-caret 7s steps(28, end) infinite; }
+.stage .stage-send { transform-box: fill-box; transform-origin: center; animation: stage-send 7s ease-out infinite; }
+.stage .stage-done { animation: stage-done 7s ease-out infinite; }
 @keyframes stage-bark { 0%, 100% { transform: translateY(0) rotate(0); } 40% { transform: translateY(-3px) rotate(-1deg); } }
 @keyframes stage-type-1 { 0% { transform: scaleX(0); } 30%, 100% { transform: scaleX(1); } }
 @keyframes stage-type-2 { 0%, 32% { transform: scaleX(0); } 62%, 100% { transform: scaleX(1); } }
@@ -940,7 +981,10 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
   .stage .stage-ground { stroke: var(--line); stroke-width: var(--stroke-hairline); }
 }
 @media (prefers-reduced-motion: reduce) {
-        html { scroll-behavior: auto; }
+  .stage .stage-rings path, .stage .stage-major, .stage .stage-type, .stage .stage-send { animation: none; transform: none; }
+  .stage .stage-caret { animation: none; opacity: 0; }
+  .stage .stage-done { animation: none; opacity: 1; }
+  html { scroll-behavior: auto; }
   .button { transition: none; }
 }
 
@@ -969,6 +1013,14 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 .card .h3 { margin-top: var(--space-4); }
 .card > .h3:first-child { margin-top: 0; }
 .card .label { margin-top: var(--space-1); }
+.card-icon {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border-radius: var(--radius-md);
+  background: var(--surface-tint);
+  color: var(--ink);
+}
+.card-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 .card pre { margin-top: var(--space-4); max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* Platforms */
@@ -994,6 +1046,7 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 .platform .logo-tile { margin-bottom: var(--space-3); }
 .platform .ui { color: var(--ink); }
 .platform .caption { color: var(--ink-muted); }
+.platform-note { margin-top: var(--space-6); color: var(--ink-muted); max-width: 48rem; }
 
 /* Platform logos, after archdev.ai: each platform's official file, unmodified and in its
    own colours, alone on a white tile in both themes (LinkedIn, Slack, X, GitHub and Reddit
@@ -1171,6 +1224,9 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
   }
 }
 
+.major-gripes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); max-width: 36rem; }
+.major-gripes li { color: var(--ink); }
+.major-gripes .label { display: block; color: var(--ink-muted); }
 
 /* "The Major says" docs callout (layouts/_partials/major-says.html) */
 .major-says {
@@ -1497,6 +1553,14 @@ body { background: var(--surface); }
 }
 .brand-hero-copy > * + * { margin-top: var(--space-4); }
 .brand-hero-copy .body-lg { max-width: 34rem; }
+.brand-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  margin-top: var(--space-6);
+}
+.brand-hero-actions .caption { max-width: 22rem; }
 /* The two kit downloads: each button with its own caption underneath, side by side
    when there is room, stacked on narrow screens. */
 .brand-downloads {
@@ -1591,6 +1655,7 @@ body { background: var(--surface); }
 .stage-light { background: var(--white); }
 .stage-dark { background: var(--near-black); }
 .stage-teal { background: var(--teal); }
+.stage-charcoal { background: var(--charcoal); }
 .stage-cream { background: var(--cream); }
 .stage-busy {
   background: repeating-linear-gradient(135deg, var(--yellow) 0 14px, var(--teal-bright) 14px 28px, var(--white) 28px 42px);
@@ -1636,6 +1701,10 @@ body { background: var(--surface); }
   box-shadow: inset 0 0 0 var(--stroke-hairline) var(--line);
 }
 .asset-stage img { width: 70%; height: auto; max-height: 70%; object-fit: contain; }
+.asset-stage-square { aspect-ratio: 1 / 1; }
+.asset-stage-square img { width: 50%; max-height: 50%; }
+.asset-stage-short { aspect-ratio: 2 / 1; }
+.asset-stage-short img { width: 64%; }
 .stage-cream.asset-stage { aspect-ratio: 1 / 1; }
 .stage-cream.asset-stage img { width: 84%; max-height: 84%; }
 .asset-meta {
@@ -1990,11 +2059,27 @@ body { background: var(--surface); }
 .coverage tr.cov-us .cov-yes,
 .coverage td.cov-us.cov-yes { background: color-mix(in srgb, var(--teal) 55%, var(--surface)); }
 
+/* Sound wave section */
+.wave-visual { display: flex; justify-content: center; margin: 1.5rem 0; }
+.wave-visual svg { width: min(100%, 400px); height: auto; overflow: visible; }
+.wave-visual circle { fill: none; stroke: var(--teal, currentColor); stroke-width: 2; opacity: .6; transform-origin: 200px 60px; animation: wave-pulse 3s ease-out infinite; }
+.wave-visual circle:nth-child(2) { animation-delay: .3s; } .wave-visual circle:nth-child(3) { animation-delay: .6s; }
+.wave-visual circle:nth-child(4) { animation-delay: .9s; } .wave-visual circle:nth-child(5) { animation-delay: 1.2s; }
 @keyframes wave-pulse { 0% { opacity: .8; transform: scale(.9); } 100% { opacity: .15; transform: scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .wave-visual circle { animation: none; } }
+.wave-speech { margin: 2rem auto 1rem; max-width: 36rem; }
 
 /* ---------- Download page and the thanks page ---------- */
 .download-head { max-width: 44rem; }
 .download-icon { width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 10px 18px rgba(30, 33, 23, 0.22)); }
+.download-cta {
+  display: grid;
+  gap: var(--space-6);
+  justify-items: center;
+  text-align: center;
+}
+.download-cta .section-head { margin-inline: auto; }
+.download-cta-icon { width: 64px; height: 64px; filter: drop-shadow(0 10px 18px rgba(30, 33, 23, 0.22)); }
 
 .thanks-page { padding-block: var(--space-16) var(--space-12); }
 .thanks-head { text-align: center; max-width: 44rem; margin-inline: auto; }
@@ -2346,6 +2431,22 @@ body { background: var(--surface); }
   .versus-ledger-gap { border-top: 0; border-left: var(--stroke-hairline) solid var(--line); }
 }
 .versus-ledger-win { background: color-mix(in srgb, var(--surface-tint) 55%, transparent); }
+/* Versus spotlight: the optional per-page art-and-proof section (front matter
+  `spotlight`). A glass panel: cast art as the focal element, copy, an optional
+  CLI code card and the official platform logo tiles (white tiles, both themes). */
+.versus-spotlight {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--card-pad, var(--space-6));
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+@media (min-width: 720px) { .versus-spotlight { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: center; } }
+.versus-spotlight-art { margin: 0; }
+.versus-spotlight-art img { display: block; width: 100%; height: auto; border-radius: var(--radius-md); }
+.versus-spotlight-art figcaption { margin-top: var(--space-2); }
+.versus-spotlight-copy > * + * { margin-top: var(--space-4); }
+.versus-platforms { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0 0; padding: 0; list-style: none; }
 .versus-marks { display: grid; gap: var(--space-3); padding: 0; list-style: none; }
 .versus-marks li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--space-3); align-items: start; color: var(--ink); }
 .versus-ledger-gap .versus-marks li { color: var(--ink-muted); }
@@ -2543,6 +2644,7 @@ a.card.docs-card > * { margin-top: 0; }
 .major-log .h3 { margin: var(--eyebrow-gap) 0 var(--intro-gap); }
 .major-follow { margin-top: calc(var(--grid-gap) * 2); padding: var(--card-pad); }
 .major-follow p { margin: var(--intro-gap) 0 var(--stack-gap); }
+.major-meet { margin-top: var(--stack-gap); }
 .major-troops { list-style: none; padding: 0; margin: 0; }
 .major-troop .label { display: block; }
 .major-troop-links { list-style: none; margin: var(--space-3) 0 0; padding: var(--space-2) 0 0; border-top: 1px solid var(--line); display: grid; }
@@ -2578,6 +2680,7 @@ a.card.docs-card > * { margin-top: 0; }
 .army-name { font-family: var(--font-display); font-weight: 800; line-height: 1.15; }
 .army-plats { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); list-style: none; margin: 0; padding: 0; }
 .army-plats img { display: block; width: 32px; height: 32px; padding: 5px; object-fit: contain; background: var(--white); border-radius: 8px; box-shadow: var(--shadow-soft); }
+.army-plats img.is-hit { animation: army-hop 0.45s ease-out both; }
 .army-plats li:nth-child(2) img { animation-delay: 70ms; } .army-plats li:nth-child(3) img { animation-delay: 140ms; } .army-plats li:nth-child(4) img { animation-delay: 210ms; } .army-plats li:nth-child(5) img { animation-delay: 280ms; } .army-plats li:nth-child(6) img { animation-delay: 350ms; } .army-plats li:nth-child(7) img { animation-delay: 420ms; }
 @keyframes army-hop { 50% { transform: translateY(-6px) scale(1.1); } }
 @keyframes army-enlist { from { transform: scale(0.5); opacity: 0; } }
@@ -2592,6 +2695,9 @@ a.card.docs-card > * { margin-top: 0; }
 .proof-flag { display: inline-block; padding: 0.1em 0.55em; border-radius: 999px; background: var(--proof-flag-bg); color: var(--proof-flag-ink); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
 .proof-avatar { display: inline-grid; place-items: center; flex: none; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--glass-fill-strong); border: var(--stroke-hairline, 1px) solid var(--glass-edge); box-shadow: var(--glass-shadow); font-weight: 700; font-size: 0.8125rem; }
 .proof-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.proof-big { max-width: 46rem; margin: 0 auto; text-align: center; }
+.proof-big blockquote { margin: 0 0 var(--space-4); }
+.proof-big blockquote::before { content: "\201C"; display: block; font-family: var(--font-display); font-size: 4rem; line-height: 0.6; color: var(--teal-deep); }
 
 /* Ticker: the user organisations' horizontal logos (data/user_logos.json,
    files in static/assets/orgs/), directly under the hero. The track is
@@ -2614,12 +2720,25 @@ a.card.docs-card > * { margin-top: 0; }
 @media (prefers-color-scheme: dark) { .proof-ticker-logo { filter: grayscale(1) invert(1); } }
 @keyframes proof-ticker-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
+/* Quote grid. A giant quotation mark sits behind the cards. The cards take
+   their variants from the template (cards.css): a featured paper opener across
+   the whole first row, then the rest dealt stamp, field, plain and paper
+   (card-deal.html), so no two cards in a row or a column dress the same. */
+.proof-section { position: relative; overflow: hidden; }
+.proof-section .wrap { position: relative; }
+.proof-section .wrap::before { content: "\201C"; position: absolute; top: -3.5rem; right: -1rem; font-family: var(--font-display); font-weight: 800; font-size: 22rem; line-height: 1; color: var(--teal); opacity: 0.08; pointer-events: none; }
 /* Fixed columns (1, 2, 3, listed in card-deal.html "proof-grid"), never auto-fill, so the
    dealt variants hold at every width. The featured quote takes the whole first row. */
 .proof-grid { list-style: none; padding: 0; display: grid; gap: var(--grid-gap, var(--space-6)); grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 640px) { .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 960px) { .proof-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.proof-card-feature { grid-column: 1 / -1; }
+.proof-card { position: relative; overflow: hidden; padding: var(--card-pad, var(--space-6)); border-radius: 1.25rem; }
+.proof-mark { display: block; font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 0.7; color: var(--teal-deep); }
+.proof-card blockquote { margin: var(--space-3) 0 var(--space-4); }
 .proof-who { display: flex; gap: var(--space-3); align-items: center; margin: 0; }
+.proof-card-feature .proof-mark { font-size: 4.5rem; }
+.proof-card-feature blockquote { font-family: var(--font-display); font-weight: 700; font-size: 1.45rem; line-height: 1.35; }
 .proof-band { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); margin-bottom: var(--space-8); }
 .proof-band figure { margin: 0; padding: var(--card-pad, var(--space-6)); }
 /* Rotating proof (solutions pages): one quote at a time. The first quote
@@ -2913,6 +3032,13 @@ a.docs-card.platform-card:hover::after, a.docs-card.platform-card:focus-visible:
 .supported-actions tbody th { font-weight: 600; color: var(--ink); }
 .supported-actions th:last-child,
 .supported-actions td:last-child { padding-right: 0; }
+.supported-actions-status {
+  display: inline-flex;
+  vertical-align: -3px;
+  margin-left: var(--space-1);
+  color: var(--ink-muted, currentColor);
+  cursor: help;
+}
 @media (max-width: 719px) {
   .supported-actions-wrap { overflow-x: visible; }
   .supported-actions { min-width: 0; }
@@ -2995,6 +3121,13 @@ a.docs-card.platform-card:hover::after, a.docs-card.platform-card:focus-visible:
 .tabs-panel + .tabs-panel { margin-top: var(--space-6); }
 .tabs.is-enhanced .tabs-panel[hidden] { display: none; }
 .tabs.is-enhanced .tabs-panel { margin-top: 0; }
+.tabs-soon {
+  padding: var(--card-pad);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--ink);
+}
+.tabs-soon > * + * { margin-top: var(--space-2); }
 .action-example { margin-top: var(--head-gap); }
 /* #action-<id> targets from the actions table: no block padding, so undo the
    section[id] pull-back and let html scroll-padding-top clear the header. */
@@ -3006,6 +3139,8 @@ a.docs-card.platform-card:hover::after, a.docs-card.platform-card:focus-visible:
   border-radius: var(--radius-md);
   box-shadow: 0 0 0 var(--stroke-hairline) var(--line);
 }
+.agent-platform-list { display: grid; gap: var(--grid-gap); grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); }
+.agent-platform > * + * { margin-top: var(--space-3); }
 
 /* Agent pages: supported actions as one table, a row per platform and action,
    from data/platforms/*.yaml. */
@@ -3150,6 +3285,15 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
   .tells-docs-card-link a:hover svg { transform: translateX(2px); }
 }
 
+/* Home band (layouts/_partials/home/tells.html) and the callout
+   (layouts/_partials/tells-callout.html). */
+.tells-panel {
+  display: grid;
+  gap: var(--grid-gap);
+  align-items: center;
+  padding: var(--card-pad);
+  border-radius: var(--radius-xl);
+}
 .tells-art,
 .tells-callout-art { margin: 0; }
 .tells-art img,
@@ -3161,7 +3305,17 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
   border-radius: var(--radius-lg);
   background: var(--near-black);
 }
+.tells-art { order: -1; }
 .tells-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.tells-agents { margin-top: var(--stack-gap); max-width: var(--text-measure); }
+.tells-agents a { white-space: nowrap; }
+@media (max-width: 479px) {
+  .tells-panel .tells-actions .button { flex: 1 1 100%; }
+}
+@media (min-width: 900px) {
+  .tells-panel { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-12); padding: var(--space-12); }
+  .tells-art { order: 0; }
+}
 .tells-callout { display: grid; gap: var(--grid-gap); align-items: center; border-radius: var(--radius-xl); }
 .tells-callout-art { max-width: 20rem; }
 .tells-callout-copy > * + * { margin-top: var(--intro-gap); }
@@ -3190,6 +3344,25 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
   .tells-thanks .button { flex: none; }
 }
 
+/* Signal home: AI sections (layouts/_partials/home/ai-agents.html, ai-content.html). */
+.ai-agent-cards, .ai-content-offers { list-style: none; padding: 0; }
+/* The Major's quote: his portrait beside his bubble, the same round
+   head-and-shoulders crop of the cast art as .major-hero-quote on
+   /major/ (keep the two in sync). */
+.ai-agents-major { display: flex; align-items: center; gap: var(--space-4); max-width: 40rem; }
+.ai-agents-major-art {
+  flex: none; position: relative; overflow: hidden;
+  width: 72px; height: 72px;
+  border-radius: var(--radius-pill);
+  background: var(--cream);
+}
+.ai-agents-major-art img { position: absolute; top: 2%; left: -150%; width: 400%; max-width: none; height: auto; }
+.ai-agents-major-copy { min-width: 0; }
+.ai-agents-major .bubble { margin: 0; }
+.ai-agents-major .label { margin: var(--space-2) 0 0; color: var(--ink-muted); }
+.ai-agents-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.ai-content-price { color: var(--ink); }
+.ai-agent-cards .cli-flag { white-space: nowrap; }
 
 /* Signup form honeypot: off-screen, not display:none, so naive bots still
    fill it while sighted visitors never see it. The Worker answers such

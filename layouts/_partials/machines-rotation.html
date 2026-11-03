@@ -1,0 +1,27 @@
+{{- /* The home page computers section rotation, from data/machines.json
+  (schema: schemas/machines.schema.json). Returns variants (id, headline,
+  subhead, in rotation order), default (the variant no-JS visitors see),
+  mode and intervalSeconds. Fails the build when rotation.ids names an
+  unknown variant or when default is not in the rotation. Mode and
+  interval are schema-checked; this partial only resolves ids.
+  See docs/machines-variants.md. */ -}}
+{{- $data := site.Data.machines -}}
+{{- $cfg := $data.rotation -}}
+{{- $ids := slice -}}
+{{- with $cfg.ids }}{{ $ids = . }}{{ else }}{{ range $data.variants }}{{ $ids = $ids | append .id }}{{ end }}{{ end -}}
+{{- $variants := slice -}}
+{{- range $ids -}}
+  {{- $match := where $data.variants "id" . -}}
+  {{- if not $match -}}
+    {{- errorf "data/machines.json: rotation.ids names %q, which is not one of variants[].id" . -}}
+  {{- end -}}
+  {{- $v := index $match 0 -}}
+  {{- $variants = $variants | append (dict "id" $v.id "headline" $v.headline "subhead" $v.subhead) -}}
+{{- end -}}
+{{- $default := $data.default -}}
+{{- if not (in $ids $default) -}}
+  {{- errorf "data/machines.json: default %q must be one of the rotating ids, or no-JS visitors would get no design" $default -}}
+{{- end -}}
+{{- $seconds := 0 -}}
+{{- with $cfg.intervalSeconds }}{{ $seconds = . }}{{ end -}}
+{{- return dict "variants" $variants "default" $default "mode" $cfg.mode "intervalSeconds" (int $seconds) -}}
