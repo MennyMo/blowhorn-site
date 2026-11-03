@@ -24,14 +24,11 @@ the shortcode, a dead `#action-<id>` link, an action name without one, or an
 Example column coming back. A listed action is supported, so the table shows
 no Supported label and no check mark (the check fails either); only an
 exception, such as a coming-soon platform, shows a status, as an icon with an
-accessible name and tooltip and no text label. A coming-soon platform's actions
-table has no action rows: it shows its cast empty state instead. A Status column with no
+accessible name and tooltip and no text label. A Status column with no
 exception in it fails too.
 
 When every surface of an example is `placeholder`, its tabs open on
-`defaultSurface` (`cli`), which reads "Not in the CLI yet." with a cast character.
-Every placeholder surface is a cast empty state (`layouts/_partials/cast-empty-state.html`);
-its copy is fixed in the pane, so the YAML `notes` do not show there.
+`defaultSurface` (`cli`), which reads "Not in the CLI yet" with the CLI notes.
 
 ## Add or fill an example
 
