@@ -1,7 +1,7 @@
 // Home #how, the computers designs (data/machines.json). Animates whichever
-// design the rotation in machines-rotation-head.html picked: recruits fall
-// in with the army-enlist pop, packets travel wires to the Major, rings use
-// wave-pulse.
+// design the rotation in machines-rotation-head.html picked, in the spirit
+// of the Reveille army board (assets/js/army.js): recruits fall in with the
+// army-enlist pop, packets travel wires to the Major, rings use wave-pulse.
 // The panel gets .is-armed (start state) and, once in view, .is-live (play).
 // Looping motion pauses out of view (.is-paused). Under prefers-reduced-motion
 // nothing is armed: the designs rest in their final, fully drawn state, and
@@ -131,7 +131,7 @@
   }
 
   // One Thunder: curved voice lines from every teammate and computer into the
-  // Major (drawn from the layout), packets flowing along
+  // Major (drawn from the layout, like army.js wire()), packets flowing along
   // them, rings out of the bullhorn, and each platform tile lighting in turn.
   function thunder() {
     var card = panel.querySelector('.machines-thunder');

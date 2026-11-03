@@ -95,7 +95,7 @@ class TheServiceIsBlowhorn(unittest.TestCase):
             "index.html": page("<h2>You give the orders. Your Macs carry them out.</h2>"),
             "major/index.html": page("<p>He keeps them on your own Mac.</p>"),
             "download/index.html": page(head='<meta name="description" content="Install Blowhorn on your Mac">'),
-            "pricing/index.html": page(footer="<p>Runs on every Mac you own.</p>"),
+            "home-oil/index.html": page(footer="<p>Runs on every Mac you own.</p>"),
             "compare/x/index.html": page('<img src="a.png" alt="Two MACS">'),
         })
         self.assertEqual(len(failures), 5)
@@ -108,9 +108,10 @@ class TheServiceIsBlowhorn(unittest.TestCase):
             '<a href="/download/">Download for Mac</a><p>Blowhorn-mac.dmg, Computer 1, machinery</p>')})
         self.assertEqual(failures, [])
 
-    def test_macs_in_docs_and_code_pass(self):
+    def test_macs_in_docs_home_reveille_and_code_pass(self):
         failures = self.build({
             "docs/reference/requirements/index.html": page("<p>What your Mac needs. Intel Macs work.</p>"),
+            "home-reveille/index.html": page("<h2>Your Macs carry them out.</h2>"),
             "index.html": page("<pre><code>echo your Mac</code></pre>"),
         })
         self.assertEqual(failures, [])

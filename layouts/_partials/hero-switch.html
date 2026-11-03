@@ -1,0 +1,30 @@
+{{- /* Hero switcher, development builds only: the three layouts that
+  render a hero page (layouts/home.html, layouts/home-reveille.html,
+  layouts/home-oil.html) include this partial only when the Hugo
+  environment is a development one, so it never ships in production or
+  internal builds. Its styles ride along via hero-switch-css.html in the
+  same layouts' head blocks. A <details> menu, no JavaScript. Signal is the live
+  homepage; Reveille and Oil are standalone preview pages, and the
+  switcher navigates between the three real pages (the ?theme= preview
+  param swaps only the token layer, not the hero). The current entry is
+  marked with aria-current: the preview pages compare by RelPermalink,
+  and a preview whose page is not built (build: render: never) is left
+  out; with none built the switcher is not drawn at all,
+  the home page by .IsHome (its RelPermalink is /index.html under
+  uglyURLs; canonical.html gives it the site root publicly). */ -}}
+{{- $here := .RelPermalink }}
+{{- $previews := slice }}
+{{- range $preview := slice (dict "path" "/home-reveille" "label" "Reveille") (dict "path" "/home-oil" "label" "Oil") }}
+  {{- with site.GetPage $preview.path }}{{ if .RelPermalink }}{{ $previews = $previews | append (dict "url" .RelPermalink "label" $preview.label) }}{{ end }}{{ end }}
+{{- end }}
+{{- if $previews }}
+<details class="hero-switch">
+  <summary class="hero-switch-summary">Hero</summary>
+  <nav class="hero-switch-menu" aria-label="Homepage hero variants">
+    <a href="{{ "/" | relURL }}"{{ if .IsHome }} class="is-current" aria-current="true"{{ end }}>Signal</a>
+    {{- range $previews }}
+    <a href="{{ .url }}"{{ if eq $here .url }} class="is-current" aria-current="true"{{ end }}>{{ .label }}</a>
+    {{- end }}
+  </nav>
+</details>
+{{- end }}

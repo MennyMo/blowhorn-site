@@ -1,0 +1,215 @@
+{{- /* /home-oil/ (content/en/home-oil.md): a preview of the alternate
+  oil-painting brand style, hung like a small gallery. Not linked from
+  navigation, noindex, out of sitemap.xml and llms.txt. Styles live in
+  assets/css/home-oil.css and are scoped to .oil, so no other page changes.
+  Paintings: static/assets/oil-style/ (sources and prompts in
+  the blowhorn repository's marketing/brand/oil-style/). */ -}}
+{{ define "head" }}
+    {{- $css := resources.Get "css/home-oil.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+    {{- if or (eq hugo.Environment "development") (eq hugo.Environment "dev") }}
+    {{- partial "hero-switch-css.html" . }}
+    {{- end }}
+    <link rel="preload" href="{{ "assets/alt-style/Fraunces-Variable.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" as="image" type="image/webp" href="{{ "assets/oil-style/hero-1280.webp" | relURL }}" imagesrcset="{{ "assets/oil-style/hero-640.webp" | relURL }} 640w, {{ "assets/oil-style/hero-960.webp" | relURL }} 960w, {{ "assets/oil-style/hero-1280.webp" | relURL }} 1280w" imagesizes="100vw">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Blowhorn">
+    <meta property="og:title" content="Blowhorn: one message out, many ears in">
+    <meta property="og:description" content="One queue. Every profile. Posted as you, from your own browser.">
+    <meta property="og:url" content="{{ partial "canonical.html" . }}">
+    <meta property="og:image" content="{{ "assets/oil-style/og-oil-1200x630.jpg" | absURL }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Oil painting of Major Blowhorn, a teal rooster drill sergeant, sounding a brass trumpet from a fence post at dawn.">
+    <meta name="twitter:card" content="summary_large_image">
+{{- end }}
+
+{{ define "sprite" }}
+    {{ partial "sprite.html" . }}
+{{- end }}
+
+{{ define "main" }}
+    {{- $a := "assets/oil-style/" | relURL }}
+    {{- $plat := (site.GetPage "/docs/reference/platforms").RelPermalink }}
+    {{- $sizes := "(min-width: 1100px) 1040px, 100vw" }}
+    {{- $half := "(min-width: 900px) 560px, 100vw" }}
+    <main id="main" class="oil">
+      <section class="oil-hero" aria-labelledby="hero-title">
+        <picture class="oil-hero-art">
+          <img src="{{ $a }}hero-1280.webp" srcset="{{ $a }}hero-640.webp 640w, {{ $a }}hero-960.webp 960w, {{ $a }}hero-1280.webp 1280w" sizes="100vw" width="1280" height="720" fetchpriority="high" alt="Oil painting of Major Blowhorn, a teal rooster in a campaign hat, sounding a brass trumpet from a fence post at dawn while a field of birds gathers below">
+        </picture>
+        <div class="wrap oil-hero-copy">
+          <p class="oil-eyebrow">Blowhorn for macOS</p>
+          <h1 id="hero-title" class="oil-display">Stop pasting the same post into tab after tab</h1>
+          <p class="oil-lead">One queue. Every profile. Posted as you, from your own browser.</p>
+          <div class="oil-actions">
+            <a class="oil-btn oil-btn-primary" href="{{ "download/" | relURL }}">
+              <svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#glyph-download"></use></svg>
+              Download for Mac
+            </a>
+            <a class="oil-btn oil-btn-ghost" href="#how">See how it works</a>
+          </div>
+          <p class="oil-note"><span>Any number of profiles</span><a href="{{ (site.GetPage "/docs/reference/requirements").RelPermalink }}">See system requirements</a></p>
+        </div>
+      </section>
+
+      <section id="platforms" class="oil-section" aria-labelledby="platforms-title">
+        <div class="wrap">
+          <div class="oil-head oil-head-center">
+            <p class="oil-eyebrow">Platforms</p>
+            <h2 id="platforms-title" class="oil-h2">Say it once. Everywhere</h2>
+            <p class="oil-intro">One queue. As many computers as you've got.</p>
+          </div>
+          <ul class="oil-plaques">
+            {{- range slice
+              (dict "n" "LinkedIn" "a" "linkedin" "i" "linkedin-in-bug.png")
+              (dict "n" "X" "a" "x" "i" "x-logo-black.png")
+              (dict "n" "Reddit" "a" "reddit" "i" "reddit-logo.png")
+              (dict "n" "Hacker News" "a" "hacker-news" "i" "hacker-news-y18.svg")
+              (dict "n" "Slack" "a" "slack" "i" "slack-mark.svg")
+              (dict "n" "Bluesky" "a" "bluesky" "i" "bluesky-butterfly-blue.svg")
+              (dict "n" "GitHub" "a" "github" "i" "github-invertocat-black.svg")
+              (dict "n" "YouTube (coming soon)" "a" "youtube" "i" "youtube-simple-icons.svg")
+              (dict "n" "Instagram (coming soon)" "a" "instagram" "i" "instagram-simple-icons.svg")
+              (dict "n" "TikTok (coming soon)" "a" "tiktok" "i" "tiktok-simple-icons.svg")
+              (dict "n" "Facebook (coming soon)" "a" "facebook" "i" "facebook-simple-icons.svg") }}
+            <li><a class="oil-plaque" href="{{ $plat }}{{ .a }}/"><span class="oil-plaque-logo"><img src="{{ printf "assets/platforms/%s" .i | relURL }}" alt="" width="32" height="32"></span><span>{{ .n }}</span></a></li>
+            {{- end }}
+          </ul>
+        </div>
+      </section>
+
+      <section id="sound-wave" class="oil-section oil-room" aria-labelledby="sound-wave-title">
+        <div class="wrap">
+          <div class="oil-head">
+            <p class="oil-eyebrow">Coordinated amplification</p>
+            <h2 id="sound-wave-title" class="oil-h2">Make a sound wave</h2>
+            <p class="oil-intro">Schedule one message. Every profile you add amplifies it at the moment you pick.</p>
+          </div>
+          <figure class="oil-frame">
+            <img src="{{ $a }}soundwave-1280.webp" srcset="{{ $a }}soundwave-640.webp 640w, {{ $a }}soundwave-960.webp 960w, {{ $a }}soundwave-1280.webp 1280w" sizes="{{ $sizes }}" width="1280" height="720" loading="lazy" decoding="async" alt="Oil painting of Major Blowhorn trumpeting from a lectern while a choir of birds sings back in a golden swirl of sound">
+            <figcaption><cite>The Choir</cite>, oil on canvas</figcaption>
+          </figure>
+          <ul class="oil-notes oil-notes-3">
+            <li><h3 class="oil-h3">Schedule it once</h3><p>Queue the post and its reposts, quotes and reactions. Each fires from whichever computer is awake.</p></li>
+            <li><h3 class="oil-h3">Bring your people</h3><p>Teammates add their profiles to your account. Every profile joins the same wave.</p></li>
+            <li><h3 class="oil-h3">One blast, no echoes</h3><p>Coordinated so the same post isn't sent from two computers.</p></li>
+          </ul>
+          <p class="oil-more"><a href="{{ (site.GetPage "/docs/how-to/publish/amplify-a-post").RelPermalink }}">How amplification works</a>. Team invites are coming soon.</p>
+        </div>
+      </section>
+
+      <section id="how" class="oil-section" aria-labelledby="how-title">
+        <div class="wrap">
+          <div class="oil-head">
+            <p class="oil-eyebrow">How you run it</p>
+            <h2 id="how-title" class="oil-h2">Many soldiers, one army</h2>
+            <p class="oil-intro">Several ways in, one engine. Rehearse any run before anything is published.</p>
+          </div>
+          <figure class="oil-frame">
+            <img src="{{ $a }}army-1280.webp" srcset="{{ $a }}army-640.webp 640w, {{ $a }}army-960.webp 960w, {{ $a }}army-1280.webp 1280w" sizes="{{ $sizes }}" width="1280" height="720" loading="lazy" decoding="async" alt="Oil painting of Major Blowhorn inspecting his recruits at a bench of laptops: a chick at a keyboard, a chick with a mouse, a small robot, a chick in a helmet and a sleepy chick in a nightcap">
+            <figcaption><cite>Inspection at the Barracks</cite>, oil on canvas</figcaption>
+          </figure>
+          <ul class="oil-notes oil-notes-5">
+            <li><a href="{{ (site.GetPage "/docs/reference/cli").RelPermalink }}"><h3 class="oil-h3">Keyboard Warrior</h3><p class="oil-role">The CLI</p><p>Every action is a command, with a dry run first.</p></a></li>
+            <li><a href="{{ (site.GetPage "/docs/reference/use-the-desktop-app").RelPermalink }}"><h3 class="oil-h3">Mouse Marine</h3><p class="oil-role">The menu-bar app</p><p>See what is due, running and about to post.</p></a></li>
+            <li><a href="{{ "agents/" | relURL }}"><h3 class="oil-h3">Robo-Recruit</h3><p class="oil-role">Your AI agent</p><p>Your agent drives. You hold the switch.</p></a></li>
+            <li><a href="{{ (site.GetPage "/docs/explanation/your-own-chrome").RelPermalink }}"><h3 class="oil-h3">Trench Trooper</h3><p class="oil-role">The browser extension</p><p>Acts in your own browser, as you.</p></a></li>
+            <li><a href="{{ (site.GetPage "/docs/how-to/schedule/background-service").RelPermalink }}"><h3 class="oil-h3">Sleeper Cell</h3><p class="oil-role">The background service</p><p>Keeps posting on schedule with the app closed.</p></a></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="control" class="oil-section oil-room" aria-labelledby="control-title">
+        <div class="wrap oil-split">
+          <figure class="oil-frame">
+            <img src="{{ $a }}control-1280.webp" srcset="{{ $a }}control-640.webp 640w, {{ $a }}control-960.webp 960w, {{ $a }}control-1280.webp 1280w" sizes="{{ $half }}" width="1280" height="720" loading="lazy" decoding="async" alt="Oil painting of a human hand on a brass halt lever while Major Blowhorn stands at attention beside a laptop and a campaign map">
+            <figcaption><cite>The Human Holds the Switch</cite>, oil on canvas</figcaption>
+          </figure>
+          <div>
+            <div class="oil-head">
+              <p class="oil-eyebrow">Control</p>
+              <h2 id="control-title" class="oil-h2">You're in control</h2>
+              <p class="oil-intro">Built for AI. Controlled by you.</p>
+            </div>
+            <dl class="oil-faq">
+              <dt><a href="{{ (site.GetPage "/docs/explanation/reliability-and-anti-bot-design").RelPermalink }}">Will I get banned?</a></dt><dd>Blowhorn works at a human pace you choose and never solves a CAPTCHA for you.</dd>
+              <dt><a href="{{ (site.GetPage "/docs/explanation/never-twice").RelPermalink }}">Will it post twice?</a></dt><dd>Your computers coordinate through one queue, so the same post isn't sent from two of them.</dd>
+              <dt><a href="{{ (site.GetPage "/docs/how-to/schedule/pause").RelPermalink }}">What if an AI agent is driving?</a></dt><dd>Agents get the same queue and limits you do. Only approved posts go out.</dd>
+            </dl>
+            <div class="oil-term">
+              {{ partial "code-card.html" (dict "code" "blowhorn schedule pause --all" "title" "terminal" "lang" "bash" "prompt" true) }}
+              <p class="oil-caption">Halt every scheduled post on every computer with one command.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="signal" class="oil-section" aria-labelledby="signal-title">
+        <div class="wrap oil-split oil-split-rev">
+          <div>
+            <div class="oil-head">
+              <p class="oil-eyebrow">What we believe</p>
+              <h2 id="signal-title" class="oil-h2">Strong signal, not bought numbers</h2>
+              <p class="oil-intro">No follower packages. No like packages. Bought numbers are weak signal.</p>
+            </div>
+            <p>Blowhorn helps real people say something worth answering, so you get replies, responses and discussion. <a href="{{ "compare/" | relURL }}">Compare Blowhorn</a> with the alternatives, honestly.</p>
+          </div>
+          <figure class="oil-frame">
+            <img src="{{ $a }}signal-1280.webp" srcset="{{ $a }}signal-640.webp 640w, {{ $a }}signal-960.webp 960w, {{ $a }}signal-1280.webp 1280w" sizes="{{ $half }}" width="1280" height="720" loading="lazy" decoding="async" alt="Oil painting of Major Blowhorn, arms crossed, turning his back on a straw scarecrow giving a thumbs up, while real birds chat beside him">
+            <figcaption><cite>The Scarecrow of Bought Likes</cite>, oil on canvas</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="trust" class="oil-section oil-room" aria-labelledby="trust-title">
+        <div class="wrap">
+          <div class="oil-head oil-head-center">
+            <p class="oil-eyebrow">Trust</p>
+            <h2 id="trust-title" class="oil-h2">Yours to keep</h2>
+            <p class="oil-intro">Many public voices, one coordinated queue, every action on your own computer.</p>
+          </div>
+          <ul class="oil-notes oil-notes-3">
+            <li><h3 class="oil-h3">Every action runs on your computer</h3><p>In <a href="{{ (site.GetPage "/docs/explanation/your-own-chrome").RelPermalink }}">your own browser</a> or through a platform's API. Never from a server.</p></li>
+            <li><h3 class="oil-h3">One queue, any computer</h3><p>Your queue and results stay in sync in your account. <a href="{{ (site.GetPage "/docs/explanation/your-data").RelPermalink }}">Where your data lives</a>.</p></li>
+            <li><h3 class="oil-h3">Hacker News: submit and comment only</h3><p>Never votes. At most 2 link submissions a day per profile.</p></li>
+          </ul>
+          <p class="oil-center"><a class="oil-btn oil-btn-ghost" href="{{ (site.GetPage "/legal").RelPermalink }}">Visit the Trust Center</a></p>
+        </div>
+      </section>
+
+      <section class="oil-section" aria-labelledby="major-title">
+        <div class="wrap oil-split">
+          <figure class="oil-frame oil-frame-portrait">
+            <img src="{{ $a }}major-500.webp" srcset="{{ $a }}major-400.webp 400w, {{ $a }}major-500.webp 500w" sizes="(min-width: 900px) 420px, 80vw" width="500" height="625" loading="lazy" decoding="async" alt="Oil portrait of Major Blowhorn, arms crossed under gold epaulettes and two medals, glaring from beneath his broad campaign hat">
+            <figcaption><cite>The Major, Unimpressed</cite>, oil on canvas</figcaption>
+          </figure>
+          <div>
+            <h2 id="major-title" class="oil-h2">Meet Major Blowhorn</h2>
+            <blockquote class="oil-quote card-paper"><p>{{ site.Data.integrations.major.headline }}</p></blockquote>
+            <p>Thirty years running basic training. Now he runs your queue.</p>
+            <p><a class="oil-btn oil-btn-ghost" href="{{ "major/" | relURL }}">Read his story</a></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="download" class="oil-section oil-room" aria-labelledby="download-title">
+        <div class="wrap oil-split oil-split-rev">
+          <div>
+            <h2 id="download-title" class="oil-h2">Download for Mac</h2>
+            <p class="oil-intro">One disk image for Apple silicon and Intel, plus a browser extension. About a minute to set up.</p>
+            <p class="oil-actions"><a class="oil-btn oil-btn-primary" href="{{ "download/" | relURL }}">
+              <svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#glyph-download"></use></svg>
+              Get Blowhorn for Mac</a></p>
+          </div>
+          <figure class="oil-frame">
+            <img src="{{ $a }}download-1280.webp" srcset="{{ $a }}download-640.webp 640w, {{ $a }}download-960.webp 960w, {{ $a }}download-1280.webp 1280w" sizes="{{ $half }}" width="1280" height="720" loading="lazy" decoding="async" alt="Oil painting of Major Blowhorn saluting beside an open crate of straw holding a laptop">
+            <figcaption><cite>Reporting for Duty</cite>, oil on canvas</figcaption>
+          </figure>
+        </div>
+      </section>
+    </main>
+    {{- if or (eq hugo.Environment "development") (eq hugo.Environment "dev") }}
+    {{- partial "hero-switch.html" . }}
+    {{- end }}
+{{- end }}

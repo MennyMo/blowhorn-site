@@ -296,7 +296,7 @@ check-schemas:
 	python3 .github/scripts/check_bookmarklet.py
 	python3 .github/scripts/check_action_matrix.py --source
 
-## Production build, then fail if / is not the Signal theme (themes.json default plus _index.md front matter), or a theme-specific content file appeared.
+## Production build, then fail if / is not the home-page theme (themes.json default plus _index.md front matter), the Reveille preview lost today's look, or a theme-specific content file appeared outside content/en/home-reveille.md.
 check-theme: site-build
 	python3 .github/scripts/check_theme.py $(BUILD_DIR)
 

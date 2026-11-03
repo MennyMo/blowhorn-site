@@ -61,9 +61,10 @@ while someone is reading the page.
 ## Animations
 
 [`assets/js/machines.js`](../assets/js/machines.js) (bundled into the home
-page's `home-signal.js`) animates only the design the rotation picked.
+page's `home-signal.js`) animates only the design the rotation picked, in the
+spirit of the Reveille army board ([`assets/js/army.js`](../assets/js/army.js)).
 Styles are under "Machines animations" in `assets/css/home-signal.css` and
-reuse the keyframes in `assets/css/site.css`: `army-enlist` (the
+reuse the Reveille keyframes in `assets/css/site.css`: `army-enlist` (the
 enlist pop), `wave-pulse` (rings), `stage-bark` (the Major) and `army-shout`
 (his bubble).
 

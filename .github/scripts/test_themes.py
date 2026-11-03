@@ -165,11 +165,11 @@ class IntegrationsSchemaTest(unittest.TestCase):
 
 
 class ThemeContentSplitTest(unittest.TestCase):
-    def test_no_theme_content_file_approved(self):
+    def test_only_approved_theme_content_file(self):
         import check_theme
 
         self.assertEqual(check_theme.extra_theme_content(), [])
-        self.assertEqual(check_theme.APPROVED_THEME_CONTENT, frozenset())
+        self.assertIn("content/en/home-reveille.md", check_theme.APPROVED_THEME_CONTENT)
 
     def test_home_signal_content_would_fail(self):
         import check_theme

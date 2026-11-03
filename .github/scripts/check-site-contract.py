@@ -18,6 +18,9 @@ from pathlib import Path
 
 # Published path -> ids that must exist on that page: the section anchors other
 # pages link to, and the sprite symbols and labels the page itself references.
+# The preview home pages (/home-reveille/, /home-oil/) are not listed: they were
+# noindex previews, out of the sitemap and llms.txt, and are no longer built
+# (`build: render: never`), so they were never part of the public contract.
 PAGES = {
     "index.html": [
         "glyph-menubar", "glyph-terminal", "glyph-clock", "glyph-extension",

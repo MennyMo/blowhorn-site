@@ -1,0 +1,13 @@
+{{- /* Styles for hero-switch.html, included in the head of the three
+  hero layouts under the same development-only gate. Kept apart from the
+  markup partial because a <style> element is only valid in the head. */ -}}
+<style>
+.hero-switch { position: fixed; right: var(--space-4); bottom: var(--space-4); z-index: 2000; font: 500 12px var(--font-mono); color: var(--ink); }
+.hero-switch-summary { list-style: none; cursor: pointer; text-align: center; background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: var(--space-1) var(--space-3); box-shadow: var(--shadow-soft); }
+.hero-switch-summary::-webkit-details-marker { display: none; }
+.hero-switch-menu { position: absolute; right: 0; bottom: calc(100% + var(--space-2)); display: grid; gap: 2px; min-width: 9rem; background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--space-2); box-shadow: var(--shadow-soft); }
+.hero-switch-menu a { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); color: var(--ink); text-decoration: none; }
+.hero-switch-menu a:hover { background: var(--surface-tint); }
+.hero-switch-menu a.is-current { font-weight: 700; }
+.hero-switch-menu a.is-current::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex: none; }
+</style>
