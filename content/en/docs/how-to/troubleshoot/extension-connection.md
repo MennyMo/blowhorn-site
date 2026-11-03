@@ -25,7 +25,10 @@ the install did not finish, so install it again with your administrator. A
 stale manifest means the checkout moved on without it. A run repairs that
 itself on demand: it repairs the native host, registers the extension for
 the mapped profile's data directory when nothing is there yet, and
-re-probes hello once. Ahead of a run, ensure it for one mapped profile
+re-probes hello once. A scheduled run goes further: if a native host
+process left by an earlier upgrade is still answering in that profile's
+place, it ends that process by its own process id first, which is
+usually enough on its own. Ahead of a run, ensure it for one mapped profile
 with `blowhorn chrome extension-install --profile <name> --ensure`.
 If the socket is still missing after the ensure and Chrome is running,
 relaunch Chrome with that profile (or accept the install offer). When

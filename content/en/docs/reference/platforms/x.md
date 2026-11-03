@@ -8,6 +8,10 @@ weight: 226
 Blowhorn works on X in your own signed-in Google Chrome, through the Blowhorn extension. Sign in to X there once, by hand. The credential Blowhorn checks is `X_USERNAME`, kept in your account.
 
 Posts from an activity; a message past 274 characters goes out as a thread.
+If a post asks for media and the upload into the compose form fails, the
+post is not sent: nothing is clicked, the row stays pending, and the
+next run can retry it with its media. A media download failure behaves
+the same way.
 Replies go through a post activity that targets the conversation. Amplifies
 by retweet or quote. Follows accounts with `blowhorn follow`. Analytics
 appends a follower and following trend activity per run.

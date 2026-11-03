@@ -544,13 +544,62 @@ Put an API token for your Blowhorn account in place of `<token>`.
 The gateway is read-only, with the four tools `listContentItems`,
 `getContentItem`, `getEvents` and `getConnections`.
 
-Grok on the web and Grok Bot cannot connect yet. Their custom
-connectors (grok.com/connectors, New Connector, then Custom) take a
-public HTTPS MCP server with an OAuth sign-in, and the interim
-gateway takes a bearer token only. They wait on the hosted Blowhorn
-MCP server, which brings its own sign-in. The local server is a
-process on your own computer, and Grok on the web cannot start one.
-[Vendor docs](https://docs.x.ai/grok/connectors).
+Grok on the web cannot connect yet. Its custom connectors
+(grok.com/connectors, New Connector, then Custom) take a public
+HTTPS MCP server with an OAuth sign-in, and the interim gateway
+takes a bearer token only. It waits on the hosted Blowhorn MCP
+server, which brings its own sign-in. The local server is a process
+on your own computer, and Grok on the web cannot start one.
+[Vendor docs](https://docs.x.ai/grok/connectors). Grok Bot can
+connect today, read-only: see [Grok Bot](#grok-bot).
+
+### Grok Bot
+
+Blowhorn is not in Grok Bot's connector catalog yet. Until it is,
+add Blowhorn to your bot as a custom connection to the interim
+hosted gateway. Grok Bot runs on its own computer in the cloud, so
+it cannot start the local server on your Mac, but it can reach a
+public HTTPS server and send a bearer token with every request.
+
+The gateway is read-only. It has four tools, `listContentItems`,
+`getContentItem`, `getEvents` and `getConnections`, so your bot can
+read your queue, a post, your activity and your connections. It
+cannot post, schedule or change anything. For those, use a client
+on the Mac where Blowhorn runs, such as [Claude Code](#claude-code)
+or [Grok Build](#grok).
+
+You need an API token for your Blowhorn account.
+
+1. In a chat with your bot, ask it to add the server. Say "custom",
+   so the bot does not look for a catalog connector instead:
+
+   > Add a custom MCP server named blowhorn at
+   > https://mcp.blowhorn.ai/mcp. It needs the header
+   > Authorization: Bearer followed by my Blowhorn API token.
+
+2. The bot shows the name and the URL and asks you to confirm.
+   Check that the URL is exactly `https://mcp.blowhorn.ai/mcp`, then
+   confirm.
+3. When the bot asks for the token, give it. The bot stores it as
+   the `Authorization` header on the server entry, never in the URL.
+   The gateway has no OAuth sign-in, so no sign-in card appears.
+   The token passes through your chat with the bot, so use one you
+   can revoke, and revoke it when you stop using the connection (see
+   [Revoke a leaked token](#revoke-a-leaked-token)).
+4. Check it in your next message. Ask:
+
+   > Which Blowhorn tools do you have? Then list my Blowhorn
+   > connections.
+
+   The bot should name the four tools above and answer from
+   `getConnections`. Nothing it can call changes anything.
+
+If the bot reports `401 Unauthorized` when it connects, the header
+is missing or malformed: the gateway wants exactly
+`Authorization: Bearer <token>`. If it connects but a tool call
+fails with a `401` from your Blowhorn account, the token has expired
+or been revoked: get a new token and ask the bot to update the
+header on the `blowhorn` server.
 
 ## Authentication
 
@@ -573,8 +622,8 @@ The server serves stdio only. Asking it for HTTP refuses at startup:
 ```
 
 A hosted Blowhorn MCP server, with its own sign-in, is coming.
-Until it lands, the interim hosted gateway in the Muse and Grok
-sections above serves a few read-only tools to clients that can
+Until it lands, the interim hosted gateway in the Muse, Grok and
+Grok Bot sections above serves a few read-only tools to clients that can
 send a token. The rest of this page covers the local server.
 
 ### Revoke a leaked token

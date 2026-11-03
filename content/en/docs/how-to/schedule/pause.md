@@ -103,7 +103,8 @@ touches your account. In the app every scope is one duty switch, reading
   it beside the switch and it saves as you type. While the fleet stands down,
   the card shows who stood it down, when and why, and this computer's row is
   held until the fleet is back on duty.
-- **This order** (`--activity N`) - the duty switch inside an item's drawer,
+- **This order** (`--activity N`) - the duty switch in an item's details (click
+  the item and it opens in a dialog, a box over the screen),
   reading **On duty** or **Standing down**. The optional reason field above it
   saves as you type, with a teal check once saved, and goes out with the
   hold. The item's list row reads **standing down** while it is held.

@@ -33,7 +33,7 @@ the next check runs straight away; you never have to relaunch the app to
 clear it. **try again** on the line checks at once instead of waiting.
 The console shows the same line, with the same **try again**.
 
-The popover header holds this computer's duty switch, the footer holds "stand
+Each routine on the popover's boards carries its own small duty switch; the popover header holds this computer's duty switch, the footer holds "stand
 down the fleet" (the fleet's switch takes its place while the fleet holds) and,
 when an update is ready, the update card. The update downloads the new version, installs it
 and relaunches the app; when it cannot, it says why and offers the release
@@ -240,39 +240,54 @@ activity, is locked. Once you are signed in, the account button stays usable. Se
 
 | Screen | Shows | Acts |
 |---|---|---|
-| Home (two tabs: **Today** and **Resources**) | Today: whether Blowhorn is working and whether it needs you, but never what runs next: an activity's next run is on Activity › Routines, and the rail's duty toggle names the next one on hover; the Fleet card: computers known (this one), how many are on duty or standing down, fleet holds, who stood the fleet down and why, and this computer's row; "Your draft was saved" once after setup, until you dismiss it or leave Home; beside them your results, and one card with **Recent activity** and **What went wrong** (it opens on what went wrong while something failed). Resources: ideas worth a try, the latest from Blowhorn - each piece labelled with its column, From the Desk of the General, From Boot Camp or From the Field - and the tips as a taught sequence: the next tip you have not seen yet, with its video, one at a time; opening a tip or choosing **Another tip** moves you on, a tip you have seen never comes back, and when you have seen them all the card says so and points to Resources. A newer release is offered on a card at the top of the results column, **Update to Blowhorn** and the version | the entire fleet's switch (reason optional, saved as you type) or this computer's switch, on the Fleet card; open This computer from this computer's row; reconnect a signed-out account from the **Needs you** section at the top of Today: one full-row button per signed-out account, its platform's mark and **Reconnect** (naming the profile, **Reconnect @handle**, only where two signed-out accounts share a platform), which signs that account in again and reads **Reconnecting…** while it runs, and the **?** beside the title says which computer they are signed out on and how many scheduled posts wait (a Bluesky app password or a GitHub token opens Profiles instead); a sign-in that does not finish leaves the row with a note underneath saying so; start the update from its card (Blowhorn restarts to finish); **Connect an account** opens a step for your own profile: each platform, how to sign in to it in your Google Chrome profile, and **Check again**, with connected ones ticked; finish setting up |
-| Activity › Upcoming | Your posts with their status - "ready", "scheduled", "partly sent", "sent", "draft", "needs you" - and clicked-but-unread ones, each with when it goes out: its own time, "next check" when the next run would take it, "not scheduled" when nothing will send it (a draft, or a post that needs you), and "-" once it has gone out; an opened post's editor shows its result: delivery per profile and platform, reception where it was collected, and the follower change since. On the all and scheduled filters, the schedule's routines follow below the posts, each labelled by what it does; a routine names no post, so selecting one opens it on Routines | Add or edit a post; clearing a clicked post's "Date Promoted" queues it again |
-| Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the next check; a drawer for one item; a chooser of sample routines, each one ticked on only once its platform is connected | Add an item with the **+** button or by clicking a free time; move an item's next time by dragging it; edit one item, or switch it between on duty and standing down from the duty switch in its drawer; "do it now"; turn **dry fire** on in the header to rehearse up to the final click and post nothing (the dry run, `--dry-run`); add the sample routines you tick |
-| Activity › History | Everything Blowhorn did, newest first, with each one's detailed log under the log directory's `scheduler/` folder; a picked run's detail shows its activity's result above the log: delivery per profile and platform, reception where it was collected, and the follower change since | "try again" on a failure |
+| Home (two tabs: **Today** and **Resources**) | Today: whether Blowhorn is working and whether it needs you, but never what runs next: an activity's next run is on Activity › Routines, and the rail's duty toggle names the next one on hover; the Fleet card: computers known (this one), how many are on duty or standing down, fleet holds, who stood the fleet down and why, and this computer's row; "Your draft was saved" once after setup, until you dismiss it or leave Home; beside them your results, and one card with **Recent activity** and **What went wrong** (it opens on what went wrong while something failed). Resources: ideas worth a try, the latest from Blowhorn - each piece labelled with its column, From the Desk of the General, From Boot Camp or From the Field - and the tips as a taught sequence: the next tip you have not seen yet, with its video, one at a time; opening a tip or choosing **Another tip** moves you on, a tip you have seen never comes back, and when you have seen them all the card says so and points to Resources. A newer release is offered on a card at the top of the results column, **Update to Blowhorn** and the version | the entire fleet's switch (reason optional, saved as you type) or this computer's switch, on the Fleet card; open This computer from this computer's row; reconnect a signed-out account from the **Needs you** section at the top of Today: one full-row button per signed-out account, its platform's mark and **Reconnect** (naming the profile, **Reconnect @handle**, only where two signed-out accounts share a platform), which signs that account in again and reads **Reconnecting…** while it runs, and the **?** beside the title says which computer they are signed out on and how many scheduled posts wait (a Bluesky app password or a GitHub token opens Profiles instead); a sign-in that does not finish leaves the row with a note underneath saying so; open an item's details from a row in **Recent activity** or **What went wrong**; start the update from its card (Blowhorn restarts to finish); **Connect an account** opens a step for your own profile: each platform, how to sign in to it in your Google Chrome profile, and **Check again**, with connected ones ticked; finish setting up |
+| Activity › Upcoming | Your posts with their status - "ready", "scheduled", "partly sent", "sent", "draft", "needs you" - and clicked-but-unread ones, each with when it goes out: its own time, "next check" when the next run would take it, "not scheduled" when nothing will send it (a draft, or a post that needs you), and "-" once it has gone out; an opened post shows its result: delivery per profile and platform, reception where it was collected, and the follower change since. On the all and scheduled filters, the schedule's routines follow below the posts, each labelled by what it does; a routine names no post, so clicking one opens that routine's details on Routines | Click a post to open it in a dialog (a box over the screen), or add one; edit it there; clearing a clicked post's "Date Promoted" queues it again |
+| Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the next check; a dialog for one item, opened by clicking it in the list or on the calendar; a chooser of sample routines, each one ticked on only once its platform is connected | Add an item with the **+** button or by clicking a free time; move an item's next time by dragging it; edit one item, or switch it between on duty and standing down from its duty switch on its row, on its calendar chip or in its dialog; "do it now", "disable" or "delete" it there; turn **dry fire** on in the header to rehearse up to the final click and post nothing (the dry run, `--dry-run`); add the sample routines you tick |
+| Activity › History | Everything Blowhorn did, newest first, with each one's detailed log under the log directory's `scheduler/` folder; clicking a run opens it in a dialog over the full-width list: when it started, how it ended and why it stopped, its activity's result (delivery per profile and platform, reception where it was collected, and the follower change since), and the log and its file behind **more details** | open a run; "try again" on a failure |
 | Profiles | Every profile, its Chrome mapping, its per-platform sessions; for LinkedIn, X and Reddit, which Chrome profile to sign in to - never a password field. Clicking a profile opens it in a window over the list, which keeps the whole screen. It keeps its name and **check sessions** on top, over three tabs: **Details** (name, description, who it is), **Platforms** (one platform's card at a time, picked by its mark, each mark showing that session's state) and **Chrome** (its Chrome profile) | Add a profile (in the same window); save or delete it, or **cancel** to close without saving (on an open profile, the X, Escape or a click outside asks first if you typed something); map or unmap its Chrome profile; open a platform's sign-in page in that Chrome profile and **Check again**; enter a token or app password for the platforms that take one |
 | Performance | Followers, growth, and activity per profile; collection freshness in the header. Under the filters, three tabs that all read them: **Activity** (runs by platform, activity per profile), **History** (the figures, followers over time, new versus unfollowed per month) and **Report** (your LinkedIn pages and the health of each profile and page) | Collect now; open the HTML report |
 | Posture (three tabs: **Rules**, **Limits**, **Protection**; the fleet's stand down and stop sit on the tabs' line) | Rules: the rules of engagement for everyone (the slider: Safety on, Weapons tight or Weapons free), which choice wins, one grid of every profile on every platform with where each cell's choice comes from. Limits, one section at a time: by platform (pace and daily caps), speed and amount (spacing, outreach, how much runs at once), when and who says yes (quiet hours, approval, dry fire), typing, and pointer timing. Protection: what happens when a platform pushes back and what the last check held back, beside where your sign-ins live and what Blowhorn will never do | Move the slider; choose a preset for one platform for every profile, one profile on every platform, or one cell, or reset any of them to inherit; save limits or reset them to the preset; stand down or stop every computer; run a held activity once with **Do it anyway**; turn the sign-in check, the needs-you note, dry fire by default and failure reports on or off |
 | This computer (from Home's computer row, or the rail's reason line) | Whether this computer is on duty and, when it is not, the one sentence on what is wrong, the owner of the background service once something holds it, the last check, the fleet's stand down | Its one fix under the banner: "register the service" when the service is not registered or runs from another copy of Blowhorn, "start the service" when it is registered but not running, "open Login Items" when it is turned off in System Settings (only those states offer one); "check now" (with "dry fire" to rehearse up to the final click, posting nothing); "stand down the fleet", and the fleet's switch while the fleet holds |
 | Settings (from the account menu; its pages are listed in the left rail under the places while it is open) | **General**: appearance (theme, material, spacing), notifications and usage data. **Background & updates**: startup, keeping this computer on watch after quit, the pause shortcut, the update channel, uninstall. **Setup**: setup and the guided setup, the extension card. **Advanced**: app paths and the engine defaults Posture does not hold, rendered from the CLI's own option list | Change defaults, check the extension, choose its mode; run setup again or quit or uninstall; **open Posture ›** for the rules of engagement and limits. Your account is not in Settings: the account menu holds **Your account and plan**, **Switch organization** and **Sign out** |
 
-The routines list keeps every value on one line. When the list is narrow -
-the drawer is wide, or the window is small - the browser and recurrence
-columns leave first (the drawer still shows both) and a long profile list
-is shortened with an ellipsis; the status is never cut. With a routine
-open at the default window size the number leaves too, and a routine that
-is standing down shows an amber dot beside its status (hover it for the
-words). A list longer than the pane is shown a page at a time, as many
-rows as fit, with previous and next at its foot.
+The routines list keeps every value on one line, and it has the whole width of
+the screen: an item's details open in a dialog, not beside it. When the window is
+small, the browser and recurrence columns leave first (an item's dialog still
+shows both) and a long profile list is shortened with an ellipsis; the status is
+never cut. In the narrowest window the number leaves too, and each routine's duty switch
+shrinks to its track (its words stay in its name). Every row carries that switch beside its status:
+click it to stand the routine down or put it back on duty, without opening the row. A
+list longer than the screen is shown a page at a time, as many rows as fit, with
+previous and next at its foot.
+
+Clicking an item, in the list or on the calendar, opens its details in a
+dialog (a box over the screen). It shows the item's number, its status as
+plain text, platform, what it does and who for, and the duty switch on the
+right of that heading (a routine only: a post or a run has none), then when it
+goes and when it last did, the last error, and **do it now**, **disable**,
+**edit** and **delete**. The driver, the rules of engagement, the retries, the lock, the
+edit check and the log sit behind **more details**, which is already open
+while the item is running. **edit** swaps the dialog for the editor, one box at
+a time. Esc, the **X** or a click outside closes it, and it asks first when
+you typed a reason you have not sent; focus goes back to the item you clicked.
+A routine or post on Home, a routine under Upcoming's posts and a row in the
+menu-bar popover open the same dialog over its own screen; a run on Home opens
+its run dialog where you are.
 
 The day and week calendars show all 24 hours at once, an hour a row; the
 rows grow when the window gives them room. The **now** lane shows three
 items and a "+N more".
 
 The Upcoming list keeps each value on one line too, and the preview gives
-way first. With a post open beside it, "goes out" leaves the list (the
-editor's Promote On shows it), and below that the number and the preview.
+way first: in a small window "goes out" leaves the list (the post's dialog
+shows it), and below that the number and the preview.
 
-The Upcoming list opens with its editor folded away, so the list has the
-full width and each post's preview is on screen at the default window
-size. Selecting a post opens the editor beside it, and **New activity**
-opens it on a new entry. A fold you make yourself is remembered, and a
-post you select while the editor is folded that way stays in the list
-until you open the editor again.
+The Upcoming list has the full width of the screen, so each post's preview is
+on screen at the default window size. Clicking a post opens it in a dialog, a
+box over the screen, with its words, when it goes out, whether it is approved,
+and what came of it; **New activity** opens the same dialog on a new entry.
+The columns nobody reads daily sit behind **more details**. If you typed
+something and close the dialog, it asks before it throws your changes away.
 
 The Routines view opens on the week calendar and remembers the layout you
 pick; opening a day from the month makes the day view the remembered one.
@@ -307,7 +322,15 @@ and an info button beside it links the docs page for it. Where the next step
 is the **+** button or a button in the header, such as **collect now** on
 Performance, the note names it rather than repeating it. With **Major
 Blowhorn** off in Settings, the same note and action show without the art and
-the line. A filter that matches nothing just says so.
+the line. A tab with nothing on it says what goes there and offers one
+button: Upcoming's points at the tab where your posts are, with its count
+(**show drafts (1)**), and History's at today or all, or at the **+** button
+when nothing has run yet. A filter that hides everything on a tab offers **clear
+filter**.
+
+Upcoming opens on the first tab that holds a post - ready, needs you, drafts,
+scheduled, then sent - so right after guided setup it opens on your first
+post, often a draft. A tab you pick, or one a link opens, stays put.
 
 On the guided setup's steps, Major Blowhorn's portrait in the left rail is
 alive. His eyes and head follow your pointer, and now and then he looks

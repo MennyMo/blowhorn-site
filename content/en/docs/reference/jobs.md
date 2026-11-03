@@ -76,7 +76,7 @@ inherits the profile's preset, exactly as before. A hold or a run
 report names the source as `schedule` when the activity's own setting
 decided it. `blowhorn schedule list` shows each activity's own setting,
 the preset it effectively runs and where that preset came from. The
-app's activity editor and drawer show the same column as **rules of
+app's activity editor and the item's details dialog show the same column as **rules of
 engagement**, with `cautious` as Safety on, `standard` as Weapons tight
 and `brisk` as Weapons free; the stored value does not change.
 

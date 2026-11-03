@@ -258,11 +258,21 @@ The mapped profile counts as connected only when its host answers on
 its own socket; a socket file left by a host that crashed does not
 count. When the mapped profile is not connected, Blowhorn repairs the
 native host if its manifest or launcher is missing or out of date, then
-opens the profile in the background; when it still does not connect,
-the run is held, not failed, with one line saying Blowhorn could not
-open the profile and that you can reconnect it, and Blowhorn tries
-again on its own ten minutes later. A pass that is cancelled, stopped
-or paused, and an activity paused on its own, open nothing.
+checks for a native host process from before an earlier upgrade still
+answering on the mapped profile's behalf - such a host keeps serving the
+old shared socket until something ends it - and ends it, by its own
+process id, before opening the profile in the background. That alone is
+usually enough: ending the stale host
+drops the extension's connection to it, and the extension connects
+again on its own, which starts the host the current launcher names.
+When it still does not connect, the run is held, not failed, with one
+line saying Blowhorn could not open the profile and that you can
+reconnect it, and Blowhorn tries again on its own ten minutes later. If
+a superseded host is still answering after that attempt, the one line
+instead asks you to restart Google Chrome, since reconnecting would not
+help: that is the one action that ends every such host in that Chrome
+instance at once. A pass that is cancelled, stopped or paused, and an
+activity paused on its own, open nothing.
 
 The opening, the wait and every code above can also be handled by a
 compiled helper, `blowhorn-chrome-start`, instead of the Python code
