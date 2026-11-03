@@ -34,7 +34,7 @@ COMING_SOON_ROW = (
     '<tr class="supported-actions-empty"><td colspan="3">'
     '<div class="cast-empty cast-empty-compact">'
     '<img class="cast-empty-art" src="/assets/brand/cast/robo-recruit-base.webp" alt="">'
-    '<p class="cast-empty-text ui">This platform isn\'t available yet.</p>'
+    '<p class="cast-empty-text ui">Its actions show up here when it ships.</p>'
     "</div></td></tr>"
 )
 
