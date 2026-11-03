@@ -5,6 +5,7 @@ heading_id: thanks-title
 description: Your signup for Blowhorn notifications is saved.
 layout: plain
 url: /coming-soon/thanks/
+noindex: true
 sitemap:
   disable: true
 ---
