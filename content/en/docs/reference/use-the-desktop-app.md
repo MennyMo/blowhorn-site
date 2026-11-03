@@ -127,7 +127,7 @@ check; one you passed empty, such as a skipped landing zone, takes a dashed
    and each landed file has its own **Stand down** to remove it. Blowhorn posts
    media from a link, so a dropped file needs its link pasted too. **LZ clear**
    moves on with no media. A rally or an action carries no media.
-5. **When to march** - **On my mark** (out on the next run), or a date and a
+5. **When to march** - **On my mark** (goes out now), or a date and a
    start time from the pickers. Time is read the military way ("1430 HRS"),
    with the day's bugle calls (Reveille 0600, Mess call 1200, Retreat 1700,
    Taps 2200) as quick picks; **Roger ✓** closes the clock and **Lock it in**
@@ -165,7 +165,7 @@ instead: **Mission failure**, how many platforms deployed, each refusal in its
 own words, and per platform **Re-engage** (try only what did not land) or
 **Stand down** (leave it unsent). What landed is never written twice.
 An action deploys the same way, as one scheduled run per platform and desk
-that runs once, at the time you picked or on the next run; its debrief rows
+that runs once, at the time you picked or now; its debrief rows
 have no link to wait for and no Debrief link, since an action is not a post
 with engagement to measure. The app checks an action in the window and again
 before it is saved, so one missing a required option or naming an option the command

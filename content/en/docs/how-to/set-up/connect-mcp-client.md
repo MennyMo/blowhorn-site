@@ -85,8 +85,11 @@ list as JSON. Neither starts serving.
 
 ### Start it with npx
 
-The `blowhorn-mcp` package is published on npm. Swap the command in
-any entry on this page for `npx` with the arguments `-y blowhorn-mcp`:
+The [`blowhorn-mcp`](https://www.npmjs.com/package/blowhorn-mcp) npm
+package is published, and listed in the official MCP Registry as
+`io.github.blowhorn-ai/blowhorn`. With Node.js 20 or later, swap the
+command in any entry on this page for `npx` with the arguments
+`-y blowhorn-mcp`:
 
 ```json
 {
@@ -100,8 +103,7 @@ any entry on this page for `npx` with the arguments `-y blowhorn-mcp`:
 ```
 
 On a client's command line, the same swap is `-- npx -y blowhorn-mcp`.
-It still needs the Blowhorn app installed and opened once, and
-Node.js 20 or later.
+It still needs the Blowhorn app installed and opened once.
 
 ### Fallback: the app's own Python
 

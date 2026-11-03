@@ -81,8 +81,9 @@ or later; see [The blowhorn-mcp command](#the-blowhorn-mcp-command)),
 and so does a checkout install (`tools/install.sh`). Any arguments after
 the command go to the server unchanged, so
 `~/.local/bin/blowhorn-mcp --list-tools` works too. The npm package
-`blowhorn-mcp`, run as `npx -y blowhorn-mcp`, is coming soon and not
-published yet.
+[`blowhorn-mcp`](https://www.npmjs.com/package/blowhorn-mcp) is
+published, so `npx -y blowhorn-mcp` (Node.js 20 or later) starts the
+same server; it still needs the Blowhorn app installed and opened once.
 
 Without the command, run the server from a checkout, with the
 checkout's Python environment:
@@ -653,14 +654,16 @@ call may run at most 600 seconds by default
 
 ## Catalog listings
 
-The server is not listed in the official MCP Registry or other catalogs
-yet. The listing input, `server.json`, lives in the public
+The server is published in the
+[official MCP Registry](https://registry.modelcontextprotocol.io/) as
+`io.github.blowhorn-ai/blowhorn`, and its launcher on npm as
+[`blowhorn-mcp`](https://www.npmjs.com/package/blowhorn-mcp). The listing
+input, `server.json`, lives in the public
 [blowhorn-mcp repository](https://github.com/blowhorn-ai/blowhorn-mcp)
-beside the source of the `blowhorn-mcp` npm launcher. It names the server
-for the registry and carries the npm launcher's version, not the Blowhorn
-release's: the launcher works with Blowhorn 1.61.0 or later. Neither the npm
-package nor the listing is published yet; publication waits on the catalog
-description's approval.
+beside the source of the npm launcher. It carries the npm launcher's
+version, not the Blowhorn release's: the launcher works with Blowhorn
+1.61.0 or later, and each registry publish pairs with an npm publish of
+the same version. Other catalogs are not listed yet.
 
 See also the [CLI reference](/docs/reference/cli/) for the commands themselves,
 [Connect an AI assistant over MCP](/docs/how-to/set-up/connect-mcp-client/)
