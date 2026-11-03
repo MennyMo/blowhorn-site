@@ -119,7 +119,6 @@
   --font-display: "Bricolage Grotesque", "Instrument Sans", system-ui, sans-serif;
   --font-sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --font-label: var(--font-display); /* section and field labels; mirrors the desktop app */
 
   /* Spacing, 4px base */
   --space-1: 4px;
@@ -317,17 +316,16 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 }
 .body-lg { font-size: 18px; line-height: 28px; }
 .body { font-size: 16px; line-height: 24px; }
-.ui { font-size: 15px; line-height: 22px; font-weight: 500; }
+.ui { font-size: 14px; line-height: 20px; font-weight: 500; }
 .caption { font-size: 13px; line-height: 18px; font-weight: 500; }
 .muted { color: var(--ink-muted); }
 .label {
-  font-family: var(--font-label);
+  font-family: var(--font-mono);
   font-size: 11px;
   line-height: 16px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  font-optical-sizing: auto;
   color: var(--ink-muted);
 }
 
@@ -2798,8 +2796,8 @@ a.card.docs-card > * { margin-top: 0; }
 .plan > * + * { margin-top: var(--space-3); }
 .plan .plan-name { margin-top: 0; font-size: 22px; }
 .plan-badge {
-  align-self: flex-start; padding: 2px var(--space-2); border-radius: var(--radius-pill);
-  background: var(--teal); color: var(--on-teal); font-weight: 700; white-space: nowrap;
+  align-self: flex-start; padding: 2px var(--space-3); border-radius: var(--radius-pill);
+  background: var(--teal); color: var(--on-teal); font-weight: 700;
 }
 .plan-badge + .plan-name { margin-top: var(--space-3); }
 .plan-blurb { min-height: 3em; }

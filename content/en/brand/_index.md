@@ -389,9 +389,9 @@ troublemakers:
     h: 360
 fonts:
   - family: Bricolage Grotesque
-    role: Display and labels
+    role: Display
     class: type-display
-    weights: ExtraBold 800, Bold 700, SemiBold 600
+    weights: ExtraBold 800, Bold 700
     sample: One message out, many ears in
     url: https://fonts.google.com/specimen/Bricolage+Grotesque
   - family: Instrument Sans
@@ -401,9 +401,9 @@ fonts:
     sample: Write it once. Blowhorn takes it from there.
     url: https://fonts.google.com/specimen/Instrument+Sans
   - family: JetBrains Mono
-    role: Code
+    role: Code and labels
     class: type-mono
     weights: Regular 400, Medium 500
-    sample: blowhorn post --all-profiles
+    sample: POSTED TO 12 PROFILES
     url: https://fonts.google.com/specimen/JetBrains+Mono
 ---
