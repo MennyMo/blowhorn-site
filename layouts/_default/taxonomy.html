@@ -7,8 +7,8 @@
       <div class="wrap">
         <header>
           <p class="label">Tag</p>
-          <h1 class="display">{{ .Title }}</h1>
-          <p class="body-lg muted lede">Everything on blowhorn.ai tagged {{ .Title }}.</p>
+          <h1 class="display">{{ humanize .Data.Term }}</h1>
+          <p class="body-lg muted lede">Everything on blowhorn.ai tagged {{ humanize .Data.Term }}.</p>
         </header>
         {{- $videos := where .Pages "Layout" "video" -}}
         {{- with $videos }}
