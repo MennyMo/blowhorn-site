@@ -1,6 +1,6 @@
 ---
 title: "Change how the app looks"
-description: "Pick the app's theme, make the side rail and the + button solid or tinted glass, and choose whether the desktop shows through."
+description: "Pick the app's theme, make the side rail and the + button solid or tinted glass, choose whether the desktop shows through, and see how times follow your Mac's clock."
 weight: 175
 ---
 
@@ -58,3 +58,11 @@ macOS feature; on any other system the glass stays opaque.
 In the **appearance** card, pick **spacing**: **Comfortable** is the default,
 **Compact** fits more rows, and **Spacious** makes text and targets about 25%
 larger.
+
+## Times on screen
+
+Blowhorn shows every time in your Mac's local time, on the clock your Mac
+uses: **8:47 PM** with the 12-hour clock, **20:47** with the 24-hour clock.
+To switch, turn **24-hour time** on or off in System Settings > General >
+Date & Time, then quit and reopen Blowhorn. Hover over a relative time, such
+as **yesterday 8:47 PM**, to see its full date.
