@@ -6,7 +6,7 @@ weight: 287
 
 
 Closing the app stops the window, not the work. The background service
-keeps running the schedule: one pass every ten minutes, claiming due
+keeps running the schedule: a pass whenever an activity falls due, at least once a minute, claiming due
 activities and writing the ledger, with no window open and no person
 watching. Quitting pauses nothing and resumes nothing; the pause
 scopes keep exactly what they said.

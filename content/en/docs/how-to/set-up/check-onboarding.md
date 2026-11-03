@@ -59,8 +59,8 @@ After setup, both walks also check the console a new person sees:
 - **Next run:** saving a daily Accept LinkedIn invitations from that picker
   stores one enabled routine in the local Cloud, and **Activity > Routines**
   lists it with its next run at the time the step typed. Home names no next run. The rail's status line
-  never shows a "next check" countdown: on watch it names that same next run, and
-  otherwise it keeps its own reason and promises no next run.
+  never shows a countdown: it says what this computer is doing, and otherwise it
+  keeps its own reason.
 
 `empty-profile` covers
 a new organization with no planted logins. `sign-up` presses Create account,

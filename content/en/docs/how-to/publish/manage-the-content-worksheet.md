@@ -105,9 +105,10 @@ without retyping it. It holds no credential and reaches no account: it hands
 the page's address, title, and any selected text to the desktop app, which
 opens Activity › Upcoming on a new entry pre-filled from it.
 
-To install it: in the app, **Activity › Upcoming → from browser → copy code**, then add
-a bookmark in your browser named `Blowhorn: capture` and paste the code as
-its address.
+To install it, open **Settings › Setup** (or **Activity › Upcoming → from browser**) and
+drag the **Blowhorn: capture** link onto your Google Chrome bookmarks bar. If you
+would rather paste, choose **copy code**, add a bookmark in Google Chrome named
+`Blowhorn: capture`, and paste the code as its address.
 
 or paste this:
 

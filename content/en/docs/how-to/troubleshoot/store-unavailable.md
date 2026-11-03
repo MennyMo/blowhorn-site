@@ -54,14 +54,14 @@ Blowhorn is rate limiting this account (schedules); retrying in 5s.
 ```
 
 and exits 3. The app says "Blowhorn asked this computer to slow down for
-a moment. It will retry on its own." There is nothing to fix: the next tick
-tries again. Run records waiting in the spool go back a few at a time, in the
+a moment. It will retry on its own." There is nothing to fix: the next
+pass tries again. Run records waiting in the spool go back a few at a time, in the
 order they were written, and stop at the first refusal, so the records behind
 it wait their turn rather than being lost or reordered.
 
 ## What the run did while your account was out of reach
 
-Run records waited in the local spool and replay on the next tick or run that
+Run records waited in the local spool and replay on the next pass or run that
 reaches your account, which prints how many it replayed. To send them now:
 
 ```bash

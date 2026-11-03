@@ -62,7 +62,7 @@ page, open the routine after adding it and change its page.
 
 Open a job (click it, or focus it and press Enter) and its details appear in a
 dialog, a box over the screen. Choose **edit** to change it, or "do it now"
-to run it without waiting for its time. With "dry fire" on, check now rehearses the pass and claims nothing. When the account is not connected, the preview says the activity is blocked and why, in the same words a real run would meet.
+to run it without waiting for its time. With "dry fire" on, a run rehearses the routine and claims nothing. When the account is not connected, the preview says the activity is blocked and why, in the same words a real run would meet.
 
 ## From the command line
 

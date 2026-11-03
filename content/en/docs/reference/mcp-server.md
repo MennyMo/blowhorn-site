@@ -231,7 +231,9 @@ computer.
 stdin. Passing it adds the command's `--payload-stdin` flag. Every
 other call runs with stdin closed.
 
-## Safety: dry run first, confirm to act
+<a id="safety-dry-run-first-confirm-to-act"></a>
+
+## Dry run first, confirm to act
 
 A tool that only reads runs as asked. A tool that changes anything
 runs with `--dry-run` unless the call passes `confirm` as true. With
@@ -506,7 +508,7 @@ The label values:
 - `outcome` is `ok` (the command ran and succeeded), `error` (the call
   failed or named no tool) or `refused` (a change the server would not
   run without `confirm`, or `confirm` with `dry_run`; see
-  [Safety](#safety-dry-run-first-confirm-to-act)).
+  [Dry run first](#dry-run-first-confirm-to-act)).
 - `kind` is `timeout`, `cli_not_found`, `nonzero_exit`, `refused`,
   `invalid_arguments`, `unknown_tool`, `tool_error` (a failed result no
   other kind names), or one of the JSON-RPC errors `parse_error`,

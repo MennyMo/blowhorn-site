@@ -25,7 +25,7 @@ Chrome profile you already use, on the sites Blowhorn acts on. It makes
 no requests of its own.
 
 The background service is what runs the schedule while the app is
-closed: one pass every ten minutes claiming the activities that are due.
+closed: a pass whenever an activity falls due, and at least once a minute, claiming the activities that are due.
 Quitting the app never pauses it; pausing is explicit, per computer,
 per organization, or per activity.
 

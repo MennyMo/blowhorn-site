@@ -63,7 +63,7 @@ blowhorn schedule resume
 
 The flagless pause writes a local file beside your config, so it works even
 when everything else is broken, and it survives a crash, a restart and a
-reboot. Ticks keep running every ten minutes but claim nothing and exit 0.
+reboot. The service keeps running but claims nothing and exits 0.
 Due times carry forward: a recurring activity that fell due during the pause runs
 once on resume, not once per missed interval.
 
@@ -157,6 +157,6 @@ only - a command you run by hand is yours, exactly as a pause never stops one.
 
 - [Schedule a job](/docs/how-to/schedule/schedule-a-job/) - create activities and run passes by hand
 - [Find out why a job did not run](/docs/how-to/schedule/why-not-run/) - see which scope holds an activity
-- [Keep posting when the app is closed](/docs/how-to/schedule/background-service/) - the service that keeps ticking while paused
+- [Keep posting when the app is closed](/docs/how-to/schedule/background-service/) - the service that keeps running while paused
 - [Change your defaults](/docs/how-to/settings/defaults/) - pace, excluded profiles, logs
 - [You're in control](/docs/explanation/youre-in-control/) - every other safety control

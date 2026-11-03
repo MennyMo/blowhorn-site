@@ -6,27 +6,28 @@ weight: 153
 
 
 Scheduled passes keep running with no window open. One background service owns
-the timer and runs a pass every ten minutes, starting with one as soon as it
-starts.
+the schedule: it runs a pass when an activity falls due, re-scans at least once
+a minute, and starts with a pass as soon as it starts.
 
 ## Check the service
 
 ```bash
 blowhorn service status
-blowhorn service tick-now --follow
+blowhorn service start
 ```
 
 `service status` names the owner, whether the service is running, the last
-pass and the pass in flight. `tick-now` asks the running service for a pass
-now and watches it. In the app, the "this computer" screen shows the same state.
+pass and the pass in flight. `service start` loads the service if it is stopped
+and asks a running one to look at the schedule now. In the app, the "this
+computer" screen shows the same state.
 
 While no pass is running, the service also tells your Blowhorn account that this
 computer is still here, about once a minute, so the computer shows online there
 between passes. It sends nothing while you are signed out.
 
-When this install is signed in to a Blowhorn account, one tick runs at a time. A
+When this install is signed in to a Blowhorn account, one pass runs at a time. A
 second `blowhorn schedule tick` or `blowhorn schedule trigger-now` while that
-tick is running stops, and Blowhorn says it is already running a tick on this
+pass is running stops, and Blowhorn says it is already running on this
 install.
 
 The owner tells you who manages it: the desktop app registered it itself, or

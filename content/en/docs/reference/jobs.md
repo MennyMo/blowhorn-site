@@ -9,7 +9,7 @@ What a schedule activity holds, when it runs, and what keeps it from
 running. This page describes; the steps live in the how-to guides
 linked under Related.
 
-A pass runs every ten minutes and claims the activities that are due. Several
+The service runs a pass when an activity falls due, and at least once a minute, and claims the activities that are due. Several
 computers sharing one store share the queue: a running activity carries a lease,
 and an activity whose lease lapsed is reclaimable by the next pass.
 

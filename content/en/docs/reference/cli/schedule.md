@@ -17,8 +17,8 @@ The `blowhorn schedule` commands. Each one's `--help` prints the same text.
 | [`schedule get`](#blowhorn-schedule-get) | Return a single scheduled action with all fields. |
 | [`schedule list`](#blowhorn-schedule-list) | List scheduled actions and whether they are currently due. |
 | [`schedule pause`](#blowhorn-schedule-pause) | Pause all scheduled processing: every tick keeps running but claims no activities until `blowhorn schedule resume`, and due times carry forward. |
-| [`schedule resume`](#blowhorn-schedule-resume) | Resume scheduled processing after `blowhorn schedule pause`; activities that fell due meanwhile run once, on the next tick. |
-| [`schedule status`](#blowhorn-schedule-status) | Show whether processing is paused, the last tick's heartbeat, the estimated next tick, today's tick counts from the run ledger, and the scheduler LaunchAgent state. |
+| [`schedule resume`](#blowhorn-schedule-resume) | Resume scheduled processing after `blowhorn schedule pause`; activities that fell due meanwhile run once, as soon as the service takes them up. |
+| [`schedule status`](#blowhorn-schedule-status) | Show whether processing is paused, the last pass's heartbeat, whether passes are still running, today's run counts from the run ledger, and the background service's state. |
 | [`schedule tick`](#blowhorn-schedule-tick) | Run one scheduler polling pass against due scheduled actions, executing each through the same command routing the CLI uses and writing a per-job log under &lt;log-dir&gt;/scheduler/. |
 | [`schedule trigger-now`](#blowhorn-schedule-trigger-now) | Force a specific scheduled action to run immediately. |
 | [`schedule upsert`](#blowhorn-schedule-upsert) | Create or update a scheduled action from a JSON payload. |
@@ -201,7 +201,7 @@ Output: json with `--json`, text otherwise.
 
 ## blowhorn schedule resume
 
-Resume scheduled processing after `blowhorn schedule pause`; activities that fell due meanwhile run once, on the next tick. The same three scopes: without a flag this machine's own pause is lifted, `--all` lifts the pause every machine sharing the store honours, and `--activity` N lifts one paused action. Lifting one scope leaves the other two as they were.
+Resume scheduled processing after `blowhorn schedule pause`; activities that fell due meanwhile run once, as soon as the service takes them up. The same three scopes: without a flag this machine's own pause is lifted, `--all` lifts the pause every machine sharing the store honours, and `--activity` N lifts one paused action. Lifting one scope leaves the other two as they were.
 
 ```text
 blowhorn schedule resume [OPTIONS]
@@ -231,7 +231,7 @@ Output: json with `--json`, text otherwise.
 
 ## blowhorn schedule status
 
-Show whether processing is paused, the last tick's heartbeat, the estimated next tick, today's tick counts from the run ledger, and the scheduler LaunchAgent state.
+Show whether processing is paused, the last pass's heartbeat, whether passes are still running, today's run counts from the run ledger, and the background service's state.
 
 ```text
 blowhorn schedule status [OPTIONS]

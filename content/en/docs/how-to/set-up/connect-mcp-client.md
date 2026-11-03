@@ -499,7 +499,7 @@ for the outcome and read the rehearsal:
 
 Say go, and the bot runs the same call confirmed. Under approval
 mode an agent cannot approve its own queued work, so confirmed
-work can still wait for you in the app (see [Safety](#safety)).
+work can still wait for you in the app (see [Dry run first](#dry-run-first)).
 
 A Muse bot that is not running on your Mac can still read
 through the interim hosted gateway. Connect it as a custom MCP
@@ -698,7 +698,9 @@ other write. `profile status` and `chrome discover` count as writes
 too, because each records the sign-ins it reads as the profile's
 accounts in your Blowhorn account.
 
-## Safety
+<a id="safety"></a>
+
+## Dry run first
 
 Writes need confirmation, and dry run is the default. A tool that
 only reads runs as asked. A tool that changes anything runs with
