@@ -52,7 +52,7 @@ Paper and Dispatch keep one palette in both themes, so they also set `--ink`, `-
 | `card-stamp` | Stamp | facts, stats, guarantees, proof points, compliance | none (the page shows through) | 2px ink (1px border plus a 1px inset ring, so the box matches the other variants); label boxed in mono caps | ink, ink-muted | 16.3:1 and 5.6 / 7.2:1 for muted; edge 16.3:1 |
 | `card-field` | Field | feature and explanation grids, the common case | surface-tint | none; the hover edge is line-strong | ink, ink-muted | 14.2 / 12.4:1 ink; 4.9 / 5.5:1 muted |
 | `card-plain` | Plain | secondary lists, link lists, low emphasis | none | 1px line-strong on all sides | ink, ink-muted | 16.3 / 16.3:1 ink; 5.6 / 7.2:1 muted; edge 3.7 / 4.4:1 |
-| `card-glass` | Glass | one floating surface over content: a menu, the header, a hero. Also the `.glass` panel class. Never on a grid | solid `--surface` (flat, no blur) | even 1px `--glass-edge` on all sides, soft shadow | ink, ink-muted | 16.0 / 15.0:1 ink; 5.5 / 6.6:1 muted |
+| `card-glass` | Glass | one floating surface over content: a menu, the header, a hero. Also the `.glass` panel class. Never on a grid | liquid glass (sheen, blur, rim) | rim highlight, no solid edge | ink, ink-muted | 16.0 / 15.0:1 ink; 5.5 / 6.6:1 muted |
 
 Ratios are WCAG 2.1 for the pair named, computed for light and dark. Two edges are deliberate:
 
@@ -69,7 +69,7 @@ Do:
 Don't:
 
 - Draw a stripe on one edge, on a card, a quote, a table row or a callout.
-- Give a button, card or tile a hard offset shadow (`4px 4px 0 0`); a primary button stands out by its teal fill.
+- Give a button, card or tile a hard offset shadow (`4px 4px 0 0`); a primary button stands out by its teal fill and gloss.
 - Put the same variant on two cards in a row or on a card and the one above it, or make a whole grid one variant.
 - Put glass on a grid of cards, or on anything that is not a floating surface.
 - Hard-code a card's colours in a template: add a variant, or use an existing one.
@@ -82,20 +82,6 @@ Live specimen: /brand/#cards.
 - A view has one teal primary (`.button-primary`) in its main content. A free check is a text link; a second action is an outline button.
 - `make check-install-cta` (in `make check`) fails a second primary or an old label. Docs are skipped; the home page is pending its rebuild (#418).
 - `/download/`: the Mac button is the only primary. The extension, the command and the bookmarklet are outline buttons. Windows is a plain line.
-
-## Flat Signal
-
-The site is flat. Surfaces are solid, edges are even and depth is one soft shadow on a floating surface. Three rules, enforced by `make check-site-css` over `assets/css` and `assets/scss` (`.github/scripts/check_site_css.py`):
-
-- **13px floor.** No text under 13px in mixed case. Only uppercase mono labels and numerals may go smaller (11px). The miniature interface art (`.ia-*`, `.iface-art`) is a picture of the app, aria-hidden, and is exempt.
-- **No edge stripes.** No border-left, border-right or inset shadow in an accent colour down one side. The docs sidebar's active page is a tint fill with teal text, not a bar. Neutral 1px rules and the selected-tab mark stay.
-- **No glass.** No `backdrop-filter`, no inset highlight, no sheen or ambient gradient. A panel that floats is a solid surface with an even border.
-
-## Casing
-
-Yi's rule (2 Nov 2026): **small uppercase is for section and field labels only** (eyebrows such as "HOW IT WORKS", form field labels). Everything else is sentence case: headings, buttons, menu and nav items, titles and body. Proper nouns and product names keep their capitals ("Blowhorn", "Major Blowhorn", "Chrome", "LinkedIn", "Am I a Bot?"). Examples: "Questions", not "Frequently Asked Questions"; "Get started free", not "Get Started Free".
-
-`make check-casing` fails a Title Case heading, button or nav link in the built site. Its allowlist of names is in `.github/scripts/check_casing.py`; the synced docs (`/docs/`) and the competitor pages (`/compare/`) are not read by it. Add a name to the allowlist rather than capitalising a common word.
 
 ## Concision
 
@@ -113,8 +99,6 @@ Say less, more clearly. Turn the verbosity dial down a notch from your first dra
 - [ ] New sections use the shared section and `.section-head` classes, not page-specific spacing
 - [ ] Sections are clearly separated (whitespace, then divider or background shift if needed)
 - [ ] Paragraphs stay within `--text-measure`; cards use `--card-pad` and `--grid-gap`
-- [ ] Type is 13px or more in mixed case; no border-left accent, inset stripe or backdrop blur (`make check-site-css`)
-- [ ] Headings, buttons and nav are sentence case; section and field labels are the only uppercase (`make check-casing`)
 - [ ] No coloured stripe on one edge of a card, callout, quote, table row or panel, and no hard offset shadow; no two cards in a row, and no card and the one above it, share a card variant, at any width the grid shows
 - [ ] Checked at 1280, 390 and 320 px, light and dark
 - [ ] One teal primary per view; install links come from `download-button.html` and say "Download"
@@ -136,7 +120,7 @@ Rule (Lee, 12 Oct 2026): **anywhere the site shows a command a reader might run,
 
 The miniature product UI in the homepage "Ways in" section is one partial, `layouts/_partials/interface-art.html` (styles under "Interface art" in `assets/css/site.css`). It is drawn from the real surfaces, never invented:
 
-- **Desktop app** copies the console: lights at the top of the left rail (hidden-inset title bar, no URL bar), the Crowhorn and wordmark, "+ New activity", the places (Dashboard, Activity, Profiles, Performance, Posture) and the "on watch" status line, beside Activity's Upcoming list. Sources in the product repository: `desktop/src/renderer/console/ConsoleRail.tsx`, `places.ts` and `desktop/src/ui/PlatformIcon.tsx`. When the app's rail or vocabulary changes, update the art.
+- **Desktop app** copies the console: lights at the top of the left rail (hidden-inset title bar, no URL bar), the Crowhorn and wordmark, "+ New activity", the five places (Home, Activity, Profiles, Performance, Safety) and the "on watch" status line, beside Activity's Upcoming list. Sources in the product repository: `desktop/src/renderer/console/ConsoleRail.tsx`, `places.ts` and `desktop/src/ui/PlatformIcon.tsx`. When the app's rail or vocabulary changes, update the art.
 - **Web app** and **Chrome extension** share a Chrome-on-Mac frame (`interface-art-browser.html`): lights at the far left of the tab strip, back/forward/reload, the omnibox, a bookmarks bar; the extension adds the pinned Blowhorn icon.
 - Platform marks are the app's monoline marks (`interface-art-mark.html`), not filled brand logos. App labels say "activity", never "post".
 - The Product menu is cards only (no art, no intro copy). The art appears on the home page only, and a container query in the same CSS keeps each piece legible at its narrow sizes. Check both widths, light and dark.
@@ -164,6 +148,6 @@ Paper, mint and command keep their colours in dark mode so a voice looks the sam
 - Do pick the variant by who is talking, and use the same variant for the same voice on every page.
 - Do keep command to one per section.
 - Don't mix variants within one list, put links or buttons inside a bubble, or use teal (#00B39F) as a fill under white text (2.6:1).
-- Current assignments: Major's intros and asides (/major/ hero, the home Major card, /brand/) are `paper`; the home "Fall in, profiles" rally and the army demo's yells are `command`; the agent pages' Try saying prompts are `mint`; the /major/ Greatest hits list is neutral.
+- Current assignments: Major's intros and asides (/major/ hero, the home Major card, /brand/, the 404) are `paper`; the home "Fall in, profiles" rally and the army demo's yells are `command`; the agent pages' Try saying prompts are `mint`; the /major/ Greatest hits list is neutral.
 - The storybook variant is retired: its only page, the /home-alt/ preview, was deleted with the flat storybook art.
 

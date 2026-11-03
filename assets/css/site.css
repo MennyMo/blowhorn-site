@@ -103,17 +103,25 @@
   --ai-soon-ink: #B23A26;
   --shadow-soft: 0 8px 24px rgba(30, 33, 23, 0.12);
 
-  /* Glass (light): solid surfaces with an even edge, so text always sits on
-     an opaque fill and keeps WCAG AA (see DESIGN.md, "Flat Signal"). */
-  --glass-fill: var(--surface);
-  --glass-fill-strong: var(--surface);
-  --glass-fill-solid: var(--surface);
-  --glass-field: var(--surface);
-  --glass-sheen: var(--surface-tint);
-  --glass-rim: var(--line);
-  --glass-edge: var(--line);
+  /* Liquid glass (light). Translucent surfaces over the ambient field; text
+     always sits on a fill opaque enough to keep WCAG AA (see DESIGN.md). */
+  --glass-fill: rgba(255, 255, 255, 0.58);
+  --glass-fill-strong: rgba(255, 255, 255, 0.72);
+  --glass-fill-solid: #FBFDFC;
+  --glass-field: rgba(255, 255, 255, 0.78);
+  --glass-sheen: rgba(255, 255, 255, 0.55);
+  --glass-specular: rgba(255, 255, 255, 0.95);
+  --glass-rim: rgba(255, 255, 255, 0.65);
+  --glass-edge: rgba(30, 33, 23, 0.08);
   --glass-shadow: 0 1px 2px rgba(30, 33, 23, 0.05), 0 12px 32px -12px rgba(30, 33, 23, 0.18);
   --glass-shadow-lift: 0 2px 4px rgba(30, 33, 23, 0.06), 0 20px 44px -14px rgba(0, 117, 106, 0.28);
+  --glass-blur: 20px;
+  --glass-saturate: 170%;
+  --ambient-base: linear-gradient(180deg, #F6FBFA 0%, #FFFFFF 38%, #F3F8F7 100%);
+  --ambient-1: rgba(0, 211, 169, 0.20);
+  --ambient-2: rgba(166, 235, 223, 0.50);
+  --ambient-3: rgba(235, 192, 23, 0.14);
+  --ambient-4: rgba(0, 179, 159, 0.12);
 
   /* Type */
   --font-display: "Bricolage Grotesque", "Instrument Sans", system-ui, sans-serif;
@@ -162,15 +170,21 @@
     --ai-soon-ink: #FF8A73;
     --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.45);
 
-    --glass-fill: var(--surface);
-    --glass-fill-strong: var(--surface);
-    --glass-fill-solid: var(--surface);
-    --glass-field: var(--surface);
-    --glass-sheen: var(--surface-tint);
-    --glass-rim: var(--line);
-    --glass-edge: var(--line);
+    --glass-fill: rgba(42, 46, 37, 0.52);
+    --glass-fill-strong: rgba(30, 33, 23, 0.68);
+    --glass-fill-solid: #262A21;
+    --glass-field: rgba(30, 33, 23, 0.60);
+    --glass-sheen: rgba(255, 255, 255, 0.06);
+    --glass-specular: rgba(255, 255, 255, 0.14);
+    --glass-rim: rgba(255, 255, 255, 0.08);
+    --glass-edge: rgba(0, 0, 0, 0.35);
     --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.30), 0 16px 40px -14px rgba(0, 0, 0, 0.60);
     --glass-shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.30), 0 22px 48px -14px rgba(0, 211, 169, 0.22);
+    --ambient-base: linear-gradient(180deg, #1A1D14 0%, #1E2117 45%, #1B1E15 100%);
+    --ambient-1: rgba(0, 211, 169, 0.20);
+    --ambient-2: rgba(0, 179, 159, 0.12);
+    --ambient-3: rgba(235, 192, 23, 0.05);
+    --ambient-4: rgba(0, 117, 106, 0.18);
   }
 }
 
@@ -317,7 +331,7 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 .body-lg { font-size: 18px; line-height: 28px; }
 .body { font-size: 16px; line-height: 24px; }
 .ui { font-size: 14px; line-height: 20px; font-weight: 500; }
-.caption { font-size: 13px; line-height: 18px; font-weight: 500; }
+.caption { font-size: 12px; line-height: 16px; font-weight: 500; }
 .muted { color: var(--ink-muted); }
 .label {
   font-family: var(--font-mono);
@@ -395,7 +409,7 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
    last item. Behaviour in assets/js/nav.js; without it (no
    .is-enhanced), hover and focus open the panels and small screens list the
    groups open. */
-/* The fill and edge are the Glass recipe in cards.css (the header variant). */
+/* The fill, blur and edge are the Glass recipe in cards.css (the header variant). */
 .site-header {
   position: sticky;
   top: 0;
@@ -458,9 +472,16 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
   gap: var(--space-6) var(--space-8);
   padding: var(--space-6) var(--space-8);
   border-radius: var(--radius-lg);
-  /* Solid: the panel is opaque, so its text never sits on the page. */
-  background: var(--glass-fill-solid);
-  box-shadow: 0 0 0 1px var(--glass-edge), var(--glass-shadow);
+  /* Near-opaque: the header's own backdrop filter stops a nested one from
+     blurring the page, so the panel carries the glass look without relying on it. */
+  background:
+    linear-gradient(180deg, var(--glass-sheen), transparent 46%),
+    var(--glass-fill-solid);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-specular),
+    inset 0 0 0 1px var(--glass-rim),
+    0 0 0 1px var(--glass-edge),
+    var(--glass-shadow);
 }
 .mm-panel-wide { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .site-header:not(.is-enhanced) .mm-item:hover > .mm-panel,
@@ -497,7 +518,7 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
   color: var(--ink);
 }
 .mm-link:hover,
-.mm-link:focus-visible { background: var(--glass-sheen); color: var(--ink); }
+.mm-link:focus-visible { background: var(--glass-sheen); color: var(--ink); box-shadow: inset 0 0 0 1px var(--glass-rim); }
 .mm-link-title { font-size: 14px; line-height: 20px; font-weight: 600; }
 .mm-link:hover .mm-link-title { color: var(--link); }
 .mm-link-desc { font-size: 13px; line-height: 18px; color: var(--ink-muted); }
@@ -820,7 +841,7 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
     overscroll-behavior: contain;
     padding: var(--space-2) var(--gutter) var(--space-6);
     background: var(--glass-fill-solid);
-    box-shadow: 0 0 0 1px var(--glass-edge), 0 24px 40px -24px rgba(30, 33, 23, 0.45);
+    box-shadow: inset 0 1px 0 0 var(--glass-edge), 0 24px 40px -24px rgba(30, 33, 23, 0.45);
   }
   .site-header.is-enhanced.is-menu-open .site-nav { display: block; }
   .mm-list { flex-direction: column; align-items: stretch; gap: 0; }
@@ -840,6 +861,8 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
     gap: var(--space-4);
     padding: 0 0 var(--space-4);
     background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     box-shadow: none;
     border-radius: 0;
     animation: none !important;
@@ -883,6 +906,17 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 .hero-note { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); }
 .hero-art { position: relative; width: 100%; max-width: 560px; margin-inline: auto; }
+.hero-art::before {
+  /* A soft teal and mint halo behind the hero stage, for the glass to pick up. */
+  content: "";
+  position: absolute;
+  inset: 6% 0 6% 8%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--ambient-1), var(--ambient-2) 55%, transparent);
+  filter: blur(24px);
+  pointer-events: none;
+}
 @media (min-width: 900px) {
   .hero { padding-block: var(--space-16); }
   .hero-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 6fr); gap: var(--space-12); }
@@ -945,7 +979,7 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 .stage .stage-send { fill: var(--teal); }
 .stage .stage-send-label { font: 700 14px var(--font-sans); fill: var(--on-teal); text-anchor: middle; }
 .stage .stage-done rect { fill: var(--near-black); stroke: var(--teal-bright); stroke-width: var(--stroke-hairline); }
-.stage .stage-done text { font: 600 13px var(--font-sans); fill: var(--teal-bright); text-anchor: middle; }
+.stage .stage-done text { font: 600 12px var(--font-sans); fill: var(--teal-bright); text-anchor: middle; }
 .stage .stage-rings path {
   fill: none;
   stroke: var(--teal-bright);
@@ -1299,8 +1333,8 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 
 /* ---------- Footer ----------
    A glass panel: a top band (the tagline left, the newsletter right), one row
-   of links, then the legal bar. The panel is a floating surface (see "Flat
-   Signal" below). */
+   of links, then the legal bar. The panel is a glass surface (see "Liquid
+   glass" below). */
 .site-footer {
   padding-block: var(--space-12) var(--space-8);
   color: var(--ink-muted);
@@ -1373,7 +1407,7 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   align-items: center;
   padding-inline: 0.4rem;
   padding-block: 0.2rem;
-  font-size: 0.8125rem;
+  font-size: 0.8rem;
   line-height: 1;
   color: var(--status-ink);
   text-decoration: none;
@@ -1451,16 +1485,18 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 .cast-empty-action { margin: 0; }
 .cast-empty-compact .cast-empty-art { width: min(100%, 160px); }
 
-/* 404: the Mouse Marine art, one line of copy and one way home. */
+/* 404 */
 .empty-state {
   display: grid;
-  justify-items: center;
-  gap: var(--space-6);
+  gap: var(--space-8);
+  align-items: center;
   padding-block: var(--space-12);
-  text-align: center;
 }
-.missing-art { margin: 0; width: min(100%, 560px); }
-.missing-art img { display: block; width: 100%; height: auto; border-radius: var(--radius-lg); }
+.empty-state .major-figure { width: min(100%, 320px); }
+.empty-copy > * + * { margin-top: var(--space-4); }
+@media (min-width: 720px) {
+  .empty-state { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+}
 
 /* Whole-card links (10 Oct): the card is the link, no underlines on card text. The lift,
    its transition and its reduced-motion rule are cards.css's alone. */
@@ -1483,19 +1519,68 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 .logo-tile img { display: block; margin: auto; object-position: center; }
 .logo-tile img[src*="linkedin"] { width: 24px; height: 24px; transform: none; }
 
-/* Flat Signal: solid surfaces and even borders. No blur, no highlights, no
-   gradient fills and no ambient field. Depth is the soft --glass-shadow on a
-   floating surface only (DESIGN.md, "Cards"). Rules:
-   - text sits on a solid --surface fill, so contrast stays AA in both themes;
-   - platform logos stay on their opaque white tiles (the tile gets the edge);
-   - nothing moves on its own; only hover lifts, and not under reduced motion. */
+/* ---------- Liquid glass ----------
+   Frosted, translucent surfaces over a soft ambient field of brand colour, after
+   Apple's Liquid Glass: backdrop blur plus saturation, a bright specular top edge,
+   a faint rim and layered soft shadows. Rules (DESIGN.md, "Liquid glass"):
+   - text never sits on less than --glass-fill, so contrast stays AA in both themes;
+   - platform logos stay on their opaque white tiles (the tile gets the edge, not the blur);
+   - nothing glassy moves on its own; only hover lifts, and not under reduced motion;
+   - no backdrop-filter support, prefers-reduced-transparency or prefers-contrast:
+     more all fall back to solid surfaces. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(44rem 34rem at 6% -8%, var(--ambient-1), transparent 66%),
+    radial-gradient(40rem 32rem at 98% 6%, var(--ambient-2), transparent 62%),
+    radial-gradient(30rem 26rem at 82% 70%, var(--ambient-3), transparent 64%),
+    radial-gradient(42rem 32rem at 10% 96%, var(--ambient-4), transparent 64%),
+    var(--ambient-base);
+}
 body { background: var(--surface); }
 
 /* The glass recipe for .glass panels is the Glass variant in cards.css. */
 .td-offline-search-results {
-  box-shadow: 0 0 0 1px var(--glass-edge), var(--glass-shadow);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-specular),
+    inset 0 0 0 1px var(--glass-rim),
+    0 0 0 1px var(--glass-edge),
+    var(--glass-shadow);
 }
 
+/* Platform logo tiles: opaque white, as each platform asks, with a glass edge. */
+.logo-tile,
+.fan .fan-tile rect {
+  background: var(--white);
+}
+.logo-tile {
+  box-shadow:
+    inset 0 1px 0 0 var(--white),
+    inset 0 -1px 0 0 rgba(30, 33, 23, 0.06),
+    0 0 0 1px var(--glass-edge),
+    0 8px 18px -8px rgba(30, 33, 23, 0.28);
+}
+
+/* Buttons: a glossy teal primary and a glass secondary. */
+.button-primary {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0) 55%);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55), inset 0 -1px 0 0 rgba(0, 0, 0, 0.10), 0 8px 18px -8px rgba(0, 143, 128, 0.65);
+}
+.button-primary:hover { background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%); }
+.button-secondary {
+  border-color: transparent;
+  background:
+    linear-gradient(180deg, var(--glass-sheen), transparent 60%),
+    var(--glass-fill);
+  -webkit-backdrop-filter: blur(12px) saturate(var(--glass-saturate));
+  backdrop-filter: blur(12px) saturate(var(--glass-saturate));
+  box-shadow: inset 0 1px 0 0 var(--glass-specular), inset 0 0 0 1px var(--line-strong), var(--glass-shadow);
+}
+.button-secondary:hover { background: var(--glass-fill-strong); }
 /* A disabled button reads as unavailable: flat, muted, no hover, no lift. */
 .button:disabled,
 .button:disabled:hover {
@@ -1524,19 +1609,28 @@ body { background: var(--surface); }
 .docs-main pre, .card pre { background: var(--glass-field); box-shadow: inset 0 0 0 1px var(--glass-edge); }
 
 /* Search results overlay text, so they sit on the strong fill. */
-.td-offline-search-results { background: var(--glass-fill-strong); }
+.td-offline-search-results { background: var(--glass-fill-strong); -webkit-backdrop-filter: blur(28px) saturate(var(--glass-saturate)); backdrop-filter: blur(28px) saturate(var(--glass-saturate)); }
 
-/* Platform logo tiles: opaque white, as each platform asks, with an even edge. */
-.logo-tile,
-.fan .fan-tile rect {
-  background: var(--white);
+/* Fallbacks: no backdrop-filter, less transparency or more contrast all mean
+   solid surfaces with a visible edge. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --glass-fill: var(--glass-fill-solid); --glass-fill-strong: var(--surface); --glass-field: var(--surface); }
 }
-.logo-tile {
-  box-shadow: 0 0 0 1px var(--glass-edge), 0 8px 18px -8px rgba(30, 33, 23, 0.28);
+@media (prefers-reduced-transparency: reduce) {
+  :root { --glass-fill: var(--glass-fill-solid); --glass-fill-strong: var(--surface); --glass-field: var(--surface); --glass-sheen: transparent; }
+  .td-offline-search-results, .button-secondary {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  body::before { opacity: 0.4; }
 }
-
+@media (prefers-contrast: more) {
+  :root { --glass-fill: var(--surface); --glass-fill-strong: var(--surface); --glass-field: var(--surface); --glass-sheen: transparent; --glass-edge: var(--line-strong); }
+  body::before { display: none; }
+}
 @media print {
-  .glass { background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+  body::before { display: none; }
+  .glass { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
 }
 
 /* ---------- Brand (/brand/) ----------
@@ -1631,7 +1725,7 @@ body { background: var(--surface); }
 }
 .brand-index a::before {
   content: counter(brand-index, decimal-leading-zero);
-  font: 500 13px var(--font-mono);
+  font: 500 11px var(--font-mono);
   letter-spacing: 0.08em;
   color: var(--ink-muted);
 }
@@ -1825,7 +1919,7 @@ body { background: var(--surface); }
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
-.swatch > .swatch-chip { display: block; height: 64px; box-shadow: inset 0 0 0 1px var(--line); }
+.swatch > .swatch-chip { display: block; height: 64px; box-shadow: inset 0 -1px 0 var(--line); }
 .swatch-meta { padding: var(--space-4); }
 @media (min-width: 640px) { .swatch > .swatch-chip { height: 104px; } }
 .swatch-meta > * + * { margin-top: var(--space-1); }
@@ -2106,9 +2200,9 @@ body { background: var(--surface); }
   font: 600 13px/1 var(--font-sans);
   color: var(--ink);
   background: var(--glass-fill);
-  box-shadow: inset 0 0 0 1px var(--line-strong);
+  box-shadow: inset 0 1px 0 0 var(--glass-specular), inset 0 0 0 1px var(--line-strong);
 }
-.step-extension .step-num { background: var(--teal); color: var(--on-teal); }
+.step-extension .step-num { background: var(--teal); color: var(--on-teal); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5); }
 .step-stage {
   width: 100%;
   max-width: 320px;
@@ -2124,10 +2218,10 @@ body { background: var(--surface); }
 .step-action { margin-top: calc(var(--space-1) * -1); }
 
 /* Mini UIs: small, crisp drawings of the real thing, in the site's tokens. */
-.mini { position: relative; font: 500 13px/1.3 var(--font-sans); color: var(--ink); }
+.mini { position: relative; font: 500 11px/1.3 var(--font-sans); color: var(--ink); }
 .mini b { font-weight: 600; }
-.mini small { display: block; font-size: 13px; color: var(--ink-muted); }
-.mini-title { margin: 0; font-size: 13px; font-weight: 600; color: var(--ink-muted); }
+.mini small { display: block; font-size: 10px; color: var(--ink-muted); }
+.mini-title { margin: 0; font-size: 11px; font-weight: 600; color: var(--ink-muted); }
 .mini-cursor { position: absolute; width: 14px; height: 19px; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35)); }
 .mini-cursor path { fill: var(--white); stroke: var(--near-black); stroke-width: 1.2; stroke-linejoin: round; }
 .mini-surface, .mini-panel, .mini-apps, .mini-ext, .mini-url {
@@ -2172,7 +2266,7 @@ body { background: var(--surface); }
 .mini-ext { width: 200px; padding: 12px; display: grid; gap: 10px; text-align: left; }
 .mini-ext-head { display: flex; align-items: center; gap: 10px; }
 .mini-ext-head img { width: 32px; height: 32px; flex: none; }
-.mini-add { position: relative; justify-self: end; padding: 5px 12px; border-radius: var(--radius-pill); background: var(--teal); color: var(--on-teal); font-weight: 600; }
+.mini-add { position: relative; justify-self: end; padding: 5px 12px; border-radius: var(--radius-pill); background: var(--teal); color: var(--on-teal); font-weight: 600; box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5); }
 .mini-add .mini-cursor { right: -6px; bottom: -14px; }
 
 .thanks-updates { margin-top: var(--space-16); display: grid; justify-items: center; }
@@ -2204,6 +2298,11 @@ body { background: var(--surface); }
   border-radius: var(--radius-lg);
   position: relative; overflow: hidden;
 }
+.agent-hero::before {
+  content: ""; position: absolute; inset: -40% -10% auto auto; width: 60%; aspect-ratio: 1;
+  background: radial-gradient(circle, var(--ambient-1), transparent 65%);
+  pointer-events: none;
+}
 .agent-hero > * { position: relative; }
 @media (min-width: 900px) { .agent-hero { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); } }
 .agent-hero-index { grid-template-columns: 1fr; }
@@ -2216,7 +2315,7 @@ body { background: var(--surface); }
   display: inline-grid; place-items: center; flex: none;
   width: 48px; height: 48px; border-radius: var(--radius-md);
   font-family: var(--font-mono); font-weight: 700; font-size: 1rem;
-  color: var(--ink); background: var(--surface-tint);
+  color: var(--ink); background: linear-gradient(160deg, var(--glass-specular), var(--surface-tint));
   border: 1px solid var(--glass-rim); box-shadow: var(--glass-shadow);
 }
 .agent-mark-xl { width: 96px; height: 96px; border-radius: 24px; font-size: 1.9rem; }
@@ -2261,7 +2360,9 @@ body { background: var(--surface); }
   background: var(--term-bg);
   color: var(--term-ink);
   border: 1px solid var(--glass-rim);
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-specular);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
 }
 @media (prefers-color-scheme: dark) {
   .term {
@@ -2285,7 +2386,7 @@ body { background: var(--surface); }
   min-height: 40px; padding: var(--space-1) var(--space-2) var(--space-1) var(--space-4);
   background: var(--term-bar);
   border-bottom: 1px solid var(--term-rule);
-  font-family: var(--font-mono); font-size: 13px; line-height: 18px;
+  font-family: var(--font-mono); font-size: 12px; line-height: 16px;
 }
 .term-dots { display: inline-flex; gap: 6px; flex: none; }
 .term-dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--coral); box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.2); }
@@ -2295,13 +2396,13 @@ body { background: var(--surface); }
 .term-lang {
   flex: none; padding: 2px 8px; border-radius: var(--radius-pill);
   border: 1px solid var(--term-rule); color: var(--term-muted);
-  font-size: 13px; letter-spacing: 0.02em;
+  font-size: 11px; letter-spacing: 0.02em;
 }
 .term-copy {
   flex: none; display: inline-flex; align-items: center; gap: 6px;
   min-height: 32px; padding: 0 10px; border-radius: var(--radius-sm);
   border: 1px solid transparent; background: transparent; color: var(--term-muted);
-  font: 500 13px/1 var(--font-sans); cursor: pointer;
+  font: 500 12px/1 var(--font-sans); cursor: pointer;
 }
 .term-copy svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 .term-copy:hover { color: var(--term-ink); border-color: var(--term-rule); background: var(--glass-sheen); }
@@ -2318,7 +2419,7 @@ body { background: var(--surface); }
 .term-output .term-body pre { color: var(--term-muted); }
 @media (max-width: 480px) {
   .term-lang { display: none; }
-  .term-body pre { font-size: 13px; padding: var(--space-3); }
+  .term-body pre { font-size: 12px; padding: var(--space-3); }
 }
 .term .chroma .k, .term .chroma .nt, .term .chroma .kd, .term .chroma .na { color: var(--tk-key); }
 .term .chroma .s, .term .chroma .s1, .term .chroma .s2, .term .chroma .sb, .term .chroma .sd, .term .chroma .se, .term .chroma .l { color: var(--tk-str); }
@@ -2691,7 +2792,7 @@ a.card.docs-card > * { margin-top: 0; }
    beside the download call. One data file (data/testimonials.json) feeds all
    of it through placements, so a quote appears where its slot is called. */
 .proof-flag { display: inline-block; padding: 0.1em 0.55em; border-radius: 999px; background: var(--proof-flag-bg); color: var(--proof-flag-ink); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
-.proof-avatar { display: inline-grid; place-items: center; flex: none; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--glass-fill-strong); border: var(--stroke-hairline, 1px) solid var(--glass-edge); box-shadow: var(--glass-shadow); font-weight: 700; font-size: 0.8125rem; }
+.proof-avatar { display: inline-grid; place-items: center; flex: none; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--glass-fill-strong); border: var(--stroke-hairline, 1px) solid var(--glass-edge); box-shadow: var(--glass-shadow); font-weight: 700; font-size: 0.8rem; }
 .proof-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
 .proof-big { max-width: 46rem; margin: 0 auto; text-align: center; }
 .proof-big blockquote { margin: 0 0 var(--space-4); }
@@ -2783,7 +2884,7 @@ a.card.docs-card > * { margin-top: 0; }
 .save-badge {
   padding: 2px var(--space-2); border-radius: var(--radius-pill);
   background: var(--yellow); color: var(--on-yellow);
-  font-size: 13px; line-height: 18px; font-weight: 700; white-space: nowrap;
+  font-size: 12px; line-height: 16px; font-weight: 700; white-space: nowrap;
 }
 .pricing-grid {
   display: grid; gap: var(--grid-gap); margin-top: var(--head-gap);
@@ -2849,7 +2950,7 @@ a.card.docs-card > * { margin-top: 0; }
 .ai-persona { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); margin: 0; }
 .ai-persona .ai-robo { width: clamp(120px, 22vw, 200px); height: auto; }
 .ai-persona figcaption { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.ai-status { display: inline-block; padding: .2rem .7rem; border-radius: 999px; font-size: .8125rem; font-weight: 700; letter-spacing: .02em; background: rgba(0, 211, 169, .10); color: var(--teal-deep); }
+.ai-status { display: inline-block; padding: .2rem .7rem; border-radius: 999px; font-size: .8rem; font-weight: 700; letter-spacing: .02em; background: rgba(0, 211, 169, .10); color: var(--teal-deep); }
 .ai-soon { background: rgba(238, 90, 68, .14); color: var(--ai-soon-ink); }
 .ai-code-grid { display: grid; gap: var(--space-4); }
 @media (min-width: 860px) { .ai-code-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; } }
@@ -2874,8 +2975,8 @@ a.card.docs-card > * { margin-top: 0; }
   width: 64px;
   height: 64px;
   border-radius: var(--radius-pill);
-  background: var(--white);
-  box-shadow: inset 0 0 0 1px var(--line);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--surface-tint) 90%, transparent) 0%, color-mix(in srgb, var(--surface-tint) 40%, transparent) 62%, transparent 100%);
+  box-shadow: none;
 }
 #platforms .logo-tile img {
   width: 36px;
@@ -2887,7 +2988,7 @@ a.card.docs-card > * { margin-top: 0; }
 #platforms .logo-tile img[src*="x-logo"] { width: 30px; height: 30px; }
 @media (prefers-color-scheme: dark) {
   #platforms .logo-tile {
-    background: var(--white);
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.04) 62%, transparent 100%);
   }
   #platforms .logo-tile img { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45)); }
   #platforms .logo-tile img[src*="x-logo-black"],

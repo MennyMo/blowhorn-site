@@ -37,6 +37,7 @@ def complete_site():
         "index.html": page("nav", "home"),
         "ai/index.html": page("ai"),
         "download/thanks/index.html": page("thanks"),
+        "404.html": page("404"),
         "compare/index.html": page(),
         "compare/phantombuster/index.html": page("compare"),
         "docs/index.html": page("docs"),

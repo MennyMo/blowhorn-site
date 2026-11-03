@@ -34,7 +34,7 @@
 
 "{{ . }}"
 {{ end }}
-## Questions
+## Frequently Asked Questions
 {{ range $item.faq }}
 **{{ .q }}** {{ .a }}{{ with .link }} [{{ .label }}]({{ .href }}){{ end }}
 {{ end }}

@@ -64,7 +64,7 @@
         {{- end }}
 
         {{- with $intel }}
-        <h2>Latest from product intelligence</h2>
+        <h2>Latest from Product intelligence</h2>
         {{- $deal := partial "card-deal.html" (dict "n" (len (first 3 .)) "grid" "stack" "variants" (slice "card-field" "card-plain")) }}
         <div class="articles-list">
           {{- range $i, $v := first 3 (.ByDate.Reverse) }}{{ partial "article-card.html" (dict "page" $v "i" $i "deal" $deal) }}{{ end -}}

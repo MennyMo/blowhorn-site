@@ -17,7 +17,8 @@
     "compare",
     "ai",
     "thanks",
-    "docs"
+    "docs",
+    "404"
   ],
   "nav": {
     "label": "Am I a Bot?"
@@ -57,5 +58,9 @@
     "title": "Am I a Bot?",
     "text": "See what sites can read about your Chrome profile.",
     "link": "Run the check"
+  },
+  "missing": {
+    "text": "Good news: you probably aren't a bot. Want proof?",
+    "link": "Take the free test"
   }
 }

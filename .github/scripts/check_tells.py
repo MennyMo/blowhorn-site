@@ -11,8 +11,8 @@ site and fails when:
   data/tells.json, or a utm_content that is not a listed placement;
 - a placement is missing from a page that must carry it (REQUIRED below):
   the header on the home page, the home band, the callout on
-  every /compare/<slug>/ page and /ai/, the thanks card and the card on
-  every docs page.
+  every /compare/<slug>/ page and /ai/, the thanks card, the card on
+  every docs page and the 404 line.
 
 Links without any UTM parameter pass: the docs (synced from the product
 repository) and data-driven FAQ copy link to Tells in prose, by design.
@@ -36,6 +36,7 @@ REQUIRED = {
     "index.html": {"nav", "home"},
     "ai/index.html": {"ai"},
     "download/thanks/index.html": {"thanks"},
+    "404.html": {"404"},
 }
 # Every page (index.html) under a prefix must carry the placement. The
 # /compare/ hub is a matrix page, not a comparison, so only its children

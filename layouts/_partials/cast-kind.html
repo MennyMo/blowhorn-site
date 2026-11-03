@@ -6,10 +6,7 @@
 {{- if eq $kind "role" -}}
   {{- $getsTitle := "" -}}
   {{- if .name -}}
-    {{- /* The role's name reads mid-sentence: lower its first letter, unless it opens with a capitalised word such as DevRel. */ -}}
-    {{- $who := .name -}}
-    {{- if findRE "^[A-Z][a-z]" .name -}}{{- $who = printf "%s%s" (lower (substr .name 0 1)) (substr .name 1) -}}{{- end -}}
-    {{- $getsTitle = printf "What Blowhorn does for %s" $who -}}
+    {{- $getsTitle = printf "What Blowhorn does for %s" .name -}}
   {{- end -}}
   {{- $out = dict
     "kind" "role"

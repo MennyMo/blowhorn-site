@@ -37,6 +37,7 @@ Build a link with the partial; never hard-code a Tells URL in a template:
 | `ai` | Callout after the first section of `/ai/` (the only page with the "Your AI agent swears it's human" promo) | `tells-callout.html` in `ai.html` |
 | `thanks` | Card after the install steps on `/download/thanks/` | `download-thanks.html` |
 | `docs` | Card under the table of contents (1280px and up), else at the end of the page | `tells-docs-card.html` in `docs/baseof.html` |
+| `404` | Line under the 404 message | `404.html` |
 
 Prose links in the docs (synced from the
 product repository), the Field Manual, the Trust Center and the role and

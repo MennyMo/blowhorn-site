@@ -5,7 +5,7 @@
   "description": "data/tells.json: where the free Am I a Bot? tool (Blowhorn Tells) lives and the copy for every place the site promotes it. Every link is built by layouts/_partials/tells-link.html from url, pages and utm, with utm_content set to one of placements; the partial fails the build on an unknown page or placement, and .github/scripts/check_tells.py fails it when a placement goes missing from its page. Plain text, hyphens never em dashes. Marketing copy says browser, never Chrome; only the docs card says Chrome profile.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["url", "pages", "utm", "placements", "nav", "home", "callouts", "thanks", "docs"],
+  "required": ["url", "pages", "utm", "placements", "nav", "home", "callouts", "thanks", "docs", "missing"],
   "definitions": {
     "text": { "type": "string", "minLength": 1, "not": { "pattern": "\u2014" } },
     "page": { "type": "string", "enum": ["home", "checks", "agents"] },
@@ -109,6 +109,16 @@
       "properties": {
         "eyebrow": { "$ref": "#/definitions/text" },
         "title": { "$ref": "#/definitions/text" },
+        "text": { "$ref": "#/definitions/text" },
+        "link": { "$ref": "#/definitions/text" }
+      }
+    },
+    "missing": {
+      "description": "The line under the 404 page's message.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "link"],
+      "properties": {
         "text": { "$ref": "#/definitions/text" },
         "link": { "$ref": "#/definitions/text" }
       }
