@@ -154,6 +154,7 @@ a.docs-card,
   border-radius: var(--radius-sm, 6px);
 }
 .card-stamp .label {
+  font-family: var(--font-mono);
   display: inline-block;
   width: fit-content;
   max-width: 100%;

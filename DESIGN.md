@@ -167,3 +167,6 @@ Paper, mint and command keep their colours in dark mode so a voice looks the sam
 - Current assignments: Major's intros and asides (/major/ hero, the home Major card, /brand/) are `paper`; the home "Fall in, profiles" rally and the army demo's yells are `command`; the agent pages' Try saying prompts are `mint`; the /major/ Greatest hits list is neutral.
 - The storybook variant is retired: its only page, the /home-alt/ preview, was deleted with the flat storybook art.
 
+## Type
+
+The families are `--font-display` (Bricolage Grotesque, headings), `--font-sans` (Instrument Sans, text and interface) and `--font-mono` (JetBrains Mono, code, commands, IDs and numerals). Section and field labels (eyebrows, `.label`) use the label token, `--font-label`, which is `--font-display` at 600, 11px/16px, 0.08em tracking, uppercase, with optical sizing on. It mirrors the desktop app's `--font-label`. Keep code-like labels (timestamps, kbd, IDs, numerals) and the stamp card's label in mono, set on the element rather than by the `.label` class. The style lives in `static/assets/brand/tokens.json` (Display group, `label`).
