@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {{- partial "theme-head.html" . }}
     {{- partial "tells-bar-head.html" . }}
-    <title>{{ if .IsHome }}{{ .Title }}{{ else if .Params.seo_title }}{{ .Params.seo_title }}{{ else if eq .Kind "404" }}Page not found: {{ site.Title }}{{ else if eq .Kind "term" }}{{ humanize .Data.Term }}: {{ site.Title }}{{ else }}{{ .Title }}: {{ site.Title }}{{ end }}</title>
+    <title>{{ if .IsHome }}{{ .Title }}{{ else if .Params.seo_title }}{{ .Params.seo_title }}{{ else if eq .Kind "404" }}Page not found: {{ site.Title }}{{ else }}{{ .Title }}: {{ site.Title }}{{ end }}</title>
     {{- if eq (getenv "HUGO_PREVIEW") "true" }}
     <meta name="robots" content="noindex, nofollow">
-    {{- else if or (eq .Kind "404") (eq .Kind "taxonomy") (eq .Kind "term") .Params.noindex }}
+    {{- else if or (eq .Kind "404") .Params.noindex }}
     <meta name="robots" content="noindex">
     {{- end }}
     {{- with .Description }}

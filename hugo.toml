@@ -176,10 +176,9 @@ renderSegments = ["public"]
 [params.llms]
   generate_llms_txt = true
   generate_llms_full_txt = true
-  # The redirect and onboarding pages at the site root, the coming-soon pages and
-  # the tag pages (noindex, thin) stay out of llms.txt,
+  # The redirect and onboarding pages at the site root stay out of llms.txt,
   # as they stay out of sitemap.xml.
-  exclude = ["/download/thanks/", "/install/", "/signup/", "/login/", "/welcome/", "/early-access/", "/coming-soon/", "/coming-soon/thanks/", "/tags/**"]
+  exclude = ["/download/thanks/", "/install/", "/signup/", "/login/", "/welcome/", "/early-access/"]
 
 # Hugo module configuration, as layer5io/docs.
 [module]

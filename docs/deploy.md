@@ -189,12 +189,6 @@ The public URLs are a contract, checked by `make site-check`:
 - Generated: `/sitemap.xml`, `/robots.txt` (which names the sitemap),
   `/llms.txt`, `/llms-full.txt` and `/index.md`.
 
-Thin and post-signup pages are `noindex` and stay out of `sitemap.xml` and
-`llms.txt`: `/coming-soon/` and `/coming-soon/thanks/`, and the tag pages under
-`/tags/`. The `robots` meta is set in `layouts/_partials/head.html`, the sitemap
-rule in `layouts/_default/sitemap.xml`, and the llms rule in `params.llms.exclude`
-in `hugo.toml`.
-
 The canonical URLs, Open Graph tags, `sitemap.xml` and `robots.txt` name
 `https://blowhorn.ai/`. A build with `HUGO_PREVIEW=true` marks every page
 `noindex, nofollow` and its `robots.txt` disallows everything.
