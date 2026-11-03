@@ -108,6 +108,6 @@ When the app shows a failure, such as a store it cannot reach, it sends a small 
 - Support follow-up: if you contact support about a failure, you may type in an email address for a follow-up. That address is sent only when you type it in. The automatic report itself contains no email address.
 - Turning it off: failure reports are on by default. Turn them off in Settings under "Send failure reports". When off, no report is stored or sent.
 
-## Frequently Asked Questions {#questions}
+## Questions {#questions}
 
 Open an issue on the [site repository](https://github.com/blowhorn-ai/blowhorn-site/issues) for anything about this page, or use the contact channels in the account [privacy policy](https://layer5.io/company/legal/privacy/).

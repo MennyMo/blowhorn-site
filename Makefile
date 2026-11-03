@@ -48,6 +48,10 @@ include .github/build/Makefile.show-help.mk
 #   check-install-cta  Production build, then fail if a page (docs excepted)
 #                      shows more than one teal primary in its main content,
 #                      or an old install label ("Download free", "Get Blowhorn").
+#   check-site-css     Fail a font under 13px on mixed-case text, a coloured
+#                      edge stripe, a single-edge inset shadow or glass (#421).
+#   check-casing       Production build, then fail a Title Case heading, button or
+#                      nav link (sentence case; proper nouns allowlisted) (#421).
 #   check-no-internal  Fail if the production build contains /internal/.
 #   check-platform-docs Production build, then fail if a supported platform
 #                      lacks a docs page, a page skips the shared actions
@@ -313,7 +317,7 @@ check-action-matrix: site-build
 	python3 .github/scripts/check_action_matrix.py $(BUILD_DIR)
 
 ## Build for production once, then validate-html, check-links, check-third-party and check-urls, plus check-schemas (what site.yml runs).
-site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-empty-states check-action-matrix check-download-links check-install-cta check-feeds check-brand-kits check-tells check-tips
+site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-site-css check-casing check-empty-states check-action-matrix check-download-links check-install-cta check-feeds check-brand-kits check-tells check-tips
 
 ## Production build, then fail if any built page or script links to /releases/latest/download (an axi release can hold Latest; build download URLs from data/download.json).
 check-download-links: site-build
@@ -346,6 +350,13 @@ check-naming: site-build
 ## Production build, then fail if an empty state (the docs search, the example panes, the action table) shows its copy without its cast character.
 check-empty-states: site-build
 	python3 .github/scripts/check_empty_states.py $(BUILD_DIR)
+## Fail if a site stylesheet sets a font under 13px on mixed-case text, a coloured stripe on one edge, a single-edge inset shadow or glass (backdrop-filter).
+check-site-css:
+	python3 .github/scripts/check_site_css.py
+
+## Production build, then fail if a heading, button or nav link is in Title Case (sentence case everywhere but section and field labels).
+check-casing: site-build
+	python3 .github/scripts/check_casing.py $(BUILD_DIR)
 
 ## Build for production, then fail if the /internal/ section leaked into it.
 check-no-internal: site-build
@@ -494,6 +505,8 @@ clean:
 	check-brand-kits \
 	check-naming \
 	check-empty-states \
+	check-site-css \
+	check-casing \
 	check-download-links \
 	check-feeds \
 	check-tips \

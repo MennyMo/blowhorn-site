@@ -31,21 +31,15 @@ html[data-theme="signal"] {
   --focus-ring: var(--teal-deep);
   --shadow-soft: 0 8px 24px rgba(30, 33, 23, 0.12);
 
-  --glass-fill: rgba(255, 255, 255, 0.58);
-  --glass-fill-strong: rgba(255, 255, 255, 0.72);
-  --glass-fill-solid: #FBFDFC;
-  --glass-field: rgba(255, 255, 255, 0.78);
-  --glass-sheen: rgba(255, 255, 255, 0.55);
-  --glass-specular: rgba(255, 255, 255, 0.95);
-  --glass-rim: rgba(255, 255, 255, 0.65);
-  --glass-edge: rgba(30, 33, 23, 0.08);
+  --glass-fill: var(--surface);
+  --glass-fill-strong: var(--surface);
+  --glass-fill-solid: var(--surface);
+  --glass-field: var(--surface);
+  --glass-sheen: var(--surface-tint);
+  --glass-rim: var(--line);
+  --glass-edge: var(--line);
   --glass-shadow: 0 1px 2px rgba(30, 33, 23, 0.05), 0 12px 32px -12px rgba(30, 33, 23, 0.18);
   --glass-shadow-lift: 0 2px 4px rgba(30, 33, 23, 0.06), 0 20px 44px -14px rgba(0, 117, 106, 0.28);
-  --ambient-base: linear-gradient(180deg, #F6FBFA 0%, #FFFFFF 38%, #F3F8F7 100%);
-  --ambient-1: rgba(0, 211, 169, 0.20);
-  --ambient-2: rgba(166, 235, 223, 0.50);
-  --ambient-3: rgba(235, 192, 23, 0.14);
-  --ambient-4: rgba(0, 179, 159, 0.12);
 
   --app-canvas: #EDF3F0;
   --app-rail: #E1EBE5;
@@ -61,8 +55,7 @@ html[data-theme="signal"] {
   --app-tint: rgba(0, 179, 159, 0.10);
 }
 
-/* No Signal chrome or ambient overrides: the header, footer and the
-   body::before ambient field in site.css apply as on every other page. */
+/* No Signal chrome overrides: the header and footer in site.css apply as on every other page. */
 
 html[data-theme="signal"] .stage .stage-ground { stroke: var(--line); stroke-width: var(--stroke-hairline); }
 
@@ -83,21 +76,15 @@ html[data-theme="signal"] .stage .stage-ground { stroke: var(--line); stroke-wid
     --focus-ring: var(--teal-bright);
     --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.45);
 
-    --glass-fill: rgba(42, 46, 37, 0.52);
-    --glass-fill-strong: rgba(30, 33, 23, 0.68);
-    --glass-fill-solid: #262A21;
-    --glass-field: rgba(30, 33, 23, 0.60);
-    --glass-sheen: rgba(255, 255, 255, 0.06);
-    --glass-specular: rgba(255, 255, 255, 0.14);
-    --glass-rim: rgba(255, 255, 255, 0.08);
-    --glass-edge: rgba(0, 0, 0, 0.35);
+    --glass-fill: var(--surface);
+    --glass-fill-strong: var(--surface);
+    --glass-fill-solid: var(--surface);
+    --glass-field: var(--surface);
+    --glass-sheen: var(--surface-tint);
+    --glass-rim: var(--line);
+    --glass-edge: var(--line);
     --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.30), 0 16px 40px -14px rgba(0, 0, 0, 0.60);
     --glass-shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.30), 0 22px 48px -14px rgba(0, 211, 169, 0.22);
-    --ambient-base: linear-gradient(180deg, #1A1D14 0%, #1E2117 45%, #1B1E15 100%);
-    --ambient-1: rgba(0, 211, 169, 0.20);
-    --ambient-2: rgba(0, 179, 159, 0.12);
-    --ambient-3: rgba(235, 192, 23, 0.05);
-    --ambient-4: rgba(0, 117, 106, 0.18);
   }
 
   html[data-theme="signal"] .bubble { --bubble-stroke: var(--cream); }
@@ -124,7 +111,7 @@ html[data-theme="signal"] .stage .stage-ground { stroke: var(--line); stroke-wid
   }
 
   html[data-theme="signal"] #platforms .logo-tile {
-    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.04) 62%, transparent 100%);
+    background: var(--white);
   }
   html[data-theme="signal"] #platforms .logo-tile img { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45)); }
   html[data-theme="signal"] #platforms .logo-tile img[src*="x-logo-black"],

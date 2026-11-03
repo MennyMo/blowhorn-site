@@ -89,7 +89,7 @@
         {{ partial "major-says.html" (dict "line" $item.major) }}
 
         <section class="agent-section" aria-labelledby="faq-title">
-          <div class="section-head"><h2 id="faq-title" class="h2">Frequently Asked Questions</h2></div>
+          <div class="section-head"><h2 id="faq-title" class="h2">Questions</h2></div>
           <div class="agent-faq">
             {{- range $i, $f := $item.faq }}
             <details class="card {{ partial "card-variant.html" (dict "i" $i "grid" "stack" "n" (len $item.faq) "variants" (slice "card-field" "card-plain")) }}"><summary class="ui">{{ .q }}</summary><p>{{ .a }}{{ with .link }} <a href="{{ .href }}">{{ .label }}</a>{{ end }}</p></details>

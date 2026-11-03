@@ -310,7 +310,7 @@
       ],
       "gets": [
         {
-          "t": "Your computers press Post",
+          "t": "Your computers press post",
           "b": "Every action runs on one of your computers, in your browser or through the platform's API. Your account keeps them in sync and never posts."
         },
         {

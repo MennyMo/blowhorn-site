@@ -1,24 +1,14 @@
 {{- /* GitHub Pages serves this page for any missing path, nested ones included,
-  so every reference is root-relative (relURL against baseURL). */ -}}
+  so every reference is root-relative (relURL against baseURL). One line of
+  copy and one way home (#421). */ -}}
 {{ define "main" }}
     <main id="main">
       <section class="wrap empty-state" aria-labelledby="missing-title">
-        <figure class="major-figure">
-          <img src="{{ "assets/brand/mascot/locked-6/major-6-hat-left.webp" | relURL }}" alt="Major Blowhorn, a teal rooster drill sergeant, pointing and shouting into his bullhorn" width="657" height="560">
+        <figure class="missing-art">
+          <img src="{{ "assets/brand/cast/mouse-marine-salute.webp" | relURL }}" alt="Mouse Marine, a mallard in a green beret saluting from a gold trackball on a small tank, cursor spear in hand" width="960" height="540">
         </figure>
-        <div class="empty-copy">
-          {{ partial "bubble.html" (dict "text" "At ease. Nothing to announce... yet." "class" "h3" "variant" "paper") }}
-          <p class="label">404</p>
-          <h1 id="missing-title" class="display">There is no page here</h1>
-          <p class="body-lg muted">The address may have a typo, or the page moved. The home page has everything that is public.</p>
-          {{- with site.Data.tells.missing }}
-          <p class="tells-missing">{{ .text }} <a href="{{ partial "tells-link.html" (dict "placement" "404") }}">{{ .link }}</a></p>
-          {{- end }}
-          <p class="hero-actions">
-            <a class="button button-primary" href="{{ "" | relURL }}">Back to the home page</a>
-            <a class="button button-secondary" href="{{ site.Params.github_repo }}/releases">See releases</a>
-          </p>
-        </div>
+        <h1 id="missing-title" class="display">This page went out of range.</h1>
+        <p><a href="{{ "" | relURL }}">Back to the home page</a></p>
       </section>
     </main>
 {{- end }}

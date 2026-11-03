@@ -41,8 +41,6 @@ a.docs-card,
   color: var(--card-ink);
   border: var(--card-border-width, 1px) var(--card-border-style, solid) var(--card-border-color, transparent);
   box-shadow: var(--card-shadow, none);
-  -webkit-backdrop-filter: var(--card-blur, none);
-  backdrop-filter: var(--card-blur, none);
 }
 /* Text inside a card, at zero specificity: a default, never an override. A
    component that colours its own text (a badge, a status pill) keeps it, and
@@ -111,14 +109,13 @@ a.docs-card,
   --surface-tint: #DDF4F1;
   --surface: #FFFFFF;
   --surface-raised: #F4F7F6;
-  --glass-fill: rgba(255, 255, 255, 0.58);
-  --glass-fill-strong: rgba(255, 255, 255, 0.72);
-  --glass-fill-solid: #FBFDFC;
-  --glass-field: rgba(255, 255, 255, 0.78);
-  --glass-sheen: rgba(255, 255, 255, 0.55);
-  --glass-specular: rgba(255, 255, 255, 0.95);
-  --glass-rim: rgba(255, 255, 255, 0.65);
-  --glass-edge: rgba(30, 33, 23, 0.08);
+  --glass-fill: var(--surface);
+  --glass-fill-strong: var(--surface);
+  --glass-fill-solid: var(--surface);
+  --glass-field: var(--surface);
+  --glass-sheen: var(--surface-tint);
+  --glass-rim: var(--line);
+  --glass-edge: var(--line);
 }
 .card-paper * { --focus-ring: var(--teal-deep); }
 .card-dispatch {
@@ -131,14 +128,13 @@ a.docs-card,
   --surface-tint: #173A34;
   --surface: #1E2117;
   --surface-raised: #2A2E25;
-  --glass-fill: rgba(42, 46, 37, 0.52);
-  --glass-fill-strong: rgba(30, 33, 23, 0.68);
-  --glass-fill-solid: #262A21;
-  --glass-field: rgba(30, 33, 23, 0.60);
-  --glass-sheen: rgba(255, 255, 255, 0.06);
-  --glass-specular: rgba(255, 255, 255, 0.14);
-  --glass-rim: rgba(255, 255, 255, 0.08);
-  --glass-edge: rgba(0, 0, 0, 0.35);
+  --glass-fill: var(--surface);
+  --glass-fill-strong: var(--surface);
+  --glass-fill-solid: var(--surface);
+  --glass-field: var(--surface);
+  --glass-sheen: var(--surface-tint);
+  --glass-rim: var(--line);
+  --glass-edge: var(--line);
 }
 .card-dispatch * { --focus-ring: var(--teal-bright); }
 
@@ -192,47 +188,26 @@ a.docs-card,
   --card-hover-shadow: none;
 }
 
-/* 6. Glass: the liquid glass recipe, one definition for every glass surface.
+/* 6. Glass: the flat floating surface, one definition for every glass surface.
    Reserved for one floating surface over content (a menu, a hero panel, the
    cookie notice, the header): the .glass panel class and the .card-glass variant
    share it, and it is never a card in a grid. The site header is the same recipe
-   with a stronger fill, a tighter blur and no outer edge. */
+   with a stronger fill and the same even edge. */
 .card-glass,
 .glass {
-  --card-bg:
-    linear-gradient(180deg, var(--glass-sheen, rgba(255, 255, 255, 0.55)), transparent 46%),
-    var(--glass-fill, rgba(255, 255, 255, 0.58));
+  --card-bg: var(--glass-fill, var(--surface));
   --card-ink: var(--ink);
   --card-muted: var(--ink-muted);
-  --card-border-color: transparent;
-  --card-shadow:
-    inset 0 1px 0 0 var(--glass-specular, rgba(255, 255, 255, 0.95)),
-    inset 0 0 0 1px var(--glass-rim, rgba(255, 255, 255, 0.65)),
-    0 0 0 1px var(--glass-edge, rgba(30, 33, 23, 0.08)),
-    var(--glass-shadow, 0 12px 32px -12px rgba(30, 33, 23, 0.18));
-  --card-blur: blur(var(--glass-blur, 20px)) saturate(var(--glass-saturate, 170%));
-  --card-hover-border: var(--glass-specular, rgba(255, 255, 255, 0.95));
+  --card-border-color: var(--glass-edge, var(--line));
+  --card-shadow: var(--glass-shadow, 0 12px 32px -12px rgba(30, 33, 23, 0.18));
+  --card-hover-border: var(--line-strong);
   --card-hover-shadow: var(--card-shadow);
 }
 .site-header {
-  --card-bg: var(--glass-fill-strong, rgba(255, 255, 255, 0.72));
-  --card-border-width: 0px;
-  --card-blur: blur(24px) saturate(180%);
-  --card-shadow:
-    inset 0 -1px 0 0 var(--glass-edge, rgba(30, 33, 23, 0.08)),
-    0 1px 0 0 var(--glass-rim, rgba(255, 255, 255, 0.65)),
-    0 8px 24px -18px rgba(30, 33, 23, 0.35);
-}
-/* Glass drops its blur where the page asks for less transparency or more contrast. */
-@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .card-glass,
-  .glass,
-  .site-header { --card-blur: none; }
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .card-glass,
-  .glass,
-  .site-header { --card-blur: none; }
+  --card-bg: var(--glass-fill-strong, var(--surface));
+  --card-border-width: 1px;
+  --card-border-color: var(--glass-edge, var(--line));
+  --card-shadow: 0 8px 24px -18px rgba(30, 33, 23, 0.35);
 }
 
 /* Whole-card links, any variant: a 2px lift and a stronger border, no glow. The
@@ -271,7 +246,6 @@ a.card-dispatch:is(:hover, :focus-visible) {
   .glass {
     --card-bg: var(--surface);
     --card-border-color: var(--ink);
-    --card-blur: none;
   }
   .card-field { --card-chip: var(--surface-tint); }
   .card-glass,
@@ -316,7 +290,5 @@ a.card-dispatch:is(:hover, :focus-visible) {
     color: var(--print-ink);
     border: 1px solid var(--print-ink);
     box-shadow: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
   }
 }

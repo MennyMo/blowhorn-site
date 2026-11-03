@@ -22,8 +22,6 @@
   border-radius: var(--radius-xl);
   background: var(--glass-fill-strong);
   box-shadow: 0 0 0 var(--stroke-hairline) var(--glass-rim), var(--glass-shadow);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
 }
 .matrix-scroll {
   position: relative; /* contains the visually hidden labels, so they scroll too */
@@ -79,8 +77,8 @@
   border-top: var(--stroke-hairline) solid var(--line);
 }
 .matrix-group-name {
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 13px;
+  line-height: 18px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;

@@ -49,7 +49,7 @@
 - **[{{ $act.name }}]({{ $pl.docs | absURL }}#{{ $act.slug }})**: {{ $act.description }}{{ with $act.limits }} Limits: {{ . }}{{ end }}
 {{- end }}
 {{ end }}
-## Frequently Asked Questions {#questions}
+## Questions {#questions}
 {{ range .Params.faq }}
 **{{ .q }}** {{ .a }}
 {{ end }}

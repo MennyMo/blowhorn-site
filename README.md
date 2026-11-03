@@ -76,6 +76,8 @@ Every CI step that runs repository logic is a make target, and the workflow call
 | `check-no-internal` | the public build holds nothing from `/internal/` | `site-check` |
 | `check-naming` | no page says Layer5 Cloud or Blowhorn Cloud, names Layer5 outside the footer and legal pages, says machines, or says Macs in marketing copy; the docs say Chrome profile and Chrome extension | `site-check` |
 | `check-empty-states` | every empty state (the docs search, the example panes, the action table) shows its copy with its cast character | `site-check` |
+| `check-site-css` | the site stylesheets hold the flat Signal rules: no font under 13px on mixed-case text (uppercase labels excepted), no coloured stripe on one edge, no single-edge inset shadow, no glass (`backdrop-filter`) | `site-check` |
+| `check-casing` | no built heading (h1 to h3), button or nav link is in Title Case; sentence case except section and field labels; proper nouns and `/docs/` and `/compare/` pages are skipped | `site-check` |
 | `check-download-links` | no page or script links to `/releases/latest/download` | `site-check` |
 | `check-install-cta` | no page (docs excepted) has more than one teal primary button in its main content, and no link or button reads an old install label ("Download free", "Get Blowhorn", "Enlist a computer"); the home page is exempt until its rebuild (#418) | `site-check` |
 | `check-feeds` | the Resources RSS feeds validate | `site-check` |
