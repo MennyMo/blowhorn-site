@@ -45,8 +45,8 @@ and id from it. Add `--disabled` to list a page without collecting from it,
 and add it again without the flag to collect from it again. Collection walks
 the enabled pages and only those, so two organizations sharing one install
 each collect their own pages. When your organization has no pages yet, the
-card in the app says "connect a LinkedIn page" and the add form is right
-there.
+card in the app says "no company page connected yet" and its **connect page**
+button takes you to the add form, which is right there.
 
 An organization that has not configured any pages yet keeps collecting the
 pages it collected before per-organization configuration. Run

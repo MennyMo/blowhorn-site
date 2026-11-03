@@ -69,8 +69,8 @@ on every platform.
 
 Every platform and action has a built-in daily ceiling. The **by platform**
 table on the Posture screen shows each one as the empty box's placeholder:
-type a lower cap of your own there, or press × to go back to the ceiling,
-then **save limits**. A cap of your own can only lower the ceiling, never
+type a lower cap of your own there, or press × to go back to the ceiling.
+The cap saves when you close the window. A cap of your own can only lower the ceiling, never
 raise it.
 
 ```bash

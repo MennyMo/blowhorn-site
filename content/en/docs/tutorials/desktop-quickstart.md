@@ -67,7 +67,7 @@ Now click **open console**.
 ## 4. Look at the queue {#section-4-look-at-the-queue}
 
 The console's "posts" screen reads the same content queue the CLI does - it
-runs `blowhorn content list --json` once and its "ready" tab shows the activities that
+runs `blowhorn content list --json` once and its Ready tab shows the activities that
 are due, each with who would post it (the same selection
 `blowhorn post --check-queue` prints).
 

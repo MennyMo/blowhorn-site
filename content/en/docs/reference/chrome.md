@@ -728,7 +728,7 @@ Chrome it never does.
 LinkedIn, X and Reddit work through your own Chrome, so `--sign-in`
 with one of them is how you connect it: Blowhorn never asks for the
 password. After you sign in, `blowhorn chrome discover` (the desktop's
-**Check again**) sees the sign-in and records it as the profile's
+**Discover**) sees the sign-in and records it as the profile's
 account in your Blowhorn account.
 
 ## `blowhorn chrome create-profile`
@@ -750,7 +750,7 @@ new profile a default name, `Person 1` in that check (the number can
 differ on your computer), and the desktop shows the profile as
 **Blowhorn's profile**. It maps nothing, reads no store and drives
 nothing in the window: you sign in there to the sites Blowhorn should
-use, then `blowhorn chrome discover` (the desktop's **Check again**)
+use, then `blowhorn chrome discover` (the desktop's **Discover**)
 finds the profile and its accounts. Setup's **Set up Blowhorn's
 profile** runs it.
 
@@ -815,7 +815,7 @@ picks this Chrome profile for:
 `--json` lists what was recorded in `accounts` (`profile`, `platform`,
 `outcome` - `created`, `reconnected`, `disconnected`, `unchanged` or
 `none` - and the `account`), and names each refusal in `account_errors`.
-`--local` and `--dry-run` record nothing. The desktop app's Check again
+`--local` and `--dry-run` record nothing. The desktop app's Discover
 runs this survey, which is how Home's Connect an account step and every
 other computer learn the account is connected. `blowhorn profile status
 --check-sessions` records its LinkedIn, X and Reddit verdicts the same

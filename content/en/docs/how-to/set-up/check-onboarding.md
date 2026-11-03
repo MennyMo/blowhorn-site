@@ -25,7 +25,7 @@ publishing it.
 It runs four walks. The happy path and `linkedin-session` are the same walk,
 but `linkedin-session` first plants a cookie named `li_at` in the throwaway
 Chrome profile. Only the cookie's name matters, as with the planted Slack
-login. With the cookie, Confirm and then Check again have to record exactly
+login. With the cookie, Confirm and then Discover have to record exactly
 one LinkedIn account in the local Cloud: connected, with no credential,
 and mapped to the new profile. `blowhorn profile accounts` has to list it
 too. Without the cookie, no LinkedIn account may be recorded. In both walks,
@@ -40,15 +40,14 @@ After setup, both walks also check the console a new person sees:
   Home's button opens its own step, not the Profiles table. LinkedIn's row
   there says which Chrome profile to sign in to and offers **Open LinkedIn
   sign-in** and **Check again**, with no form field.
-- **Check again:** on the Chrome profiles step and in **Profiles › chrome
-  profiles** after setup, each press must read **Checking…** while it runs
+- **Discover:** on Confirm troops and in a profile's **Browser** tab after setup, each press must read **Checking…** while it runs
   and then leave a result line. With the planted cookie, the walk marks the
   LinkedIn account disconnected in the local Cloud first: the press must
   reconnect that same account and say so, and a second press must say
   **Nothing new found** and leave one LinkedIn account.
-- **Profile detail:** the mapped profile's LinkedIn card shows that same
-  guidance (or, with the planted cookie, that LinkedIn is connected) and a
-  **Check again** button. It shows no setting name like `LI_PASSWORD`, no
+- **Browser tab:** the mapped profile's LinkedIn row shows that same guidance (or, with
+  the planted cookie, that LinkedIn is found), with **Set up** and **Open in Chrome**.
+  **Discover** sits at the top of the list. It shows no setting name like `LI_PASSWORD`, no
   password field, no **advanced** section (by its label or its slot) and no raw `LI_`, `X_` or `RDDT_`
   field: LinkedIn's sign-in is the person's own Chrome session.
   `blowhorn chrome open-profile <profile> --sign-in linkedin --dry-run` must pick the

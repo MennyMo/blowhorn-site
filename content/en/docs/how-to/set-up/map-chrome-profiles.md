@@ -74,7 +74,7 @@ member you pick under **Which person is this?**, or nobody for a brand.
 When the Chrome profile's Google email belongs to exactly one member, that
 member is picked for you; there is no email to type. If Blowhorn
 can't list your organization's members, the card says so and offers only
-**Nobody, a brand** until you choose **Check again**; if it can't list your
+**Nobody, a brand** until you choose **Discover**; if it can't list your
 profiles, the step says so above the cards, so check again before you
 create one rather than make a second profile for the same person. An
 existing profile is named by its id. A `chrome confirm` document that still

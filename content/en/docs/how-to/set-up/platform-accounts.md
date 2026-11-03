@@ -19,24 +19,24 @@ every browser sign-in below opens in the profile's mapped Chrome.
 Blowhorn never asks for these passwords. The account is your own sign-in,
 in the Chrome profile your Blowhorn profile is mapped to.
 
-In the desktop app, open **Profiles**, pick the profile, and find the
-platform's card. It says which Chrome profile to use ("Sign in to LinkedIn
-in the Chrome profile Work"). Choose **Open LinkedIn sign-in** to open that
-Chrome profile on LinkedIn's sign-in page, sign in there, then choose
-**Check again**. Once Blowhorn sees the sign-in, it records it as the
-profile's account in your Blowhorn account, and the card says
-**Connected**. Home's **Connect an account** button opens the same steps
-for your own profile. The card holds only that guidance, **Open LinkedIn
-sign-in** and **Check again**: it has no fields to fill in and never asks
-for a password. An account Blowhorn should sign in to for you with a stored
+In the desktop app, open **Profiles**, open the profile, and go to its **Browser**
+tab. Pick the Google Chrome profile on the left and find LinkedIn on the right. Choose
+**Set up**: it says which Chrome profile to use ("Open the Work Chrome profile and
+sign in to LinkedIn there"). Choose **Open in Chrome** to open that Chrome profile on
+LinkedIn's sign-in page, sign in there, then choose **Discover** at the top of the
+list. Once Blowhorn sees the sign-in, it records it as the profile's account in your
+Blowhorn account, and the row says it found you signed in. Home's **Connect an account**
+button opens the same steps for your own profile. The set-up steps hold only that
+guidance and **Open in Chrome**: they have no fields to fill in and never ask for a
+password. An account Blowhorn should sign in to for you with a stored
 username and password is set up from Terminal only (below).
 
-**Check again** reads **Checking…** while Blowhorn reads your Chrome
+**Discover** reads **Checking…** while Blowhorn reads your Chrome
 profiles, then says what it found: the platforms it found in each Chrome
 profile, which are new since your last check and which are no longer
 signed in (Blowhorn then marks that account disconnected), **Nothing new
-found**, or why it couldn't read Chrome. Setup's Chrome profiles step and **Profiles ›
-chrome profiles** answer the same way. Chrome saves a new sign-in to disk
+found**, or why it couldn't read Chrome. Setup's Confirm troops step and the **Browser** tab of any profile answer the
+same way. Chrome saves a new sign-in to disk
 about 30 seconds after you sign in, so if you signed in a moment ago and
 see **Nothing new found**, wait a little and check again.
 

@@ -10,31 +10,35 @@ describes; the steps live in the how-to guides linked under Related.
 
 ## The menu bar and the popover
 
-Blowhorn lives in the menu bar. Opening it shows the popover, which has
-two boards. The running board shows the scheduler, what is due now, what
-is running, what needs you, and the content queue. The standing down board shows STANDING DOWN with each
-scope (this computer, the fleet) stated once, and the activities that would post now wait instead of
-posting; it lists the first three waiting items and how many more, which
-**N more ›** opens in Activity › Routines. Until you are signed in and the extension is ready, those boards
-stay hidden, and so does any can't-reach or unknown line. Signed out, the
-popover then shows the mark, the wordmark
-and Quit, the recruit, Welcome to Blowhorn, the line "Open Blowhorn to sign
-in and get set up. It takes about five minutes.", and one Open Blowhorn
-button, which opens the console. Signed in but the extension not ready
-yet, it shows Finish setting up and the same one Open Blowhorn button
-instead. It shows no pause, counts,
-update card or error. A store outage puts its line above the board once
-the boards show. The line is the last store check's word, so while it shows, the app keeps checking the store in
-the background - soon after the line appears, then every two minutes -
-and again whenever you open the popover, bring the console forward, or
-wake the computer. When the store answers, the line clears on its own and
-the store check runs straight away; you never have to relaunch the app to
-clear it. **try again** on the line checks at once instead of waiting.
-The console shows the same line, with the same **try again**.
+Blowhorn lives in the menu bar. Opening it shows the popover, top to bottom:
 
-Each routine on the popover's boards carries its own small duty switch; the popover header holds this computer's duty switch, the footer holds "stand
-down the fleet" (the fleet's switch takes its place while the fleet holds) and,
-when an update is ready, the update card. The update downloads the new version, installs it
+- **The header:** the Blowhorn mark and wordmark (not a link), a `?` that says what the popover is for, **Settings** and **Quit**.
+- **Three stats:** how many items need you (gold above zero), runs done in the last seven days, and the success share over the same week. A dash means no runs or no reading.
+- **The create button:** **New order**, or **New activity** when Major Blowhorn is off. Under it, one line says you can drop a link, image or video anywhere on the popover.
+- **NEXT UP:** the next three due items. **open ›** opens one in Activity. When nothing is due, the popover says so.
+- **RECENTLY DONE:** the last three finished items. **↗** opens the item's proof link in Google Chrome. An item with no proof link opens in Content.
+- **Duty:** **This computer ›** and **Fleet ›**, each with its switch. A switch shows its state by its knob alone. The name opens that screen.
+- **Open console**, and, when there is one, an update card.
+
+A notice line sits under the header when something needs you: a store outage, a fleet state that cannot be read, or a refused pause. The popover never offers Check now, a countdown or a timer. Its stats and lists refresh when the popover opens and when main pushes a change.
+
+Stop everything is not on the popover. Use the console or `blowhorn stop --all` for it.
+
+### Drop a link, image or video
+
+Drop anything on the popover, with no prompt. What you drop decides the sheet:
+
+- **A link to a post or comment** on LinkedIn, X, Reddit, Bluesky, Slack or GitHub opens the engage sheet for it. The sheet offers the verbs that platform takes: Respond and Amplify on LinkedIn, Reddit and Bluesky, Amplify alone on X and GitHub, and Respond alone on Slack. A verb the platform cannot do is left out.
+- **Only profiles with an active account on that platform** are offered. The one you used last on that platform is selected, and that choice is remembered on this computer. A platform with no active profile says so in one line and links to Profiles.
+- **Any other link,** including a Hacker News item, starts a new order that uses the page's title and summary.
+- **An image or video** starts a new order.
+- **Anything else** is refused with the line "Links, images or video only" (in the military voice, "Wrong intel").
+
+Respond or Amplify writes an approved item, due now, for each profile you select. For 10 seconds afterwards the sheet offers **Undo**, which removes what it wrote. After that the order is final.
+
+**New order** looks at the Chrome tab in front of you first. An open post opens the engage sheet, and an open page starts a new order from that page. The first time you press New order while Chrome is running, macOS asks whether Blowhorn may control Google Chrome. Blowhorn asks only then, when you start a post from a page, never at launch.
+
+When an update is ready, the update card at the bottom of the popover offers **Update**. The update downloads the new version, installs it
 and relaunches the app; when it cannot, it says why and offers the release
 page. In the console, an update shows its progress over the whole window
 until Blowhorn reopens. An installed Blowhorn that finds such a release when it opens also
@@ -44,7 +48,10 @@ what each does is under [Update](/docs/how-to/set-up/install-the-app/#update).
 With **UI sounds** on in Settings, a new version gets a short announcement when the prompt
 first shows, the update plays quiet music while it downloads and installs, and a finished
 update plays a short chime: on the new version's first launch when Blowhorn relaunched to
-finish. Turning UI sounds off silences all three.
+finish. Turning UI sounds off silences all three. The update dialog itself carries a
+speaker toggle at the top right beside its title; it is the same **UI sounds** setting
+as in Settings, so switching it off mid-update silences the update music at once, and
+switching it on again restores it.
 
 ## The console
 
@@ -52,9 +59,8 @@ The console is the full window, reached from the popover. The Blowhorn logo
 at the top of its rail is Home; there is no separate Home item. Below it are
 four places: **Activity**, **Profiles**, **Performance** and **Posture**. The
 round **+** button in the lower right of every screen, teal glass unless you
-change the material, is **New activity** (⌘N, or New activity in the File
-menu). It opens **New order**, a field
-order you fill in one step at a time. Only the open step shows its fields; a
+change the material, is **New order** (⌘N, or New order in the File menu), or **New activity** when Major Blowhorn is off. It opens a field order you fill in
+one step at a time. Only the open step shows its fields; a
 finished step folds to a one-line summary (press it to change it), and the
 steps ahead wait as dim rows. A step that holds what it asks for takes a teal
 check; one you passed empty, such as a skipped landing zone, takes a dashed
@@ -154,8 +160,7 @@ the chip. Once its link is read back and
 the platform reports on it, its engagement and reach, labelled measured with
 the date it was read. A post whose link is not read back yet says **link
 pending** - there is nothing to measure, so it never shows a zero. The rows
-are read once when Performance opens and again when you press **read again**,
-never on the screen's 60-second poll. If any platform refuses, the card is an **after-action report**
+are read once when Performance opens, never on the screen's 60-second poll. If any platform refuses, the card is an **after-action report**
 instead: **Mission failure**, how many platforms deployed, each refusal in its
 own words, and per platform **Re-engage** (try only what did not land) or
 **Stand down** (leave it unsent). What landed is never written twice.
@@ -239,13 +244,13 @@ activity, is locked. Once you are signed in, the account button stays usable. Se
 
 | Screen | Shows | Acts |
 |---|---|---|
-| Home (two tabs: **Today** and **Resources**) | Today: whether Blowhorn is working and whether it needs you, but never what runs next: an activity's next run is on Activity › Routines, and the rail's duty toggle names the next one on hover; the Fleet card: computers known (this one), how many are on duty or standing down, fleet holds, who stood the fleet down and why, and this computer's row; "Your draft was saved" once after setup, until you dismiss it or leave Home; beside them your results, and one card with **Recent activity** and **What went wrong** (it opens on what went wrong while something failed). Resources: ideas worth a try, the latest from Blowhorn - each piece labelled with its column, From the Desk of the General, From Boot Camp or From the Field - and the tips as a taught sequence: the next tip you have not seen yet, with its video, one at a time; opening a tip or choosing **Another tip** moves you on, a tip you have seen never comes back, and when you have seen them all the card says so and points to Resources. A newer release is offered on a card at the top of the results column, **Update to Blowhorn** and the version | the entire fleet's switch (reason optional, saved as you type) or this computer's switch, on the Fleet card; open This computer from this computer's row; reconnect a signed-out account from the **Needs you** section at the top of Today: one full-row button per signed-out account, its platform's mark and **Reconnect** (naming the profile, **Reconnect @handle**, only where two signed-out accounts share a platform), which signs that account in again and reads **Reconnecting…** while it runs, and the **?** beside the title says which computer they are signed out on and how many scheduled posts wait (a Bluesky app password or a GitHub token opens Profiles instead); a sign-in that does not finish leaves the row with a note underneath saying so; open an item's details from a row in **Recent activity** or **What went wrong**; start the update from its card (Blowhorn restarts to finish); **Connect an account** opens a step for your own profile: each platform, how to sign in to it in your Google Chrome profile, and **Check again**, with connected ones ticked; finish setting up |
+| Home (two tabs: **Today** and **Resources**) | Today: whether Blowhorn is working and whether it needs you, but never what runs next: an activity's next run is on Activity › Routines, and the rail's duty toggle names the next one on hover; the Fleet card: computers known (this one and every other computer that has run here or reported lately), how many are on duty or standing down, fleet holds, who stood the fleet down and why, this computer's row, and a row for each other computer saying **On duty**, **Standing down** or **Not on duty** from the last pass its background service reported, or **Not reporting** when it has reported nothing in the last half hour; a computer that is not reporting is never counted on duty, and the card says **2 of 3 reporting** while any one is not; "Your draft was saved" once after setup, until you dismiss it or leave Home; beside them your results, and one card with **Recent activity** and **What went wrong** (it opens on what went wrong while something failed). Resources: ideas worth a try, the latest from Blowhorn - each piece labelled with its column, From the Desk of the General, From Boot Camp or From the Field - and the tips as a taught sequence: the next tip you have not seen yet, with its video, one at a time; opening a tip or choosing **Another tip** moves you on, a tip you have seen never comes back, and when you have seen them all the card says so and points to Resources. A newer release is offered on a card at the top of the results column, **Update to Blowhorn** and the version | the entire fleet's switch (reason optional, saved as you type) or this computer's switch, on the Fleet card; open This computer from this computer's row; reconnect a signed-out account from the **Needs you** section at the top of Today: one full-row button per signed-out account, its platform's mark and **Reconnect** (naming the profile, **Reconnect @handle**, only where two signed-out accounts share a platform), which signs that account in again and reads **Reconnecting…** while it runs, and the **?** beside the title says which computer they are signed out on and how many scheduled posts wait (a Bluesky app password or a GitHub token opens Profiles instead); a sign-in that does not finish leaves the row with a note underneath saying so; open an item's details from a row in **Recent activity** or **What went wrong**; start the update from its card (Blowhorn restarts to finish); **Connect an account** opens a step for your own profile: each platform, how to sign in to it in your Google Chrome profile, and **Check again**, with connected ones ticked; finish setting up |
 | Activity › Upcoming | Your posts with their status - "ready", "scheduled", "partly sent", "sent", "draft", "needs you" - and clicked-but-unread ones, each with when it goes out: its own time, "next run" when the next run would take it, "not scheduled" when nothing will send it (a draft, or a post that needs you), and "-" once it has gone out; an opened post shows its result: delivery per profile and platform, reception where it was collected, and the follower change since. On the all and scheduled filters, the schedule's routines follow below the posts, each labelled by what it does; a routine names no post, so clicking one opens that routine's details on Routines | Click a post to open it in a dialog (a box over the screen), or add one; edit it there; clearing a clicked post's "Date Promoted" queues it again |
-| Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the service to take them up; a dialog for one item, opened by clicking it in the list or on the calendar; a chooser of sample routines, each one ticked on only once its platform is connected | Add an item with the **+** button or by clicking a free time; move an item's next time by dragging it; edit one item, or switch it between on duty and standing down from its duty switch on its row, on its calendar chip or in its dialog; "do it now", "disable" or "delete" it there; turn **dry fire** on in the header to rehearse up to the final click and post nothing (the dry run, `--dry-run`); add the sample routines you tick |
+| Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the service to take them up; a dialog for one item, opened by clicking it in the list or on the calendar; a chooser of sample routines, each one ticked on only once its platform is connected | Add an item with the **+** button or by clicking a free time (**Schedule** saves it); move an item's next time by dragging it; edit one item (its changes save as you make them, and **Do it now** runs it), or switch it between on duty and standing down from its duty switch on its row, on its calendar chip or in its dialog; "do it now", "disable" or "delete" it there; turn **dry fire** on in the header to rehearse up to the final click and post nothing (the dry run, `--dry-run`); add the sample routines you tick |
 | Activity › History | Everything Blowhorn did, newest first, with each one's detailed log under the log directory's `scheduler/` folder; clicking a run opens it in a dialog over the full-width list: when it started, how it ended and why it stopped, its activity's result (delivery per profile and platform, reception where it was collected, and the follower change since), and the log and its file behind **more details** | open a run; "try again" on a failure |
-| Profiles | Every profile, its Chrome mapping, its per-platform sessions; for LinkedIn, X and Reddit, which Chrome profile to sign in to - never a password field. Clicking a profile opens it in a window over the list, which keeps the whole screen. It keeps its name and **check sessions** on top, over three tabs: **Details** (name, description, who it is), **Platforms** (one platform's card at a time, picked by its mark, each mark showing that session's state) and **Chrome** (its Chrome profile) | Add a profile (in the same window); save or delete it, or **cancel** to close without saving (on an open profile, the X, Escape or a click outside asks first if you typed something); map or unmap its Chrome profile; open a platform's sign-in page in that Chrome profile and **Check again**; enter a token or app password for the platforms that take one |
+| Profiles | Every profile, its accounts and their state, and the Google Chrome profiles on this computer each one uses. Clicking a profile opens its window over the list: the header says what Blowhorn does for the person and what needs you, and three tabs hold the rest. **Accounts** lists each connected account, and an account that needs you reads **Reconnect**. **Browser** lists the Google Chrome profiles on this computer beside the accounts in the one you pick; each is switched on or off for Blowhorn, and **Discover** finds signed-in sessions again. **About** holds the name, the description, who the profile is for, and delete. Nothing has a Save button: switches and fields save as you change them | Add a profile (in its own form); reconnect an account on **Accounts**; on **Browser**, turn a Google Chrome profile on or off, set up an account, or add a token or app password; change the name, description or who it is for, or delete the profile, on **About**; **check all profiles** on the list |
 | Performance | Followers, growth, and activity per profile; collection freshness in the header. Under the filters, three tabs that all read them: **Activity** (runs by platform, activity per profile), **History** (the figures, followers over time, new versus unfollowed per month) and **Report** (your LinkedIn pages and the health of each profile and page) | Collect now; open the HTML report |
-| Posture (three tabs: **Rules**, **Limits**, **Protection**; the fleet's stand down and stop sit on the tabs' line) | Rules: the rules of engagement for everyone (the slider: Safety on, Weapons tight or Weapons free), which choice wins, one grid of every profile on every platform with where each cell's choice comes from. Limits, one section at a time: by platform (pace and daily caps), speed and amount (spacing, outreach, how much runs at once), when and who says yes (quiet hours, approval, dry fire), typing, and pointer timing. Protection: what happens when a platform pushes back and what the last check held back, beside where your sign-ins live and what Blowhorn will never do | Move the slider; choose a preset for one platform for every profile, one profile on every platform, or one cell, or reset any of them to inherit; save limits or reset them to the preset; stand down or stop every computer; run a held activity once with **Do it anyway**; turn the sign-in check, the needs-you note, dry fire by default and failure reports on or off |
+| Posture (three tabs: **Rules**, **Limits**, **Protection**; the fleet's stand down and stop sit on the tabs' line) | Rules: the rules of engagement for everyone (the slider: Safety on, Weapons tight or Weapons free), which choice wins, one grid of every profile on every platform with where each cell's choice comes from. Limits, one row per section: by platform (pace and daily caps), speed and amount (spacing, outreach, how much runs at once), when and who says yes (quiet hours, approval, dry fire), typing, and pointer timing; each row opens its settings in a window. Protection, one row per section: what happens when a platform pushes back, what the last check held back, where your sign-ins live and what Blowhorn will never do | Move the slider; choose a preset for one platform for every profile, one profile on every platform, or one cell, or reset any of them to inherit; reset them to the preset; each limit saves as you change it; stand down or stop every computer; run a held activity once with **Do it anyway**; turn the sign-in check, the needs-you note, dry fire by default and failure reports on or off |
 | This computer (from Home's computer row, or the rail's reason line) | Whether this computer is on duty and, when it is not, the one sentence on what is wrong, the owner of the background service once something holds it, the last pass, the fleet's stand down | Its one fix under the banner: "register the service" when the service is not registered or runs from another copy of Blowhorn, "start the service" when it is registered but not running, "open Login Items" when it is turned off in System Settings (only those states offer one); "check now" (with "dry fire" to rehearse up to the final click, posting nothing); "stand down the fleet", and the fleet's switch while the fleet holds |
 | Settings (from the account menu; its pages are listed in the left rail under the places while it is open) | **General**: appearance (theme, material, spacing), notifications and usage data. **Background & updates**: startup, keeping this computer on watch after quit, the pause shortcut, the update channel, uninstall. **Setup**: setup and the guided setup, the extension card. **Advanced**: app paths and the engine defaults Posture does not hold, rendered from the CLI's own option list | Change defaults, check the extension, choose its mode; run setup again or quit or uninstall; **open Posture ›** for the rules of engagement and limits. Your account is not in Settings: the account menu holds **Your account and plan**, **Switch organization** and **Sign out** |
 
@@ -284,7 +289,7 @@ shows it), and below that the number and the preview.
 The Upcoming list has the full width of the screen, so each post's preview is
 on screen at the default window size. Clicking a post opens it in a dialog, a
 box over the screen, with its words, when it goes out, whether it is approved,
-and what came of it; **New activity** opens the same dialog on a new entry.
+and what came of it; **New order** opens the same dialog on a new entry.
 The columns nobody reads daily sit behind **more details**. If you typed
 something and close the dialog, it asks before it throws your changes away.
 
@@ -300,9 +305,9 @@ changed that item since you loaded it. A finished item (it happened once, or
 gave up after its retries) shows its last time and no next one; giving it a
 new "when" in its editor schedules it again, with its full set of retries.
 
-The Performance screen states how fresh its numbers are in the header and
-has no refresh control of its own (the debrief's **read again** reads only
-those posts). Its activity heatmap has one row per
+The Performance screen states how fresh its numbers are behind the `?` in its
+header and has no refresh control of its own (the debrief's rows are read once,
+when the screen opens on them). Its activity heatmap has one row per
 profile; attempts recorded for several profiles at once (`all`, or a comma
 list) name no one profile, so they are counted beside it rather than shown
 as a row. The History view reaches each item's detailed log through the
@@ -313,15 +318,15 @@ service the app registered and never installs, updates or uninstalls one.
 The app lists each profile by the name your account holds and reads and
 saves it as the lowercase name every command resolves it to.
 
-An empty screen says what it is for and what to do next. Activity, the
-content queue, Profiles, today's History and Performance each show one member
-of the cast with a line from Major Blowhorn and a short note on what goes
-there. Where the next step is a button on that screen, the button is there,
-and an info button beside it links the docs page for it. Where the next step
-is the **+** button or a button in the header, such as **collect now** on
-Performance, the note names it rather than repeating it. With **Major
-Blowhorn** off in Settings, the same note and action show without the art and
-the line. A tab with nothing on it says what goes there and offers one
+An empty screen says what it is for and what to do next, with one member of
+the cast beside the note. Every empty screen has one, including a filter that
+hides everything, a table, a form, a dropdown and the menu bar's queue. Two
+empty areas on one screen merge into one. Where the next step is a button on
+that screen, the button is there, and an info button beside it links the docs
+page for it. Where the next step is the **+** button or a button in the
+header, such as **collect now** on Performance, the note names it rather than
+repeating it. With **Cast characters** off in Settings, the same note and
+action show without the art, and Major's line goes with them. A tab with nothing on it says what goes there and offers one
 button: Upcoming's points at the tab where your posts are, with its count
 (**show drafts (1)**), and History's at today or all, or at the **+** button
 when nothing has run yet. A filter that hides everything on a tab offers **clear
@@ -337,9 +342,12 @@ around, pulls a face, polishes his bugle or gives a thumbs up. Click him and
 he sounds his bugle, double-click him and he lets Old Thunderlung rip; he only
 makes a sound when you click him, and only with **UI sounds** on. Leave him
 alone and he points at the step's button, then turns into one of his oil
-paintings until you come back. With **Major Blowhorn** off in Settings the
+paintings until you come back. With **Cast characters** off in Settings the
 rail shows no portrait, and with **Reduce motion** on in your Mac's
-accessibility settings he holds still.
+accessibility settings he holds still. The same setting hides the periscope
+picture on the Chrome side panel's idle screen; the line under it stays. The
+side panel follows the setting within a few seconds: no reload, and you do not
+need to close and open it again.
 
 ## Setup
 
@@ -364,7 +372,9 @@ registering the service happen here, not in a terminal.
 
 Settings edits the same `.blowhorn.yaml` defaults the CLI reads:
 default profile and platform, excluded profiles, notifications, logs, and the
-Chrome launch mode. Its **appearance** card is the app's own: the theme, the
+Chrome launch mode. Nothing has a Save button: a switch saves as you flip it,
+and a text, number or path field saves when you leave it, with one saved
+indicator on the card. Its **appearance** card is the app's own: the theme, the
 material of the side rail and the **+** button (Solid, Teal glass, Ink glass or
 Clear glass, with tint strength, see-through and reduce transparency, which is
 on by default), and spacing; see [Change how the app looks](/docs/how-to/settings/appearance/).
@@ -385,8 +395,8 @@ posting to the background service and the keep-running setting; see
 
 ## Posture
 
-Posture opens with "Your pace. Your risk. Your call." and **stand down the fleet**
-and **stop everything**, the same controls as the popover's footer.
+Posture opens on its tabs, with **Stand down the fleet** and **Stop everything**
+beside them; the rail names the screen, so it has no visible title.
 
 - **Who runs how carefully.** The slider sets the rules of engagement for
   everyone: **Safety on** (slow and careful, in teal blue), **Weapons tight**
@@ -406,16 +416,17 @@ and **stop everything**, the same controls as the popover's footer.
 - **The limits Blowhorn keeps.** One table of the platforms the rules of engagement cover,
   with each platform's pace (a word, or a number as a multiplier) and its daily
   caps, each cap showing the built-in ceiling until you set a lower one. Below it,
-  the speed, how-much and when rows, the preset's own values where no option sets
-  them, and typing and pointer timing. **save limits** writes every change at
-  once; **reset to preset** puts the dials back.
-- **When a platform pushes back.** The pause after a challenge, any sign-in that
+  one row per section (by platform, speed and amount, when and who says yes, typing,
+  pointer timing). Each row opens its settings in a window: a choice saves as you
+  make it, a typed value saves when you leave the field or close the window, and
+  **Reset to preset** puts the dials back.
+- **When a platform pushes back.** Each row opens a window holding the pause after a challenge, any sign-in that
   needs you (with **open Profiles ›**), how often sign-ins are checked, and the
   needs-you note.
 - **Held back.** What the last check held, why, and when it can run, with **Do it
   anyway** for a rules-of-engagement hold.
-- **Where your sign-ins live** and **Blowhorn will never** are the promises, with
-  the failure reports switch.
+- **Where your sign-ins live** and **Blowhorn will never** are the promises, each one
+  row that opens its details in a window; the failure reports switch is in the sign-ins window.
 
 Info buttons stay hidden until you point at their row or tab to them.
 
