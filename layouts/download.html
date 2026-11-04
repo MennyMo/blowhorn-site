@@ -6,8 +6,13 @@
   block below it. The bookmarklet card's draggable link writes
   data/bookmarklet.json as a safeHTMLAttr href, because Go templates rewrite
   javascript: URLs and percent-encode safeURL ones; check_bookmarklet.py keeps
-  the code equal to the docs page. The Windows card is a placeholder: no link, a disabled
-  button, and a decorative hanging "Coming soon" sign. */ -}}
+  the code equal to the docs page. The Windows card is a placeholder: no link, a
+  decorative hanging "Coming soon" sign, and a "Notify me when available"
+  button that reveals an email form for the Windows waitlist (topic
+  "windows" on the signup service, separate from the newsletter list).
+  Without JavaScript the form is visible and posts to the service, which
+  redirects to /coming-soon/thanks/; with JavaScript download.js hides it
+  until the button is clicked and submits it in place. */ -}}
 {{ define "sprite" }}
     {{ partial "sprite.html" . }}
 {{- end }}
@@ -62,7 +67,7 @@
             </p>
             <p class="meta caption"><a href="{{ "docs/how-to/publish/manage-the-content-worksheet/#capture-a-page-from-the-browser" | relURL }}">How to add it</a></p>
           </div>
-          <div class="download-card card-stamp download-card-soon" aria-disabled="true" aria-labelledby="windows-title">
+          <div class="download-card card-stamp download-card-soon" aria-labelledby="windows-title">
             <svg class="soon-sign" viewBox="0 0 200 100" aria-hidden="true" focusable="false">
               <path class="soon-sign-string" d="M100 9 22 52M100 9l78 43" />
               <rect class="soon-sign-edge" x="6" y="44" width="188" height="52" rx="12" />
@@ -75,7 +80,22 @@
             <img class="download-icon" src="{{ "assets/brand/logo/blowhorn-app-icon.svg" | relURL }}" alt="" width="72" height="72">
             <h2 id="windows-title" class="h3">Blowhorn for Windows<span class="visually-hidden">, coming soon</span></h2>
             <p>We're working on it. Really.</p>
-            <p class="actions"><button class="button button-primary" type="button" disabled>Coming soon</button></p>
+            <p class="actions"><button class="button button-primary windows-notify-toggle" type="button" id="windows-notify-toggle" aria-expanded="false" aria-controls="windows-notify-form" hidden>Notify me when available</button></p>
+            <form id="windows-notify-form" class="newsletter windows-notify" method="post" action="https://api.blowhorn.ai/api/waitlist">
+              <label class="newsletter-label ui" for="windows-notify-email">Email address</label>
+              <div class="newsletter-row">
+                <input type="email" id="windows-notify-email" name="email" autocomplete="email" placeholder="Email address" required maxlength="254">
+                <button class="button button-primary" type="submit">Notify me</button>
+              </div>
+              <input type="hidden" name="topic" value="windows">
+              <input type="hidden" name="source_page" value="{{ .RelPermalink }}">
+              <p class="signup-honeypot" aria-hidden="true">
+                <label for="windows-notify-website">Website</label>
+                <input id="windows-notify-website" name="website" type="text" tabindex="-1" autocomplete="off">
+              </p>
+              <p class="caption muted">One email when Windows support ships, nothing else. Your address is only used for that, and every email carries an unsubscribe link.</p>
+              <p id="windows-notify-status" class="windows-notify-status" role="status"></p>
+            </form>
           </div>
         </div>
         <aside class="download-requirements" aria-labelledby="requirements-title">
