@@ -138,3 +138,61 @@
       // lookup only means no version details. Never claim "no build" on an error.
     });
 })();
+
+// Windows notify signup on the coming-soon card: the button reveals the
+// waitlist form (topic "windows", stored separately from the newsletter
+// list), and submitting it posts JSON to the signup service and shows an
+// inline result, mirroring assets/js/signup.js. Without JavaScript, or
+// without fetch, the toggle stays hidden and the form stays visible: it
+// posts to the service, which redirects to a thanks page. An invalid
+// address is caught by the browser's own validation, and a failed
+// submission leaves the entered address in place.
+(function () {
+  "use strict";
+
+  var toggle = document.getElementById("windows-notify-toggle");
+  var form = document.getElementById("windows-notify-form");
+  if (!toggle || !form || !window.fetch) {
+    return;
+  }
+  var status = document.getElementById("windows-notify-status");
+  var email = document.getElementById("windows-notify-email");
+  toggle.hidden = false;
+  form.hidden = true;
+  toggle.addEventListener("click", function () {
+    var open = form.hidden;
+    form.hidden = !open;
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open && email) {
+      email.focus();
+    }
+  });
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var data = {};
+    new FormData(form).forEach(function (value, key) {
+      data[key] = value;
+    });
+    fetch(form.action, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(data),
+    })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body };
+        });
+      })
+      .then(function (pair) {
+        if (pair.res.ok && pair.body.ok) {
+          form.reset();
+          status.textContent = "You are on the list. We will email you when Blowhorn for Windows is ready.";
+        } else {
+          status.textContent = (pair.body && pair.body.error) || "Something went wrong. Please try again.";
+        }
+      })
+      .catch(function () {
+        status.textContent = "Something went wrong. Please try again.";
+      });
+  });
+})();
