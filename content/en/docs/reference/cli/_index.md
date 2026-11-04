@@ -87,7 +87,7 @@ and checked against it, so a page says what `--help` says.
 | [`blowhorn config`](/docs/reference/cli/config/) | blowhorn config: get, path, set, show. |
 | [`blowhorn content`](/docs/reference/cli/content/) | blowhorn content: approve, delete, get, list, posts, upsert. |
 | [`blowhorn desktop`](/docs/reference/cli/desktop/) | blowhorn desktop: build, install, start, status. |
-| [`blowhorn find`](/docs/reference/cli/find/) | Search Bluesky for posts matching a query with optional date, author, and relevancy filters. |
+| [`blowhorn find`](/docs/reference/cli/find/) | Search Bluesky and GitHub for posts, issues, and pull requests matching a query, with optional date, author, and relevancy filters. |
 | [`blowhorn follow`](/docs/reference/cli/follow/) | Follow accounts on X, Bluesky, or GitHub. |
 | [`blowhorn github`](/docs/reference/cli/github/) | blowhorn github: squatters. |
 | [`blowhorn org`](/docs/reference/cli/org/) | blowhorn org: members. |

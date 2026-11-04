@@ -8,7 +8,12 @@ weight: 231
 Blowhorn works on GitHub through GitHub's API, never the browser, with the `GH_TOKEN` in your account.
 
 Follows accounts with `blowhorn follow` and lists an audience with
-`blowhorn source --platform github --repo`. Under `post`, GitHub
+`blowhorn source --platform github --repo`. Searches issues and pull
+requests with `blowhorn find --platform github`, read-only through
+GitHub's search API: `--repo`, `--type`, and `--state` narrow it, and
+the other find filters translate to search qualifiers. See
+[Find issues and pull requests on GitHub](/docs/how-to/grow/find-on-github/).
+Under `post`, GitHub
 amplifies only: it adds all five uplifting reactions (+1, laugh,
 hooray, heart, rocket) to the issue or pull request the `--amplify`
 flag or the activity's "Amplify" column names, from every selected profile

@@ -1,7 +1,7 @@
 ---
 title: "blowhorn find"
 linkTitle: "find"
-description: "Search Bluesky for posts matching a query with optional date, author, and relevancy filters."
+description: "Search Bluesky and GitHub for posts, issues, and pull requests matching a query, with optional date, author, and relevancy filters."
 weight: 109
 ---
 
@@ -9,7 +9,7 @@ weight: 109
 
 <a id="blowhorn-find"></a>
 
-Search Bluesky for posts matching a query with optional date, author, and relevancy filters. Read-only: results are printed, never posted, and no browser is opened.
+Search Bluesky and GitHub for posts, issues, and pull requests matching a query, with optional date, author, and relevancy filters. Read-only: results are printed, never posted, and no browser is opened.
 
 ```text
 blowhorn find [OPTIONS]
@@ -28,7 +28,10 @@ blowhorn find [OPTIONS]
 | `--url` | string |  | Filter by linked URL |
 | `--tag` | string |  | Filter by hashtag(s), comma-delimited |
 | `--limit` | integer | `25` | Max results (1-100, default 25) |
-| `--platform` | string |  | Platform scope for `blowhorn find`. One of: bluesky, all (`all` means every platform listed here) |
+| `--repo` | string, repeatable |  | GitHub only: search only in owner/name repositories (repeatable, or comma-delimited) |
+| `--type` | string | `all` | GitHub only: issue, pr, or all (default: all) |
+| `--state` | string | `open` | GitHub only: open, closed, or all (default: open) |
+| `--platform` | string |  | Platform scope for `blowhorn find`. One of: bluesky, github, all (`all` means every platform listed here) |
 | `--pace` | string |  | Pace of the random delays between `blowhorn find` actions (page loads, typing, clicks, API calls): a preset name (fast/normal/slow) or a numeric multiplier (e.g. 0.5, 2.0). Resolved as CLI flag, then `BLOWHORN_PACE`, then defaults.pace in .blowhorn.yaml (normal when none is set); an unrecognized value is rejected before anything runs |
 | `--risk-profile` | string |  | Risk Profile this run uses: cautious, standard or brisk. For this one run it beats the schedule's value, the profile's choice and configuration. A value after the command word wins over one before it; an unrecognized value is rejected before anything runs |
 
@@ -41,6 +44,8 @@ blowhorn find --query "service mesh" --sort latest --limit 10
 blowhorn find --query "kubernetes" --author meshaborhot --sort top
 blowhorn find --query "cloud native" --since 2026-03-01 --until 2026-04-01
 blowhorn find --query "kubernetes" --tag meshery --lang en --limit 50
+blowhorn find --platform github --query "service mesh" --limit 25
+blowhorn find --platform github --query "meshery" --repo meshery/meshery --type issue --state open
 ```
 
 Output: text.
