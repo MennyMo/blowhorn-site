@@ -113,7 +113,7 @@ Output: json with `--json`, text otherwise.
 
 ## blowhorn schedule fleet
 
-List every computer sharing your schedule whose background service has reported lately, and whether each is on duty, read from the last scheduler pass it recorded in the store: a pass that ran says on duty, a paused one says standing down, and one that failed says not on duty. A computer with no pass in the reporting window (about half an hour) is left out, because nothing recent says what it is doing. Reads only -- it claims nothing and changes nothing.
+List every computer sharing your schedule whose background service has reported lately, and whether each is on duty, read from the last scheduler pass it recorded in the store: a pass that ran says on duty, a paused one says off duty, and one that failed says last pass failed. A computer with no pass in the reporting window (about half an hour) is left out, because nothing recent says what it is doing. Reads only -- it claims nothing and changes nothing.
 
 ```text
 blowhorn schedule fleet [OPTIONS]

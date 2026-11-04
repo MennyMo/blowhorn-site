@@ -9,7 +9,7 @@ Stop Blowhorn from claiming scheduled work without stopping the service. Reach
 for this when a platform challenges a sign-in, when a session expires, or on
 any day you want nothing to go out.
 
-{{< major >}}Whole unit standing down. Your call. Unpause when you're ready.{{< /major >}}
+{{< major >}}Whole unit off duty. Your call. Reenlist when you're ready.{{< /major >}}
 
 ## Stop everything
 
@@ -46,8 +46,8 @@ instead of stopping mid-pass. The command says so when it happens.
 
 In the app, **Stop everything** is on the console, not the popover: the popover
 only shows the duty switches. It asks for a reason and a confirmation first - nothing
-stops on the first click. Stop everything is the emergency control; standing
-down is not. The standing down board then shows a **stop** line with who
+stops on the first click. Stop everything is the emergency control; taking leave
+is not. The Off duty board then shows a **stop** line with who
 stopped it, when and why, and the console's **Stop everything** control
 is the way back: turning it off lifts the stop, and the pause it raised
 with it. A pause you set by hand is never the stop's to lift, and its
@@ -72,13 +72,14 @@ a half-done action on the platform, so the pause stops the next claim, never
 the running job.
 
 In the app this pause is a duty switch. Use the switch at the bottom of the
-console rail, or in the menu-bar popover's header: it shows **On duty** while
-this computer runs scheduled work and **Standing down** while it is held. The
+console rail, or on the menu-bar popover's **This computer** row: it shows **On duty** while
+this computer runs scheduled work and **Off duty** while it is held. The
 switch's position and colour say which, and a click changes it. ⌘⇧P does the
 same, and so does the **On duty** item in the Scheduler menu. It takes one click
 and no reason. Home's Fleet card shows the same switch on this computer's row.
-While this computer is standing down, the app also skips its session probe, so
-it opens no browser at all.
+While this computer is off duty, the app also skips its session probe, so
+it opens no browser at all. The popover shows its Off duty board in place
+of NEXT UP: what holds this computer, and the items waiting until you reenlist.
 
 ## Pause every computer, or one activity
 
@@ -93,24 +94,25 @@ An activity is claimed only when none of the three scopes says paused: this comp
 all computers, or that activity. `--all` and `--activity` live in your account, so every
 computer sharing it honours them on its next claim; the flagless pause never
 touches your account. In the app every scope is one duty switch, reading
-**On duty** or **Standing down**:
+**On duty** or **Off duty**:
 
-- **This computer** - the rail's switch and the popover header's switch, the
-  flagless pause above.
+- **This computer** - the rail's switch and the popover's **This computer**
+  switch, the flagless pause above.
 - **The fleet** (every computer sharing your schedule, `--all`) - the
-  **Entire fleet** row on Home's Fleet card, or "stand down the fleet" in the
-  popover, This computer and Posture. A reason is optional; on Home you type
-  it beside the switch and it saves as you type. While the fleet stands down,
-  the card shows who stood it down, when and why, and this computer's row is
+  **Entire fleet** row on Home's Fleet card, **Take leave for the fleet** in
+  Posture, or the popover's **Fleet** switch, which takes no reason. A reason
+  is optional; on Home you type
+  it beside the switch and it saves as you type. While the fleet is off duty,
+  the card shows who took it off duty, when and why, and this computer's row is
   held until the fleet is back on duty.
 - **This order** (`--activity N`) - the duty switch in an item's details (click
   the item and it opens in a dialog, a box over the screen),
-  reading **On duty** or **Standing down**. The optional reason field above it
+  reading **On duty** or **Off duty**. The optional reason field above it
   saves as you type, with a teal check once saved, and goes out with the
-  hold. The item's list row reads **standing down** while it is held.
+  hold. The item's list row reads **off duty** while it is held.
 
-There is no switch for another computer: stand that computer down from
-its own Blowhorn app, or stand down the whole fleet.
+There is no switch for another computer: take leave on that computer from
+its own Blowhorn app, or take leave for the whole fleet.
 
 Lifting one scope leaves the other two as they were. A held activity still reads
 `due: yes` beside `paused: yes` in `blowhorn schedule list`: due keeps meaning
@@ -136,8 +138,8 @@ The window may wrap midnight, as `22:00-07:00` does, and is read in
 `defaults.quiet_hours_tz` - unset, this computer's own zone. In the app, the
 same two fields sit under Settings, in the defaults card's quiet hours
 group; clearing the window there turns quiet hours off. While a window is
-in force, the menu-bar popover says so - `quiet until 07:00`, the window's
-end. An activity due inside the window is not claimed and not failed: it
+in force and this computer is off duty, the menu-bar popover's Off duty
+board says so - `quiet until 07:00`, the window's end. An activity due inside the window is not claimed and not failed: it
 stays due and runs on the first pass after the window ends, the way a
 paused activity carries forward.
 `blowhorn schedule list` marks it `held (quiet hours)` with the window and
