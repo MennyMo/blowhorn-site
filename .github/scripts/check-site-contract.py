@@ -114,6 +114,9 @@ PAGES = {
     "use-cases/linkedin-outreach/index.html": [
         "main", "use-case-title", "pains-title", "gets-title", "faq-title", "cta-title",
     ],
+    "use-cases/team-amplification/index.html": [
+        "main", "use-case-title", "pains-title", "gets-title", "faq-title", "cta-title",
+    ],
     "solutions/index.html": [
         "main", "solutions-title", "by-role-title", "by-use-case-title", "by-category-title",
     ],

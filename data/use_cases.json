@@ -320,6 +320,89 @@
           "page": "/for/agencies"
         }
       ]
+    },
+    {
+      "slug": "team-amplification",
+      "name": "Team amplification",
+      "title": "Blowhorn for team amplification",
+      "weight": 40,
+      "headline": "One post, every teammate, in the first hour.",
+      "lead": "Teammates and supporters add their own profiles to your account and join the wave, each posting as themselves. Schedule one post and every profile you add amplifies it at the moment you pick. No 100-seat minimum.",
+      "description": "Get teammates and supporters behind every company post: each posts as themselves, in the first hour, from one coordinated queue, with no 100-seat minimum.",
+      "art": {
+        "src": "assets/brand/cast/recruit-chick-salute.webp",
+        "alt": "Recruit Chick, a yellow chick in a green helmet saluting, a slingshot over one shoulder and a belt of like, heart and repost badges"
+      },
+      "pains": [
+        {
+          "t": "Everyone means to share it",
+          "b": "The post goes out, and by the time teammates see the Slack ping, the first hour is gone."
+        },
+        {
+          "t": "Built for a hundred seats",
+          "b": "Advocacy suites are priced and sold for big companies, not a small team with a launch day."
+        },
+        {
+          "t": "Every profile, a separate queue",
+          "b": "Each teammate posts on their own, at their own hour, and nobody can see the whole wave or stop it at once."
+        }
+      ],
+      "gets": [
+        {
+          "t": "Teammates join the wave",
+          "b": "Teammates and supporters add their own profiles to your account and join the wave, each posting as themselves."
+        },
+        {
+          "t": "Real people, first hour",
+          "b": "Real people, acting as themselves, in the first hour. Blowhorn posts as that person, never as a bot."
+        },
+        {
+          "t": "Sent once, from one computer",
+          "b": "Coordinated so the same post isn't sent from two computers, however many your team runs."
+        },
+        {
+          "t": "One pause for the whole wave",
+          "b": "Pause one action, one computer or every computer at once. Resume, and due times carry forward."
+        }
+      ],
+      "prompt": "Queue the launch post for 9:00, have every teammate's profile amplify it, then --dry-run the wave.",
+      "major": "Fall in, team. One post, every voice, on my mark.",
+      "faq": [
+        {
+          "q": "Can I invite my team?",
+          "a": "Team invites are coming soon. Today teammates and supporters add their own profiles to your account."
+        },
+        {
+          "q": "Will the same post go out twice?",
+          "a": "Your computers coordinate through one queue, so the same post isn't sent from two of them."
+        },
+        {
+          "q": "Do teammates hand over their sign-ins?",
+          "a": "No. A teammate adds their own profile from their own computer, signed in as themselves. Blowhorn posts as that person, never as a bot."
+        },
+        {
+          "q": "How many seats do we need?",
+          "a": "There is no 100-seat minimum. Start with the teammates and supporters who will actually answer, and add profiles as you go."
+        }
+      ],
+      "related": [
+        {
+          "label": "Blowhorn for marketing managers",
+          "page": "/for/marketing"
+        },
+        {
+          "label": "Employee advocacy",
+          "page": "/solutions/employee-advocacy"
+        },
+        {
+          "label": "How amplification works",
+          "page": "/docs/how-to/publish/amplify-a-post"
+        },
+        {
+          "label": "Pause and resume",
+          "page": "/docs/how-to/schedule/pause"
+        }
+      ]
     }
   ]
 }
