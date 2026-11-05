@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://blowhorn.ai/schemas/activity_feed.schema.json",
   "title": "Public activity feed",
-  "description": "Public activity feed for the blowhorn.ai hero social proof card. No PII - no emails, user ids or post content. Served by Layer5 Cloud at GET /api/public/activity-feed; this file is the single contract. Hyphens never em dashes.",
+  "description": "Public activity feed for the blowhorn.ai hero social proof card. Carries Layer5 Cloud user ids, never emails or post content. Served by Layer5 Cloud at GET /api/public/activity-feed; this file is the single contract. Hyphens never em dashes.",
   "type": "object",
   "additionalProperties": false,
   "required": ["version", "sample", "generatedAt", "items"],
@@ -31,9 +31,14 @@
     "item": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "platform", "role", "line", "completedAt", "visibility"],
+      "required": ["id", "userId", "platform", "role", "line", "completedAt", "visibility"],
       "properties": {
         "id": { "type": "string", "minLength": 1 },
+        "userId": {
+          "description": "Layer5 Cloud user id.",
+          "type": "string",
+          "minLength": 1
+        },
         "platform": {
           "description": "Integration id. Supported platforms only, matching data/integrations.json.",
           "type": "string",
@@ -62,7 +67,20 @@
           "type": "string",
           "format": "date-time"
         },
+        "avatarUrl": {
+          "description": "Present only when the user's profile is public.",
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "organizationName": {
+          "description": "Present only when the user's profile is public.",
+          "allOf": [{ "$ref": "#/definitions/plainText" }],
+          "minLength": 1,
+          "maxLength": 80
+        },
         "publicProfileUrl": {
+          "description": "Present only when the user's profile is public.",
           "type": "string",
           "format": "uri",
           "pattern": "^https://"
