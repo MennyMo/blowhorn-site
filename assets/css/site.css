@@ -3479,19 +3479,28 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
   z-index: 1040;
   left: 50%;
   bottom: var(--space-4);
-  width: min(360px, calc(100% - 2 * var(--space-4)));
+  width: min(450px, calc(100% - 2 * var(--space-4)));
   transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: var(--space-4) var(--space-8) var(--space-4) var(--space-4);
   border-radius: var(--radius-lg);
   background: var(--glass-fill-strong);
   color: var(--ink);
   box-shadow: var(--glass-shadow);
+  text-align: center;
 }
 .consent[hidden] { display: none; }
 .consent-title { margin: 0 0 var(--space-1); font-size: 14px; line-height: 20px; font-weight: 600; }
 .consent-text { margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-muted); }
 .consent-text a { color: var(--link); text-decoration: none; }
-.consent-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.consent h2,
+.consent p {
+  text-align: center;
+  width: 100%;
+}
+.consent-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-top: var(--space-3); width: 100%; }
 .consent-button { min-height: 36px; padding: var(--space-1) var(--space-4); font-size: 13px; }
 .consent-close {
   position: absolute;
@@ -3529,7 +3538,7 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
   }
 }
 @media (min-width: 480px) {
-  .consent { bottom: var(--space-6); width: min(360px, calc(100% - 2 * var(--space-6))); }
+  .consent { bottom: var(--space-6); width: min(450px, calc(100% - 2 * var(--space-6))); }
 }
 
 
