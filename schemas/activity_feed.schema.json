@@ -72,7 +72,7 @@
         },
         "completedAt": { "$ref": "#/definitions/dateTime" },
         "displayName": {
-          "description": "Present only for public profiles, alongside avatarUrl, organizationName and publicProfileUrl. Filled in by Layer5 Cloud when the feed is read; the Blowhorn engine does not send it.",
+          "description": "The person's public username on their Layer5 Cloud profile, never their real name. Present only for public profiles, alongside avatarUrl, organizationName and publicProfileUrl. Filled in by Layer5 Cloud when the feed is read; the Blowhorn engine does not send it.",
           "allOf": [{ "$ref": "#/definitions/plainText" }],
           "minLength": 1,
           "maxLength": 80
