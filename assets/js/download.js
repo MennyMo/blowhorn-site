@@ -78,13 +78,14 @@
     var icon = card.querySelector(".download-icon");
     var requirement = card.querySelector(".download-req");
     var actions = card.querySelector(".actions");
+    var fallback = card.querySelector(".download-fallback");
     var size = actions && actions.querySelector(".caption");
     if (size) {
       size.textContent = versioned.name + " · " + megabytes(versioned.size);
     }
     var title = el("h2", "Blowhorn " + version + " for Mac", { class: "h3" });
     var body = el("p", "The Mac app runs your activities and installs the Blowhorn command.");
-    var children = (icon ? [icon] : []).concat([title, body], requirement ? [requirement] : [], [actions]);
+    var children = (icon ? [icon] : []).concat([title, body], requirement ? [requirement] : [], [actions], fallback ? [fallback] : []);
 
     var meta = el("p", null, { class: "meta caption" });
     var date = release.published_at ? publishedOn(release.published_at) : null;
