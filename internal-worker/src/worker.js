@@ -396,7 +396,7 @@ function workloadTable(snap) {
         `<td class="n">${escHtml(num(t.router_open_issues))}</td><td class="n">${escHtml(num(t.handed_24h))}</td>` +
         `<td class="n">${escHtml(num(t.done_24h))}</td><td class="n">${escHtml(num(t.gh_open_prs))}</td>` +
         `<td class="n">${escHtml(num(t.gh_review_requests))}</td><td class="n">${escHtml(num(t.gh_assigned_issues))}</td>` +
-        `<td>${escHtml(fmtCentral(t.last_seen))}</td></tr>`
+        `<td data-v="${escHtml(t.last_seen || '')}">${escHtml(fmtCentral(t.last_seen))}</td></tr>`
       );
     })
     .join('');
@@ -415,7 +415,51 @@ function workloadTable(snap) {
 const FLEET_CSS =
   'body{font:14px/1.4 system-ui,sans-serif;margin:2rem;color:#111}table{border-collapse:collapse;margin:.5rem 0 1.5rem}' +
   'th,td{border:1px solid #ccc;padding:.25rem .5rem;text-align:left;white-space:nowrap}td.n{text-align:right}' +
-  '.hot{color:#b00;font-weight:600}.stale{color:#b00}.wide{overflow-x:auto}';
+  '.hot{color:#b00;font-weight:600}.stale{color:#b00}.wide{overflow-x:auto}' +
+  'th button{all:unset;cursor:pointer;display:block;width:100%}th button:focus-visible{outline:2px solid #06c}' +
+  'th button .ind{margin-left:.25rem;font-size:.75em}';
+
+// Click (or Enter/Space) a column header to sort that table by it, ascending
+// first, then toggling. Numbers sort numerically, text alphabetically; an
+// empty or "-" cell always goes last. A cell's data-v, when set, is the sort key.
+export const FLEET_SORT_JS = `(() => {
+  const key = (td) => {
+    if (!td) return null;
+    const raw = (td.dataset.v ?? td.textContent).trim();
+    if (raw === '' || raw === '-') return null;
+    return /^-?\\d+(\\.\\d+)?(%| GB)?$/.test(raw) ? parseFloat(raw) : raw.toLowerCase();
+  };
+  document.querySelectorAll('table').forEach((table) => {
+    const ths = [...table.querySelectorAll('thead th')];
+    const tbody = table.tBodies[0];
+    if (!tbody) return;
+    ths.forEach((th, col) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.append(...th.childNodes);
+      const ind = document.createElement('span');
+      ind.className = 'ind';
+      ind.setAttribute('aria-hidden', 'true');
+      b.append(ind);
+      th.append(b);
+      th.setAttribute('aria-sort', 'none');
+      b.addEventListener('click', () => {
+        const dir = th.getAttribute('aria-sort') === 'ascending' ? -1 : 1;
+        ths.forEach((h) => { h.setAttribute('aria-sort', 'none'); h.querySelector('.ind').textContent = ''; });
+        th.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
+        ind.textContent = dir === 1 ? '\u25B2' : '\u25BC';
+        const rows = [...tbody.rows].map((r, i) => ({ r, i, k: key(r.cells[col]?.colSpan > 1 ? null : r.cells[col]) }));
+        rows.sort((a, b) => {
+          if (a.k === null || b.k === null) return a.k === b.k ? a.i - b.i : a.k === null ? 1 : -1;
+          if (typeof a.k !== typeof b.k) return (typeof a.k === 'number' ? -1 : 1) * dir;
+          const c = typeof a.k === 'number' ? a.k - b.k : a.k.localeCompare(b.k);
+          return (c || a.i - b.i) * dir;
+        });
+        rows.forEach(({ r }) => tbody.append(r));
+      });
+    });
+  });
+})();`;
 
 async function handleFleet(url, env, nowMs = Date.now()) {
   const db = env.FLEET_DB;
@@ -451,7 +495,7 @@ async function handleFleet(url, env, nowMs = Date.now()) {
     `(add <code>?days=30</code> for a longer window, up to 90).</p>\n` +
     `<h2>Teammate workload</h2>\n${staleNote(workload[0], 'workload', nowMs)}\n${workloadTable(workload[0])}\n` +
     `<h2>Disk free</h2>\n${staleNote(disk[0], 'disk', nowMs)}\n${diskTable(disk[0])}\n${diskTrend(disk.slice(0, 28))}\n` +
-    `</main>\n</body>\n</html>\n`;
+    `</main>\n<script>${FLEET_SORT_JS}</script>\n</body>\n</html>\n`;
   return new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8', ...ADMIN_HEADERS } });
 }
 

@@ -243,3 +243,9 @@ test('old fleet path redirects permanently to /engineering/fleet/', async () => 
   assert.equal(res.status, 301);
   assert.equal(new URL(res.headers.get('location')).pathname + new URL(res.headers.get('location')).search, '/engineering/fleet/disk.csv?days=3');
 });
+
+test('fleet page tables get sortable headers', async () => {
+  const html = await (await handle(authed('/engineering/fleet/'), fleetEnv({ disk: [diskSnap], workload: [workloadSnap] }), certsFetch)).text();
+  assert.match(html, /<script>[\s\S]*aria-sort[\s\S]*<\/script>/);
+  assert.match(html, /data-v="/);
+});
