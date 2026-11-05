@@ -2,15 +2,15 @@
   "title": "Blowhorn vs Hootsuite",
   "linkTitle": "Hootsuite",
   "seo_title": "Blowhorn vs Hootsuite: honest comparison",
-  "description": "Hootsuite is a full social operations suite for larger teams: inbox, listening, approvals, ads. Blowhorn is a lighter, sharper tool for technical company voices who need real people amplifying on developer networks.",
+  "description": "Blowhorn isn't a bot. It's you. Hootsuite is a full social operations suite for larger teams: inbox, listening, approvals, ads. Blowhorn is a lighter, sharper tool for technical voices who need real people amplifying on developer networks.",
   "layout": "versus",
   "weight": 11,
-  "lastmod": "2026-10-13",
+  "lastmod": "2026-11-02",
   "competitor": "Hootsuite",
   "mark": "Hs",
   "site_url": "https://www.hootsuite.com/",
   "group": "Cloud schedulers",
-  "verdict": "Hootsuite is a full social operations suite for larger teams: inbox, listening, approvals, ads. Blowhorn is a lighter, sharper tool for technical company voices who need real people amplifying on developer networks.",
+  "verdict": "Blowhorn isn't a bot. It's you. Hootsuite is a full social operations suite for larger teams: inbox, listening, approvals, ads. Blowhorn is a lighter, sharper tool for technical voices who need real people amplifying, as themselves, on developer networks.",
   "them": [
     "You run a social team with approvals, a shared inbox, listening and paid boosts",
     "Compliance and governance features are a must",
@@ -19,7 +19,8 @@
   "us": [
     "You are a founder, DevRel lead or small team, not a social department",
     "Hacker News, Reddit, GitHub and Slack matter as much as LinkedIn and X",
-    "You want your people to amplify a post as themselves, without enterprise seat math"
+    "You want your people to amplify a post as themselves, without enterprise seat math",
+    "You run a local practice, an enterprise team, or several client brands from one shared queue"
   ],
   "price_them": "Standard $99, Professional $199, Advanced $399 a user a month",
   "price_src": "https://www.hootsuite.com/plans",
@@ -27,7 +28,7 @@
     {
       "f": "Built for",
       "t": "Mid-market and enterprise social teams",
-      "b": "Technical founders, DevRel and small teams"
+      "b": "Technical founders, DevRel, small teams, and agencies running client brands"
     },
     {
       "f": "Where it acts",
@@ -36,13 +37,13 @@
     },
     {
       "f": "Inbox, listening, approvals",
-      "t": "Yes, deep",
+      "t": "Yes, deep. Approvals from Advanced, SSO and compliance on Enterprise",
       "b": "No. Blowhorn doesn't try to be a suite"
     },
     {
       "f": "Many people amplifying one post",
-      "t": "Employee advocacy on Enterprise",
-      "b": "Sound wave: one scheduled message, amplified by every profile in your account, including profiles teammates and supporters add"
+      "t": "Employee advocacy (Parliament) on Enterprise",
+      "b": "Sound wave: one scheduled message, amplified by every profile in your account"
     },
     {
       "f": "Hacker News, GitHub, Slack",
@@ -51,8 +52,8 @@
     },
     {
       "f": "AI agents",
-      "t": "OwlyWriter AI",
-      "b": "MCP server, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
+      "t": "Wisdom AI in every plan, plus MCP connectors",
+      "b": "MCP server, AI skills and a full CLI with --json and --dry-run on writes. AI drafts, you decide"
     },
     {
       "f": "Bought engagement",
@@ -65,7 +66,7 @@
       "b": "Free plan available, see pricing"
     }
   ],
-  "signal": "Hootsuite's boost is paid advertising, and ads are a fair, labeled trade. What Blowhorn adds is the thing ads can't buy: people who know you, replying and reposting because they actually care about what you shipped.",
+  "signal": "Hootsuite's boost is paid advertising, and ads are a fair, labeled trade. What Blowhorn adds is the thing ads can't buy: people who know you, replying and reposting because they actually care about what you shipped. When platforms crack down on anything that looks like a bot, a reply from a real person still reads as a person.",
   "faq": [
     {
       "q": "Is Hootsuite better than Blowhorn?",
@@ -74,9 +75,53 @@
     {
       "q": "Does Blowhorn have a social inbox or listening?",
       "a": "No. It publishes, replies, amplifies and does careful LinkedIn outreach from your own computers."
+    },
+    {
+      "q": "Can my team amplify without an Enterprise contract?",
+      "a": "Yes. A sound wave amplifies from every profile in your Blowhorn account, with no enterprise tier needed. Hootsuite's advocacy product sits on Enterprise."
     }
   ],
   "major": "Big suites are fine for big armies. A squad with a launch needs a horn, not a headquarters.",
+  "art": {
+    "src": "assets/brand/cast/icons/trench-trooper.webp",
+    "alt": "Trench Trooper, a muddy pig in a helmet holding a rifle with a long tab bayonet and a gold periscope",
+    "caption": "Trench Trooper holds the line with one queue, so one small squad can post without a whole headquarters behind it."
+  },
+  "code": {
+    "title": "terminal",
+    "code": "blowhorn post --profile all --dry-run\nblowhorn post --profile all",
+    "intro": "One message, every profile, previewed first."
+  },
+  "logos": [
+    {
+      "src": "assets/platforms/linkedin-in-bug.png",
+      "alt": "LinkedIn"
+    },
+    {
+      "src": "assets/platforms/x-logo-black.png",
+      "alt": "X"
+    },
+    {
+      "src": "assets/platforms/reddit-logo.png",
+      "alt": "Reddit"
+    },
+    {
+      "src": "assets/platforms/hacker-news-y18.svg",
+      "alt": "Hacker News"
+    },
+    {
+      "src": "assets/platforms/github-invertocat-black.svg",
+      "alt": "GitHub"
+    },
+    {
+      "src": "assets/platforms/bluesky-butterfly-blue.svg",
+      "alt": "Bluesky"
+    },
+    {
+      "src": "assets/platforms/slack-mark.svg",
+      "alt": "Slack"
+    }
+  ],
   "sitemap": {
     "changefreq": "monthly",
     "priority": 0.5

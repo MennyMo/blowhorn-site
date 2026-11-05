@@ -63,16 +63,6 @@
           </div>
         </section>
 
-        {{- with $p.art }}
-        {{- /* Optional page art: one approved cast or troops image with a
-          real-text caption. Renders only on pages that set `art`. */ -}}
-        <section class="agent-section versus-art">
-          <figure class="versus-figure">
-            <img src="{{ .src | relURL }}" alt="" loading="lazy">
-            <figcaption class="muted">{{ .caption }}</figcaption>
-          </figure>
-        </section>
-        {{- end }}
 
         {{- if $p.wins }}
         <section class="agent-section" aria-labelledby="wins-title">
@@ -132,6 +122,14 @@
               </tbody>
             </table>
           </div>
+          {{- with $p.logos }}
+          <div class="section-head">
+            <h3 class="h3">Networks Blowhorn posts on today</h3>
+          </div>
+          <ul class="versus-logos">
+            {{- range . }}<li><span class="logo-tile"><img src="{{ .src | relURL }}" alt="{{ .alt }}" width="28" height="28" loading="lazy"></span><span class="ui">{{ .alt }}</span></li>{{ end }}
+          </ul>
+          {{- end }}
         </section>
 
         <section class="agent-section versus-belief" aria-labelledby="belief-title">
@@ -142,13 +140,15 @@
 
         {{- with $p.code }}
         {{- /* Optional terminal code card: one CLI example that shows the
-          difference better than words. Renders only on pages that set `code`. */ -}}
+          difference better than words. Renders only on pages that set `code`.
+          Pages use either heading/lede or intro/title; both render one card. */ -}}
         <section class="agent-section versus-code" aria-labelledby="code-title">
           <div class="section-head">
-            <h2 id="code-title" class="h2">{{ .heading }}</h2>
-            <p class="muted">{{ .lede }}</p>
+            {{- with .heading }}<h2 id="code-title" class="h2">{{ . }}</h2>{{ end }}
+            {{- with .lede }}<p class="muted">{{ . }}</p>{{ end }}
+            {{- with .intro }}<p class="muted">{{ . }}</p>{{ end }}
           </div>
-          {{ partial "code-card.html" (dict "title" "terminal" "lang" "bash" "code" .code "prompt" true) }}
+          {{ partial "code-card.html" (dict "title" (.title | default "terminal") "lang" "bash" "code" .code "prompt" true) }}
         </section>
         {{- end }}
 
