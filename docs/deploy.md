@@ -630,6 +630,24 @@ The workflow, in order (each step is a make target):
    asset and a guessed URL must all redirect to the Access login. A 2xx
    deletes the Worker and fails the run.
 
+### Dynamic pages (signups, fleet stats)
+
+Two pages are rendered by the Worker per request from D1, after the same
+Access check as every static page, so their data changes without a build:
+
+- `/internal/signups/` and `/internal/signups/export`: the `SIGNUPS_DB`
+  binding (`blowhorn-signups`), written by the public signup worker.
+- `/internal/fleet/`, plus `data.json`, `workload.csv` and `disk.csv` beside
+  it (each takes `?days=N`, default 7, at most 90): the `FLEET_DB` binding
+  (`blowhorn-fleet-stats`). A zero-token cron on Bastion writes teammate
+  workload every hour and machine disk free every 6 hours into its
+  `snapshots` table (`kind`, `collected_at`, JSON `body`). The collector, its
+  schedule and its least-privilege D1 token live in koopverse/firstmate
+  `fleet/fleet-stats/` (koopverse/firstmate#72).
+
+`.github/scripts/resolve-d1.sh` swaps every placeholder `database_id` in
+`wrangler.json` for the real one, creating a database that does not exist yet.
+
 ### This repository is public
 
 Its Actions logs are world-readable. The workflow uploads no artifact,
