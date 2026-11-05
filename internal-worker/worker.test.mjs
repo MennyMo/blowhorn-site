@@ -2,7 +2,7 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync, createSign } from 'node:crypto';
-import { handle, ipAllowed, resetCertsCache } from './src/worker.js';
+import { handle, ipAllowed, resetCertsCache, sortWorkloadTeammates, FLEET_SORT_JS } from './src/worker.js';
 
 const TEAM_HOST = 'example-team.cloudflareaccess.com';
 const TEAM = `https://${TEAM_HOST}`;
@@ -149,7 +149,9 @@ const workloadSnap = {
   kind: 'workload', collected_at: '2026-11-05T02:47:40Z', collector_host: 'bastion', orgs: ['layer5io'],
   router: { tasks: { assigned: 42, done: 60 } },
   teammates: [
+    { persona: 'alice', login: 'alice-bot', kind: 'muse-bot', paused: false, idle: false, router_load: 1, router_open_reviews: 0, router_open_issues: 1, handed_24h: 3, done_24h: 2, gh_open_prs: 1, gh_review_requests: 1, gh_assigned_issues: 1, last_seen: '2026-11-05T02:30:00Z' },
     { persona: 'yi', login: 'yi-bot', kind: 'muse-bot', paused: false, idle: false, router_load: 4, router_open_reviews: 1, router_open_issues: 3, handed_24h: 8, done_24h: 4, gh_open_prs: 25, gh_review_requests: 19, gh_assigned_issues: 7, last_seen: '2026-11-05T02:40:00Z' },
+    { persona: 'bob', login: 'bob-bot', kind: 'muse-bot', paused: false, idle: false, router_load: 2, router_open_reviews: 0, router_open_issues: 2, handed_24h: 12, done_24h: 10, gh_open_prs: 2, gh_review_requests: 2, gh_assigned_issues: 2, last_seen: '2026-11-05T02:45:00Z' },
     { persona: null, login: 'leecalcote', kind: 'human', paused: false, router_load: 0, gh_open_prs: null },
   ],
 };
@@ -207,7 +209,8 @@ test('fleet CSVs flatten one row per machine or teammate', async () => {
   assert.match(disk, /^collected_at,name,reachable,/);
   assert.equal(disk.trim().split('\n').length, 3);
   const wl = await (await handle(authed('/engineering/fleet/workload.csv'), e, certsFetch)).text();
-  assert.match(wl, /2026-11-05T02:47:40Z,yi,yi-bot,muse-bot/);
+  assert.match(wl, /2026-11-05T02:47:40Z,alice,alice-bot,muse-bot/);
+  assert.match(wl, /yi,yi-bot,muse-bot/);
 });
 test('fleet database errors fail closed', async () => {
   const e = { ...env, FLEET_DB: { prepare: () => ({ bind: () => ({ all: async () => { throw new Error('d1'); } }) }) } };
@@ -242,6 +245,41 @@ test('old fleet path redirects permanently to /engineering/fleet/', async () => 
   const res = await handle(authed('/internal/fleet/disk.csv?days=3'), fleetEnv({}), certsFetch);
   assert.equal(res.status, 301);
   assert.equal(new URL(res.headers.get('location')).pathname + new URL(res.headers.get('location')).search, '/engineering/fleet/disk.csv?days=3');
+});
+
+
+test('sortWorkloadTeammates orders Done 24h numerically descending (10 before 2)', () => {
+  const ordered = sortWorkloadTeammates([
+    { login: 'low', done_24h: 2 },
+    { login: 'high', done_24h: 10 },
+    { login: 'mid', done_24h: 4 },
+    { login: 'missing' },
+  ]).map((t) => t.login);
+  assert.deepEqual(ordered, ['high', 'mid', 'low', 'missing']);
+});
+
+test('sortWorkloadTeammates keeps input order on equal Done 24h', () => {
+  const ordered = sortWorkloadTeammates([
+    { login: 'a', done_24h: 5 },
+    { login: 'b', done_24h: 5 },
+  ]).map((t) => t.login);
+  assert.deepEqual(ordered, ['a', 'b']);
+});
+
+test('fleet workload table defaults to Done 24h descending in HTML order', async () => {
+  const html = await (await handle(authed('/engineering/fleet/'), fleetEnv({ disk: [diskSnap], workload: [workloadSnap] }), certsFetch)).text();
+  assert.match(html, /data-fleet="workload"/);
+  const body = html.match(/data-fleet="workload"[\s\S]*?<tbody>([\s\S]*?)<\/tbody>/);
+  assert.ok(body, 'workload tbody present');
+  const logins = [...body[1].matchAll(/<td>[^<]*<\/td><td>([a-z0-9-]+)<\/td><td>(working|human|idle|paused)<\/td>/g)].map((m) => m[1]);
+  assert.deepEqual(logins, ['bob-bot', 'yi-bot', 'alice-bot', 'leecalcote']);
+});
+
+test('fleet sort script defaults to Done 24h descending and keeps a chosen sort', () => {
+  assert.match(FLEET_SORT_JS, /fleet-stats-sort/);
+  assert.match(FLEET_SORT_JS, /Done 24h/);
+  assert.match(FLEET_SORT_JS, /localStorage/);
+  assert.match(FLEET_SORT_JS, /saved\.dir/);
 });
 
 test('fleet page tables get sortable headers', async () => {

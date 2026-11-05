@@ -385,9 +385,22 @@ function diskTrend(history) {
   return `<h3>Disk used, last 7 days</h3>\n<div class="wide"><table>\n<thead><tr><th>Machine</th>${head}</tr></thead>\n<tbody>${body}</tbody>\n</table></div>`;
 }
 
+// Highest Done 24h first; missing values last; equal values keep input order.
+export function sortWorkloadTeammates(teammates) {
+  return (teammates || [])
+    .map((t, i) => ({ t, i }))
+    .sort((a, b) => {
+      const aMissing = typeof a.t.done_24h !== 'number';
+      const bMissing = typeof b.t.done_24h !== 'number';
+      if (aMissing || bMissing) return aMissing === bMissing ? a.i - b.i : aMissing ? 1 : -1;
+      return (b.t.done_24h - a.t.done_24h) || (a.i - b.i);
+    })
+    .map(({ t }) => t);
+}
+
 function workloadTable(snap) {
   if (!snap) return '';
-  const rows = (snap.teammates || [])
+  const rows = sortWorkloadTeammates(snap.teammates)
     .map((t) => {
       const state = t.kind === 'human' ? 'human' : t.paused ? 'paused' : t.idle ? 'idle' : 'working';
       return (
@@ -406,7 +419,7 @@ function workloadTable(snap) {
     : '';
   return (
     `<p>Router tasks: ${tasks || 'n/a'}. Orgs: ${escHtml((snap.orgs || []).join(', '))}.</p>\n` +
-    `<table>\n<thead><tr><th>Teammate</th><th>Login</th><th>State</th><th>Router load</th><th>Reviews</th><th>Issues</th>` +
+    `<table data-fleet="workload">\n<thead><tr><th>Teammate</th><th>Login</th><th>State</th><th>Router load</th><th>Reviews</th><th>Issues</th>` +
     `<th>Handed 24h</th><th>Done 24h</th><th>Open PRs</th><th>Review requests</th><th>Assigned issues</th><th>Last seen</th></tr></thead>\n` +
     `<tbody>${rows}</tbody>\n</table>`
   );
@@ -422,17 +435,57 @@ const FLEET_CSS =
 // Click (or Enter/Space) a column header to sort that table by it, ascending
 // first, then toggling. Numbers sort numerically, text alphabetically; an
 // empty or "-" cell always goes last. A cell's data-v, when set, is the sort key.
+// The workload table defaults to Done 24h descending; a chosen column is kept
+// in localStorage across refreshes (fleet-stats-sort).
 export const FLEET_SORT_JS = `(() => {
+  const STORE = 'fleet-stats-sort';
   const key = (td) => {
     if (!td) return null;
     const raw = (td.dataset.v ?? td.textContent).trim();
     if (raw === '' || raw === '-') return null;
     return /^-?\\d+(\\.\\d+)?(%| GB)?$/.test(raw) ? parseFloat(raw) : raw.toLowerCase();
   };
+  const readStore = () => {
+    try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch { return {}; }
+  };
+  const writeStore = (id, col, dir) => {
+    if (!id) return;
+    const all = readStore();
+    all[id] = { col, dir };
+    try { localStorage.setItem(STORE, JSON.stringify(all)); } catch {}
+  };
+  const sortBody = (tbody, col, dir) => {
+    const rows = [...tbody.rows].map((r, i) => ({ r, i, k: key(r.cells[col]?.colSpan > 1 ? null : r.cells[col]) }));
+    rows.sort((a, b) => {
+      if (a.k === null || b.k === null) return a.k === b.k ? a.i - b.i : a.k === null ? 1 : -1;
+      if (typeof a.k !== typeof b.k) return (typeof a.k === 'number' ? -1 : 1) * dir;
+      const c = typeof a.k === 'number' ? a.k - b.k : a.k.localeCompare(b.k);
+      return (c || a.i - b.i) * dir;
+    });
+    rows.forEach(({ r }) => tbody.append(r));
+  };
+  const labelOf = (th) => {
+    const b = th.querySelector('button');
+    if (!b) return th.textContent.trim();
+    return [...b.childNodes]
+      .filter((n) => n.nodeType === 3)
+      .map((n) => n.textContent.trim())
+      .join('') || b.textContent.replace(/[\u25B2\u25BC]/g, '').trim();
+  };
   document.querySelectorAll('table').forEach((table) => {
     const ths = [...table.querySelectorAll('thead th')];
     const tbody = table.tBodies[0];
     if (!tbody) return;
+    const id = table.dataset.fleet || '';
+    const apply = (col, dir) => {
+      if (col < 0 || col >= ths.length) return;
+      ths.forEach((h) => { h.setAttribute('aria-sort', 'none'); const s = h.querySelector('.ind'); if (s) s.textContent = ''; });
+      const th = ths[col];
+      th.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
+      const ind = th.querySelector('.ind');
+      if (ind) ind.textContent = dir === 1 ? '\u25B2' : '\u25BC';
+      sortBody(tbody, col, dir);
+    };
     ths.forEach((th, col) => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -445,19 +498,17 @@ export const FLEET_SORT_JS = `(() => {
       th.setAttribute('aria-sort', 'none');
       b.addEventListener('click', () => {
         const dir = th.getAttribute('aria-sort') === 'ascending' ? -1 : 1;
-        ths.forEach((h) => { h.setAttribute('aria-sort', 'none'); h.querySelector('.ind').textContent = ''; });
-        th.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
-        ind.textContent = dir === 1 ? '\u25B2' : '\u25BC';
-        const rows = [...tbody.rows].map((r, i) => ({ r, i, k: key(r.cells[col]?.colSpan > 1 ? null : r.cells[col]) }));
-        rows.sort((a, b) => {
-          if (a.k === null || b.k === null) return a.k === b.k ? a.i - b.i : a.k === null ? 1 : -1;
-          if (typeof a.k !== typeof b.k) return (typeof a.k === 'number' ? -1 : 1) * dir;
-          const c = typeof a.k === 'number' ? a.k - b.k : a.k.localeCompare(b.k);
-          return (c || a.i - b.i) * dir;
-        });
-        rows.forEach(({ r }) => tbody.append(r));
+        apply(col, dir);
+        writeStore(id, col, dir);
       });
     });
+    if (id === 'workload') {
+      const saved = readStore().workload;
+      const doneIdx = ths.findIndex((th) => labelOf(th) === 'Done 24h');
+      const col = saved && Number.isInteger(saved.col) ? saved.col : doneIdx;
+      const dir = saved && (saved.dir === 1 || saved.dir === -1) ? saved.dir : -1;
+      apply(col, dir);
+    }
   });
 })();`;
 

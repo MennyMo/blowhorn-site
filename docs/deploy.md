@@ -670,7 +670,7 @@ Access check as every static page, so their data changes without a build:
   it (each takes `?days=N`, default 7, at most 90): the `FLEET_DB` binding
   (`blowhorn-fleet-stats`). A zero-token cron on Bastion writes teammate
   workload every hour and machine disk free every 6 hours into its
-  `snapshots` table (`kind`, `collected_at`, JSON `body`). The collector, its
+  `snapshots` table (`kind`, `collected_at`, JSON `body`). The teammate workload table defaults to Done 24h descending (highest first, numeric); clicking a column header still sorts, and that choice is kept across refreshes. The collector, its
   schedule and its least-privilege D1 token live in koopverse/firstmate
   `fleet/fleet-stats/` (koopverse/firstmate#72).
 
