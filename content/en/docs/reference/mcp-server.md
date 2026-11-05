@@ -1,6 +1,6 @@
 ---
 title: "MCP server"
-description: "The local MCP server: one tool per CLI command, a few hidden by default, over stdio, with dry run as the default for anything that changes state."
+description: "The local MCP server: one tool per CLI command, a few split into two tools, a few hidden by default, over stdio, with dry run as the default for anything that changes state."
 weight: 225
 ---
 
@@ -10,7 +10,11 @@ learning a second surface. It is generated, not hand-written: at
 startup it reads `schemas/dist/openapi.yaml` and builds one tool per
 operation in that bundle, except the few
 [hidden by default](#hidden-tools), named by the operation id
-(`post`, `schedule_trigger_now`, `profile_list`, and so on). A command
+(`post`, `schedule_trigger_now`, `profile_list`, and so on). A few
+commands are split into two tools, so a distinct form gets its own
+tool: a read-only check, a fleet-wide scope, or a sign-up form. The
+base tool refuses the split-out argument and names the tool that owns
+it. A command
 added to the CLI appears as a tool the next time the server starts,
 and `make mcp-generate` fails if the tool list ever stops matching the
 bundle. The tool inputs are the command's flags and arguments, taken
@@ -35,7 +39,8 @@ or the CLI itself. The steps for connecting a client are in
 
 The tools are grouped the way the command bundle groups them, and a
 group's tools cover the commands in it, no more and no less, except
-the few that are [hidden by default](#hidden-tools):
+the few that are [hidden by default](#hidden-tools) and the few split
+into two tools:
 
 - **Act** - the outward actions: `post`, `comment`, `follow`,
   `unfollow`, `accept`, `withdraw`, `find`, and `source`, plus the
@@ -323,12 +328,19 @@ stays a preview: it writes nothing to your profiles, but every call
 signs in to Bluesky live, so it is a dry run until `confirm` is true,
 like any other changing tool.
 
-Two commands are split into two tools, so the form that only adds keeps
-the additive label. The page-invitation command is additive, and its
+Some commands are split into more than one tool, so each form keeps
+its own label. The page-invitation command is additive, and its
 held-entry form, `invite_held`, carries `--requeue` and `--dismiss` (a
 destructive tool, because it removes a held entry or rewrites its
 note). `slack_react` is additive, and `slack_unreact` carries `--remove`
-(it deletes a reaction). The base tool does not accept the split-out
+(it deletes a reaction). `post` gains `post_check_queue`, which only
+shows pending posts and is read-only, and `chrome_attach_chrome` gains
+`chrome_attach_chrome_status`, the `status` action on its own, also
+read-only. `schedule_pause` and `schedule_resume` each gain an `--all`
+form for every computer sharing the store, `auth_login` gains
+`auth_login_sign_up`, `profile_auth` gains `profile_auth_all`, and
+`auth_anonymous_usage_stats` gains `auth_anonymous_usage_stats_on` and
+`auth_anonymous_usage_stats_off`. The base tool does not accept the split-out
 arguments: a call to `slack_react` that names `remove` is refused as an
 unknown argument, and the refusal says `remove belongs to slack_unreact`.
 The base tool's description ends by naming each split-out argument and

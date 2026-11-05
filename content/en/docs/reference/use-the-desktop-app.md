@@ -248,13 +248,13 @@ activity, is locked. Once you are signed in, the account button stays usable. Se
 |---|---|---|
 | Home (two tabs: **Today** and **Resources**) | Today: whether Blowhorn is working and whether it needs you, but never what runs next: an activity's next run is on Activity › Routines, and the rail's duty toggle names the next one on hover; the Fleet card: computers known (this one and every other computer that has run here or reported lately), how many are on duty or off duty, fleet holds, who took the fleet off duty and why, this computer's row, and a row for each other computer saying **On duty**, **Off duty** or **Last pass failed** from the last pass its background service reported, or **Not reporting** when it has reported nothing in the last half hour; a computer that is not reporting is never counted on duty, and the card says **2 of 3 reporting** while any one is not; "Your draft was saved" once after setup, until you dismiss it or leave Home; beside them your results, and one card with **Recent activity** and **What went wrong** (it opens on what went wrong while something failed). Resources: ideas worth a try, the latest from Blowhorn - each piece labelled with its column, From the Desk of the General, From Boot Camp or From the Field - and the tips as a taught sequence: the next tip you have not seen yet, with its video, one at a time; opening a tip or choosing **Another tip** moves you on, a tip you have seen never comes back, and when you have seen them all the card says so and points to Resources. A newer release is offered on a card at the top of the results column, **Update to Blowhorn** and the version | the entire fleet's switch (reason optional, saved as you type) or this computer's switch, on the Fleet card; open This computer from this computer's row; reconnect a signed-out account from the **Needs you** section at the top of Today: one full-row button per signed-out account, its platform's mark and **Reconnect** (naming the profile, **Reconnect @handle**, only where two signed-out accounts share a platform), which signs that account in again and reads **Reconnecting…** while it runs, and the **?** beside the title says which computer they are signed out on and how many scheduled posts wait (a Bluesky app password or a GitHub token opens Profiles instead); a sign-in that does not finish leaves the row with a note underneath saying so; open an item's details from a row in **Recent activity** or **What went wrong**; start the update from its card (Blowhorn restarts to finish); **Connect an account** opens a step for your own profile: each platform, how to sign in to it in your Google Chrome profile, and **Check again**, with connected ones ticked; finish setting up |
 | Activity › Upcoming | Your posts with their status - "ready", "scheduled", "partly sent", "sent", "draft", "needs you" - and clicked-but-unread ones, each with when it goes out: its own time, "next run" when the next run would take it, "not scheduled" when nothing will send it (a draft, or a post that needs you), and "-" once it has gone out; an opened post shows its result: delivery per profile and platform, reception where it was collected, and the follower change since. On the all and scheduled filters, the schedule's routines follow below the posts, each labelled by what it does; a routine names no post, so clicking one opens that routine's details on Routines | Click a post to open it in a dialog (a box over the screen), or add one; edit it there; clearing a clicked post's "Date Promoted" queues it again |
-| Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the service to take them up; a dialog for one item, opened by clicking it in the list or on the calendar; a chooser of sample routines, each one ticked on only once its platform is connected | Add an item with the **+** button or by clicking a free time (**Schedule** saves it); move an item's next time by dragging it; edit one item (its changes save as you make them, and **Do it now** runs it), or switch it between on duty and off duty from its duty switch on its row, on its calendar chip or in its dialog; "do it now", "disable" or "delete" it there; turn **dry fire** on in the header to rehearse up to the final click and post nothing (the dry run, `--dry-run`); add the sample routines you tick |
+| Activity › Routines | Your routines as a day, week or month calendar, or as a list: each item's next time, its last time, and the times that would follow, dashed because they are estimates; a "now" row for items going out or waiting for the service to take them up; a dialog for one item, opened by clicking it in the list or on the calendar; a chooser of sample routines, each one ticked on only once its platform is connected | Add an item with the **+** button or by clicking a free time (**Schedule** saves it); move an item's next time by dragging it; edit one item in place in its dialog (its changes save as you make them); put it **On hold** or back **In effect** from the state pill beside its title; switch its duty hold from the duty switch on its row or its calendar chip; **Do it now** or **Delete** it from its dialog; turn **dry fire** on in the header to rehearse up to the final click and post nothing (the dry run, `--dry-run`); add the sample routines you tick |
 | Activity › History | Everything Blowhorn did, newest first, with each one's detailed log under the log directory's `scheduler/` folder; clicking a run opens it in a dialog over the full-width list: when it started, how it ended and why it stopped, and the log and its file behind **more details**. A post's own result (delivery, reception, the follower change) is in its details under Upcoming, not on the run | open a run; "try again" on a failure |
 | Profiles | Every profile, its accounts and their state, and the Google Chrome profiles on this computer each one uses. Clicking a profile opens its window over the list: the header says what Blowhorn does for the person and what needs you, and three tabs hold the rest. **Accounts** lists each connected account, and an account that needs you reads **Reconnect**. **Browser** lists the Google Chrome profiles on this computer beside the accounts in the one you pick; each is switched on or off for Blowhorn, and **Discover** finds signed-in sessions again. **About** holds the name, the description, who the profile is for, and delete. Nothing has a Save button: switches and fields save as you change them | Add a profile (in its own form); reconnect an account on **Accounts**; on **Browser**, turn a Google Chrome profile on or off, set up an account, or add a token or app password; change the name, description or who it is for, or delete the profile, on **About**; **check all profiles** on the list |
 | Performance | Followers, growth, and activity per profile; collection freshness in the header. Under the filters, three tabs that all read them: **Activity** (runs by platform, activity per profile), **History** (the figures, followers over time, new versus unfollowed per month) and **Report** (your LinkedIn pages and the health of each profile and page) | Collect now; open the HTML report |
 | Posture (three tabs: **Rules**, **Limits**, **Protection**; the fleet's Take leave and stop sit on the tabs' line) | Rules: the rules of engagement for everyone (the slider: Safety on, Weapons tight or Weapons free), which choice wins, one grid of every profile on every platform with where each cell's choice comes from. Limits, one row per section: by platform (pace and daily caps), speed and amount (spacing, outreach, how much runs at once), when and who says yes (quiet hours, approval, dry fire), typing, and pointer timing; each row opens its settings in a window. Protection, one row per section: what happens when a platform pushes back, what the last check held back, where your sign-ins live and what Blowhorn will never do | Move the slider; choose a preset for one platform for every profile, one profile on every platform, or one cell, or reset any of them to inherit; reset them to the preset; each limit saves as you change it; take leave or stop every computer; run a held activity once with **Do it anyway**; turn the sign-in check, the needs-you note, dry fire by default and failure reports on or off (while dry fire is on, Approve and every duty switch, a routine's own included, each say so in one line, because nothing was approved or changed) |
 | This computer (from Home's computer row, or the rail's reason line) | Whether this computer is on duty and, when it is not, the one sentence on what is wrong, the owner of the background service once something holds it, the last pass, the fleet's leave | Its one fix under the banner: "register the service" when the service is not registered or runs from another copy of Blowhorn, "start the service" when it is registered but not running, "open Login Items" when it is turned off in System Settings (only those states offer one); "check now" (with "dry fire" to rehearse up to the final click, posting nothing); "take leave for the fleet", and the fleet's switch while the fleet holds |
-| Settings (from the account menu; its pages are listed in the left rail under the places while it is open) | **General**: appearance (theme, material, spacing), notifications and usage data. **Background & updates**: startup, keeping this computer on watch after quit, the pause shortcut, the update channel, uninstall. **Setup**: setup and the guided setup, the extension card. **Advanced**: app paths and the engine defaults Posture does not hold, rendered from the CLI's own option list | Change defaults, check the extension, choose its mode; run setup again or quit or uninstall; **open Posture ›** for the rules of engagement and limits. Your account is not in Settings: the account menu holds **Your account and plan**, **Switch organization** and **Sign out** |
+| Settings (from the account menu; its pages are listed in the left rail under the places while it is open) | **General**: appearance (theme, material, spacing), notifications and usage data. **Background & updates**: startup, keeping this computer on duty after quit, the pause shortcut, the update channel, uninstall. **Setup**: setup and the guided setup, the extension card. **Advanced**: app paths and the engine defaults Posture does not hold, rendered from the CLI's own option list | Change defaults, check the extension, choose its mode; run setup again or quit or uninstall; **open Posture ›** for the rules of engagement and limits. Your account is not in Settings: the account menu holds **Your account and plan**, **Switch organization** and **Sign out** |
 
 The routines list keeps every value on one line, and it has the whole width of
 the screen: an item's details open in a dialog, not beside it. When the window is
@@ -266,16 +266,33 @@ click it to take the routine off duty or put it back on duty, without opening th
 list longer than the screen is shown a page at a time, as many rows as fit, with
 previous and next at its foot.
 
-Clicking an item, in the list or on the calendar, opens its details in a
-dialog (a box over the screen). It shows the item's number, its status as
-plain text, platform, what it does and who for, and the duty switch on the
-right of that heading (a routine only: a post or a run has none), then when it
-goes and when it last did, the last error, and **do it now**, **disable**,
-**edit** and **delete**. The driver, the rules of engagement, the retries, the lock, the
-edit check and the log sit behind **more details**, which is already open
-while the item is running. **edit** swaps the dialog for the editor, one box at
-a time. Esc, the **X** or a click outside closes it, and it asks first when
-you typed a reason you have not sent; focus goes back to the item you clicked.
+Clicking a routine, in the list or on the calendar, opens its details in a
+dialog (a box over the screen), all on one page with no tabs. Its title band
+shows the platform's mark, what it does and who for, and beside it the state
+pill: **In effect**, or **On hold** while the routine is turned off. Click the
+pill for **Hold** or **Resume**; while that saves, the pill says
+**Holding…** or **Resuming…**. Below are four rows, each with a short summary,
+that open in place when you click them, one at a time:
+
+- **What** says what it does, as in "Post as Kate on LinkedIn". Open it to
+  change the command, platform, profiles, browser and parameters, and to
+  **Delete** the routine.
+- **When** says how often and when it goes next, as a date. Click the date to
+  pick a new next run on the calendar (**Set** moves it); open the row to change
+  the time, the repeat and the retries. A routine held with its duty switch
+  says who held it, when and why here, with **Resume**.
+- **Rules** says which rules of engagement it follows from Posture, or its
+  own. Open it to choose its own; a choice looser than Posture's for that
+  profile on that platform gets a note in coral.
+- **Log** says when it last went out, as a date. Open it for the last run's
+  log (live while it runs, and it opens by itself then), with the
+  troubleshooting facts (the exact call, the driver, the retries, the lock
+  and the edit check) folded under it.
+
+The footer holds **Close** on the left and **Do it now** on the right; Do it
+now says **Going out…** while it runs. Esc, **Close** or a click outside
+closes the dialog, and focus goes back to the item you clicked. A post's or a
+run's dialog shows its own facts, with the rest behind **more details**.
 A routine or post on Home, a routine under Upcoming's posts and a row in the
 menu-bar popover open the same dialog over its own screen; a run on Home opens
 its run dialog where you are.
@@ -359,7 +376,7 @@ ready (otherwise the first muster is the guided setup; see
 five rows read from this computer: the engine rows ("blowhorn engine" and
 "bundled engine" in the installed app; "Blowhorn folder" and "helper tools" in
 a source build), "organization connection", "chrome profiles", and
-"this computer on watch". The first two check the engine bundled in the
+"this computer on duty". The first two check the engine bundled in the
 app, the only engine the installed app runs
 ([Install the app](/docs/how-to/set-up/install-the-app/#first-muster)).
 Setup itself never clones or installs: a source build with no engine is
@@ -367,7 +384,7 @@ told to clone the repository and run `./tools/install.sh` in Terminal.
 An app run from its disk image says to move it to Applications
 instead. Each row reports ok, warn, or off with the
 one fix that clears it. The "map chrome profiles" panel and the
-"this computer on watch" row act directly: mapping a profile and
+"this computer on duty" row act directly: mapping a profile and
 registering the service happen here, not in a terminal.
 
 ## Settings
@@ -402,7 +419,7 @@ beside them; the rail names the screen, so it has no visible title.
 
 - **Who runs how carefully.** The slider sets the rules of engagement for
   everyone: **Safety on** (slow and careful, in teal blue), **Weapons tight**
-  (normal pace, in teal) or **Weapons free** (fast, in the warn colour); the CLI
+  (normal pace, in teal) or **Weapons free** (fast, in coral); the CLI
   and the config file keep `cautious`, `standard` and `brisk`. Under
   it, **which choice wins** numbers the levels from everyone to one activity, and
   the grid has a row for each platform's choice for every profile (**Each
@@ -410,9 +427,12 @@ beside them; the rail names the screen, so it has no visible title.
   platform**), and a cell for one profile on one platform. A filled chip was chosen
   at that spot; a dashed chip is inherited, and the line under it says from where
   ("from LinkedIn", "from this profile", "from everyone"). A profile still warming
-  up shows **Warming** and the preset it returns to. Pick any chip to choose a
-  preset or **Inherit**; a cell chosen here shows a reset beside it when you point
-  at it or tab to it. A platform's choice is kept for every computer; when it could
+  up shows **Warming** and the preset it returns to. A chip in the **Each
+  platform** row or the **Every platform** column opens a small slider, with
+  **Follows Everyone** to reset it; when a platform and a profile both choose, the
+  more careful one wins, and a profile's slider names each platform that wins over
+  it. Any other chip opens a menu to choose a preset or **Inherit**, and a cell
+  chosen here shows a reset beside it when you point at it or tab to it. A platform's choice is kept for every computer; when it could
   only be saved on this computer, the row says "this computer only". The order is
   in [Which choice wins](/docs/reference/configuration/#which-choice-wins).
 - **The limits Blowhorn keeps.** One table of the platforms the rules of engagement cover,

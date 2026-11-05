@@ -86,7 +86,7 @@ If a scheduled pass is running when the new version opens, the carry waits
 until the pass ends, and the service stays as it was until then. If the
 carry cannot finish, the service is put back as it was and the next launch
 tries again. A notification says what was carried, and the Setup screen's
-**this computer on watch** row and the Service screen carry the same line.
+**this computer on duty** row and the Service screen carry the same line.
 
 ## If an update stalls
 

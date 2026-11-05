@@ -635,6 +635,15 @@ and changes nothing. `--json` prints one object: `mode`,
 `rollback`, `rollback_error`, `features`, `group` and `group_account`, `window`
 (`side_tab` or `own_window`) and `window_account`, and `written`.
 
+## `blowhorn chrome active-tab`
+
+The front Chrome tab's address and title, asked of the extension through the bridge. The menu-bar
+popover's New order asks here first: a tab the extension answers needs no Apple Event, so macOS
+never prompts for Chrome. It navigates nowhere, reads no page, and contacts no platform. When no
+Chrome with the extension answers a front tab, `--json` carries `tab: null` with `connected` saying
+whether any bridge socket answered at all and `detail` naming why. It writes nothing but the bridge
+lock, the same lock `blowhorn chrome extension-status` writes.
+
 ## `blowhorn chrome extension-status`
 
 Whether the extension is installed, which version answers, and whether

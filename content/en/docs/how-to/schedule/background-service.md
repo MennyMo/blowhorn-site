@@ -32,7 +32,7 @@ install.
 
 The owner tells you who manages it: the desktop app registered it itself, or
 the command line installed it from a file. When the app owns it, the app's
-setting "keep this computer on watch after quit" (on by default)
+setting "keep this computer on duty after quit" (on by default)
 decides whether quitting stops it. Quitting with a pass in flight asks what to
 do, in a small prompt in the Blowhorn window that lists what is running:
 

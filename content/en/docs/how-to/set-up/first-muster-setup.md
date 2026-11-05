@@ -136,7 +136,7 @@ nothing here.
 
 ## The rest of the app stays limited until Getting ready
 
-- **Limited until then:** the rail's places (the logo, which is Home, stays open), and the **+** New activity button,
+- **Limited until then:** the rail's places (Dashboard stays open), and the **+** New activity button,
   stay locked until you're signed in and the extension is ready. Home, and
   any place you already opened, stay on screen, and anything that would
   take you somewhere else - a rail item, the menu bar's buttons, a capture

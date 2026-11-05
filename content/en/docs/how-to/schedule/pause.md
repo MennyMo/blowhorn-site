@@ -105,19 +105,20 @@ touches your account. In the app every scope is one duty switch, reading
   it beside the switch and it saves as you type. While the fleet is off duty,
   the card shows who took it off duty, when and why, and this computer's row is
   held until the fleet is back on duty.
-- **This order** (`--activity N`) - the duty switch in an item's details (click
-  the item and it opens in a dialog, a box over the screen),
-  reading **On duty** or **Off duty**. The optional reason field above it
-  saves as you type, with a teal check once saved, and goes out with the
-  hold. The item's list row reads **off duty** while it is held.
+- **This order** (`--activity N`) - the duty switch on the item's row in the
+  Routines list or on its calendar chip, reading **On duty** or **Off duty**.
+  While it is held, the item's details (click the item and it opens in a
+  dialog, a box over the screen) show who held it, when and why where the
+  **When** row opens, with **Resume**.
 
 There is no switch for another computer: take leave on that computer from
 its own Blowhorn app, or take leave for the whole fleet.
 
 Lifting one scope leaves the other two as they were. A held activity still reads
 `due: yes` beside `paused: yes` in `blowhorn schedule list`: due keeps meaning
-its time has passed. A pause is not `Enabled: no`: disabling an activity is
-editorial, with no reason and no intent to resume.
+its time has passed. A pause is not `Enabled: no`: turning an activity off is
+editorial, with no reason. In the app that is the details' state pill:
+**On hold** is `Enabled: no`, and **Resume** turns it back on.
 
 `trigger-now` on a held activity exits 1 and names the scope. `--ignore-pause` on
 `tick` or `trigger-now` overrides every scope, and a dry run previews through

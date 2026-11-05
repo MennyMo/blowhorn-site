@@ -81,7 +81,7 @@ and checked against it, so a page says what `--help` says.
 | [`blowhorn accept`](/docs/reference/cli/accept/) | Accept pending LinkedIn connection invitations other people have sent you, one at a time with a randomized pause between each. |
 | [`blowhorn analytics`](/docs/reference/cli/analytics/) | blowhorn analytics: activities, activity, history, import-exports, operations, pages. |
 | [`blowhorn auth`](/docs/reference/cli/auth/) | blowhorn auth: anonymous-usage-stats, login, logout, status, switch-organization. |
-| [`blowhorn chrome`](/docs/reference/cli/chrome/) | blowhorn chrome: attach-chrome, confirm, create-profile, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap. |
+| [`blowhorn chrome`](/docs/reference/cli/chrome/) | blowhorn chrome: active-tab, attach-chrome, confirm, create-profile, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap. |
 | [`blowhorn classify-url`](/docs/reference/cli/classify-url/) | Say what a link is, by the platform rules the engine keeps. |
 | [`blowhorn comment`](/docs/reference/cli/comment/) | Post LinkedIn, Reddit, or Bluesky comments from scheduled activities or ad-hoc target/message flags. |
 | [`blowhorn config`](/docs/reference/cli/config/) | blowhorn config: get, path, set, show. |
@@ -232,7 +232,7 @@ Chrome Web Store page in each Chrome profile named (repeat the flag for more tha
 directory, writes nothing, and with `--json` reports `ok: false` and exits 1 when Chrome was
 asked in no profile. `chrome extension-status --json` reports each profile's state as
 `profile_states` (`enabled`, `disabled`, `removed` or `absent`).
-All but `chrome unmap`, `chrome extension-install`, `chrome extension-status`, `chrome extension-enable` and `chrome extension-mode` read two files under a Chrome data
+All but `chrome unmap`, `chrome extension-install`, `chrome extension-status`, `chrome active-tab`, `chrome extension-enable` and `chrome extension-mode` read two files under a Chrome data
 directory (`Local State`, `DevToolsActivePort`) and nothing else - `attach-chrome`
 reads the dedicated tree's pair rather than the daily one's, plus its `SingletonLock`; `chrome unmap`
 reads only your account, so a mapping can be removed when those files are gone;

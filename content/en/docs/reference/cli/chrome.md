@@ -1,7 +1,7 @@
 ---
 title: "blowhorn chrome"
 linkTitle: "chrome"
-description: "blowhorn chrome: attach-chrome, confirm, create-profile, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap."
+description: "blowhorn chrome: active-tab, attach-chrome, confirm, create-profile, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap."
 weight: 103
 ---
 
@@ -11,6 +11,7 @@ The `blowhorn chrome` commands. Each one's `--help` prints the same text.
 
 | Command | What it does |
 | --- | --- |
+| [`chrome active-tab`](#blowhorn-chrome-active-tab) | Ask the Chrome extension for the front tab's address and title, through the bridge, and print it. |
 | [`chrome attach-chrome`](#blowhorn-chrome-attach-chrome) | Start or report a dedicated Chrome that is open to remote debugging with no Allow dialog, so `--chrome-launch cdp` can attach to a real Chrome unattended. |
 | [`chrome confirm`](#blowhorn-chrome-confirm) | Apply the confirm screen's confirmed choices. |
 | [`chrome create-profile`](#blowhorn-chrome-create-profile) | Give Blowhorn a Google Chrome profile of its own, for a Chrome that has only its main profile. |
@@ -25,6 +26,32 @@ The `blowhorn chrome` commands. Each one's `--help` prints the same text.
 | [`chrome status`](#blowhorn-chrome-status) | Report whether Google Chrome is installed, whether it is running, whether its remote-debugging switch is on (chrome://inspect/#remote-debugging), the debugging port it recorded, how many profiles i... |
 | [`chrome suggest`](#blowhorn-chrome-suggest) | Print a proposed mapping from every Blowhorn profile in the store to a Chrome profile on this machine, matched by display name (a Chrome profile named `Company` proposes for the Blowhorn profile co... |
 | [`chrome unmap`](#blowhorn-chrome-unmap) | Remove one of a Blowhorn profile's Chrome profile mappings on this machine. |
+
+## blowhorn chrome active-tab
+
+Ask the Chrome extension for the front tab's address and title, through the bridge, and print it. The popover's New order asks here first (#2007): a tab the extension answers needs no Apple Event, so macOS never prompts for Chrome. This command navigates nowhere, probes no tab's page, and contacts no platform: it reads only the front tab's own address and title, from the Chrome profile whose bridge answers first. No Chrome with the extension, a held bridge, or a Chrome with no front tab answers with no tab, and `--json` carries connected and a detail saying why. That read writes nothing but the bridge lock, the same lock `chrome extension-status` writes. `--json` emits the answer as one object, for a script or the desktop app.
+
+```text
+blowhorn chrome active-tab [OPTIONS]
+```
+
+| Flag | Type | Default | Description |
+| --- | --- | --- | --- |
+| `--json` | boolean | `false` | Emit the report as JSON with a stable shape, for a script or the desktop app |
+| `--platform` | string |  | Accepted and ignored by `blowhorn chrome`: this command never acts on a platform, so `--platform` has no effect here -- including a value inherited from `BLOWHORN_PLATFORM` or defaults.platform in .blowhorn.yaml |
+| `--pace` | string |  | Accepted by `blowhorn chrome active-tab` because `--pace` is a global flag, but this command does no paced work -- it sleeps between nothing -- so the value changes nothing about how it runs and appears only in the Pace column of the -v summary. Resolved as CLI flag, then `BLOWHORN_PACE`, then defaults.pace in .blowhorn.yaml (normal when none is set); an unrecognized value is rejected before anything runs |
+| `--risk-profile` | string |  | Accepted by `blowhorn chrome active-tab` because `--risk-profile` is a global flag, but this command does no gated work -- no Risk Profile hold, cap or pace applies to it -- so the value changes nothing about how it runs. A value after the command word wins over one before it; an unrecognized value is rejected before anything runs |
+
+Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `--log-dir`, `--profile`, `--exclude`, `--headless`, `--chrome-launch`, `--headed`, `--dry-run`, `--verbose`.
+
+Examples:
+
+```bash
+blowhorn chrome active-tab
+blowhorn chrome active-tab --json
+```
+
+Output: json with `--json`, text otherwise.
 
 ## blowhorn chrome attach-chrome
 
