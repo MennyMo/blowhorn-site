@@ -67,20 +67,26 @@
           "type": "string",
           "format": "date-time"
         },
+        "displayName": {
+          "description": "Present only for public profiles, alongside avatarUrl, organizationName and publicProfileUrl. Filled in by Layer5 Cloud when the feed is read; the Blowhorn engine does not send it.",
+          "allOf": [{ "$ref": "#/definitions/plainText" }],
+          "minLength": 1,
+          "maxLength": 80
+        },
         "avatarUrl": {
-          "description": "Present only when the user's profile is public.",
+          "description": "Present only for public profiles, alongside displayName, organizationName and publicProfileUrl. Filled in by Layer5 Cloud when the feed is read; the Blowhorn engine does not send it.",
           "type": "string",
           "format": "uri",
           "pattern": "^https://"
         },
         "organizationName": {
-          "description": "Present only when the user's profile is public.",
+          "description": "Present only for public profiles, alongside displayName, avatarUrl and publicProfileUrl. Filled in by Layer5 Cloud when the feed is read; the Blowhorn engine does not send it.",
           "allOf": [{ "$ref": "#/definitions/plainText" }],
           "minLength": 1,
           "maxLength": 80
         },
         "publicProfileUrl": {
-          "description": "Present only when the user's profile is public.",
+          "description": "Present only for public profiles, alongside displayName, avatarUrl and organizationName. Filled in by Layer5 Cloud when the feed is read; the Blowhorn engine does not send it.",
           "type": "string",
           "format": "uri",
           "pattern": "^https://"
