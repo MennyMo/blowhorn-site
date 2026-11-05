@@ -164,11 +164,11 @@ const fleetDb = (byKind, seen = []) => ({
 const fleetEnv = (byKind, seen) => ({ ...env, FLEET_DB: fleetDb(byKind, seen) });
 
 test('fleet page without a token is denied', async () =>
-  assert.equal(await status(adminReq('/internal/fleet/'), fleetEnv({ disk: [diskSnap] })), 403));
+  assert.equal(await status(adminReq('/engineering/fleet/'), fleetEnv({ disk: [diskSnap] })), 403));
 test('fleet page without a database fails closed', async () =>
-  assert.equal((await handle(authed('/internal/fleet/'), env, certsFetch)).status, 503));
+  assert.equal((await handle(authed('/engineering/fleet/'), env, certsFetch)).status, 503));
 test('fleet page renders the latest snapshots in Central time', async () => {
-  const res = await handle(authed('/internal/fleet/'), fleetEnv({ disk: [diskSnap], workload: [workloadSnap] }), certsFetch);
+  const res = await handle(authed('/engineering/fleet/'), fleetEnv({ disk: [diskSnap], workload: [workloadSnap] }), certsFetch);
   assert.equal(res.status, 200);
   assert.equal(res.headers.get('cache-control'), 'no-store');
   const html = await res.text();
@@ -183,17 +183,17 @@ test('fleet page renders the latest snapshots in Central time', async () => {
 });
 test('fleet page flags a snapshot older than two runs as stale', async () => {
   const old = { ...diskSnap, collected_at: '2020-01-01T00:00:00Z' };
-  const html = await (await handle(authed('/internal/fleet/'), fleetEnv({ disk: [old] }), certsFetch)).text();
+  const html = await (await handle(authed('/engineering/fleet/'), fleetEnv({ disk: [old] }), certsFetch)).text();
   assert.match(html, /Stale: the cron has missed at least two runs/);
 });
 test('fleet page says so when there is no data yet', async () => {
-  const html = await (await handle(authed('/internal/fleet/'), fleetEnv({}), certsFetch)).text();
+  const html = await (await handle(authed('/engineering/fleet/'), fleetEnv({}), certsFetch)).text();
   assert.match(html, /No workload snapshot yet/);
   assert.match(html, /No disk snapshot yet/);
 });
 test('fleet data.json returns latest and history, window clamped to 90 days', async () => {
   const seen = [];
-  const res = await handle(authed('/internal/fleet/data.json?days=999'), fleetEnv({ disk: [diskSnap], workload: [workloadSnap] }, seen), certsFetch);
+  const res = await handle(authed('/engineering/fleet/data.json?days=999'), fleetEnv({ disk: [diskSnap], workload: [workloadSnap] }, seen), certsFetch);
   assert.equal(res.status, 200);
   const body = await res.json();
   assert.equal(body.days, 90);
@@ -203,15 +203,15 @@ test('fleet data.json returns latest and history, window clamped to 90 days', as
 });
 test('fleet CSVs flatten one row per machine or teammate', async () => {
   const e = fleetEnv({ disk: [diskSnap], workload: [workloadSnap] });
-  const disk = await (await handle(authed('/internal/fleet/disk.csv'), e, certsFetch)).text();
+  const disk = await (await handle(authed('/engineering/fleet/disk.csv'), e, certsFetch)).text();
   assert.match(disk, /^collected_at,name,reachable,/);
   assert.equal(disk.trim().split('\n').length, 3);
-  const wl = await (await handle(authed('/internal/fleet/workload.csv'), e, certsFetch)).text();
+  const wl = await (await handle(authed('/engineering/fleet/workload.csv'), e, certsFetch)).text();
   assert.match(wl, /2026-11-05T02:47:40Z,yi,yi-bot,muse-bot/);
 });
 test('fleet database errors fail closed', async () => {
   const e = { ...env, FLEET_DB: { prepare: () => ({ bind: () => ({ all: async () => { throw new Error('d1'); } }) }) } };
-  assert.equal((await handle(authed('/internal/fleet/'), e, certsFetch)).status, 503);
+  assert.equal((await handle(authed('/engineering/fleet/'), e, certsFetch)).status, 503);
 });
 
 const ipEnv = { ...env, ALLOWED_IP_RANGES: '192.0.2.1/32,2001:db8:0:73::7/128' };
@@ -236,4 +236,10 @@ test('ipAllowed matches CIDR prefixes and rejects garbage', () => {
   assert.equal(ipAllowed('', ['0.0.0.0/0']), false);
   assert.equal(ipAllowed('1.2.3.4', ['bad/33']), false);
   assert.equal(ipAllowed('1:2::3::4', ['::/0']), false);
+});
+
+test('old fleet path redirects permanently to /engineering/fleet/', async () => {
+  const res = await handle(authed('/internal/fleet/disk.csv?days=3'), fleetEnv({}), certsFetch);
+  assert.equal(res.status, 301);
+  assert.equal(new URL(res.headers.get('location')).pathname + new URL(res.headers.get('location')).search, '/engineering/fleet/disk.csv?days=3');
 });
