@@ -220,7 +220,7 @@ site-internal-poll:
 site-internal-access-check:
 	python3 .github/scripts/internal_access.py check
 
-## Create or update the Cloudflare Access application and allow policy (internal-worker/access.json), then verify they are default-deny.
+## Create or update the Cloudflare Access application, allow policy and trusted-network bypass policy (internal-worker/access.json), then verify they are default-deny.
 site-internal-access:
 	python3 .github/scripts/internal_access.py ensure
 

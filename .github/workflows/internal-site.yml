@@ -95,7 +95,7 @@ jobs:
           persist-credentials: false
 
       # Access first: if the token cannot manage Access, or the application is
-      # not default-deny with exactly the managed allow policy, stop here,
+      # not default-deny with exactly the managed policies, stop here,
       # before any private content reaches this runner.
       - name: Check Cloudflare API token permissions
         run: make site-internal-access-check
