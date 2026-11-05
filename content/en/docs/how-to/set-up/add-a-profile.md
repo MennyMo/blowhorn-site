@@ -37,9 +37,18 @@ connects the rest. What a profile holds is in the
    organization** and pick the member, or **nobody · a brand**.
 4. Click **create profile**.
 
-Then give the profile its accounts: open **chrome profiles** to map the
-Chrome profile it posts from and attach the accounts signed in there, and
-use a platform card for anything else, such as a GitHub token.
+Then give the profile its accounts: open the profile and choose its
+**Browser** tab. It lists the profile's own Chrome profile first, then the
+Chrome profiles no other profile uses yet, and says `No Chrome profile yet`
+when none is mapped. Turn one on to map it and attach the accounts signed in
+there. Each card counts the accounts the profile uses there, connected ones
+included even when Chrome shows no sign-in for them. Use a platform card for
+anything else, such as a GitHub token.
+
+The profile's header states its worst problem in the list's own words, such
+as `Not signed in · authenticate` or `Chrome profile changed`, and reads
+`Ready` only when nothing needs you. The **Checked** column says how long ago
+the last session check ran; hover it for the exact date and time.
 
 A profile you create for someone else is listed for them too, so their own
 Blowhorn shows it once they sign in to your organization. They can read it

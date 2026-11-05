@@ -28,7 +28,7 @@ the Risk Profile, so old scripts keep working.
 Choose it in the app on the **Posture** screen: the slider at the top is
 the choice for everyone, a track from Safety on (slow end, in the
 brand's teal blue) through Weapons tight (teal) to Weapons free (fast
-end, in the warn colour). The same choice shows as a mini-slider in
+end, in coral). The same choice shows as a mini-slider in
 the menu-bar popover, which opens Posture, and changing it anywhere
 changes it everywhere. Or use
 `blowhorn risk set cautious`. `blowhorn risk show` says which preset is
@@ -45,7 +45,7 @@ LinkedIn on Safety on while the rest stay on Weapons tight:
 
 1. Open **Posture**.
 2. In the grid, pick the chip in the **Each platform** row under
-   **LinkedIn**, and choose **Safety on**.
+   **LinkedIn**. It opens a small slider: move it to **Safety on**.
 
 Or, from Terminal:
 
@@ -60,20 +60,26 @@ command says `scope: this_computer` with the reason, and the row says
 **this computer only**. Your organization's choice for that platform comes
 first, so when it already has one, the command says it still applies on
 every computer and this computer's choice has no effect until an
-organization admin clears it. Choose **Inherit** in the same chip, or run
-`blowhorn risk set default --platform linkedin`, to clear it.
+organization admin clears it. Choose **Follows Everyone** under the same
+chip's slider, or run `blowhorn risk set default --platform linkedin`, to
+clear it.
 
 ## Set one profile, or one profile on one platform
 
 - **One profile on every platform:** pick the chip in that profile's
-  **Every platform** column, or `blowhorn risk set cautious --profile company`.
+  **Every platform** column and move its slider, or
+  `blowhorn risk set cautious --profile company`. When a platform has its own
+  choice, the slider's window says that the more careful of the two wins and
+  names each platform that wins over this profile.
 - **One profile on one platform:** pick that profile's cell under the
   platform, or `blowhorn risk set brisk --profile company --platform x`.
 
 A chip you chose is filled; a dashed chip is inherited, and the line under
 it says where it comes from ("from LinkedIn", "from this profile", "from
 everyone"). To put a cell back, point at it and press its reset, or choose
-**Inherit** in its menu; the menu names what it would inherit first.
+**Inherit** in its menu; the menu names what it would inherit first. A
+platform's or a profile's slider says **Set here.** with **Follows Everyone**
+to put it back, or **Follows Everyone** and the preset it follows.
 
 ## Which choice wins
 
@@ -87,6 +93,14 @@ platform, choose its cell. A new profile or computer still runs under
 Safety on for its first 14 days. The
 full order is in
 [Which choice wins](/docs/reference/configuration/#which-choice-wins).
+
+An activity may set its own rules, and they may be looser than Posture
+for that profile on that platform: Blowhorn keeps them as you set them.
+The app marks a looser activity with a note in coral, such as "Looser
+than Kara Linden on LinkedIn (Weapons tight)". The warm-up and each
+platform's published limits still apply above it. A new order follows
+Posture: its **Rules** row says which rules each profile and platform
+will use, and you change them in Posture.
 
 ## Adjust the limits yourself
 
@@ -200,11 +214,12 @@ chosen preset's caps, quiet hours and outreach.
 
 One recurring activity can run under Safety on while everything else on
 the same profile and platform runs under Weapons tight: open the
-activity, set **rules of engagement** (inherit means the activity's own
-choice is blank, exactly as before), and save.
+activity, open its **Rules** row and set **rules of engagement** (inherit
+means the activity's own choice is blank, exactly as before); it saves as
+you choose.
 From the terminal the same value is `risk_profile=cautious` in the
-activity's params. The activity's detail then shows the preset and
-where it came from (`Safety on · this activity`, or `Safety on ·
+activity's params. The Rules row then says the activity's own preset, and its
+troubleshooting facts (under the Log row) say the preset and where it came from (`Safety on · this activity`, or `Safety on ·
 inherits: LinkedIn × work profile`), and while the profile is warming
 it also says what the tick enforces (`warming: runs Safety on for
 now`). An activity without one profile and one platform names no
