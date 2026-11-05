@@ -17,6 +17,6 @@
   "bypass_policy_name": "Blowhorn internal site: trusted networks",
   "bypass_ip_ranges": [
     "70.123.144.221/32",
-    "2603:808c:2800:73:8592:5cd8:7257:7bf9/128"
+    "2603:808c:2800:73::/64"
   ]
 }

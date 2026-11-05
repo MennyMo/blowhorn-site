@@ -85,7 +85,7 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "description": "One CIDR with no host bits set, for example 192.0.2.1/32 or 2001:db8::1/128.",
+        "description": "One CIDR with no host bits set, for example 192.0.2.1/32, 2001:db8::1/128, or 2001:db8:0:73::/64 for a whole IPv6 network.",
         "pattern": "^[0-9a-fA-F:.]+/[0-9]{1,3}$"
       }
     }
