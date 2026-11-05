@@ -99,6 +99,9 @@ PAGES = {
     "for/agencies/index.html": [
         "main", "role-title", "pains-title", "gets-title", "faq-title", "cta-title",
     ],
+    "for/social-media/index.html": [
+        "main", "role-title", "pains-title", "gets-title", "faq-title", "cta-title",
+    ],
     "use-cases/index.html": [
         "main", "use-cases-title", "pick-title",
     ],
