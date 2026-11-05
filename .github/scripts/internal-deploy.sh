@@ -16,7 +16,7 @@ test -f "$root/public-internal/internal/index.html" || { echo "internal-deploy: 
 # The same loader as internal_access.py ensure, so the Worker's allow list
 # includes the extras from the secret. Its stdout is captured, so anything it
 # prints (the ::add-mask:: lines under Actions) goes to stderr instead. Only
-# the two lists come back, and they are never echoed.
+# the three lists come back, and they are never echoed.
 access_lists="$(python3 -c '
 import contextlib, os, sys
 sys.path.insert(0, os.path.join(sys.argv[1], ".github", "scripts"))
@@ -25,15 +25,17 @@ with contextlib.redirect_stdout(sys.stderr):
     cfg = ia.load_config(sys.argv[2], require_extras=True)
 print(",".join(cfg["allowed_emails"]))
 print(",".join(cfg["allowed_email_domains"]))
+print(",".join(cfg["bypass_ip_ranges"]))
 ' "$root" "$root/internal-worker/access.json")"
-{ IFS= read -r emails; IFS= read -r domains; } <<<"$access_lists"
+{ IFS= read -r emails; IFS= read -r domains; IFS= read -r ip_ranges; } <<<"$access_lists"
 log="$(mktemp)"
 trap 'rm -f "$log"' EXIT
 export WRANGLER_SEND_METRICS=false CI=true
 set +e
 (cd "$root/internal-worker" && npx --yes "wrangler@$WRANGLER_VERSION" deploy \
   --var "TEAM_DOMAIN:$TEAM_DOMAIN" --var "POLICY_AUD:$POLICY_AUD" \
-  --var "ALLOWED_EMAILS:$emails" --var "ALLOWED_EMAIL_DOMAINS:$domains") >"$log" 2>&1
+  --var "ALLOWED_EMAILS:$emails" --var "ALLOWED_EMAIL_DOMAINS:$domains" \
+  --var "ALLOWED_IP_RANGES:$ip_ranges") >"$log" 2>&1
 rc=$?
 set -e
 if [ "$rc" -ne 0 ]; then

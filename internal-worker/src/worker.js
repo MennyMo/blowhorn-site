@@ -1,5 +1,6 @@
 // Serves the internal site (public-internal/) only to requests that carry a
-// valid Cloudflare Access token for this application. Access already sits in
+// valid Cloudflare Access token for this application, or that come from a
+// trusted network in ALLOWED_IP_RANGES (the Access bypass policy). Access already sits in
 // front of the hostname; this check means a missing or misconfigured Access
 // application fails closed instead of exposing the site. Every request runs
 // this code first (assets.run_worker_first), assets included. The root
@@ -20,6 +21,9 @@
 //                           allowed_emails plus the INTERNAL_ACCESS_EXTRA_EMAILS
 //                           secret (internal-worker/access.json, docs/deploy.md)
 //   ALLOWED_EMAIL_DOMAINS   comma-separated email domains (allowed_email_domains)
+//   ALLOWED_IP_RANGES       comma-separated CIDRs (bypass_ip_ranges): requests
+//                           from these networks skip the token check, matching
+//                           the Access bypass policy, which issues no token
 //
 // A verified email is admitted when it is one of ALLOWED_EMAILS, or when the
 // part after its last "@" is exactly one of ALLOWED_EMAIL_DOMAINS (no subdomain
@@ -134,18 +138,59 @@ export function emailAllowed(email, emails, domains) {
   return domains.includes(email.slice(at + 1));
 }
 
+// Parses an IPv4 or IPv6 address into [version, BigInt], or null.
+function parseIp(text) {
+  const s = String(text || '').trim().toLowerCase();
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(s)) {
+    const parts = s.split('.').map(Number);
+    if (parts.some((n) => n > 255)) return null;
+    return [4, parts.reduce((acc, n) => (acc << 8n) | BigInt(n), 0n)];
+  }
+  if (!/^[0-9a-f:]+$/.test(s) || !s.includes(':')) return null;
+  const halves = s.split('::');
+  if (halves.length > 2) return null;
+  const head = halves[0] ? halves[0].split(':') : [];
+  const tail = halves.length === 2 && halves[1] ? halves[1].split(':') : [];
+  const fill = 8 - head.length - tail.length;
+  if (halves.length === 2 ? fill < 1 : fill !== 0) return null;
+  const groups = [...head, ...Array(halves.length === 2 ? fill : 0).fill('0'), ...tail];
+  if (groups.some((g) => !/^[0-9a-f]{1,4}$/.test(g))) return null;
+  return [6, groups.reduce((acc, g) => (acc << 16n) | BigInt(parseInt(g, 16)), 0n)];
+}
+
+// True when ip falls inside one of the CIDRs. Malformed entries match nothing.
+export function ipAllowed(ip, ranges) {
+  const addr = parseIp(ip);
+  if (!addr) return false;
+  for (const range of ranges) {
+    const [base, bitsText] = range.split('/');
+    const net = parseIp(base);
+    if (!net || net[0] !== addr[0] || !/^\d{1,3}$/.test(bitsText || '')) continue;
+    const width = addr[0] === 4 ? 32n : 128n;
+    const bits = BigInt(bitsText);
+    if (bits > width) continue;
+    const shift = width - bits;
+    if (addr[1] >> shift === net[1] >> shift) return true;
+  }
+  return false;
+}
+
 export async function handle(request, env, fetchImpl = fetch) {
   if (!env.TEAM_DOMAIN || !env.POLICY_AUD) return deny(503);
   if (listFrom(env.ALLOWED_EMAILS).length + listFrom(env.ALLOWED_EMAIL_DOMAINS).length === 0) return deny(503);
-  const token = tokenFrom(request);
-  if (!token) return deny();
-  let claims = null;
-  try {
-    claims = await verifyAccessToken(token, env, fetchImpl);
-  } catch {
-    return deny(503);
+  // Cloudflare sets cf-connecting-ip at its edge; a client cannot supply it.
+  const trustedNetwork = ipAllowed(request.headers.get('cf-connecting-ip'), listFrom(env.ALLOWED_IP_RANGES));
+  if (!trustedNetwork) {
+    const token = tokenFrom(request);
+    if (!token) return deny();
+    let claims = null;
+    try {
+      claims = await verifyAccessToken(token, env, fetchImpl);
+    } catch {
+      return deny(503);
+    }
+    if (!claims) return deny();
   }
-  if (!claims) return deny();
   const url = new URL(request.url);
   // The signups admin lives behind the same Access check: the list holds
   // email addresses, so it is never served to an unauthenticated request.

@@ -7,11 +7,13 @@ Usage: internal_access.py check|ensure|verify-worker [--config PATH] [--env-out 
                  organization, Access applications, policies and login
                  methods (identity providers), and the Worker's workers.dev
                  setting. Changes nothing.
-  ensure         Idempotent: create or update the reusable allow policy and
-                 the self-hosted Access application for the hostname in
+  ensure         Idempotent: create or update the reusable allow policy, the
+                 reusable bypass policy (when bypass_ip_ranges is not empty)
+                 and the self-hosted Access application for the hostname in
                  internal-worker/access.json, then read them back and fail
-                 unless the application is default-deny with exactly that
-                 policy and exactly the configured login methods. The policy
+                 unless the application is default-deny with exactly those
+                 policies (bypass first, then allow) and exactly the
+                 configured login methods. The policy
                  admits the configured email domains and named emails plus
                  the extras in the environment variable that access.json's
                  extra_emails_env names (a GitHub secret in the workflow).
@@ -32,6 +34,7 @@ count. Under GitHub Actions each extra address is masked before anything
 else prints.
 """
 import argparse
+import ipaddress
 import json
 import os
 import re
@@ -120,6 +123,30 @@ def _entries(cfg, key, pattern):
     return [v.strip().lower() for v in value]
 
 
+def _ip_ranges(cfg):
+    """bypass_ip_ranges as normalized CIDR strings, sorted and deduplicated.
+
+    Optional: a missing key means no bypass. Each entry must be a CIDR with
+    no host bits set (for example 192.0.2.1/32 or 2001:db8::1/128). Bad
+    entries exit by list position, never by value.
+    """
+    value = cfg.get("bypass_ip_ranges", [])
+    if not isinstance(value, list):
+        sys.exit("internal_access: bypass_ip_ranges must be a list in internal-worker/access.json")
+    nets, bad = [], []
+    for i, v in enumerate(value):
+        try:
+            if not isinstance(v, str) or "/" not in v:
+                raise ValueError
+            nets.append(ipaddress.ip_network(v.strip(), strict=True))
+        except ValueError:
+            bad.append(str(i))
+    if bad:
+        noun = "entry" if len(bad) == 1 else "entries"
+        sys.exit(f"internal_access: bypass_ip_ranges has {len(bad)} malformed {noun} (list position {', '.join(bad)}) in internal-worker/access.json; each must be a CIDR such as 192.0.2.1/32")
+    return sorted({str(n) for n in nets})
+
+
 def _extra_emails(cfg, required):
     """Addresses from the environment variable named by extra_emails_env.
 
@@ -167,6 +194,14 @@ def load_config(path, require_extras=True):
         sys.exit("internal_access: allowed_idps needs at least one login method type in internal-worker/access.json")
     if len(set(idps)) != len(idps):
         sys.exit("internal_access: allowed_idps lists a login method type more than once")
+    ranges = _ip_ranges(cfg)
+    if ranges:
+        name = cfg.get("bypass_policy_name")
+        if not isinstance(name, str) or not name.strip():
+            sys.exit("internal_access: bypass_policy_name must be a non-empty string in internal-worker/access.json when bypass_ip_ranges is not empty")
+        if name == cfg["policy_name"]:
+            sys.exit("internal_access: bypass_policy_name must differ from policy_name")
+    cfg["bypass_ip_ranges"] = ranges
     extras = _extra_emails(cfg, require_extras)
     cfg["allowed_email_domains"] = domains
     cfg["allowed_emails"] = sorted(set(named) | set(extras))
@@ -220,6 +255,32 @@ def policy_body(cfg):
     }
 
 
+def bypass_policy_body(cfg):
+    """The bypass policy: requests from bypass_ip_ranges skip the Access login."""
+    return {
+        "name": cfg["bypass_policy_name"],
+        "decision": "bypass",
+        "include": [{"ip": {"ip": r}} for r in cfg["bypass_ip_ranges"]],
+        "exclude": [],
+        "require": [],
+    }
+
+
+def upsert_policy(name, body, label):
+    """Create or update the one reusable policy with this name."""
+    acct = account()
+    found = [p for p in list_all(f"{acct}/access/policies", PERM_ACCESS_APPS) if p.get("name") == name]
+    if len(found) > 1:
+        sys.exit(f"internal_access: {len(found)} reusable policies are named '{name}'; delete the extras in Zero Trust > Access > Policies")
+    if found:
+        policy = call("PUT", f"{acct}/access/policies/{found[0]['id']}", PERM_ACCESS_APPS, body)["result"]
+        print(f"internal_access: {label} policy updated")
+    else:
+        policy = call("POST", f"{acct}/access/policies", PERM_ACCESS_APPS, body)["result"]
+        print(f"internal_access: {label} policy created")
+    return policy
+
+
 def resolve_idps(cfg):
     """Ids of the configured login methods, in config order.
 
@@ -238,7 +299,13 @@ def resolve_idps(cfg):
     return ids
 
 
-def app_body(cfg, policy_id, idp_ids):
+def app_policies(policy_id, bypass_id=None):
+    """The managed policies in order: the bypass (when any) precedes the allow."""
+    ids = ([bypass_id] if bypass_id else []) + [policy_id]
+    return [{"id": pid, "precedence": i + 1} for i, pid in enumerate(ids)]
+
+
+def app_body(cfg, policy_id, idp_ids, bypass_id=None):
     host = cfg["hostname"]
     return {
         "name": cfg["app_name"],
@@ -253,7 +320,7 @@ def app_body(cfg, policy_id, idp_ids):
         # Show every allowed login method on the page, not redirect straight to one.
         "auto_redirect_to_identity": False,
         "allowed_idps": idp_ids,
-        "policies": [{"id": policy_id, "precedence": 1}],
+        "policies": app_policies(policy_id, bypass_id),
     }
 
 
@@ -264,15 +331,10 @@ def ensure(cfg):
     # Resolve login methods before writing anything, so a missing one fails cleanly.
     idp_ids = resolve_idps(cfg)
 
-    policies = [p for p in list_all(f"{acct}/access/policies", PERM_ACCESS_APPS) if p.get("name") == cfg["policy_name"]]
-    if len(policies) > 1:
-        sys.exit(f"internal_access: {len(policies)} reusable policies are named '{cfg['policy_name']}'; delete the extras in Zero Trust > Access > Policies")
-    if policies:
-        policy = call("PUT", f"{acct}/access/policies/{policies[0]['id']}", PERM_ACCESS_APPS, policy_body(cfg))["result"]
-        print("internal_access: allow policy updated")
-    else:
-        policy = call("POST", f"{acct}/access/policies", PERM_ACCESS_APPS, policy_body(cfg))["result"]
-        print("internal_access: allow policy created")
+    policy = upsert_policy(cfg["policy_name"], policy_body(cfg), "allow")
+    bypass_id = None
+    if cfg["bypass_ip_ranges"]:
+        bypass_id = upsert_policy(cfg["bypass_policy_name"], bypass_policy_body(cfg), "bypass")["id"]
 
     apps = matching_apps(list_all(f"{acct}/access/apps", PERM_ACCESS_APPS), cfg["hostname"])
     exact = [a for a in apps if a.get("domain") == cfg["hostname"] and a.get("type") == "self_hosted"]
@@ -284,17 +346,17 @@ def ensure(cfg):
     if len(exact) > 1:
         sys.exit(f"internal_access: {len(exact)} Access applications exist for {cfg['hostname']}; keep one")
     if exact:
-        app = call("PUT", f"{acct}/access/apps/{exact[0]['id']}", PERM_ACCESS_APPS, app_body(cfg, policy["id"], idp_ids))["result"]
+        app = call("PUT", f"{acct}/access/apps/{exact[0]['id']}", PERM_ACCESS_APPS, app_body(cfg, policy["id"], idp_ids, bypass_id))["result"]
         print("internal_access: Access application updated")
     else:
-        app = call("POST", f"{acct}/access/apps", PERM_ACCESS_APPS, app_body(cfg, policy["id"], idp_ids))["result"]
+        app = call("POST", f"{acct}/access/apps", PERM_ACCESS_APPS, app_body(cfg, policy["id"], idp_ids, bypass_id))["result"]
         print("internal_access: Access application created")
 
-    verify_app(cfg, app["id"], policy["id"], idp_ids)
+    verify_app(cfg, app["id"], policy["id"], idp_ids, bypass_id)
     return domain, app["aud"]
 
 
-def verify_app(cfg, app_id, policy_id, idp_ids):
+def verify_app(cfg, app_id, policy_id, idp_ids, bypass_id=None):
     acct = account()
     app = call("GET", f"{acct}/access/apps/{app_id}", PERM_ACCESS_APPS)["result"]
     problems = []
@@ -303,8 +365,11 @@ def verify_app(cfg, app_id, policy_id, idp_ids):
     if app.get("type") != "self_hosted":
         problems.append("application is not self_hosted")
     attached = app.get("policies") or []
-    if [p.get("id") for p in attached] != [policy_id]:
-        problems.append(f"application has {len(attached)} policies, expected exactly the managed allow policy")
+    expected = [p["id"] for p in app_policies(policy_id, bypass_id)]
+    ordered = [p.get("id") for p in sorted(attached, key=lambda p: p.get("precedence") or 0)]
+    if ordered != expected:
+        what = "the managed bypass policy, then the managed allow policy" if bypass_id else "exactly the managed allow policy"
+        problems.append(f"application has {len(attached)} policies, expected {what}")
     if sorted(app.get("allowed_idps") or []) != sorted(idp_ids):
         problems.append("application login methods differ from allowed_idps in internal-worker/access.json")
     policy = call("GET", f"{acct}/access/policies/{policy_id}", PERM_ACCESS_APPS)["result"]
@@ -323,11 +388,29 @@ def verify_app(cfg, app_id, policy_id, idp_ids):
         problems.append("policy emails differ from internal-worker/access.json and the extras")
     if domains != cfg["allowed_email_domains"]:
         problems.append("policy email domains differ from allowed_email_domains in internal-worker/access.json")
+    ranges = []
+    if bypass_id:
+        bypass = call("GET", f"{acct}/access/policies/{bypass_id}", PERM_ACCESS_APPS)["result"]
+        if bypass.get("decision") != "bypass":
+            problems.append("bypass policy decision is not bypass")
+        if bypass.get("exclude") or bypass.get("require"):
+            problems.append("bypass policy has unexpected exclude or require rules")
+        rules = bypass.get("include") or []
+        # Only IP range rules: anything else (Everyone, an email) would let
+        # people skip the login beyond the configured networks.
+        if any(set(r) != {"ip"} for r in rules):
+            problems.append("bypass policy includes a rule other than an IP range")
+        try:
+            ranges = sorted({str(ipaddress.ip_network((r.get("ip") or {}).get("ip", ""), strict=False)) for r in rules if "ip" in r})
+        except ValueError:
+            ranges = None
+        if ranges != cfg["bypass_ip_ranges"]:
+            problems.append("bypass policy IP ranges differ from bypass_ip_ranges in internal-worker/access.json")
     if not app.get("aud"):
         problems.append("application has no audience tag")
     if problems:
         sys.exit("internal_access: verification failed: " + "; ".join(problems))
-    print(f"internal_access: verified: one self-hosted application, default deny, allow list of {len(domains)} email domain(s) and {len(emails)} named email(s), {len(idp_ids)} login method(s)")
+    print(f"internal_access: verified: one self-hosted application, default deny, allow list of {len(domains)} email domain(s) and {len(emails)} named email(s), {len(idp_ids)} login method(s), bypass for {len(ranges or [])} IP range(s)")
 
 
 def worker_name():

@@ -2,7 +2,7 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync, createSign } from 'node:crypto';
-import { handle, resetCertsCache } from './src/worker.js';
+import { handle, ipAllowed, resetCertsCache } from './src/worker.js';
 
 const TEAM_HOST = 'example-team.cloudflareaccess.com';
 const TEAM = `https://${TEAM_HOST}`;
@@ -212,4 +212,28 @@ test('fleet CSVs flatten one row per machine or teammate', async () => {
 test('fleet database errors fail closed', async () => {
   const e = { ...env, FLEET_DB: { prepare: () => ({ bind: () => ({ all: async () => { throw new Error('d1'); } }) }) } };
   assert.equal((await handle(authed('/internal/fleet/'), e, certsFetch)).status, 503);
+});
+
+const ipEnv = { ...env, ALLOWED_IP_RANGES: '192.0.2.1/32,2001:db8:0:73::7/128' };
+const fromIp = (ip, headers = {}) => req({ 'cf-connecting-ip': ip, ...headers });
+test('trusted IPv4 is served without a token', async () => assert.equal(await status(fromIp('192.0.2.1'), ipEnv), 200));
+test('trusted IPv6 is served without a token, any spelling', async () => {
+  assert.equal(await status(fromIp('2001:db8:0:73:0:0:0:7'), ipEnv), 200);
+  assert.equal(await status(fromIp('2001:0DB8:0000:0073:0000:0000:0000:0007'), ipEnv), 200);
+});
+test('neighbouring IPs are denied without a token', async () => {
+  assert.equal(await status(fromIp('192.0.2.2'), ipEnv), 403);
+  assert.equal(await status(fromIp('2001:db8:0:73::8'), ipEnv), 403);
+});
+test('no IP ranges configured: a token is still required', async () => assert.equal(await status(fromIp('192.0.2.1')), 403));
+test('trusted IP still fails closed when configuration is missing', async () =>
+  assert.equal(await status(fromIp('192.0.2.1'), { ...ipEnv, POLICY_AUD: '' }), 503));
+test('ipAllowed matches CIDR prefixes and rejects garbage', () => {
+  assert.equal(ipAllowed('10.1.2.3', ['10.0.0.0/8']), true);
+  assert.equal(ipAllowed('11.0.0.1', ['10.0.0.0/8']), false);
+  assert.equal(ipAllowed('2001:db8::1', ['10.0.0.0/8']), false);
+  assert.equal(ipAllowed('not-an-ip', ['0.0.0.0/0']), false);
+  assert.equal(ipAllowed('', ['0.0.0.0/0']), false);
+  assert.equal(ipAllowed('1.2.3.4', ['bad/33']), false);
+  assert.equal(ipAllowed('1:2::3::4', ['::/0']), false);
 });

@@ -128,6 +128,79 @@ class VerifyApp(AccountTest):
         self.assertNotIn("someone@example.com", str(ctx.exception))
 
 
+RANGES = ["192.0.2.1/32", "2001:db8::1/128"]
+BYPASS_CFG = dict(CFG, bypass_policy_name="byp", bypass_ip_ranges=RANGES)
+GOOD_BYPASS = {
+    "decision": "bypass",
+    "include": [{"ip": {"ip": "192.0.2.1/32"}}, {"ip": {"ip": "2001:db8::1/128"}}],
+    "exclude": [],
+    "require": [],
+}
+BYPASS_APP = dict(GOOD_APP, policies=[{"id": "p1", "precedence": 2}, {"id": "b1", "precedence": 1}])
+
+
+def fake_call_bypass(app, policy, bypass):
+    def call(method, path, permission, body=None):
+        if "/access/apps/" in path:
+            return {"result": app}
+        if path.endswith("/access/policies/b1"):
+            return {"result": bypass}
+        if "/access/policies/" in path:
+            return {"result": policy}
+        raise AssertionError(path)
+    return call
+
+
+class VerifyBypass(AccountTest):
+    def run_verify(self, app=BYPASS_APP, bypass=GOOD_BYPASS):
+        with mock.patch.object(ia, "call", fake_call_bypass(app, GOOD_POLICY, bypass)):
+            ia.verify_app(BYPASS_CFG, "a1", "p1", IDP_IDS, "b1")
+
+    def test_good(self):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.run_verify()
+        self.assertIn("bypass for 2 IP range(s)", out.getvalue())
+        self.assertNotIn("192.0.2.1", out.getvalue())
+
+    def test_bypass_must_precede_allow(self):
+        app = dict(GOOD_APP, policies=[{"id": "p1", "precedence": 1}, {"id": "b1", "precedence": 2}])
+        with self.assertRaises(SystemExit):
+            self.run_verify(app=app)
+
+    def test_unmanaged_third_policy_rejected(self):
+        app = dict(GOOD_APP, policies=BYPASS_APP["policies"] + [{"id": "x", "precedence": 3}])
+        with self.assertRaises(SystemExit):
+            self.run_verify(app=app)
+
+    def test_missing_bypass_rejected(self):
+        with self.assertRaises(SystemExit):
+            self.run_verify(app=GOOD_APP)
+
+    def test_bypass_everyone_rejected(self):
+        with self.assertRaises(SystemExit):
+            self.run_verify(bypass=dict(GOOD_BYPASS, include=GOOD_BYPASS["include"] + [{"everyone": {}}]))
+
+    def test_bypass_range_drift_rejected(self):
+        with self.assertRaises(SystemExit):
+            self.run_verify(bypass=dict(GOOD_BYPASS, include=[{"ip": {"ip": "0.0.0.0/0"}}]))
+
+    def test_bypass_decision_must_be_bypass(self):
+        with self.assertRaises(SystemExit):
+            self.run_verify(bypass=dict(GOOD_BYPASS, decision="allow"))
+
+
+class BypassBodies(unittest.TestCase):
+    def test_policy_body(self):
+        body = ia.bypass_policy_body(BYPASS_CFG)
+        self.assertEqual(body["decision"], "bypass")
+        self.assertEqual(body["include"], [{"ip": {"ip": r}} for r in RANGES])
+
+    def test_app_orders_bypass_first(self):
+        body = ia.app_body(CFG, "p1", IDP_IDS, "b1")
+        self.assertEqual(body["policies"], [{"id": "b1", "precedence": 1}, {"id": "p1", "precedence": 2}])
+
+
 class ResolveIdps(AccountTest):
     IDPS = [
         {"id": "id-google", "type": "google"},
@@ -283,6 +356,28 @@ class LoadConfig(unittest.TestCase):
         with self.assertRaises(SystemExit) as ctx:
             ia.load_config(path)
         self.assertIn("allowed_idps", str(ctx.exception))
+
+
+class BypassConfig(LoadConfig):
+    def test_ranges_normalized(self):
+        cfg = self.load(env_value="", require=False, bypass_policy_name="b", bypass_ip_ranges=["2001:DB8:0::1/128", "192.0.2.1/32", "192.0.2.1/32"])
+        self.assertEqual(cfg["bypass_ip_ranges"], ["192.0.2.1/32", "2001:db8::1/128"])
+
+    def test_missing_ranges_mean_no_bypass(self):
+        self.assertEqual(self.load(env_value="", require=False)["bypass_ip_ranges"], [])
+
+    def test_bare_address_rejected_without_value(self):
+        with self.assertRaises(SystemExit) as ctx:
+            self.load(env_value="", require=False, bypass_policy_name="b", bypass_ip_ranges=["203.0.113.9"])
+        self.assertNotIn("203.0.113.9", str(ctx.exception))
+
+    def test_host_bits_rejected(self):
+        with self.assertRaises(SystemExit):
+            self.load(env_value="", require=False, bypass_policy_name="b", bypass_ip_ranges=["192.0.2.1/24"])
+
+    def test_name_required_with_ranges(self):
+        with self.assertRaises(SystemExit):
+            self.load(env_value="", require=False, bypass_ip_ranges=["192.0.2.1/32"])
 
 
 class RepositoryConfig(unittest.TestCase):

@@ -490,12 +490,14 @@ The internal build is served by the `blowhorn-internal` Cloudflare Worker
 Access application. Nobody reaches a page, asset or file there without
 signing in to Access as someone the allow list admits: anyone at an allowed
 email domain (layer5.io), a named team member, or an extra address from the
-`INTERNAL_ACCESS_EXTRA_EMAILS` secret. See "Who can read it" below.
+`INTERNAL_ACCESS_EXTRA_EMAILS` secret. See "Who can read it" below. The one
+exception is a request from a trusted network in `bypass_ip_ranges`, which
+reaches the site without signing in; see "Trusted networks" below.
 
 | Layer | What it enforces |
 | --- | --- |
-| Access application (self-hosted, the whole hostname) | Login required; one reusable `allow` policy whose only rules are the email domains, named emails and extras, and the login methods in `allowed_idps`. Anything not allowed is denied. |
-| Worker (`internal-worker/src/worker.js`, `run_worker_first`) | Every request, assets included, must carry an Access token signed by the team's keys, for this application's audience, unexpired, for an email the Worker admits: a named address, or an address whose domain is exactly one of `ALLOWED_EMAIL_DOMAINS` (no subdomain or look-alike match). Otherwise 403. A missing or misconfigured Access application, or an empty allow list, fails closed. |
+| Access application (self-hosted, the whole hostname) | Login required; one reusable `allow` policy whose only rules are the email domains, named emails and extras, and the login methods in `allowed_idps`. When `bypass_ip_ranges` is not empty, one reusable `bypass` policy whose only rules are those IP ranges comes first (precedence 1, the allow policy 2). Anything not allowed is denied. |
+| Worker (`internal-worker/src/worker.js`, `run_worker_first`) | Every request, assets included, must carry an Access token signed by the team's keys, for this application's audience, unexpired, for an email the Worker admits: a named address, or an address whose domain is exactly one of `ALLOWED_EMAIL_DOMAINS` (no subdomain or look-alike match). The only exception is a request whose `CF-Connecting-IP` (set by Cloudflare's edge, not the client) is inside `ALLOWED_IP_RANGES`, the same `bypass_ip_ranges`. Otherwise 403. A missing or misconfigured Access application, or an empty allow list, fails closed. |
 | `wrangler.json` | Custom domain only: `workers_dev` and `preview_urls` are off, so no other hostname serves the Worker. `verify-worker` confirms it after each deploy. |
 
 The root (`/`) serves the `/internal/` page, whose table of contents
@@ -529,6 +531,31 @@ so the Access policy and the Worker's allow list always match:
 
 A change to the secret takes effect on the next deploy. To apply it now, run
 `make site-internal-deploy` by hand.
+
+### Trusted networks
+
+`bypass_ip_ranges` in `internal-worker/access.json` lists the networks that
+reach the site without signing in, as CIDRs with no host bits set (a single
+address is `/32` for IPv4 or `/128` for IPv6). It is the one place to edit
+them. From it:
+
+- `internal_access.py ensure` creates or updates the reusable `bypass` policy
+  named `bypass_policy_name`, whose only rules are those IP ranges, and
+  attaches it to the application before the allow policy. Access issues no
+  token for a bypassed request.
+- `internal-deploy.sh` passes the same list to the Worker as
+  `ALLOWED_IP_RANGES`, so the Worker serves those networks without a token.
+
+The verification fails unless the application has exactly the bypass policy
+then the allow policy, and the bypass policy holds exactly the configured
+ranges and nothing else (no Everyone, no email rule). Empty the list, or
+remove the key, to drop the bypass: the next deploy detaches the policy.
+Addresses in this file are public, so add only networks you are happy to
+name. `make site-internal-verify` probes from a GitHub runner, which is not a
+trusted network, so it still expects the Access login.
+
+To change the list, edit `bypass_ip_ranges` in a pull request and merge; the
+push to `master` redeploys (see "Shipping an update").
 
 ### Login methods
 

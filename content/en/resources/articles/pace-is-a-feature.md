@@ -1,5 +1,6 @@
 ---
 title: "Pace is a feature: typing delay, concurrency and approval gates"
+seo_title: "Pace is a feature: delay, concurrency and approval gates"
 summary: "Speed feels like efficiency until a platform reads it as automation. Typing delay, concurrency and approval gates are the three dials that keep a fast schedule looking human, and each one trades a little time for a lot of safety."
 date: 2026-11-04
 author: "Blowhorn team"
