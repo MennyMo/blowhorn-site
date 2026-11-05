@@ -1,8 +1,16 @@
-area/learning-paths:
-- changed-files:
-  - any-glob-to-any-file:
-    - "content/en/learning-paths/**/*"
-area/challenges:
-- changed-files:
-  - any-glob-to-any-file:
-    - "content/en/challenges/**/*"
+area/ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**'
+          - 'Makefile'
+
+area/ui:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'assets/**'
+          - 'layouts/**'
+
+area/docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'content/**'
