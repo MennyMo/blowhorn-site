@@ -351,9 +351,10 @@ button: Upcoming's points at the tab where your posts are, with its count
 when nothing has run yet. A filter that hides everything on a tab offers **clear
 filter**.
 
-Upcoming opens on the first tab that holds a post - ready, needs you, drafts,
-scheduled, then sent - so right after guided setup it opens on your first
-post, often a draft. A tab you pick, or one a link opens, stays put.
+Upcoming opens on the first tab that holds a post or a routine - ready, needs
+you, drafts, scheduled, then sent - so right after guided setup it opens on
+your first post, often a draft. When the board holds only routines, it opens
+on scheduled, which lists them. A tab you pick, or one a link opens, stays put.
 
 On the guided setup's steps, Major Blowhorn's portrait in the left rail is
 alive. His eyes and head follow your pointer, and now and then he looks

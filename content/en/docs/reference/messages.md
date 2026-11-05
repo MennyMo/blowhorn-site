@@ -54,6 +54,11 @@ what to do, and the code names the case; the codes are listed under
 [Opening Chrome when it is closed](/docs/reference/chrome/#opening-chrome-when-it-is-closed).
 Exit 1.
 
+`error: page did not load`: Google Chrome was running. LinkedIn did not
+finish loading in the Blowhorn tab, or its received list could not be
+read. The sentence above the summary says which, and nothing was done.
+Run the activity again. Exit 1.
+
 A profile with no Chrome mapping on this computer, a mapped directory
 Chrome no longer has, or an identity that drifted since binding is
 refused by name before anything opens, with the command that re-maps
