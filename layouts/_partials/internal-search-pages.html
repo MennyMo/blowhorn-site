@@ -1,0 +1,22 @@
+{{- /* Offline-search entries for this page and every descendant in its
+  .Pages tree. Internal pages are build.list local, so they are in a
+  parent's .Pages and absent from site-wide collections. Called only from
+  assets/json/offline-search-index-internal.json. Returns a slice of the
+  same fields Docsy's index writes, which assets/js/offline-search.js reads. */ -}}
+{{- $entries := slice -}}
+{{- if and (ne .Params.exclude_search true) (in .RelPermalink "/internal/") -}}
+{{- $summary := .Summary | plainify -}}
+{{- $entries = $entries | append (dict
+  "ref" .RelPermalink
+  "title" .Title
+  "categories" (.Params.categories | default "")
+  "tags" (.Params.tags | default "")
+  "description" (.Description | default $summary | default "")
+  "body" (.Plain | htmlUnescape)
+  "excerpt" ((.Description | default $summary | default .Plain) | htmlUnescape | truncate (site.Params.offlineSearchSummaryLength | default 70) | htmlUnescape)
+) -}}
+{{- end -}}
+{{- range .Pages -}}
+{{- $entries = $entries | append (partial "internal-search-pages.html" .) -}}
+{{- end -}}
+{{- return $entries -}}

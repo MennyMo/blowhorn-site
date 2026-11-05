@@ -3,8 +3,10 @@ title: Internal
 layout: internal
 description: Blowhorn's internal strategy, finance, engineering, design, specs, plans and research, for named team members only.
 # Rendered only by `hugo --environment internal`.
-# Keep internal pages out of the site-wide lists (menus, the search index,
-# llms.txt, the sitemap and related-page lists), even in the internal build.
+# Keep internal pages out of the site-wide lists (menus, Docsy's AllPages
+# search index, llms.txt, the sitemap and related-page lists), even in the
+# internal build. The internal build's own offline index walks this
+# section's .Pages (assets/json/offline-search-index-internal.json).
 # Pages still render (segments decide whether they render at all).
 # Descendants are `list: local`: out of every site-wide collection, but in
 # their parents' .Pages, so the docs sidebar, breadcrumb and pager can walk

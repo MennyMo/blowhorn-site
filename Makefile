@@ -44,7 +44,8 @@ include .github/build/Makefile.show-help.mk
 #                      check-third-party, check-urls, check-no-internal,
 #                      check-theme, check-platform-docs, check-naming
 #                      check-action-matrix and check-download-links (site.yml).
-#   check-no-internal  Fail if the production build contains /internal/.
+#   check-no-internal  Fail if the production build contains /internal/,
+#                      or its offline search index is missing or contains /internal/.
 #   check-platform-docs Production build, then fail if a supported platform
 #                      lacks a docs page, a page skips the shared actions
 #                      table, or a docs page carries a hand-written action list.
@@ -336,7 +337,7 @@ check-tells: site-build
 check-naming: site-build
 	python3 .github/scripts/check_naming.py $(BUILD_DIR)
 
-## Build for production, then fail if the /internal/ section leaked into it.
+## Build for production, then fail if /internal/ leaked into it, including the offline search index.
 check-no-internal: site-build
 	.github/scripts/check-no-internal.sh $(BUILD_DIR)
 

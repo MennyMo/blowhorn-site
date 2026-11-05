@@ -318,7 +318,7 @@ repository, and only the internal environment mounts it.
 | Target | What it does | Output |
 | --- | --- | --- |
 | `make site-build` | Public build (`hugo`, production environment, `renderSegments = ["public"]`), what CI deploys | `public/`, no `/internal/` |
-| `make site-internal-build` | Internal build (`hugo --environment internal`, `renderSegments = ["internal"]`) with the blowhorn clone mounted; renders only `/internal/`, with its own header, footer and navigation, and no search index; the output's root page redirects to `/internal/` | `public-internal/`, only `/internal/` |
+| `make site-internal-build` | Internal build (`hugo --environment internal`, `renderSegments = ["internal"]`) with the blowhorn clone mounted; renders only `/internal/`, with its own header, footer and navigation, and Docsy offline search over those internal pages only; the output's root page redirects to `/internal/` | `public-internal/`: `/internal/` pages, and `offline-search-index.json` at the output root |
 | `make site` / `make site-internal` | Live-reload servers for the two builds (the internal one renders in memory) | http://localhost:1313 |
 
 The internal targets need a blowhorn clone at `BLOWHORN_DIR`
@@ -448,16 +448,25 @@ need a token for the private repository.
 The internal section's committed `content/en/internal/_index.md` is
 `build: {list: never}` itself and cascades `build: {list: local}` and
 `type: docs` to every internal page. Internal pages stay out of the
-site-wide collections (menus, the search index, llms.txt, the sitemap),
+site-wide collections (menus, llms.txt, the sitemap and related lists),
 even in the internal build, but stay in their parents' `.Pages`, so they
 render in the docs shell (`layouts/docs/baseof.html` with
 `layouts/docs/internal.html`) with the docs sidebar, breadcrumb, table of
 contents and prev/next built from the `/internal/` section tree. Page order
-is each page's `weight`. The public build never renders any of it.
+is each page's `weight`. Docsy's offline index reads `.Site.AllPages`, which
+those `list` settings leave empty of internal pages, so the internal build
+does not use it. It publishes its own index,
+`public-internal/offline-search-index.json`, by walking the `/internal/`
+section (`.Pages` recursively,
+`assets/json/offline-search-index-internal.json`). That file is generated
+only in the internal environment. The public build keeps Docsy's index and
+never lists an `/internal/` page, title or passage. The public build never
+renders any internal page.
 
 `make check-no-internal` (part of `make site-check`, and a step in
 `site.yml`) fails when `public/internal` exists, a public page links to
-`/internal/` or names an internal file, or git tracks anything under
+`/internal/` or names an internal file, the public offline search index is
+missing or contains `/internal/`, or git tracks anything under
 `content/en/internal/` other than `_index.md`.
 
 ### Where the internal build runs

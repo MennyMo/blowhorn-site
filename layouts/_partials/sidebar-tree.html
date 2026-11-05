@@ -10,11 +10,17 @@
      (aria-expanded, aria-controls) beside its link, and its list starts
      hidden unless it holds the current page. assets/js/docs-toggle.js
      wires the buttons. The links and classes are otherwise upstream.
-  4. The internal build renders no search box and generates no search
-     index: the offline index covers the public pages, which the internal
-     build does not render, and internal pages stay out of the index by
-     design (content/en/internal/_index.md). The mobile nav toggle that
-     shares the search row is kept. */}}
+  4. The internal build shows this same search box, including the mobile
+     nav toggle, and indexes only the /internal/ section. Those pages stay
+     out of site-wide collections (content/en/internal/_index.md), so Docsy's
+     AllPages index cannot see them. The internal index is
+     assets/json/offline-search-index-internal.json, published as
+     offline-search-index.json, and only the internal environment renders
+     it. The public build still uses Docsy's index and never lists an
+     /internal/ page. data-offline-search-base-href stays "/" because result
+     refs are root-relative permalinks, which already include any baseURL
+     path, so the same value works for https://internal.blowhorn.ai/ and
+     for a local server of the internal output. */}}
 {{ $context := .context -}}
 {{ $sidebarRoot := .sidebarRoot -}}
 {{ $sidebarRootID := .sidebarRootID -}}
@@ -28,21 +34,18 @@
 {{ $offlineSearchLink := "" -}}
 {{ $offlineSearchMaxResults := .Site.Params.offlineSearchMaxResults | default 10 -}}
 {{ $searchLabel := T "ui_search" -}}
-{{ if ne hugo.Environment "internal" -}}
-{{ $offlineSearchIndex := resources.Get "json/offline-search-index.json" | resources.ExecuteAsTemplate "offline-search-index.json" . -}}
+{{ $offlineSearchFile := "json/offline-search-index.json" -}}
+{{ if eq hugo.Environment "internal" -}}
+{{ $offlineSearchFile = "json/offline-search-index-internal.json" -}}
+{{ end -}}
+{{ $offlineSearchIndex := resources.Get $offlineSearchFile | resources.ExecuteAsTemplate "offline-search-index.json" . -}}
 {{ if hugo.IsProduction -}}
 {{ $offlineSearchIndex = $offlineSearchIndex | fingerprint "md5" -}}
 {{ end -}}
 {{ $offlineSearchLink = $offlineSearchIndex.RelPermalink -}}
-{{ end -}}
 
 <div id="td-sidebar-menu" class="td-sidebar__inner{{ if $shouldDelayActive }} d-none{{ end }}">
-  {{ if eq hugo.Environment "internal" -}}
-  <div class="td-sidebar__search d-flex align-items-center">
-    <button class="btn btn-link td-sidebar__toggle" type="button" data-bs-toggle="collapse" data-bs-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
-    </button>
-  </div>
-  {{ else if not .Site.Params.ui.sidebar_search_disable -}}
+  {{ if or (eq hugo.Environment "internal") (not .Site.Params.ui.sidebar_search_disable) -}}
   <form class="td-sidebar__search d-flex align-items-center">
     <div class="td-search td-search--offline">
       <div class="td-search__icon"></div>

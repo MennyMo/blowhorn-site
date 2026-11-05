@@ -1,0 +1,9 @@
+{{- /* Offline search index for the internal environment only. Docsy's
+  assets/json/offline-search-index.json ranges .Site.AllPages, which does
+  not include pages cascaded to build.list local. This walks /internal
+  instead, and the public build never executes it. */ -}}
+{{- $root := site.GetPage "/internal" -}}
+{{- if not $root -}}
+{{- errorf "internal offline search: section /internal not found" -}}
+{{- end -}}
+{{- partialCached "internal-search-pages.html" $root "internal-search-index" | jsonify -}}
