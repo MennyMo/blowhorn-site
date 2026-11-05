@@ -664,7 +664,7 @@ Access check as every static page, so their data changes without a build:
 
 - `/internal/signups/` and `/internal/signups/export`: the `SIGNUPS_DB`
   binding (`blowhorn-signups`), written by the public signup worker.
-- `/internal/fleet/`, plus `data.json`, `workload.csv` and `disk.csv` beside
+- `/engineering/fleet/` (moved from `/internal/fleet/`, which now 301s here), plus `data.json`, `workload.csv` and `disk.csv` beside
   it (each takes `?days=N`, default 7, at most 90): the `FLEET_DB` binding
   (`blowhorn-fleet-stats`). A zero-token cron on Bastion writes teammate
   workload every hour and machine disk free every 6 hours into its

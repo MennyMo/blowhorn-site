@@ -10,7 +10,7 @@
 // this check: it reads the SIGNUPS_DB database the public signup worker
 // writes, and is served only to a verified Access identity.
 //
-// The fleet stats page (/internal/fleet/, data.json, disk.csv, workload.csv)
+// The fleet stats page (/engineering/fleet/, data.json, disk.csv, workload.csv)
 // shares it too: it reads the FLEET_DB database that the zero-token cron on
 // Bastion fills (koopverse/firstmate fleet/fleet-stats, issue #72).
 //
@@ -197,6 +197,15 @@ export async function handle(request, env, fetchImpl = fetch) {
   if (url.pathname === '/internal/signups/' || url.pathname === '/internal/signups/export') {
     return handleSignupsAdmin(url, env);
   }
+  // The fleet page moved from /internal/fleet/ to /engineering/fleet/;
+  // keep old links and bookmarks working with a permanent redirect.
+  if (url.pathname === '/internal/fleet' || url.pathname.startsWith('/internal/fleet/')) {
+    const to = new URL(url.pathname.replace(/^\/internal\/fleet/, '/engineering/fleet') + url.search, url);
+    return Response.redirect(to.toString(), 301);
+  }
+  if (url.pathname === '/engineering/fleet') {
+    return Response.redirect(new URL('/engineering/fleet/' + url.search, url).toString(), 301);
+  }
   if (FLEET_PATHS.has(url.pathname)) {
     return handleFleet(url, env);
   }
@@ -285,10 +294,10 @@ async function handleSignupsAdmin(url, env) {
 // table (id, kind, collected_at, body). Rendering happens here, per request,
 // so publishing a snapshot needs no build, no commit and no AI.
 const FLEET_PATHS = new Set([
-  '/internal/fleet/',
-  '/internal/fleet/data.json',
-  '/internal/fleet/disk.csv',
-  '/internal/fleet/workload.csv',
+  '/engineering/fleet/',
+  '/engineering/fleet/data.json',
+  '/engineering/fleet/disk.csv',
+  '/engineering/fleet/workload.csv',
 ]);
 const FLEET_TZ = 'America/Chicago';
 // A snapshot older than this is flagged stale: two missed runs.
@@ -420,11 +429,11 @@ async function handleFleet(url, env, nowMs = Date.now()) {
   } catch {
     return deny(503);
   }
-  if (url.pathname === '/internal/fleet/data.json') {
+  if (url.pathname === '/engineering/fleet/data.json') {
     const body = { days, latest: { disk: disk[0] || null, workload: workload[0] || null }, history: { disk, workload } };
     return new Response(`${JSON.stringify(body)}\n`, { headers: { 'content-type': 'application/json; charset=utf-8', ...ADMIN_HEADERS } });
   }
-  if (url.pathname === '/internal/fleet/disk.csv' || url.pathname === '/internal/fleet/workload.csv') {
+  if (url.pathname === '/engineering/fleet/disk.csv' || url.pathname === '/engineering/fleet/workload.csv') {
     const isDisk = url.pathname.endsWith('disk.csv');
     const rows = isDisk
       ? disk.flatMap((s) => (s.machines || []).map((m) => ({ ...m, collected_at: s.collected_at })))
@@ -437,8 +446,8 @@ async function handleFleet(url, env, nowMs = Date.now()) {
   const html =
     `<!DOCTYPE html>\n<html lang="en">\n<head><meta charset="utf-8"><title>Fleet stats</title><style>${FLEET_CSS}</style></head>\n<body>\n<main>\n` +
     `<h1>Fleet stats</h1>\n<p>Collected by cron on Bastion with no AI: workload every hour, disk every 6 hours. ` +
-    `Times are US Central. Data: <a href="/internal/fleet/data.json">data.json</a>, ` +
-    `<a href="/internal/fleet/workload.csv">workload.csv</a>, <a href="/internal/fleet/disk.csv">disk.csv</a> ` +
+    `Times are US Central. Data: <a href="/engineering/fleet/data.json">data.json</a>, ` +
+    `<a href="/engineering/fleet/workload.csv">workload.csv</a>, <a href="/engineering/fleet/disk.csv">disk.csv</a> ` +
     `(add <code>?days=30</code> for a longer window, up to 90).</p>\n` +
     `<h2>Teammate workload</h2>\n${staleNote(workload[0], 'workload', nowMs)}\n${workloadTable(workload[0])}\n` +
     `<h2>Disk free</h2>\n${staleNote(disk[0], 'disk', nowMs)}\n${diskTable(disk[0])}\n${diskTrend(disk.slice(0, 28))}\n` +
