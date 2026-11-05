@@ -1,8 +1,10 @@
 # Blowhorn signup worker
 
 The API behind the coming-soon waitlist forms and the newsletter signup:
-`POST /api/waitlist`, `POST /api/subscribe`, `GET /api/unsubscribe`.
-No confirmation step: a signup is live as soon as it is stored.
+`POST /api/waitlist`, `POST /api/subscribe`, `GET /api/unsubscribe` (confirmation page), `POST /api/unsubscribe`.
+No confirmation step: a signup is live as soon as it is stored. Every
+ship email and newsletter email carries an unsubscribe link built from
+the row token.
 
 ## Hosting
 
