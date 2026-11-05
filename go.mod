@@ -1,4 +1,4 @@
-module github.com/layer5io/blowhorn-site
+module github.com/blowhorn-ai/blowhorn-site
 
 go 1.26.4
 

@@ -20,7 +20,7 @@ activity 7 · post · your-profile · linkedin
   paused         no - activity not held, studio not paused, all-machines not paused
   due            yes - next_run_at 2026-08-31 06:00:00, 14 min ago
   claimed        yes - laptop:9912 since 2026-08-31 06:02:10, lease expires 2026-08-31 06:32:10
-  this machine   studio · store reachable · last tick 2026-08-31 06:14:02 (2 min ago)
+  this machine   studio · store reachable · last pass 2026-08-31 06:14:02 (2 min ago)
   last run       2026-08-30 06:03:11 on laptop · ok · 12 attempted, 12 confirmed
 
 studio did not run activity 7 because laptop:9912 claimed it at 2026-08-31 06:02:10 and still holds the lease (expires 2026-08-31 06:32:10).
@@ -35,13 +35,14 @@ quote it in a bug report with `--json` for the same answer scripts can read.
 - **Paused.** The scope is named: the activity, this computer, or all computers. Lift
   it with `blowhorn schedule resume`, with `--all` or `--activity 7` to match.
 - **Claimed by another computer.** A claim is a lease, not a lock: the holder
-  renews it every ten minutes while the job runs, and a dead computer stops
+  renews it while the job runs, and a dead computer stops
   renewing, so its activities return to the pool when the lease lapses. `schedule
   list` names every holder in its Locked By column; your own claims read
   `(this machine)`. Another macOS user's claims on the same Mac do not: they
   share the computer's name, not your install.
-- **Not due.** `Next Run At` has not passed yet. `schedule status` shows an
-  estimated next tick for this computer.
+- **Not due.** `Next Run At` has not passed yet. The service wakes for it when it
+  comes; `schedule status` says whether the service is still passing over the
+  schedule on this computer.
 - **Gave up.** The last run used the activity's final retry, so it is `failed`
   with no next time. For a repeating activity the whole series has stopped -
   deliberately: repeated failures usually mean a broken sign-in or a platform

@@ -144,9 +144,13 @@ class IntegrationsSchemaTest(unittest.TestCase):
     def test_role_and_category_ids_exist(self):
         payload = json.loads((ROOT / "data/integrations.json").read_text(encoding="utf-8"))
         ids = {p["id"] for p in payload["platforms"]}
-        for group in payload["categories"] + payload["roles"]:
+        for group in payload["categories"]:
             for pid in group["platforms"]:
                 self.assertIn(pid, ids, f"{group['id']} names unknown platform {pid}")
+        roles = json.loads((ROOT / "data/roles.json").read_text(encoding="utf-8"))["roles"]
+        for role in roles:
+            for pid in role["platforms"]:
+                self.assertIn(pid, ids, f"role {role['slug']} names unknown platform {pid}")
 
     def test_em_dash_headline_fails(self):
         payload = json.loads((ROOT / "data/integrations.json").read_text(encoding="utf-8"))

@@ -22,7 +22,7 @@ right-skewed distribution around the computed delay and stretches
 after a word or a sentence ends. The extension path does not insert
 the plan's extra pauses and does not type-and-correct typos. In
 background mode those same per-character messages are sent as real
-key events through Chrome's debugger, on that same cadence, and the
+key events through the browser's debugger, on that same cadence, and the
 field is read back afterwards; in classic mode the extension writes
 each character into the field directly, which is why the flows that
 read a page's own input handling (X posting and sign-in among them)
@@ -33,13 +33,14 @@ or a numeric multiplier, resolved from the flag, then the environment,
 then the defaults file. A long unattended run earns the slow pace; a
 failure never earns a retry click.
 
-That pace can also come from your Risk Profile: cautious, standard
-or brisk set pace, spacing, caps, quiet hours, outreach, the pause
+That pace can also come from your rules of engagement: Safety on,
+Weapons tight or Weapons free (stored as `cautious`, `standard` and
+`brisk`) set pace, spacing, caps, quiet hours, outreach, the pause
 after a sign-in challenge and how much runs at once, together, so you
-do not have to set each dial by hand. Cautious is the slowest and
-most guarded, brisk the fastest and least guarded, standard the
-default in between. See [You're in control](/docs/explanation/youre-in-control/#your-risk-profile)
-for the profile among every safety control, and the
+do not have to set each dial by hand. Safety on is the slowest and
+most guarded, Weapons free the fastest and least guarded, Weapons tight
+the default in between. See [You're in control](/docs/explanation/youre-in-control/#your-rules-of-engagement)
+for the rules of engagement among every safety control, and the
 [configuration reference](/docs/reference/configuration/#risk-profile-presets)
 for what each preset sets, dial by dial.
 
@@ -64,6 +65,12 @@ every remaining queued activity for that profile; every call site therefore
 contains the failure to its own unit of work instead.
 
 Within a run, Blowhorn doesn't retry a failed post; it moves on to the next item. If a post goes out but Blowhorn can't record it, it stops that profile's queue rather than risk posting twice. Scheduled jobs only re-run a failure if you turn on retries, and they're off by default.
+
+Pointer and keyboard input look like a hand's. A click does not jump to its target: the pointer crosses to it
+along a gently curved path, quickly in the middle and slowly at both ends, reporting a position every few
+milliseconds, and each key stays down for a short, varying time before it is released. The Chrome extension sends
+these as real input events, the same kind a mouse and keyboard produce, and Blowhorn turns off every
+browser-masking tweak that would make Chrome report itself differently from how it really is.
 
 ## Hacker News is the least forgiving platform
 

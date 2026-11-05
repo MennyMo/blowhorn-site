@@ -59,7 +59,7 @@
       "b": "Free plan available, see pricing"
     }
   ],
-  "signal": "A post does best when real people react in its first hour. Blowhorn helps the profiles you run show up on time, as themselves, with no bought likes.",
+  "signal": "A post tends to do best when real people react early. Blowhorn helps the profiles you run show up on time, as themselves, with no bought likes.",
   "faq": [
     {
       "q": "Why not just use LinkedIn's scheduler?",

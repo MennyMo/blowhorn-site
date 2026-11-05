@@ -2,7 +2,7 @@
 title: Terms
 heading: Blowhorn terms of service
 description: The terms between you and Layer5, Inc. for the Blowhorn website, the Blowhorn app for macOS and the Blowhorn Chrome extension.
-notice: "**Draft, pending legal review.** A lawyer has not yet reviewed these terms. They may change before they are final, and the [history of this page](https://github.com/layer5io/blowhorn-site/commits/master/content/en/legal/terms.md) records every change."
+notice: "**Draft, pending legal review.** A lawyer has not yet reviewed these terms. They may change before they are final, and the [history of this page](https://github.com/blowhorn-ai/blowhorn-site/commits/master/content/en/legal/terms.md) records every change."
 lead: Last updated 9 October 2026. These terms are an agreement between you and Layer5, Inc., which makes Blowhorn and operates this site. Read them together with the [Blowhorn privacy page](/legal/privacy/).
 layout: legal
 weight: 20
@@ -42,7 +42,7 @@ During early access Blowhorn is free. There are no plans or tiers to choose betw
 
 ## Downloads
 
-- The official Blowhorn app downloads are the signed disk images linked from blowhorn.ai, published as assets on the [releases page](https://github.com/layer5io/blowhorn-site/releases) of this site's repository, and the updates the Blowhorn app installs itself from the Blowhorn release channel, as the [privacy page](/legal/privacy/) describes. Nothing else is an official copy. Verify each disk image you download from blowhorn.ai against the `SHA256SUMS.txt` published with it before you open it.
+- The official Blowhorn app downloads are the signed disk images linked from blowhorn.ai, published as assets on the [releases page](https://github.com/blowhorn-ai/blowhorn-site/releases) of this site's repository, and the updates the Blowhorn app installs itself from the Blowhorn release channel, as the [privacy page](/legal/privacy/) describes. Nothing else is an official copy. Verify each disk image you download from blowhorn.ai against the `SHA256SUMS.txt` published with it before you open it.
 - The only official Blowhorn extension is the Chrome Web Store item named above.
 - The Blowhorn software, meaning the app for macOS, the `blowhorn` command-line tool, the background service and the Chrome extension, is licensed under the [GNU Affero General Public License, version 3](https://www.gnu.org/licenses/agpl-3.0.html) (AGPL-3.0). Each release ships a copy of that licence. Read it before you install. Where the licence and these terms differ about the software itself, the licence decides.
 - Releases are never replaced in place. A fix ships as a new version.
@@ -80,7 +80,7 @@ If you use Blowhorn from outside the United States, you are responsible for foll
 
 ## Trademarks and brand assets
 
-Blowhorn, the Crowhorn mark, Major Blowhorn and Layer5 are trademarks of Layer5, Inc. The brand assets this site serves are a copy of the Blowhorn brand kit, published for the site's pages and as the kit's public reference; they are not licensed for reuse. The fonts are licensed under the SIL Open Font License and are credited in the site's [licence note](https://github.com/layer5io/blowhorn-site/blob/master/static/assets/brand/LICENSES.md).
+Blowhorn, the Crowhorn mark, Major Blowhorn and Layer5 are trademarks of Layer5, Inc. The brand assets this site serves are a copy of the Blowhorn brand kit, published for the site's pages and as the kit's public reference; they are not licensed for reuse. The fonts are licensed under the SIL Open Font License and are credited in the site's [licence note](https://github.com/blowhorn-ai/blowhorn-site/blob/master/static/assets/brand/LICENSES.md).
 
 The site's text, graphics, logos and images belong to us or our suppliers and are protected by copyright and other laws. Except for the AGPL-3.0 licence that covers the Blowhorn software, these terms give you no licence to our intellectual property.
 
@@ -124,7 +124,7 @@ You and we may bring claims against each other only individually, and not as a p
 
 ## Changes
 
-We may change these terms. The current version replaces every earlier one, and the date at the top of this page says when it last changed. Every edit to this page is recorded in the [site repository's history](https://github.com/layer5io/blowhorn-site/commits/master/content/en/legal/terms.md).
+We may change these terms. The current version replaces every earlier one, and the date at the top of this page says when it last changed. Every edit to this page is recorded in the [site repository's history](https://github.com/blowhorn-ai/blowhorn-site/commits/master/content/en/legal/terms.md).
 
 ## Contact
 

@@ -1,0 +1,11 @@
+{{- /* The shared player dialog for video cards. One per page; resources.js
+  fills it from the clicked card's data-* attributes. Local videos only -
+  a YouTube facade lands with the privacy-page update that the first
+  embedded video requires (see the Resources center issue). */ -}}
+<dialog class="video-dialog" data-video-dialog aria-labelledby="video-dialog-title">
+  <video controls preload="metadata" playsinline></video>
+  <div class="video-dialog-bar">
+    <span class="vd-title" id="video-dialog-title" data-dialog-title></span>
+    <button type="button" class="video-dialog-close" data-dialog-close>Close</button>
+  </div>
+</dialog>

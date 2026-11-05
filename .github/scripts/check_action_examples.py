@@ -21,6 +21,10 @@ ROOT = Path(__file__).resolve().parents[2]
 FLAG_RE = re.compile(r"--[a-z][a-z0-9-]*")
 FLAG_CELL_RE = re.compile(r"`(--[a-z][a-z0-9-]*)`")
 HEADING_RE = re.compile(r"^## blowhorn (.+)$", re.M)
+# A command's own section has no h2 when it would repeat the page title
+# (the product's CLI reference renders it as the title page); the page's
+# front matter title names it instead.
+TITLE_RE = re.compile(r'^title:\s*"?blowhorn ([^"\n]+?)"?\s*$', re.M)
 EM_DASH = "\u2014"
 
 
@@ -74,6 +78,9 @@ def shared_flag_ids(text: str | None = None) -> set[str]:
 def cli_sections(text: str) -> dict[str, str]:
     parts = HEADING_RE.split(text)
     sections = {}
+    title = TITLE_RE.search(parts[0])
+    if title:
+        sections[title.group(1).strip()] = parts[0]
     # split keeps captures: preamble, heading1, body1, heading2, body2, ...
     i = 1
     while i + 1 < len(parts):

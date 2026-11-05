@@ -6,8 +6,8 @@
   {{ with .Description -}}
   <p class="body-lg docs-lead">{{ . | markdownify }}</p>
   {{ end -}}
-  {{ .Content }}
+  {{ partial "docs-content.html" . }}
   {{ partial "page-meta-lastmod.html" . -}}
 </div>
-{{ partial "pager.html" . -}}
+{{- partial "docs-sibling-pager.html" . -}}
 {{ end -}}

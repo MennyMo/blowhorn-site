@@ -1,0 +1,36 @@
+{{- /* A tag term page (/tags/<tag>/): every page carrying the tag.
+  Resources videos render as cards on the shared grid (with the player
+  dialog); anything else renders as a titled list row. This replaces the
+  Docsy taxonomy template, which does not match the marketing pages. */ -}}
+{{ define "main" }}
+    <main id="main" class="page resources-page">
+      <div class="wrap">
+        <header>
+          <p class="label">Tag</p>
+          <h1 class="display">{{ .Title }}</h1>
+          <p class="body-lg muted lede">Everything on blowhorn.ai tagged {{ .Title }}.</p>
+        </header>
+        {{- $videos := where .Pages "Layout" "video" -}}
+        {{- with $videos }}
+        {{- $deal := partial "card-deal.html" (dict "n" (len .) "grid" "video-grid") }}
+        <ul class="video-grid" data-video-grid>
+          {{- range $i, $v := .ByDate.Reverse }}{{ partial "video-card.html" (dict "page" $v "i" $i "deal" $deal) }}{{ end -}}
+        </ul>
+        {{- end }}
+        {{- $others := where .Pages "Layout" "ne" "video" -}}
+        {{- with $others }}
+        <ul>
+          {{- range .ByDate.Reverse }}
+          <li><a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with .Description }} - {{ . }}{{ end }}</li>
+          {{- end }}
+        </ul>
+        {{- end }}
+        <p><a href="{{ (site.GetPage "/resources").RelPermalink }}">Resources</a> &middot; <a href="{{ (site.GetPage "/tags").RelPermalink }}">All tags</a></p>
+      </div>
+    </main>
+    {{ partial "video-dialog.html" . }}
+{{ end }}
+
+{{ define "scripts" }}
+    {{- partial "filter-script.html" "js/resources.js" }}
+{{ end }}

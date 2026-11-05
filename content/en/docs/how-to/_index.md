@@ -7,7 +7,7 @@ weight: 20
 
 Each guide solves one real problem. Pick the group that matches what you want to do:
 
-- [Set up](/docs/how-to/set-up/): install, sign in, Chrome, profiles, and platform accounts.
+- [Set up](/docs/how-to/set-up/): install, sign in, Google Chrome, profiles, and platform accounts.
 - [Publish](/docs/how-to/publish/): queue a post, preview it, publish it, reply, and amplify.
 - [Grow](/docs/how-to/grow/): follow, find conversations, and build an audience.
 - [Schedule](/docs/how-to/schedule/): jobs, pausing, and the background service.

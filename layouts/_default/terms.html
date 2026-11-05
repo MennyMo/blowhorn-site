@@ -1,0 +1,18 @@
+{{- /* The tag index (/tags/): every tag on the site with its page count.
+  Tags live on Resources content; the chips link to each term page. */ -}}
+{{ define "main" }}
+    <main id="main" class="page resources-page">
+      <div class="wrap">
+        <header>
+          <p class="label">Resources</p>
+          <h1 class="display">{{ .Title }}</h1>
+          <p class="body-lg muted lede">Browse by topic. Every tag used across the Resources center.</p>
+        </header>
+        <ul class="tag-chips">
+          {{- range .Data.Terms.Alphabetical }}
+          <li><a class="tag-chip" href="{{ .Page.RelPermalink }}">{{ .Page.Title }} ({{ .Count }})</a></li>
+          {{- end }}
+        </ul>
+      </div>
+    </main>
+{{ end }}

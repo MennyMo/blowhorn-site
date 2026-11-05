@@ -11,7 +11,7 @@
           <p class="label"><a href="{{ (site.GetPage "/legal").RelPermalink }}">Trust Center</a> <span aria-hidden="true">/</span> {{ .Title }}</p>
           <h1 class="h1">{{ .Params.heading }}</h1>
           {{- with .Params.notice }}
-          <p class="notice" role="note">{{ . | $.RenderString }}</p>
+          <p class="notice card-field" role="note">{{ . | $.RenderString }}</p>
           {{- end }}
           <p class="body-lg muted">{{ .Params.lead | .RenderString }}</p>
         </div>

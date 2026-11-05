@@ -14,7 +14,7 @@ one-time setup every browser run depends on.
 Map a Chrome profile set aside for Blowhorn, not the one you browse in.
 The desktop app does not offer Chrome's main profile (`Default`) for a new
 mapping; a mapping an earlier setup made to it keeps working. Why is in
-[Why Blowhorn uses your own Chrome](/docs/explanation/your-own-chrome/#a-chrome-profile-of-its-own).
+[Why Blowhorn uses your own browser](/docs/explanation/your-own-chrome/#a-chrome-profile-of-its-own).
 
 A mapping is identity, never permission: it does not make a profile
 eligible for any platform. Eligibility is credential existence, decided in
@@ -64,18 +64,28 @@ is refused by name and nothing opens.
 
 ## Confirm troops in guided setup
 
-The first-run setup's **Confirm troops** step does the whole job from what
+The first-muster setup's **Confirm troops** step does the whole job from what
 Chrome already knows. For each Chrome profile it shows the Google account
 and the platform accounts discovery found there, proposes the Blowhorn
 profile each one becomes, and lets you mark each Chrome profile and each
 account in use or not in use. Confirming the ones in use creates the
-profiles that don't exist yet (a Google email must resolve to exactly one
-person in your account, the same rule as adding a profile by hand; an email
-that names several asks you to pick, and one that names none asks for the
-right email rather than inventing a person), saves the non-secret handles,
-records a confirmed Chrome session for LinkedIn and Hacker News when you're
-signed in there, and writes the mapping with the same checks as
-`blowhorn chrome map`. A Chrome profile you mark not in use is recorded
+profiles that don't exist yet in your organization, each representing the
+member you pick under **Which person is this?**, or nobody for a brand.
+When the Chrome profile's Google email belongs to exactly one member, that
+member is picked for you; there is no email to type. If Blowhorn
+can't list your organization's members, the card says so and offers only
+**Nobody, a brand** until you choose **Discover**; if it can't list your
+profiles, the step says so above the cards, so check again before you
+create one rather than make a second profile for the same person. An
+existing profile is named by its id. A `chrome confirm` document that still
+carries the old `email` or `subject` keys is refused by name: name the
+person with `userId`. Confirm then stores the credentials in your
+account, records a confirmed Chrome session for LinkedIn and Hacker News
+when you're signed in there, writes the mapping with the same checks as
+`blowhorn chrome map`, and links each account it found to the profile in
+your account, named for its username. A LinkedIn sign-in with no saved
+username is not linked here; the session check can link it later. The profile's
+handles come from those accounts. A Chrome profile you mark not in use is recorded
 that way and unmapped on this computer; the Blowhorn profile and its
 credentials stay, and a run of every profile skips it. A profile you had
 already excluded stays excluded. Marking it in use again removes that skip
@@ -140,7 +150,7 @@ chrome mapping proposal for studio (3 profiles); nothing is applied
   profile  directory  name   account             note
   ada      Profile 2  Ada    ada@example.com     name match
   grace    Profile 5  Grace  grace@example.com   name match
-  marcus       -          -      -                   none
+  personal   -          -      -                   none
 to apply an activity you agree with:
   blowhorn chrome map ada 'Profile 2'
   blowhorn chrome map grace 'Profile 5'
@@ -173,10 +183,10 @@ Mapping also pairs the profile. The command opens the Blowhorn extension's
 pairing page in that Chrome profile and prints:
 
 ```
-opened the pairing page in chrome profile 'Profile 2'; once it says paired, runs for profile ada are checked against that chrome profile
+opened the pairing page in chrome profile 'Profile 2'; once paired it offers the Blowhorn side panel, and then runs for profile ada are checked against that chrome profile
 ```
 
-Wait for the page to say the profile is paired. From then on a run for `ada`
+Once the profile is paired the page offers to open the Blowhorn side panel in that window. From then on a run for `ada`
 refuses before it does anything if Chrome is on another profile. When the page
 could not be opened, the command says why and what to run once Chrome is open
 on that profile. See [Pairing](/docs/reference/chrome/#pairing).
@@ -215,7 +225,7 @@ blowhorn profile status --chrome
 | Profile | Linkedin | X | ... | Chrome              | Notes |
 | ada     | valid    | - | ... | Profile 2           |       |
 | grace   | -        | - | ... | Profile 5 (drift)   |       |
-| marcus      | -        | - | ... | -                   |       |
+| personal    | -        | - | ... | -                   |       |
 ```
 
 The Chrome column shows the mapped directory and, when its recorded

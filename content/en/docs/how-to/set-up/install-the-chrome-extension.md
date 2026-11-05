@@ -6,7 +6,10 @@ aliases: [/docs/how-to/install-the-chrome-extension/]
 ---
 
 
-Blowhorn drives Chrome through its Chrome extension. Chrome keeps an
+Requires macOS 13 or newer and Google Chrome 142 or newer. See
+[System requirements](/docs/reference/requirements/).
+
+Blowhorn drives Google Chrome through its Chrome extension. Chrome keeps an
 extension inside each Chrome profile, and the extension drives only the
 profile it is installed in. Install it in every Chrome profile you post
 from.
@@ -37,7 +40,7 @@ Blowhorn's store page in that one profile, and your click there installs
 it only there. A profile you leave out is never given the extension by
 guided setup; if an earlier setup already put it there, setup cannot
 remove it from that one profile - see
-[Leaving a Chrome profile out](/docs/how-to/set-up/first-run-setup/#leaving-a-chrome-profile-out).
+[Leaving a Chrome profile out](/docs/how-to/set-up/first-muster-setup/#leaving-a-chrome-profile-out).
 
 A computer that already has the extension from an earlier setup - put
 there by Chrome's external-extensions file - stays on that route
@@ -92,7 +95,8 @@ If it says the extension is too old for this Blowhorn, update it: open
 On first install the extension opens the Blowhorn welcome page. Its
 toolbar button shows the Blowhorn paw in grey until this Chrome profile
 is ready, then in colour; hovering it names what is missing. Click it to
-see what is missing, then follow its one button:
+open the Blowhorn side panel; its **This Chrome profile** section says what
+is missing, then follow its one button:
 
 - **Download the Blowhorn app** - the app is not installed.
 - **Update the Blowhorn app** - the app is too old for this extension.
@@ -104,8 +108,19 @@ see what is missing, then follow its one button:
 - **Map this profile in Blowhorn** - opens the app's mapping screen for
   this Chrome profile.
 
-When everything is in place the popup names the linked Blowhorn
-profile and signed-in account, and offers **Change mapping**.
+When everything is in place the panel names the linked Blowhorn
+profile and signed-in account, and offers **Change mapping**. The app
+tells the extension which profile by its id as well as its name, so a
+profile renamed in your Blowhorn account keeps its link.
+
+After an update from a version that named the profile only, the panel
+reads **Map this profile in Blowhorn** even for a Chrome profile that is
+mapped. Nothing is lost: the mapping itself is unchanged. The panel
+catches up the next time the app reads the mapping: after you sign in or
+change a mapping.
+
+The same panel shows a run while it works; see
+[Watch, pause or take over a run in Chrome](/docs/how-to/manage/watch-and-take-over-a-run/).
 
 ## Load it unpacked in one Chrome profile
 
@@ -113,7 +128,7 @@ When only one Chrome profile needs the extension, write the native host and
 follow the printed steps. Through the Blowhorn mapping:
 
 ```bash
-blowhorn chrome extension-install --profile kate
+blowhorn chrome extension-install --profile company
 ```
 
 By the Chrome profile directory, as `blowhorn chrome profiles` prints it:
@@ -137,7 +152,7 @@ with those clicks.
 See the files first, and write nothing:
 
 ```bash
-blowhorn chrome extension-install --profile kate --dry-run
+blowhorn chrome extension-install --profile company --dry-run
 ```
 
 ## Every Chrome profile on this computer
@@ -190,7 +205,7 @@ profile's copy was confirmed.
 
 ## From the desktop app
 
-Settings has one **chrome extension** card. The segmented control is the
+Settings has one **chrome extension** card, on its **Setup** page. The segmented control is the
 route: **every profile** or **ask in each profile**. The button stays
 **install chrome extension** either way. After the command, the card lists
 one row per Chrome profile with the same words the terminal prints.

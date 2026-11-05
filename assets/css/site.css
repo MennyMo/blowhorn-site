@@ -70,6 +70,10 @@
   --line-strong: #7A878C;
   --on-teal: #1E2117;
   --on-yellow: #1E2117;
+  /* The "Coming soon" sign on /download/ (Lee's reference art). Sign art only,
+     like coral for the rooster: never a UI state, button or text colour. */
+  --sign-red: #D32A00;
+  --sign-red-shade: #B32700;
 
   /* Light theme */
   --surface: #FFFFFF;
@@ -82,7 +86,6 @@
   --link-hover: var(--near-black);
   --line: #D5DEDD;
   --focus-ring: var(--teal-deep);
-  --shadow-pop: 4px 4px 0 0 #1E2117;
   --shadow-soft: 0 8px 24px rgba(30, 33, 23, 0.12);
 
   /* Liquid glass (light). Translucent surfaces over the ambient field; text
@@ -142,14 +145,13 @@
     --surface: #1E2117;
     --surface-raised: #2A2E25;
     --surface-tint: #173A34;
-    --ink: #FFFFFF;
+    --ink: #EDEDED;
     --ink-muted: #A3AEB2;
     --ink-wordmark: #FFFFFF;
     --link: var(--teal-bright);
     --link-hover: var(--mint);
     --line: #3C494F;
     --focus-ring: var(--teal-bright);
-    --shadow-pop: 4px 4px 0 0 #00D3A9;
     --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.45);
 
     --glass-fill: rgba(42, 46, 37, 0.52);
@@ -234,6 +236,8 @@ code {
   background: var(--surface-raised);
   border-radius: var(--radius-sm);
   padding: 1px var(--space-1);
+  /* A long path or flag breaks inside itself rather than scrolling the page at 320px. */
+  overflow-wrap: anywhere;
 }
 pre {
   margin: 0;
@@ -243,7 +247,7 @@ pre {
   overflow-x: auto;
   color: var(--ink);
 }
-pre code { background: none; padding: 0; }
+pre code { background: none; padding: 0; overflow-wrap: normal; }
 
 .visually-hidden {
   position: absolute !important;
@@ -372,11 +376,6 @@ pre code { background: none; padding: 0; }
   color: var(--on-teal);
 }
 .button-primary:hover { background: var(--teal-shade); border-color: var(--teal-shade); }
-.button-pop { box-shadow: var(--shadow-pop); }
-.button-pop:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 var(--near-black); }
-@media (prefers-color-scheme: dark) {
-  .button-pop:hover { box-shadow: 2px 2px 0 0 var(--teal-bright); }
-}
 .button-secondary {
   background: transparent;
   border-color: var(--line-strong);
@@ -394,12 +393,11 @@ pre code { background: none; padding: 0; }
    last item. Behaviour in assets/js/nav.js; without it (no
    .is-enhanced), hover and focus open the panels and small screens list the
    groups open. */
+/* The fill, blur and edge are the Glass recipe in cards.css (the header variant). */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: var(--surface);
-  border-bottom: var(--stroke-hairline) solid var(--line);
 }
 .site-header .wrap {
   position: relative;
@@ -523,21 +521,24 @@ pre code { background: none; padding: 0; }
 .mm-card {
   position: relative; display: grid; gap: var(--space-2); align-content: start;
   padding: var(--space-4); border-radius: var(--radius-lg); color: var(--ink);
-  background: var(--glass-sheen); box-shadow: inset 0 0 0 1px var(--glass-rim), 0 0 0 1px var(--glass-edge);
-  transition: transform 160ms ease, box-shadow 160ms ease;
 }
-.mm-card:hover, .mm-card:focus-visible { transform: translateY(-2px); box-shadow: inset 0 0 0 1px var(--glass-rim), 0 0 0 1px var(--glass-edge), var(--glass-shadow); }
-.mm-card-title { font-size: 15px; line-height: 21px; font-weight: 700; padding-right: var(--space-6); }
+.mm-card-title { grid-row: 2; grid-column: 1; font-size: 15px; line-height: 21px; font-weight: 700; padding-right: var(--space-6); }
 .mm-card:hover .mm-card-title { color: var(--link); }
 .mm-card-desc { font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+/* The arrow rides the title's row (the title keeps room for it), never the art. */
 .mm-card-arrow {
-  position: absolute; top: var(--space-4); right: var(--space-4); width: 22px; height: 22px; border-radius: var(--radius-pill);
-  background-color: var(--surface-tint); background-repeat: no-repeat; background-position: center; background-size: 12px 12px;
+  grid-row: 2; grid-column: 1; justify-self: end; align-self: center; width: 22px; height: 22px; border-radius: var(--radius-pill);
+  background-color: var(--card-chip, var(--surface-tint)); background-repeat: no-repeat; background-position: center; background-size: 12px 12px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%2300756A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   transition: background-color 160ms ease, transform 160ms ease;
 }
 .mm-card:hover .mm-card-arrow { background-color: var(--teal); transform: translateX(2px); }
-.mm-card-plan { background: var(--surface-tint); }
+/* The dispatch card is dark in both themes, so its arrow is always the bright one. */
+.card-dispatch .mm-card-arrow { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%2300D3A9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+@media (prefers-reduced-motion: reduce) {
+  .mm-card-arrow { transition: none; }
+  .mm-card:hover .mm-card-arrow { transform: none; }
+}
 .mm-card-plan-mark, .ways-card-plan .mm-card-plan-mark {
   display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
   background: var(--yellow); color: var(--on-yellow); border: 2px solid var(--near-black);
@@ -554,6 +555,7 @@ pre code { background: none; padding: 0; }
   .mm-cards { grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
   .mm-card { grid-template-columns: auto minmax(0, 1fr); column-gap: var(--space-3); align-items: center; padding: var(--space-3); }
   .mm-card .iface-art { grid-row: span 2; width: 92px; }
+  .mm-card-title { grid-row: 1; grid-column: 2; }
   .mm-card-desc { grid-column: 2; }
   .mm-card-arrow { display: none; }
   .mm-intro-sub { display: none; }
@@ -584,36 +586,126 @@ pre code { background: none; padding: 0; }
 .ia-lights i:nth-child(2) { background: var(--yellow); opacity: 0.9; }
 .ia-lights i:last-child { background: var(--teal); opacity: 0.8; }
 .ia-caption { font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.02em; color: var(--ink-muted); white-space: nowrap; overflow: hidden; }
-.ia-bar-tabs { justify-content: space-between; }
-.ia-tab {
-  display: inline-flex; align-items: center; gap: 5px; max-width: 78%;
-  padding: 2px 7px; border-radius: 5px 5px 0 0; background: var(--glass-fill-solid);
-  box-shadow: inset 0 0 0 1px var(--line); font-size: 8px; font-weight: 600; white-space: nowrap; overflow: hidden;
-}
-.ia-tab img, .ia-url img, .ia-chip img { display: block; flex: none; }
-.ia-url {
-  display: flex; align-items: center; gap: 6px; margin: 6px 8px 2px; padding: 3px 8px;
-  border-radius: var(--radius-pill); background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--line);
-}
-.ia-lock { width: 6px; height: 5px; flex: none; border: 1.5px solid var(--ink-muted); border-top-width: 3px; border-radius: 2px; }
 .ia-mono { font-family: var(--font-mono); font-size: 8px; color: var(--ink-muted); letter-spacing: 0.01em; }
-.ia-url .ia-line { flex: 1; }
-.ia-pin { margin-left: auto; border-radius: 4px; }
 .ia-live { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 7px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal-deep); }
 .ia-live i { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); }
-.ia-split { display: flex; }
-.ia-rail { display: flex; flex-direction: column; gap: 6px; padding: 8px 7px; border-right: 1px solid var(--line); background: var(--surface-raised); }
-.ia-rail i { width: 14px; height: 5px; border-radius: 3px; background: var(--line-strong); opacity: 0.4; }
-.ia-rail i.on { background: var(--teal-deep); opacity: 1; }
 .ia-rows { display: block; flex: 1; padding: 4px 8px 7px; }
 .ia-row { display: flex; align-items: center; gap: 7px; padding: 4.5px 2px; border-bottom: 1px solid var(--line); position: relative; }
 .ia-row:last-child { border-bottom: 0; }
 .ia-line { display: block; height: 5px; border-radius: 3px; background: var(--line-strong); opacity: 0.45; }
-.ia-line.w45 { width: 45%; } .ia-line.w50 { width: 50%; } .ia-line.w55 { width: 55%; }
-.ia-line.w60 { width: 60%; } .ia-line.w65 { width: 65%; } .ia-line.w70 { width: 70%; } .ia-line.w75 { width: 75%; }
-.ia-net { width: 9px; height: 9px; flex: none; border-radius: 3px; background: var(--charcoal); }
-.ia-net.n-li { background: #0A66C2; } .ia-net.n-x { background: var(--near-black); }
-.ia-net.n-rd { background: #FF4500; } .ia-net.n-bs { background: #0285FF; } .ia-net.n-gh { background: #57606A; }
+.ia-line.w45 { width: 45%; } .ia-line.w50 { width: 50%; } .ia-line.w60 { width: 60%; } .ia-line.w75 { width: 75%; }
+/* Activity rows: the app's monoline platform mark, its status word (dot plus
+   mono label) and the preview text, in that order. */
+.ia-mark { display: block; flex: none; color: var(--ink-muted); }
+.ia-state {
+  display: inline-flex; align-items: center; gap: 3px; flex: none; width: 40px;
+  font-family: var(--font-mono); font-size: 6.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap;
+}
+.ia-browser .ia-state { width: 48px; }
+.ia-state i { width: 4px; height: 4px; flex: none; border-radius: 50%; background: currentColor; }
+.ia-state.live { color: var(--teal-deep); }
+.ia-state.wait { color: var(--yellow-shade); }
+.ia-state.done { color: var(--ink-muted); }
+.ia-prev { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 8px; color: var(--ink); }
+
+/* Chrome on a Mac (interface-art-browser.html): lights at the far left of a
+   darker tab strip, the active tab joined to the toolbar by its curved feet,
+   back/forward/reload, the rounded omnibox, a thin bookmarks bar. */
+.ia-tabstrip {
+  display: flex; align-items: flex-end; padding: 5px 8px 0;
+  background: color-mix(in srgb, var(--line) 70%, var(--surface-raised));
+}
+.ia-tabstrip .ia-lights { align-self: center; margin: 0 9px 3px 0; }
+.ia-tab {
+  position: relative; display: inline-flex; align-items: center; gap: 4px; min-width: 0; flex: 0 1 78px;
+  padding: 3px 6px 4px; font-size: 7.5px; font-weight: 600; color: var(--ink-muted); white-space: nowrap;
+}
+.ia-tab.on { flex-basis: 104px; border-radius: 5px 5px 0 0; background: var(--glass-fill-solid); color: var(--ink); }
+.ia-tab.on::before, .ia-tab.on::after { content: ""; position: absolute; bottom: 0; width: 5px; height: 5px; }
+.ia-tab.on::before { left: -5px; background: radial-gradient(circle at 0 0, transparent 4.5px, var(--glass-fill-solid) 5px); }
+.ia-tab.on::after { right: -5px; background: radial-gradient(circle at 100% 0, transparent 4.5px, var(--glass-fill-solid) 5px); }
+.ia-tab img, .ia-tab .ia-mark, .ia-chip img { display: block; flex: none; }
+.ia-tab .ia-mark { color: var(--ink); }
+.ia-tab-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ia-tab-x, .ia-tab-new { flex: none; color: var(--ink-muted); }
+.ia-tab-x {
+  width: 5px; height: 5px; margin-left: auto; opacity: 0.7;
+  background: linear-gradient(45deg, transparent 43%, currentColor 43% 57%, transparent 57%), linear-gradient(-45deg, transparent 43%, currentColor 43% 57%, transparent 57%);
+}
+.ia-tab-new {
+  align-self: center; width: 7px; height: 7px; margin: 0 0 3px 5px;
+  background: linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat, linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat;
+}
+.ia-toolbar { display: flex; align-items: center; gap: 6px; padding: 4px 8px 3px; background: var(--glass-fill-solid); color: var(--ink-muted); }
+.ia-nav { display: block; flex: none; }
+.ia-nav .ia-nav-off { opacity: 0.4; }
+.ia-omni {
+  display: flex; align-items: center; gap: 5px; flex: 1; min-width: 0; padding: 2.5px 7px;
+  border-radius: var(--radius-pill); background: color-mix(in srgb, var(--line) 40%, var(--surface-raised));
+}
+.ia-omni svg { display: block; flex: none; }
+.ia-omni .ia-mono { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); }
+.ia-pin { display: block; flex: none; border-radius: 3px; }
+.ia-avatar { width: 9px; height: 9px; flex: none; border-radius: 50%; background: var(--khaki); }
+.ia-bookmarks {
+  display: flex; gap: 9px; padding: 1px 8px 4px; overflow: hidden; white-space: nowrap;
+  background: var(--glass-fill-solid); border-bottom: 1px solid var(--line);
+}
+.ia-bm { display: inline-flex; align-items: center; gap: 3px; font-size: 7px; font-weight: 500; color: var(--ink-muted); }
+.ia-fav { display: block; width: 6px; height: 6px; flex: none; border-radius: 2px; }
+.ia-fav.f-mail { background: var(--coral); } .ia-fav.f-docs { background: var(--teal); }
+.ia-fav.f-cal { background: var(--yellow); } .ia-fav.f-team { background: var(--charcoal); }
+.ia-page { display: block; padding: 6px 8px 5px; }
+.ia-page .ia-rows { padding: 0; }
+.ia-page-head { display: flex; align-items: center; padding: 0 2px 2px; }
+.ia-page-title { font-size: 9px; font-weight: 700; }
+.ia-card { display: flex; flex-direction: column; gap: 4px; padding: 6px 7px; border-radius: var(--radius-sm); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.ia-who { display: flex; align-items: center; gap: 5px; }
+.ia-face { width: 10px; height: 10px; flex: none; border-radius: 50%; background: var(--line-strong); opacity: 0.5; }
+.ia-page > .ia-row { margin-top: 3px; }
+
+/* The desktop console (the "desktop" kind): a hidden-inset title bar, so the
+   lights sit at the top of the left rail; the rail and the Activity list are
+   the app's own (desktop/src/renderer/console/ in the product repository). */
+.ia-panel.ia-app { display: flex; }
+.ia-app-rail {
+  display: flex; flex-direction: column; gap: 5px; flex: 0 0 38%; max-width: 104px; min-width: 0;
+  padding: 6px 6px 5px; border-right: 1px solid var(--line);
+}
+.ia-app-rail .ia-lights { margin: 0 0 2px 1px; }
+.ia-app-brand { display: flex; align-items: center; gap: 3px; padding: 0 1px; }
+.ia-app-brand picture, .ia-app-brand img { display: block; flex: none; }
+.ia-app-word { width: auto; height: 7px; }
+.ia-app-new {
+  display: flex; align-items: center; gap: 3px; padding: 2px 5px; border-radius: 4px;
+  background: var(--teal); color: var(--on-teal); font-size: 7px; font-weight: 600; white-space: nowrap;
+}
+.ia-app-new b { font-weight: 600; }
+.ia-app-nav { display: flex; flex-direction: column; gap: 1px; }
+.ia-app-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 1.5px 5px; border-radius: 3px;
+  font-size: 7.5px; font-weight: 500; color: var(--ink-muted); white-space: nowrap;
+}
+.ia-app-item.on { background: var(--surface-tint); color: var(--ink); }
+.ia-app-item em { font-style: normal; font-family: var(--font-mono); font-size: 5.5px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
+.ia-app-status {
+  display: flex; align-items: center; gap: 3px; margin-top: auto; padding: 4px 1px 0;
+  border-top: 1px dashed var(--line); font-size: 7px; font-weight: 500; white-space: nowrap;
+}
+.ia-app-status i { width: 4px; height: 4px; flex: none; border-radius: 50%; background: var(--teal-deep); }
+.ia-app-main { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.ia-app-bar { display: flex; align-items: center; padding: 5px 8px; border-bottom: 1px solid var(--line); }
+.ia-seg { display: inline-flex; overflow: hidden; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--line); }
+.ia-seg b { padding: 1px 5px; font-size: 7px; font-weight: 500; color: var(--ink-muted); white-space: nowrap; }
+.ia-seg b.on { background: var(--surface-raised); color: var(--ink); font-weight: 600; }
+.ia-app-head {
+  display: flex; gap: 7px; padding: 4px 10px 1px;
+  font-family: var(--font-mono); font-size: 5.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted);
+}
+.ia-app-head span:first-child { width: 9px; }
+.ia-app-head span:nth-child(2) { width: 40px; }
+.ia-app .ia-rows { padding: 0 8px 4px; }
+
 .ia-pill {
   margin-left: auto; flex: none; padding: 1px 6px; border-radius: var(--radius-pill);
   background: var(--surface-tint); color: var(--teal-deep);
@@ -624,7 +716,7 @@ pre code { background: none; padding: 0; }
 .ia-term .ia-bar { background: rgba(255, 255, 255, 0.06); border-bottom-color: rgba(255, 255, 255, 0.14); }
 .ia-term .ia-caption { color: rgba(255, 246, 224, 0.6); }
 .ia-code { display: block; padding: 8px 10px 10px; font-family: var(--font-mono); font-size: 8.5px; line-height: 1.9; white-space: nowrap; overflow: hidden; }
-.ia-cline { display: block; }
+.ia-cline { display: block; overflow: hidden; text-overflow: ellipsis; }
 .ia-cline b { color: var(--yellow); font-weight: 700; }
 .ia-cline.ok { color: var(--teal-bright, #00D3A9); }
 .ia-cursor { display: inline-block; width: 6px; height: 10px; margin-left: 3px; vertical-align: -1px; background: var(--cream); }
@@ -647,7 +739,10 @@ pre code { background: none; padding: 0; }
   .ia-pill { color: var(--teal-bright); }
   .ia-pill.ok { background: var(--teal-bright); color: var(--near-black); }
   .ia-live { color: var(--teal-bright); }
-  .ia-net.n-x { background: var(--cream); }
+  .ia-state.live { color: var(--teal-bright); }
+  .ia-state.wait { color: var(--yellow); }
+  .ia-app-status i { background: var(--teal-bright); }
+  .ia-fav.f-team { background: var(--line-strong); }
   .ia-chip-hub { box-shadow: inset 0 0 0 1px var(--teal-bright); }
   .ia-link .ia-pulse { background: var(--teal-bright); }
 }
@@ -659,7 +754,7 @@ pre code { background: none; padding: 0; }
     animation: ia-sweep 3.6s ease-in-out infinite;
   }
   .ia-cursor { animation: ia-blink 1.1s steps(1) infinite; }
-  .ia-live i { animation: ia-breathe 2.2s ease-in-out infinite; }
+  .ia-live i, .ia-app-status i { animation: ia-breathe 2.2s ease-in-out infinite; }
   .ia-pin { animation: ia-ring 2.8s ease-out infinite; }
   .ia-link .ia-pulse { animation: ia-travel 2.8s linear infinite; }
   .ia-link .ia-pulse.d2 { animation-delay: 1.4s; }
@@ -668,6 +763,27 @@ pre code { background: none; padding: 0; }
   @keyframes ia-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
   @keyframes ia-ring { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--teal) 45%, transparent); } 70%, 100% { box-shadow: 0 0 0 6px transparent; } }
   @keyframes ia-travel { 0% { left: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { left: calc(100% - 6px); opacity: 0; } }
+}
+
+/* The Product menu's narrow rows draw the art at 92px: the console keeps its
+   rail, the browser its lights, active tab, omnibox and pin, the MCP diagram
+   its three named chips. */
+.iface-art { container-type: inline-size; }
+@container (max-width: 150px) {
+  .ia-app-main, .ia-tab-bg, .ia-tab-new, .ia-tab-x, .ia-avatar, .ia-bm + .ia-bm + .ia-bm { display: none; }
+  .ia-app-rail { flex-basis: 100%; max-width: none; border-right: 0; }
+  .ia-tabstrip { padding-inline: 6px; }
+  .ia-tabstrip .ia-lights { margin-right: 6px; }
+  .ia-toolbar, .ia-bookmarks, .ia-page { padding-inline: 6px; }
+  .ia-toolbar { gap: 4px; }
+  .ia-omni { padding-inline: 5px; }
+  .ia-omni svg, .ia-prev { display: none; }
+  .ia-diagram { padding: 9px 5px; }
+  .ia-chip { min-width: 0; padding: 3px; }
+  .ia-chip-name { font-size: 7px; }
+  .ia-chip img { width: 10px; height: 10px; margin-bottom: 0; }
+  .ia-link { min-width: 3px; }
+  .ia-chip-sub, .ia-diagram-note { display: none; }
 }
 
 /* Homepage ways-in cards reuse the menu art at a quieter size. */
@@ -714,7 +830,9 @@ pre code { background: none; padding: 0; }
     top: 100%;
     left: 0;
     right: 0;
-    max-height: calc(100dvh - var(--header-h));
+    /* nav.js sets --sheet-top to the header's bottom edge, which sits lower
+       while the Tells bar above it is still on screen. */
+    max-height: calc(100dvh - var(--sheet-top, var(--header-h)));
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: var(--space-2) var(--gutter) var(--space-6);
@@ -780,6 +898,8 @@ pre code { background: none; padding: 0; }
 .hero-copy .label { margin-top: 0; }
 .hero-copy .display-xl { margin-top: var(--space-3); max-width: 12ch; }
 .hero-copy .body-lg { max-width: 34rem; color: var(--ink-muted); }
+/* data/hero.json tagline: one plain line under every headline, balanced when it wraps on phones. */
+.hero-tagline { text-wrap: balance; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 .hero-note { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); }
 .hero-art { position: relative; width: 100%; max-width: 560px; margin-inline: auto; }
@@ -913,10 +1033,10 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
+/* The card structure. cards.css owns the fill, the edge and the text colour. */
 .card {
-  background: var(--surface-raised);
   border-radius: var(--radius-lg);
-  padding: var(--space-6);
+  padding: var(--card-pad);
 }
 .card > * + * { margin-top: var(--space-3); }
 .card .h3 { margin-top: var(--space-4); }
@@ -930,7 +1050,6 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   color: var(--ink);
 }
 .card-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
-.card p, .card ul { color: var(--ink-muted); }
 .card pre { margin-top: var(--space-4); max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* Platforms */
@@ -983,7 +1102,8 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 .logo-tile img[src*="bluesky"],
 .logo-tile img[src*="github"] { width: 27px; height: 27px; }
 
-/* Major Blowhorn marketing card */
+/* Major Blowhorn marketing card. Its fill, edge and pop shadow are the paper
+   variant (card-paper in cards.css); this is only the layout. */
 .major-card {
   position: relative;
   display: grid;
@@ -991,8 +1111,6 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   align-items: center;
   padding: var(--space-8) var(--space-6);
   border-radius: var(--radius-xl);
-  background: var(--surface-tint);
-  box-shadow: var(--shadow-pop);
   overflow: hidden;
 }
 .major-figure {
@@ -1148,7 +1266,6 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   margin: var(--space-6) 0;
   padding: var(--space-4) var(--space-6);
   border-radius: var(--radius-lg);
-  background: var(--surface-tint);
 }
 .major-says-art {
   flex: none;
@@ -1165,26 +1282,27 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 
 /* Download */
 .download-card {
-  background: var(--surface-raised);
   border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  display: grid;
+  padding: var(--card-pad);
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
-  align-content: start;
 }
 .download-card .h3 { margin: 0; }
-.download-card .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+.download-card .download-req { margin: 0; color: var(--ink-wordmark); }
+.download-card .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; margin-top: auto; }
 .download-card .meta { color: var(--ink-muted); }
 .download-card .meta span + span::before { content: "\00b7"; margin-inline: var(--space-2); }
 .download-requirements {
   display: grid;
   gap: var(--space-4);
-  margin-top: var(--space-6);
-  padding-block: var(--space-5);
+  margin-top: var(--grid-gap);
+  padding-block: var(--space-6);
   border-block: var(--stroke-hairline) solid var(--line);
 }
 .download-requirements .label { margin-bottom: var(--space-2); }
 .download-requirements .h3 { margin: 0; }
+.download-requirements-note { margin: var(--space-2) 0 0; }
 .download-requirements-list {
   display: grid;
   gap: var(--space-3);
@@ -1194,13 +1312,63 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 }
 .download-requirements-list li {
   display: grid;
+  align-content: start;
   gap: var(--space-1);
 }
 .download-requirements-list span { color: var(--ink-muted); }
 .download-verify a { color: var(--ink-muted); }
 .download-verify a:hover { color: var(--link); }
+/* Windows is not out yet: a muted card with no link, a notify-me button and
+   form, and a red sign hung from a nail on the card's top edge. The sign sits beside the
+   icon, clear of the title, and swings once on load (never under reduced motion). */
+.download-card-soon { position: relative; cursor: default; }
+.download-card-soon .download-icon { filter: grayscale(1) drop-shadow(0 10px 18px rgba(30, 33, 23, 0.16)); opacity: 0.5; }
+.download-card-soon .h3,
+.download-card-soon p { color: var(--ink-muted); }
+/* Windows notify: the toggle is hidden until download.js reveals it, so
+   without JavaScript the form below is simply visible and posts on its
+   own. The form reuses the newsletter input row; the card's own gap
+   separates it from the button, so it drops the newsletter's top margin. */
+.windows-notify-toggle[hidden] { display: none !important; }
+.windows-notify { margin-top: 0; }
+.windows-notify-status { margin-top: var(--space-2); color: var(--ink); }
+.soon-sign {
+  position: absolute;
+  top: calc(-1 * var(--space-3));
+  right: var(--card-pad);
+  width: 168px;
+  height: auto;
+  overflow: visible;
+  transform-origin: 50% 9%;
+  filter: drop-shadow(0 6px 10px rgba(30, 33, 23, 0.22));
+  animation: soon-sign-swing 2.4s ease-out 0.4s both;
+}
+.soon-sign-string { fill: none; stroke: var(--sign-red); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.soon-sign-edge { fill: var(--sign-red-shade); }
+.soon-sign-face { fill: var(--sign-red); }
+.soon-sign-rim { fill: none; stroke: var(--white); stroke-opacity: 0.18; stroke-width: 1.5; }
+.soon-sign-text { fill: var(--white); font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: 0.06em; }
+.soon-sign-nail { fill: var(--charcoal); }
+.soon-sign-glint { fill: var(--white); fill-opacity: 0.55; }
+@keyframes soon-sign-swing {
+  0% { transform: rotate(-6deg); }
+  30% { transform: rotate(4deg); }
+  55% { transform: rotate(-2deg); }
+  78% { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+@media (prefers-color-scheme: dark) {
+  .soon-sign { filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5)); }
+  .soon-sign-nail { fill: var(--line-strong); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .soon-sign { animation: none; }
+}
+.download-grid { display: grid; gap: var(--grid-gap); }
+@media (min-width: 720px) {
+  .download-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (min-width: 900px) {
-  .download-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); }
   .download-requirements { grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 2fr); align-items: center; }
   .download-requirements-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
@@ -1243,7 +1411,12 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .footer-col-wide { grid-column: 1 / -1; }
-.footer-col-wide ul { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(6, auto); grid-auto-flow: column; column-gap: var(--space-6); }
+.footer-col-wide ul { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(6, auto); grid-auto-flow: column; }
+/* Free tools (data/tells.json footer) takes its own row below 1080px, its
+   links on Compare's columns, so no column is left alone in a half-empty row. */
+.footer-col-tools { grid-column: 1 / -1; }
+.footer-col-tools ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 399px) { .footer-col-tools ul { grid-template-columns: minmax(0, 1fr); } }
 .footer-title {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -1253,7 +1426,7 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   text-transform: uppercase;
   color: var(--ink-muted);
 }
-.footer-col ul { margin-top: var(--space-3); display: grid; gap: var(--space-1); align-content: start; }
+.footer-col ul { margin-top: var(--space-3); display: grid; row-gap: var(--space-1); column-gap: var(--space-6); align-content: start; }
 .footer-col a {
   display: inline-block;
   padding-block: var(--space-1);
@@ -1275,15 +1448,23 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 }
 .footer-tm { flex-basis: 100%; }
 @media (min-width: 720px) {
-  .footer-top { grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); align-items: center; gap: var(--space-8); }
   .footer-cols { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .footer-col-wide ul { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, auto); }
+  .footer-col-tools ul { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 960px) {
+  .footer-top { grid-template-columns: minmax(240px, 1fr) minmax(0, 26rem); align-items: center; gap: var(--space-8); }
 }
 @media (min-width: 1080px) {
   .footer-panel { padding: var(--space-12); gap: var(--space-8); }
-  .footer-cols { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .footer-col-wide { grid-column: span 2; }
-  .footer-col-wide ul { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(6, auto); }
+  /* One row, each column as wide as its longest link and the slack spread
+     between them: equal tracks cut "For AI agents and scripts" (and
+     "Chrome extension") short of their nowrap width. */
+  .footer-cols { grid-template-columns: repeat(6, max-content); justify-content: space-between; }
+  .footer-col-wide,
+  .footer-col-tools { grid-column: auto; }
+  .footer-col-tools ul { grid-template-columns: max-content; }
+  .footer-col-wide ul { grid-template-columns: repeat(2, max-content); grid-template-rows: repeat(6, auto); }
 }
 /* Service status: ported from a shared footer pattern (
    src/sections/General/Footer/footer.style.js, .status-link and .pulse-icon). */
@@ -1363,7 +1544,6 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
 .page .trust-body { margin-top: var(--space-12); }
 
 .notice {
-  background: var(--surface-tint);
   color: var(--ink);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
@@ -1382,28 +1562,22 @@ html[data-hero-art="fan"] .platforms-fan { display: none; }
   .empty-state { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
 }
 
-/* Whole-card links (10 Oct): the card is the link, no underlines on card text. */
+/* Whole-card links (10 Oct): the card is the link, no underlines on card text. The lift,
+   its transition and its reduced-motion rule are cards.css's alone. */
 a.card-link, a.platform, a.docs-card {
   display: block;
   color: inherit;
   text-decoration: none;
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 a.platform { display: flex; height: 100%; justify-content: center; }
 a.card-link, a.docs-card { height: 100%; }
 a.card-link > * + * { margin-top: var(--space-3); }
-a.card-link .h3 { margin-top: var(--space-4); color: var(--ink); }
+a.card-link .h3 { margin-top: var(--space-4); }
 a.card-link > .h3:first-child { margin-top: 0; }
 a.card-link *, a.platform *, a.docs-card * { text-decoration: none; }
 a.card-link:hover, a.platform:hover, a.docs-card:hover,
 a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   text-decoration: none;
-  box-shadow: 0 0 0 var(--stroke-hairline) var(--line), var(--shadow-soft);
-  transform: translateY(-1px);
-}
-@media (prefers-reduced-motion: reduce) {
-  a.card-link, a.platform, a.docs-card { transition: none; }
-  a.card-link:hover, a.platform:hover, a.docs-card:hover { transform: none; }
 }
 /* Logos: one optical size, centred both ways in the tile. */
 .logo-tile img { display: block; margin: auto; object-position: center; }
@@ -1433,43 +1607,13 @@ body::before {
 }
 body { background: var(--surface); }
 
-.glass,
-.card,
-.platform,
-.download-card,
-.docs-banner,
-.major-says,
-.notice,
-.swatch,
+/* The glass recipe for .glass panels is the Glass variant in cards.css. */
 .td-offline-search-results {
-  background:
-    linear-gradient(180deg, var(--glass-sheen), transparent 46%),
-    var(--glass-fill);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   box-shadow:
     inset 0 1px 0 0 var(--glass-specular),
     inset 0 0 0 1px var(--glass-rim),
     0 0 0 1px var(--glass-edge),
     var(--glass-shadow);
-}
-/* Callouts carry a whisper of teal so they read as asides, not cards. */
-.docs-banner,
-.major-says,
-.notice {
-  background:
-    linear-gradient(180deg, var(--glass-sheen), transparent 46%),
-    linear-gradient(120deg, color-mix(in srgb, var(--surface-tint) 70%, transparent), transparent 80%),
-    var(--glass-fill);
-}
-
-/* The header: one sticky glass bar, a hairline under it, content blurring past. */
-.site-header {
-  background: var(--glass-fill-strong);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 0;
-  box-shadow: inset 0 -1px 0 0 var(--glass-edge), 0 1px 0 0 var(--glass-rim), 0 8px 24px -18px rgba(30, 33, 23, 0.35);
 }
 
 /* Platform logo tiles: opaque white, as each platform asks, with a glass edge. */
@@ -1491,11 +1635,6 @@ body { background: var(--surface); }
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55), inset 0 -1px 0 0 rgba(0, 0, 0, 0.10), 0 8px 18px -8px rgba(0, 143, 128, 0.65);
 }
 .button-primary:hover { background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%); }
-.button-pop { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55), var(--shadow-pop); }
-.button-pop:hover { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55), 2px 2px 0 0 var(--near-black); }
-@media (prefers-color-scheme: dark) {
-  .button-pop:hover { box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55), 2px 2px 0 0 var(--teal-bright); }
-}
 .button-secondary {
   border-color: transparent;
   background:
@@ -1506,19 +1645,19 @@ body { background: var(--surface); }
   box-shadow: inset 0 1px 0 0 var(--glass-specular), inset 0 0 0 1px var(--line-strong), var(--glass-shadow);
 }
 .button-secondary:hover { background: var(--glass-fill-strong); }
-
-/* Whole-card links lift on hover; the glass edge brightens with them. */
-a.card-link:hover, a.platform:hover, a.docs-card:hover,
-a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
-  box-shadow:
-    inset 0 1px 0 0 var(--glass-specular),
-    inset 0 0 0 1px var(--glass-rim),
-    0 0 0 1px var(--glass-edge),
-    var(--glass-shadow-lift);
-  transform: translateY(-2px);
+/* A disabled button reads as unavailable: flat, muted, no hover, no lift. */
+.button:disabled,
+.button:disabled:hover {
+  cursor: not-allowed;
+  background: var(--surface-raised);
+  background-image: none;
+  border-color: var(--line);
+  color: var(--ink-muted);
+  box-shadow: none;
+  transform: none;
 }
-.docs-card:hover,
-.docs-landing a.platform:hover { background: linear-gradient(180deg, var(--glass-sheen), transparent 46%), var(--glass-fill-strong); }
+
+/* Whole-card links: the hover lift and border are per variant (cards.css). */
 
 /* Sections float on the field: the rule between them fades at both ends. */
 .section + .section {
@@ -1527,16 +1666,6 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   background-size: min(100%, var(--measure)) 1px;
   background-repeat: no-repeat;
   background-position: top center;
-}
-
-/* The Major card keeps its tint and pop shadow (the brand moment), on glass. */
-.major-card {
-  background:
-    linear-gradient(180deg, var(--glass-sheen), transparent 50%),
-    color-mix(in srgb, var(--surface-tint) 82%, transparent);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  box-shadow: inset 0 1px 0 0 var(--glass-specular), var(--shadow-pop);
 }
 
 /* Docs: the sidebar search field and code blocks get the same quiet glass. */
@@ -1553,25 +1682,19 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 }
 @media (prefers-reduced-transparency: reduce) {
   :root { --glass-fill: var(--glass-fill-solid); --glass-fill-strong: var(--surface); --glass-field: var(--surface); --glass-sheen: transparent; }
-  .glass, .card, .platform, .download-card, .docs-banner, .major-says, .notice, .swatch,
-  .td-offline-search-results, .site-header, .button-secondary, .major-card {
+  .td-offline-search-results, .button-secondary {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
-  .major-card { background: var(--surface-tint); }
   body::before { opacity: 0.4; }
 }
 @media (prefers-contrast: more) {
   :root { --glass-fill: var(--surface); --glass-fill-strong: var(--surface); --glass-field: var(--surface); --glass-sheen: transparent; --glass-edge: var(--line-strong); }
   body::before { display: none; }
 }
-@media (prefers-reduced-motion: reduce) {
-  a.card-link:hover, a.platform:hover, a.docs-card:hover,
-  a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible { transform: none; }
-}
 @media print {
   body::before { display: none; }
-  .glass, .card, .platform, .download-card, .swatch { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+  .glass { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
 }
 
 /* ---------- Brand (/brand/) ----------
@@ -1594,6 +1717,21 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   margin-top: var(--space-6);
 }
 .brand-hero-actions .caption { max-width: 22rem; }
+/* The two kit downloads: each button with its own caption underneath, side by side
+   when there is room, stacked on narrow screens. */
+.brand-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-6) var(--space-8);
+}
+.brand-download {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  flex: 1 1 15rem;
+  max-width: 20rem;
+}
 .brand-showcase {
   display: grid;
   justify-items: center;
@@ -1612,6 +1750,7 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   font-size: clamp(22px, 2.6vw, 28px);
   line-height: 1.15;
   letter-spacing: -0.015em;
+  text-wrap: balance;
   color: var(--ink-wordmark);
 }
 @media (min-width: 720px) {
@@ -1684,10 +1823,30 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   gap: var(--space-6);
   grid-template-columns: minmax(0, 1fr);
 }
-.asset-grid-4, .mascot-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (min-width: 640px) { .asset-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 640px) { .asset-grid-4, .mascot-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 640px) {
+  .asset-grid-2,
+  .asset-grid-4,
+  .mascot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .asset-grid-4,
+  .mascot-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
 .mascot-grid { margin-top: var(--space-8); }
+/* A character tile's name wraps under itself, so its PNG and WebP buttons stay on
+   the same line as every other tile's in the row. */
+.mascot-grid .asset-meta { flex-wrap: nowrap; }
+.mascot-grid .asset-meta > div { min-width: 0; }
+.mascot-grid .asset-gets { flex: none; }
+.troop-group { margin-top: var(--space-8); }
+.troop-group + .mascot-grid { margin-top: var(--space-6); }
+.asset-stage.troop-stage { padding: 0; overflow: hidden; background: var(--near-black); }
+.asset-stage.troop-stage img { width: 100%; height: 100%; max-height: none; object-fit: contain; }
+.asset-name .nowrap { white-space: nowrap; }
 .asset { display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; }
 .asset-stage {
   display: grid;
@@ -1706,9 +1865,14 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 .stage-cream.asset-stage img { width: 84%; max-height: 84%; }
 .asset-meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-2) var(--space-3);
+}
+.asset-meta > div,
+.asset-meta > .asset-name {
+  min-width: 0;
 }
 .asset-meta > div > * + * { margin-top: 2px; }
 .asset-name { color: var(--ink); }
@@ -1725,11 +1889,11 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 }
 .asset-get:hover { color: var(--link); border-color: var(--link); text-decoration: none; }
 .asset-gets {
-  flex: none;
   display: inline-flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--space-1);
+  max-width: 100%;
 }
 .asset-get-primary { border-color: var(--ink); }
 .app-icons .asset-gets { justify-content: flex-start; margin-top: var(--space-2); }
@@ -1805,18 +1969,19 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 .ratio-yellow { flex: 7; background: var(--yellow); }
 .ratio-coral { flex: 3; background: var(--coral); }
 .color-ratio-note { margin-top: var(--space-2); }
+/* Fixed column counts (1, 2, 4), listed in card-deal.html, so the swatch variants never repeat side by side. */
 .swatches {
   display: grid;
   gap: var(--space-4);
-  grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 }
+@media (min-width: 480px) { .swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 900px) { .swatches { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .swatch {
   display: flex;
   flex-direction: column;
-  background: var(--surface-raised);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 0 0 var(--stroke-hairline) var(--line);
 }
 .swatch > .swatch-chip { display: block; height: 64px; box-shadow: inset 0 -1px 0 var(--line); }
 .swatch-meta { padding: var(--space-4); }
@@ -1894,6 +2059,12 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 .brand-rules li + li { margin-top: var(--space-2); }
 .bubble-specimens { list-style: none; padding: 0; margin: 0 0 var(--space-8); display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 .bubble-specimens .ui { margin: 0; }
+/* Cards specimen (brand page): the five surfaces in a grid, the glass panel alone below. */
+.card-specimens { list-style: none; padding: 0; margin: 0 0 var(--space-8); display: grid; gap: var(--grid-gap); grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.card-specimens .label, .card-specimen-glass .label { margin: 0; }
+.card-specimens .ui, .card-specimen-glass .ui { margin: var(--space-2) 0 0; }
+.card-specimens .caption, .card-specimen-glass .caption { margin: var(--space-2) 0 0; }
+.card-specimen-glass { margin: 0 0 var(--space-8); max-width: 32rem; }
 .bubble-specimens .caption { margin: var(--space-1) 0 0; }
 
 /* Usage */
@@ -1953,7 +2124,7 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   background-image: radial-gradient(var(--line) 1px, transparent 1.5px);
   background-size: var(--space-6) var(--space-6);
 }
-.brand-cta > div > * + * { margin-top: var(--space-2); }
+.brand-cta-copy > * + * { margin-top: var(--space-2); }
 .brand-legal { margin-top: var(--space-8); max-width: 48rem; }
 
 @page { size: 13.333in 7.5in; margin: 0.4in; }
@@ -1964,7 +2135,7 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   .site-header, .site-footer, .brand-index, .brand-hero-actions, .brand-cta, .asset-gets, .asset-get, .copy, .skip-link { display: none !important; }
   .brand-section { break-inside: auto; padding-block: var(--space-8); }
   .asset, .swatch, .rule, .type-card, .major-card, .clear-grid { break-inside: avoid; }
-  .button-pop, .major-card { box-shadow: none; }
+  .major-card { box-shadow: none; }
 }
 
 /* ---------- Compare (/compare/) ----------
@@ -2024,8 +2195,8 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 /* Coverage matrix: a Markdown table tagged {.coverage}. layouts/_markup/render-table.html
    gives each legend cell a cov-* class; brand tokens only, and every fill is mixed into
    the surface so the same rules hold in light and dark. */
-.coverage-scroll { overflow-x: auto; max-width: 100%; }
-.coverage-scroll:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.table-scroll { overflow-x: auto; max-width: 100%; }
+.table-scroll:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 .page table.coverage { max-width: none; min-width: 56rem; border-collapse: separate; border-spacing: 3px; }
 .page .coverage th, .page .coverage td { padding: var(--space-2); border-bottom: 0; vertical-align: middle; }
 .page .coverage thead th { vertical-align: bottom; border-bottom: var(--stroke-hairline) solid var(--line); }
@@ -2041,7 +2212,6 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 .coverage .cov-closed { background: var(--surface-raised); color: var(--ink-muted); text-decoration: line-through; }
 .page .coverage tr.cov-us > td:not(.cov),
 .page .coverage th.cov-us { background: var(--surface-tint); color: var(--ink-wordmark); font-weight: 700; border-radius: var(--radius-sm); }
-.page .coverage tr.cov-us > td:first-child { box-shadow: inset 4px 0 0 var(--teal); }
 .coverage tr.cov-us .cov-yes,
 .coverage td.cov-us.cov-yes { background: color-mix(in srgb, var(--teal) 55%, var(--surface)); }
 
@@ -2057,7 +2227,7 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 
 /* ---------- Download page and the thanks page ---------- */
 .download-head { max-width: 44rem; }
-.download-icon { width: 72px; height: 72px; filter: drop-shadow(0 10px 18px rgba(30, 33, 23, 0.22)); }
+.download-icon { width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 10px 18px rgba(30, 33, 23, 0.22)); }
 .download-cta {
   display: grid;
   gap: var(--space-6);
@@ -2105,19 +2275,7 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   place-items: center;
   padding: var(--space-4);
   border-radius: var(--radius-xl);
-  background:
-    linear-gradient(180deg, var(--glass-sheen), transparent 46%),
-    var(--glass-fill);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  box-shadow: inset 0 1px 0 0 var(--glass-specular), inset 0 0 0 1px var(--glass-rim), 0 0 0 1px var(--glass-edge), var(--glass-shadow);
   overflow: hidden;
-}
-.step-extension .step-stage {
-  background:
-    linear-gradient(180deg, var(--glass-sheen), transparent 46%),
-    linear-gradient(135deg, color-mix(in srgb, var(--surface-tint) 85%, transparent), transparent 85%),
-    var(--glass-fill);
 }
 .step-text { max-width: 17rem; color: var(--ink-muted); font-size: 15px; line-height: 22px; }
 .step-text b { color: var(--ink); font-weight: 600; }
@@ -2193,7 +2351,7 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 @media (prefers-contrast: more) {
   .step-stage { background: var(--surface); box-shadow: 0 0 0 1px var(--line-strong); }
 }
-.download-page .download-grid { align-items: start; }
+.download-page .download-grid { align-items: stretch; }
 
 /* ---------- Agentic AI Marketing (/agents/) ---------- */
 .agent-page .agent-section { margin-top: var(--space-12); }
@@ -2378,21 +2536,21 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
 .agent-faq { display: grid; gap: var(--space-3); max-width: 48rem; }
 .agent-faq details { padding: var(--space-4) var(--space-6); border-radius: var(--radius-lg); }
 .agent-faq summary { cursor: pointer; font-weight: 600; }
-.agent-faq details p { margin-top: var(--space-3); color: var(--ink-muted); }
+.agent-faq details p { margin-top: var(--space-3); }
 .agent-cta { padding: clamp(24px, 4vw, 48px); border-radius: var(--radius-lg); text-align: center; }
 .agent-cta > * + * { margin-top: var(--space-3); }
 /* Related-page labels come from data and can outrun a 320px screen: let
    them wrap instead of the global .button nowrap scrolling the page. */
-.agent-cta .button { white-space: normal; max-width: 100%; text-align: center; }
-.agent-grid { list-style: none; padding: 0; display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.agent-cta .button, .agent-section .actions .button { white-space: normal; max-width: 100%; text-align: center; }
+/* Fixed column counts (1, 2, 4), listed in card-deal.html, so the tile variants never repeat side by side. */
+.agent-grid { list-style: none; padding: 0; display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 640px) { .agent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1080px) { .agent-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .agent-tile {
   display: flex; gap: var(--space-4); align-items: center; height: 100%;
   padding: var(--space-4); border-radius: var(--radius-lg); color: inherit; text-decoration: none;
-  transition: transform 160ms ease, box-shadow 160ms ease;
 }
-.agent-tile:hover { transform: translateY(-2px); box-shadow: var(--glass-shadow-lift); }
 .agent-tile-copy { display: grid; gap: 2px; }
-@media (prefers-reduced-motion: reduce) { .agent-tile { transition: none; } .agent-tile:hover { transform: none; } }
 
 /* Blowhorn vs <competitor> pages (/compare/<slug>/, layouts/versus.html).
    Built on the Agentic AI Marketing glass components. */
@@ -2402,24 +2560,21 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
    a sequence instead of a stack of identical cards (tokens: --teal, --teal-deep,
    --teal-bright, --surface-tint, --line, --line-strong, --ink-muted, --radius-lg,
    --space-*; see the blowhorn repository's marketing/brand/tokens.json).
-   1. Split: two open columns under a rule; Blowhorn's rule is teal. No card.
+   1. Split: two cards, the competitor in plain and Blowhorn in paper, so the
+      difference is the variant, never a coloured edge.
    2. Ledger: one glass panel, check marks for wins, open circles with a dash for gaps.
-   3. Table: an open data table with a ruled header; Blowhorn's column tinted.
-   4. Prose: narrative with a teal side rule, no surface at all.
-   The verdict is the one highlighted callout. */
+   3. Table: an open data table with one ruled header; Blowhorn's column is set
+      in full ink and tinted on row hover.
+   4. Prose: narrative with no surface at all.
+   The verdict is the one paper callout. The FAQ alternates field and plain. */
 .versus-verdict {
   max-width: 40rem;
   padding: var(--space-4) var(--space-6);
   border-radius: var(--radius-md);
-  border-left: 4px solid var(--teal);
-  background: color-mix(in srgb, var(--surface-tint) 80%, transparent);
-  color: var(--ink);
 }
 
 .versus-split { display: grid; gap: var(--grid-gap, var(--space-8)); }
 @media (min-width: 720px) { .versus-split { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.versus-col { padding-top: var(--space-4); border-top: 2px solid var(--line-strong); }
-.versus-col.versus-us { border-top-color: var(--teal); }
 .versus-col > * + * { margin-top: var(--space-3); }
 .versus-list { display: grid; gap: var(--space-2); padding-left: var(--space-6); color: var(--ink-muted); }
 .versus-list li { list-style: disc; }
@@ -2439,6 +2594,22 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   .versus-ledger-gap { border-top: 0; border-left: var(--stroke-hairline) solid var(--line); }
 }
 .versus-ledger-win { background: color-mix(in srgb, var(--surface-tint) 55%, transparent); }
+/* Versus spotlight: the optional per-page art-and-proof section (front matter
+  `spotlight`). A glass panel: cast art as the focal element, copy, an optional
+  CLI code card and the official platform logo tiles (white tiles, both themes). */
+.versus-spotlight {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--card-pad, var(--space-6));
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+@media (min-width: 720px) { .versus-spotlight { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: center; } }
+.versus-spotlight-art { margin: 0; }
+.versus-spotlight-art img { display: block; width: 100%; height: auto; border-radius: var(--radius-md); }
+.versus-spotlight-art figcaption { margin-top: var(--space-2); }
+.versus-spotlight-copy > * + * { margin-top: var(--space-4); }
+.versus-platforms { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0 0; padding: 0; list-style: none; }
 .versus-marks { display: grid; gap: var(--space-3); padding: 0; list-style: none; }
 .versus-marks li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--space-3); align-items: start; color: var(--ink); }
 .versus-ledger-gap .versus-marks li { color: var(--ink-muted); }
@@ -2475,32 +2646,20 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
   font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--ink-muted);
 }
-.page .versus-table thead .compare-us { color: var(--ink); border-bottom-color: var(--teal); }
+.page .versus-table thead .compare-us { color: var(--ink); }
 .page .versus-table th, .page .versus-table td { padding: var(--space-4); }
 .page .versus-table tbody tr:hover > * { background: color-mix(in srgb, var(--surface-tint) 35%, transparent); }
 .page .versus-table tbody tr:hover > .compare-us { background: var(--surface-tint); }
 
-.versus-belief {
-  padding-left: var(--space-6);
-  border-left: 3px solid var(--teal);
-}
 /* The rule hugs the text, so the section trades its padding for margin. */
 .page .agent-section.versus-belief { padding-block: 0; margin-block: var(--section-y); background-image: none; }
 .versus-belief > * + * { margin-top: var(--space-4); }
 .versus-belief p { max-width: var(--text-measure, 64ch); color: var(--ink-muted); }
 .versus-belief p:first-of-type { color: var(--ink); font-size: 18px; line-height: 28px; }
 
-.versus-faq { gap: 0; }
-.versus-faq details {
-  padding: var(--space-4) 0;
-  border-radius: 0;
-  background: none;
-  -webkit-backdrop-filter: none; backdrop-filter: none;
-  box-shadow: none;
-  border-bottom: var(--stroke-hairline) solid var(--line);
-}
-.versus-faq details:first-child { border-top: var(--stroke-hairline) solid var(--line); }
 .versus-all { margin-top: var(--space-6); }
+.versus-logos { display: flex; flex-wrap: wrap; gap: var(--grid-gap); padding: 0; list-style: none; }
+.versus-logos li { display: grid; justify-items: center; gap: var(--space-2); }
 
 /* ---------- Whitespace and rhythm (DESIGN.md, "Whitespace and rhythm") ----------
    One spacing system for every page. Sections, heads, grids and cards read these
@@ -2537,9 +2696,11 @@ a.card-link:focus-visible, a.platform:focus-visible, a.docs-card:focus-visible {
    the label lands just under the bar after --section-y grew. */
 section[id],
 .section[id],
-.compare-section[id],
-.brand-section[id] {
+.compare-section[id] {
   scroll-margin-top: calc(0px - var(--section-y));
+}
+.brand-section[id] {
+  scroll-margin-top: 0;
 }
 .agent-section + .agent-section,
 .compare-section + .compare-section,
@@ -2587,10 +2748,6 @@ section > h2 + :not(p) { margin-top: var(--head-gap); }
 /* Grids and cards. */
 .grid, .agent-prompts, .agent-grid { gap: var(--grid-gap); }
 .agent-faq { gap: var(--stack-gap); }
-.card { padding: var(--card-pad); }
-.card > * + * { margin-top: var(--space-3); }
-.card .h3 { margin-top: var(--space-4); }
-.card > .h3:first-child { margin-top: 0; }
 /* Docs cards (Start here, quadrants, platform lists): the children are spans,
    so without a column layout the title and description run together inline and
    the margin rhythm above never applies. Stack them with gap instead. */
@@ -2636,7 +2793,6 @@ a.card.docs-card > * { margin-top: 0; }
 .major-story { max-width: var(--text-measure); }
 .major-story h2 { margin-bottom: var(--head-gap); }
 .major-story p + p { margin-top: var(--stack-gap); }
-.trust-tells { margin-top: var(--stack-gap); }
 .major-plate { margin: 0; }
 .major-plate img { display: block; width: 100%; height: auto; border-radius: 14px; box-shadow: 0 24px 48px -24px rgb(30 33 23 / 45%); }
 .major-plate figcaption { margin-top: var(--intro-gap); }
@@ -2698,7 +2854,7 @@ a.card.docs-card > * { margin-top: 0; }
   padding: var(--space-2) var(--space-3);
   background: var(--surface); color: inherit; font: inherit; text-align: left;
   border: 2px solid var(--near-black); border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-pop); cursor: pointer;
+  cursor: pointer;
 }
 .army-src .soldier { width: 44px; height: 44px; flex: none; object-fit: contain; }
 .army-src:hover { background: var(--surface-raised); }
@@ -2739,7 +2895,7 @@ a.card.docs-card > * { margin-top: 0; }
 .army-mac {
   display: grid; justify-items: center; gap: 2px; padding: var(--space-3) var(--space-2);
   background: var(--surface); border: 2px solid var(--near-black); border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-pop); font-weight: 600; transition: transform 0.3s, background 0.3s;
+  font-weight: 600; transition: transform 0.3s, background 0.3s;
 }
 .army-mac .soldier { width: 40px; height: 40px; object-fit: contain; }
 .army-mac-tag { font-size: 0.8125rem; font-weight: 400; color: var(--ink-muted); }
@@ -2780,14 +2936,14 @@ a.card.docs-card > * { margin-top: 0; }
 .army-packet.is-flying { opacity: 1; }
 .army-sources, .army-hq, .army-macs { z-index: 1; }
 .army-orders { padding: var(--space-4); background: var(--glass-fill-solid); }
-.army-cic { position: relative; z-index: 1; display: grid; gap: var(--stack-gap); padding: var(--space-4); background: var(--glass-fill-solid); border: 2px solid var(--near-black); border-radius: var(--radius-lg); box-shadow: var(--shadow-pop); }
+.army-cic { position: relative; z-index: 1; display: grid; gap: var(--stack-gap); padding: var(--space-4); background: var(--glass-fill-solid); border: 2px solid var(--near-black); border-radius: var(--radius-lg); }
 .army-cic-who { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 .army-cic-who > span:nth-child(2) { flex: 1 1 12rem; }
 .army-cic-star { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--yellow); color: var(--near-black); border: 2px solid var(--near-black); font-size: 1.4rem; }
 .army-halt {
   min-width: 8rem; min-height: 48px; padding: var(--space-2) var(--space-6);
   background: var(--coral); color: #fff; font: 800 1.125rem/1 var(--font-display); letter-spacing: 0.06em; text-transform: uppercase;
-  border: 2px solid var(--near-black); border-radius: 999px; box-shadow: var(--shadow-pop); cursor: pointer;
+  border: 2px solid var(--near-black); border-radius: 999px; cursor: pointer;
 }
 .army-halt:hover { background: var(--coral-shade); }
 .army-halt:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; }
@@ -2806,39 +2962,13 @@ a.card.docs-card > * { margin-top: 0; }
 
 /* Social proof (layouts/_partials/social-proof.html). Glass surfaces, low density.
    The proof is spread down the page on purpose: a wordmark ticker directly
-   under the hero, quote chips inside the hero, one big pull-quote after the
+   under the hero, one big pull-quote after the
    platforms, the full grid ("Fewer tabs. More reach."), and a closing band
    beside the download call. One data file (data/testimonials.json) feeds all
    of it through placements, so a quote appears where its slot is called. */
 .proof-flag { display: inline-block; padding: 0.1em 0.55em; border-radius: 999px; background: #FFE08A; color: #3A2E00; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
 .proof-avatar { display: inline-grid; place-items: center; flex: none; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--glass-fill-strong); border: var(--stroke-hairline, 1px) solid var(--glass-edge); box-shadow: var(--glass-shadow); font-weight: 700; font-size: 0.8rem; }
 .proof-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
-/* The hero carries exactly one proof spot, paired to the day's hero
-   banner. The teaser truncates the quote, so the summary is a real
-   disclosure control: one click (or Enter) opens the full quote in
-   place, with a link on to the full grid in context. Open, the teaser
-   hides, so the full quote is the only copy — never the teaser plus
-   the full quote. */
-.proof-spot { margin: var(--space-6) 0 0; max-width: 34rem; border-radius: 1.25rem; background: var(--glass-fill); border: 1px solid var(--glass-rim); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); }
-.proof-spot-summary { display: flex; gap: var(--space-3); align-items: center; padding: var(--space-3) var(--space-4); cursor: pointer; list-style: none; border-radius: 1.25rem; }
-.proof-spot-summary::-webkit-details-marker { display: none; }
-.proof-spot-summary:hover .proof-spot-toggle, .proof-spot-summary:hover .proof-spot-collapse { color: var(--link); }
-.proof-spot-summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; }
-.proof-spot-teaser { flex: 1; min-width: 0; }
-.proof-spot-toggle, .proof-spot-collapse { flex: none; font-size: 0.8rem; font-weight: 700; color: var(--teal-deep); white-space: nowrap; }
-.proof-spot-toggle::after { content: " +"; }
-.proof-spot-collapse { display: none; }
-.proof-spot-collapse::after { content: " –"; }
-/* Open: the teaser hides, so the full quote below is the only copy on
-   the page — never the teaser plus the full quote — and the toggle
-   swaps to a collapse label. */
-.proof-spot[open] .proof-spot-teaser { display: none; }
-.proof-spot[open] .proof-spot-toggle { display: none; }
-.proof-spot[open] .proof-spot-collapse { display: inline; }
-@media (prefers-color-scheme: dark) { .proof-spot-toggle, .proof-spot-collapse { color: var(--teal-bright); } }
-.proof-spot-full { padding: 0 var(--space-4) var(--space-4); }
-.proof-spot-full blockquote { margin: 0 0 var(--space-2); font-size: 1.05rem; line-height: 1.5; }
-.proof-spot-full p { margin: 0; }
 .proof-big { max-width: 46rem; margin: 0 auto; text-align: center; }
 .proof-big blockquote { margin: 0 0 var(--space-4); }
 .proof-big blockquote::before { content: "\201C"; display: block; font-family: var(--font-display); font-size: 4rem; line-height: 0.6; color: var(--teal-deep); }
@@ -2854,8 +2984,8 @@ a.card.docs-card > * { margin-top: 0; }
 .proof-ticker:hover .proof-ticker-track { animation-play-state: paused; }
 .proof-ticker-item { display: flex; align-items: center; padding-right: var(--space-8); white-space: nowrap; }
 /* Each organisation's own horizontal logo (data/user_logos.json), bare:
-   no plate, no box. The files are one treated set — grayscale, canvas
-   trimmed to the art, white lockups stored inverted — at one height.
+   no plate, no box. The files are one treated set - grayscale, canvas
+   trimmed to the art, white lockups stored inverted - at one height.
    Dark mode inverts the strip, so the dark-based set reads light on
    the dark ground and the stored-white lockups come back as their
    original white; contrast stays soft in both schemes. The grayscale
@@ -2864,41 +2994,36 @@ a.card.docs-card > * { margin-top: 0; }
 @media (prefers-color-scheme: dark) { .proof-ticker-logo { filter: grayscale(1) invert(1); } }
 @keyframes proof-ticker-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-/* Quote grid. A giant quotation mark sits behind the cards, and the cards
-   take turns: a featured opener, then a cycle of accent edge, tinted fill
-   and plain glass, so no two neighbours dress the same. */
+/* Quote grid. A giant quotation mark sits behind the cards. The cards take
+   their variants from the template (cards.css): a featured paper opener across
+   the whole first row, then the rest dealt stamp, field, plain and paper
+   (card-deal.html), so no two cards in a row or a column dress the same. */
 .proof-section { position: relative; overflow: hidden; }
 .proof-section .wrap { position: relative; }
 .proof-section .wrap::before { content: "\201C"; position: absolute; top: -3.5rem; right: -1rem; font-family: var(--font-display); font-weight: 800; font-size: 22rem; line-height: 1; color: var(--teal); opacity: 0.08; pointer-events: none; }
-.proof-grid { list-style: none; padding: 0; display: grid; gap: var(--grid-gap, var(--space-6)); grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
-.proof-card { position: relative; overflow: hidden; padding: var(--card-pad, var(--space-6)); border-radius: 1.25rem; background: var(--glass-fill); border: 1px solid var(--glass-rim); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); transition: transform 200ms ease, box-shadow 200ms ease; }
-.proof-card:hover { transform: translateY(-3px); box-shadow: var(--glass-shadow-lift); }
+/* Fixed columns (1, 2, 3, listed in card-deal.html "proof-grid"), never auto-fill, so the
+   dealt variants hold at every width. The featured quote takes the whole first row. */
+.proof-grid { list-style: none; padding: 0; display: grid; gap: var(--grid-gap, var(--space-6)); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 640px) { .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 960px) { .proof-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.proof-card-feature { grid-column: 1 / -1; }
+.proof-card { position: relative; overflow: hidden; padding: var(--card-pad, var(--space-6)); border-radius: 1.25rem; }
 .proof-mark { display: block; font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 0.7; color: var(--teal-deep); }
 .proof-card blockquote { margin: var(--space-3) 0 var(--space-4); }
 .proof-who { display: flex; gap: var(--space-3); align-items: center; margin: 0; }
-.proof-card:nth-child(3n+2) { border-left: 4px solid var(--teal); }
-.proof-card:nth-child(3n+2) .proof-mark { color: var(--yellow-shade); }
-.proof-card:nth-child(3n) { background: var(--surface-tint); }
-.proof-card:nth-child(3n) .proof-mark { color: var(--charcoal); }
-@media (prefers-color-scheme: dark) {
-  .proof-card:nth-child(3n) { background: var(--surface-tint); }
-  .proof-card:nth-child(3n) .proof-mark { color: var(--mint); }
-}
-.proof-card-feature { background: var(--near-black); color: var(--cream); border-color: var(--near-black); }
-.proof-card-feature .proof-mark { font-size: 4.5rem; color: var(--yellow); }
+.proof-card-feature .proof-mark { font-size: 4.5rem; }
 .proof-card-feature blockquote { font-family: var(--font-display); font-weight: 700; font-size: 1.45rem; line-height: 1.35; }
-.proof-card-feature .caption { color: var(--mint); }
-.proof-card-feature .proof-avatar { border-color: var(--cream); }
-@media (min-width: 900px) {
-  .proof-card-feature { grid-column: span 2; }
-}
 .proof-band { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); margin-bottom: var(--space-8); }
-.proof-band figure { margin: 0; padding-left: var(--space-4); border-left: 3px solid var(--teal-deep); }
-.proof-band figure:nth-child(2) { border-left-color: var(--yellow-shade); }
-.proof-band figure:nth-child(3) { border-left-color: var(--charcoal); }
+.proof-band figure { margin: 0; padding: var(--card-pad, var(--space-6)); }
+/* Rotating proof (solutions pages): one quote at a time. The first quote
+   shows with no JavaScript; the nav only appears once
+   proof-rotation.js has made it work, so a dead button never ships. */
+.proof-rotate-item { display: none; margin: 0; padding: var(--card-pad, var(--space-6)); border-radius: 1.25rem; }
+.proof-rotate-item.is-current { display: block; }
+.proof-rotate-item blockquote { margin: 0 0 var(--space-4); }
+.proof-rotate-nav { display: none; gap: var(--space-3); margin-top: var(--space-4); }
+.proof-rotate.is-rotating .proof-rotate-nav { display: flex; }
 @media (prefers-reduced-motion: reduce) {
-  .proof-card { transition: none; }
-  .proof-card:hover { transform: none; }
   .proof-ticker-viewport { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
   .proof-ticker-track { animation: none; flex-wrap: wrap; width: auto; row-gap: var(--space-3); }
 }
@@ -2946,10 +3071,6 @@ a.card.docs-card > * { margin-top: 0; }
 .plan { display: flex; flex-direction: column; position: relative; }
 .plan > * + * { margin-top: var(--space-3); }
 .plan .plan-name { margin-top: 0; font-size: 22px; }
-.plan-featured {
-  outline: 2px solid var(--teal); outline-offset: -2px;
-  box-shadow: var(--glass-shadow-lift);
-}
 .plan-badge {
   align-self: flex-start; padding: 2px var(--space-3); border-radius: var(--radius-pill);
   background: var(--teal); color: var(--on-teal); font-weight: 700;
@@ -3004,7 +3125,7 @@ a.card.docs-card > * { margin-top: 0; }
 .ai-persona { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); margin: 0; }
 .ai-persona .ai-robo { width: clamp(120px, 22vw, 200px); height: auto; }
 .ai-persona figcaption { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.ai-status { display: inline-block; padding: .2rem .7rem; border-radius: 999px; font-size: .8rem; font-weight: 700; letter-spacing: .02em; background: rgba(0, 211, 169, .16); color: #00756A; }
+.ai-status { display: inline-block; padding: .2rem .7rem; border-radius: 999px; font-size: .8rem; font-weight: 700; letter-spacing: .02em; background: rgba(0, 211, 169, .10); color: #00756A; }
 .ai-soon { background: rgba(238, 90, 68, .14); color: #B23A26; }
 .ai-code-grid { display: grid; gap: var(--space-4); }
 @media (min-width: 860px) { .ai-code-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; } }
@@ -3053,30 +3174,23 @@ a.card.docs-card > * { margin-top: 0; }
 }
 
 /* ---------- Clickable cards read as clickable at rest ----------
-   Whole-card links (a.card-link, a.docs-card, a.platform, a.agent-tile) carry
-   two at-rest cues that static cards never get: a teal-tinted edge and a round
-   arrow chip. Hover keeps its lift and fills the chip teal; keyboard focus gets
-   a visible ring; reduced motion drops the movement, not the cues.
+   Whole-card links carry one at-rest cue that static cards never get: a round
+   arrow chip. The card's own variant (cards.css) sets the edge and the lift;
+   hover fills the chip teal; keyboard focus gets a visible ring; reduced motion
+   drops the movement, not the cue.
+   The chip's fill is the card's --card-chip (cards.css), so it stands off
+   every variant's fill.
    Tokens (blowhorn repository, marketing/brand/tokens.json): teal, teal-deep,
    teal-bright, surface-tint, near-black (on-teal), radius-pill, space-*. */
-:root { --card-cue-edge: color-mix(in srgb, var(--teal) 34%, transparent); }
-@media (prefers-color-scheme: dark) {
-  :root { --card-cue-edge: color-mix(in srgb, var(--teal-bright) 30%, transparent); }
-}
 a.card-link, a.docs-card, a.platform, a.agent-tile {
   position: relative;
-  box-shadow:
-    inset 0 1px 0 0 var(--glass-specular),
-    inset 0 0 0 1px var(--card-cue-edge),
-    0 0 0 1px var(--glass-edge),
-    var(--glass-shadow);
 }
 a.card-link::after, a.docs-card::after, a.platform::after, a.agent-tile::after {
   content: "";
   flex: none;
   width: 28px; height: 28px;
   border-radius: var(--radius-pill);
-  background-color: var(--surface-tint);
+  background-color: var(--card-chip, var(--surface-tint));
   background-image: var(--card-cue-arrow);
   background-repeat: no-repeat;
   background-position: center;
@@ -3088,6 +3202,15 @@ a.card-link::after, a.docs-card::after, a.platform::after, a.agent-tile::after {
   a.card-link::after, a.docs-card::after, a.platform::after, a.agent-tile::after {
     --card-cue-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%2300D3A9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
+}
+/* Paper and Dispatch keep one palette in both themes (cards.css), so their
+   chip does too: the tint comes from the card's own --surface-tint, and the
+   arrow is the light theme's on paper and the dark theme's on dispatch. */
+a.card-paper::after {
+  --card-cue-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%2300756A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+a.card-dispatch::after {
+  --card-cue-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%2300D3A9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 /* Big cards: chip in the top-right corner, beside the icon. Platform tiles:
    agent and versus tiles: a smaller chip in the corner, clear of the copy. */
@@ -3101,13 +3224,6 @@ a.card-link:focus-visible::after, a.docs-card:focus-visible::after, a.platform:f
   --card-cue-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%231E2117' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   transform: translateX(2px);
 }
-a.card-link:hover, a.docs-card:hover, a.platform:hover, a.agent-tile:hover {
-  box-shadow:
-    inset 0 1px 0 0 var(--glass-specular),
-    inset 0 0 0 1px color-mix(in srgb, var(--teal) 60%, transparent),
-    0 0 0 1px var(--glass-edge),
-    var(--glass-shadow-lift);
-}
 a.card-link:focus-visible, a.docs-card:focus-visible, a.platform:focus-visible, a.agent-tile:focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 3px;
@@ -3117,11 +3233,6 @@ a.card-link:focus-visible, a.docs-card:focus-visible, a.platform:focus-visible, 
   a.card-link:hover::after, a.docs-card:hover::after, a.platform:hover::after, a.agent-tile:hover::after,
   a.card-link:focus-visible::after, a.docs-card:focus-visible::after, a.platform:focus-visible::after, a.agent-tile:focus-visible::after { transform: none; }
 }
-@media (prefers-contrast: more) {
-  :root { --card-cue-edge: var(--teal-deep); }
-}
-/* Static cards stay flat: testimonial and logo cards no longer lift on hover. */
-.proof-card:hover, .proof-logo-card:hover { transform: none; box-shadow: var(--glass-shadow); }
 a.card-link > :first-child, a.docs-card > :first-child { padding-right: var(--space-8); }
 a.agent-tile { padding-right: var(--space-6); }
 
@@ -3138,7 +3249,7 @@ a.agent-tile { padding-right: var(--space-6); }
 .page .fm-matrix td { vertical-align: top; }
 .fm-risk { display: inline-block; padding: 0 var(--space-2); border-radius: var(--radius-pill); font-weight: 600; font-size: 0.8125rem; line-height: 1.6; white-space: nowrap; }
 .fm-note { display: block; margin-top: var(--space-1); font-size: 0.8125rem; }
-.fm-safe .fm-risk { background: var(--teal-shade); color: var(--on-teal); }
+.fm-safe .fm-risk { background: var(--teal); color: var(--on-teal); }
 .fm-care .fm-risk { background: var(--yellow); color: var(--on-yellow); }
 .fm-risky .fm-risk { background: var(--coral); color: var(--near-black); }
 .fm-none .fm-risk { box-shadow: inset 0 0 0 1.5px var(--line-strong); color: var(--ink-muted); font-weight: 500; }
@@ -3154,15 +3265,17 @@ a.agent-tile { padding-right: var(--space-6); }
 .fm-prose { overflow-wrap: break-word; }
 /* Platform index cards: a resting arrow shows each card opens its own page. */
 .platform-cards { margin-top: var(--space-4); }
-/* They use the shared card cue (teal edge, round arrow chip), centred on the
-   right. Hover is subtle: only the edge brightens; the chip stays as it is at
-   rest, with no lift and no shift, so the arrow stays aligned with the other cards. */
+/* They use the shared round arrow chip, centred on the right. Hover lifts the
+   card 2px like every card link (cards.css); the chip stays as it is at rest,
+   with no fill change and no shift, so the arrow stays aligned with the other cards. */
 a.docs-card.platform-card { padding-right: calc(var(--space-8) + var(--space-4)); }
+/* That padding already clears the centred chip, so the title does not also
+   reserve the corner-chip room every other docs card's first child keeps. */
+a.docs-card.platform-card > :first-child { padding-right: 0; }
 a.docs-card.platform-card::after { top: 50%; right: var(--space-4); transform: translateY(-50%); }
-a.docs-card.platform-card:hover, a.docs-card.platform-card:focus-visible { transform: none; }
 a.docs-card.platform-card:hover::after, a.docs-card.platform-card:focus-visible::after {
   transform: translateY(-50%);
-  background-color: var(--surface-tint);
+  background-color: var(--card-chip, var(--surface-tint));
   --card-cue-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7h8.5M7.5 3.5L11 7l-3.5 3.5' fill='none' stroke='%2300756A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme: dark) {
@@ -3358,14 +3471,16 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
 .role-page .grid { list-style: none; padding: 0; }
 
 /* ---------- Cookie notice (layouts/_partials/consent.html) ----------
-  A small glass card in the bottom corner, full width less the gutter on
-  phones. It never covers more than it must and closes with one tap or Esc. */
+  A small glass card centered at the bottom of the screen, full width less
+  the gutter on phones. It never covers more than it must and closes with
+  one tap or Esc. */
 .consent {
   position: fixed;
   z-index: 1040;
-  inset-inline: var(--space-4);
+  left: 50%;
   bottom: var(--space-4);
-  max-width: 360px;
+  width: min(360px, calc(100% - 2 * var(--space-4)));
+  transform: translateX(-50%);
   padding: var(--space-4) var(--space-8) var(--space-4) var(--space-4);
   border-radius: var(--radius-lg);
   background: var(--glass-fill-strong);
@@ -3409,14 +3524,165 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
 @media (prefers-reduced-motion: no-preference) {
   .consent:not([hidden]) { animation: consent-in 200ms ease-out; }
   @keyframes consent-in {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: none; }
+    from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    to { opacity: 1; transform: translateX(-50%); }
   }
 }
 @media (min-width: 480px) {
-  .consent { inset-inline: var(--space-6) auto; bottom: var(--space-6); }
+  .consent { bottom: var(--space-6); width: min(360px, calc(100% - 2 * var(--space-6))); }
 }
 
+
+/* ---------- Blowhorn Tells, the free Am I a Bot? check (data/tells.json) ----------
+   One look for every place the site points at Tells: a slim bar above the
+   header, a Free pill on the header item, the home page band, the callout on
+   compare, /ai/ and /agents/, and the card on /download/thanks/. Sleeper Cell's
+   art keeps its black ground in a rounded frame, like the cast pages. The docs
+   card lives with the docs layout (assets/scss/_styles_project.scss). */
+.tells-bar {
+  background: var(--yellow);
+  color: var(--on-yellow);
+  box-shadow: inset 0 -1px 0 0 var(--yellow-shade);
+}
+/* Dismissed: tells-bar-head.html sets this before first paint. */
+html[data-tells-bar="off"] .tells-bar { display: none; }
+.tells-bar-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding-block: var(--space-2);
+  padding-right: calc(var(--gutter) + var(--space-8));
+}
+.tells-bar-text { margin: 0; font-size: 13px; line-height: 18px; font-weight: 500; }
+.tells-bar-link,
+.tells-docs-card-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-thickness: var(--stroke-hairline);
+  text-underline-offset: 3px;
+}
+/* The bar sits on brand yellow: dark ink keeps the link AA (9.4:1) in every
+   theme, separate from the docs card which keeps the themed link color. */
+.tells-bar-link { color: var(--on-yellow); }
+.tells-bar-link:hover { text-decoration-thickness: 2px; }
+.tells-docs-card-link a { color: var(--link); }
+.tells-docs-card-link a:hover { color: var(--link-hover); }
+/* The global link rules strip underlines and tint hover/focus colors; on the
+   yellow bar the dark ink stays and the focus ring goes dark too. */
+.tells-bar-link:hover,
+.tells-bar-link:focus-visible { color: var(--on-yellow); text-decoration: underline; }
+.tells-bar :focus-visible { outline-color: var(--on-yellow); }
+.tells-bar-link svg,
+.tells-docs-card-link svg { flex: none; fill: none; stroke: currentColor; stroke-width: var(--stroke-icon); stroke-linecap: round; stroke-linejoin: round; }
+@media (prefers-reduced-motion: no-preference) {
+  .tells-bar-link svg,
+  .tells-docs-card-link svg { transition: transform 160ms ease; }
+  .tells-bar-link:hover svg,
+  .tells-docs-card-link a:hover svg { transform: translateX(2px); }
+}
+.tells-bar-close {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--gutter) - var(--space-2));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--on-yellow);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.tells-bar-close[hidden] { display: none; }
+.tells-bar-close:hover { background: color-mix(in srgb, var(--on-yellow) 14%, transparent); color: var(--on-yellow); }
+.tells-bar-close svg { fill: none; stroke: currentColor; stroke-width: var(--stroke-icon); stroke-linecap: round; }
+@media (min-width: 720px) {
+  .tells-bar-inner { justify-content: center; padding-left: calc(var(--gutter) + var(--space-8)); text-align: center; }
+}
+
+/* Header item: the label with a small Free pill. */
+.mm-top-label { display: inline-flex; align-items: center; gap: 6px; }
+.mm-pill {
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--teal-deep);
+  color: var(--white);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+@media (prefers-color-scheme: dark) {
+  .mm-pill { background: var(--teal-bright); color: var(--near-black); }
+}
+
+/* Home band (layouts/_partials/home/tells.html) and the callout
+   (layouts/_partials/tells-callout.html). */
+.tells-panel {
+  display: grid;
+  gap: var(--grid-gap);
+  align-items: center;
+  padding: var(--card-pad);
+  border-radius: var(--radius-xl);
+}
+.tells-art,
+.tells-callout-art { margin: 0; }
+.tells-art img,
+.tells-callout-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  background: var(--near-black);
+}
+.tells-art { order: -1; }
+.tells-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.tells-agents { margin-top: var(--stack-gap); max-width: var(--text-measure); }
+.tells-agents a { white-space: nowrap; }
+@media (max-width: 479px) {
+  .tells-panel .tells-actions .button { flex: 1 1 100%; }
+}
+@media (min-width: 900px) {
+  .tells-panel { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-12); padding: var(--space-12); }
+  .tells-art { order: 0; }
+}
+.tells-callout { display: grid; gap: var(--grid-gap); align-items: center; border-radius: var(--radius-xl); }
+.tells-callout-art { max-width: 20rem; }
+.tells-callout-copy > * + * { margin-top: var(--intro-gap); }
+.tells-callout-copy p { max-width: var(--text-measure); }
+.tells-callout-copy .tells-actions { margin-top: var(--space-6); column-gap: var(--space-6); }
+.tells-callout-more { color: var(--link); }
+@media (min-width: 720px) {
+  .tells-callout { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: var(--space-8); }
+}
+
+/* /download/thanks/: one small card after the install steps. */
+.tells-thanks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 44rem;
+  margin: var(--space-16) auto 0;
+  padding: var(--card-pad);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+.tells-thanks p { margin: 0; color: var(--ink-muted); max-width: var(--text-measure); }
+@media (min-width: 720px) {
+  .tells-thanks { flex-direction: row; justify-content: space-between; text-align: left; }
+  .tells-thanks .button { flex: none; }
+}
 
 /* Signal home: AI sections (layouts/_partials/home/ai-agents.html, ai-content.html). */
 .ai-agent-cards, .ai-content-offers { list-style: none; padding: 0; }
@@ -3437,3 +3703,8 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
 .ai-agents-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 .ai-content-price { color: var(--ink); }
 .ai-agent-cards .cli-flag { white-space: nowrap; }
+
+/* Signup form honeypot: off-screen, not display:none, so naive bots still
+   fill it while sighted visitors never see it. The Worker answers such
+   submissions with success without storing anything. */
+.signup-honeypot { position: absolute; left: -9999px; }

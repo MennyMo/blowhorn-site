@@ -112,6 +112,19 @@ class ActionExamplesSchemaTest(unittest.TestCase):
         self.assertNotIn("--check-queue", flags)
         self.assertNotIn("--amplify", flags)
 
+    def test_title_page_section_has_no_h2(self):
+        page = (
+            '---\ntitle: "blowhorn comment"\n---\n\n'
+            "| Flag | Type |\n| --- | --- |\n| `--platform` | string |\n\n"
+            "## blowhorn comment queue\n\n"
+            "| Flag | Type |\n| --- | --- |\n| `--check-queue` | boolean |\n"
+        )
+        sections = check.cli_sections(page)
+        self.assertIn("comment", sections)
+        self.assertIn("--platform", check.allowed_flags(page, "comment"))
+        self.assertNotIn("--check-queue", check.allowed_flags(page, "comment"))
+        self.assertIn("--check-queue", check.allowed_flags(page, "comment queue"))
+
     def test_subcommand_must_match_cliref(self):
         problems = check.check_cli_available(
             "x",

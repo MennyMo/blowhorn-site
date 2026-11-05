@@ -7,7 +7,7 @@
   utc-day uses floor(UTC days since the epoch) modulo the number of heroes, and
   interval uses floor(now / intervalSeconds). Config comes from data/hero.json
   via hero-rotation.html. It runs once, at load: the hero never changes under
-  a reader. See docs/hero-variants.md. */ -}}
+  a reader, except through the Easter egg hotkey below. See docs/hero-variants.md. */ -}}
 {{- $rot := partial "hero-rotation.html" . -}}
 {{- $defaultArt := "stage" -}}
 {{- range $rot.heroes }}{{ if eq .id $rot.default }}{{ $defaultArt = .art }}{{ end }}{{ end -}}
@@ -23,6 +23,10 @@
     <script>
       (function () {
         var heroes = {{ $picks | jsonify | safeJS }}, n = {{ $rot.rotating }}, mode = {{ $rot.mode | jsonify | safeJS }}, seconds = {{ $rot.intervalSeconds }}, i = -1, q = null, k;
+        /* Exposed for assets/js/hero-cycle.js, so typing "cycle" can move
+           to the next hero in place, with its art and media, instead of
+           duplicating this pick list. */ 
+        window.blowhornHeroes = heroes;
         try { q = new URLSearchParams(window.location.search).get('hero'); } catch (e) {}
         if (q && /^[0-9]+$/.test(q)) { i = parseInt(q, 10) - 1; if (i >= n) { i = -1; } }
         else if (q) { for (k = 0; k < heroes.length; k++) { if (heroes[k].id === q) { i = k; } } }
@@ -34,5 +38,44 @@
         document.documentElement.setAttribute('data-hero', heroes[i].id);
         document.documentElement.setAttribute('data-hero-art', heroes[i].art);
         document.documentElement.setAttribute('data-hero-media', heroes[i].media);
+        /* Easter egg: press h to advance to the next hero, Shift+h for the
+           previous one. Cycles every rendered hero, rotating and
+           non-rotating alike, in render order. Ignored while typing, in a
+           dialog, or with Ctrl, Cmd or Alt held. Updates ?hero=<id> so the
+           shown hero survives a reload and can be shared. */
+        document.addEventListener('keydown', function (ev) {
+          if (!ev || (ev.key !== 'h' && ev.key !== 'H')) return;
+          if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+          var target = ev.target;
+          if (target) {
+            var tag = (target.tagName || '').toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable) return;
+            if (target.closest && target.closest('[role="dialog"]')) return;
+          }
+          var cur = document.documentElement.getAttribute('data-hero'), idx = 0, j;
+          for (j = 0; j < heroes.length; j++) { if (heroes[j].id === cur) { idx = j; } }
+          idx = ev.shiftKey ? (idx - 1 + heroes.length) % heroes.length : (idx + 1) % heroes.length;
+          var next = heroes[idx];
+          document.documentElement.setAttribute('data-hero', next.id);
+          document.documentElement.setAttribute('data-hero-art', next.art);
+          document.documentElement.setAttribute('data-hero-media', next.media);
+          try {
+            var url = new URL(window.location.href);
+            url.searchParams.set('hero', next.id);
+            window.history.replaceState(null, '', url.toString());
+          } catch (e) {}
+          try {
+            var live = document.getElementById('hero-easter-egg-live');
+            if (!live) {
+              live = document.createElement('div');
+              live.id = 'hero-easter-egg-live';
+              live.setAttribute('aria-live', 'polite');
+              live.className = 'visually-hidden';
+              document.body.appendChild(live);
+            }
+            var title = document.getElementById('hero-title');
+            live.textContent = title ? title.textContent.trim() : next.id;
+          } catch (e) {}
+        });
       })();
     </script>

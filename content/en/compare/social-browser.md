@@ -2,15 +2,15 @@
   "title": "Blowhorn vs Social Browser",
   "linkTitle": "Social Browser",
   "seo_title": "Blowhorn vs Social Browser: honest comparison",
-  "description": "Social Browser is a multi-profile browser with an automation studio and MCP control. Blowhorn is a social tool: queue, schedule, amplify and outreach, in your real Chrome.",
+  "description": "Social Browser is a multi-profile browser with an automation studio and MCP control. Blowhorn is a social tool: queue, schedule, amplify and outreach, in your real browser.",
   "layout": "versus",
   "weight": 41,
-  "lastmod": "2026-10-12",
+  "lastmod": "2026-10-26",
   "competitor": "Social Browser",
   "mark": "SBr",
   "site_url": "https://social-browser.com/",
   "group": "Local multi-profile browsers",
-  "verdict": "Social Browser is a multi-profile browser with an automation studio and MCP control. Blowhorn is a social tool: queue, schedule, amplify and outreach, in your real Chrome.",
+  "verdict": "Social Browser is a multi-profile browser with an automation studio and MCP control. Blowhorn is a social tool: queue, schedule, amplify and outreach, in your real browser.",
   "them": [
     "You manage many browser profiles with proxies on Windows",
     "You want a generic automation studio for any website",
@@ -19,7 +19,7 @@
   "us": [
     "You speak as real people, on accounts that are really theirs",
     "You want a social tool (queue, schedule, amplify, outreach), not a browser",
-    "Real Chrome, signed in as you, is what you want"
+    "A real browser, signed in as you, is what you want"
   ],
   "price_them": "Free; Professional $10 per month; Premium $100 per year; Business $300 per 3 years",
   "price_src": "https://social-browser.com/",
@@ -27,12 +27,17 @@
     {
       "f": "What it is",
       "t": "A multi-profile browser for many separate identities",
-      "b": "A social tool that acts as you, from your own Chrome"
+      "b": "A social tool that acts as you, from your own browser"
     },
     {
       "f": "Browser fingerprints and proxies",
       "t": "Yes, that's the product",
-      "b": "No. Real Chrome, real you"
+      "b": "No. Real browser, real you"
+    },
+    {
+      "f": "IP address each post comes from",
+      "t": "A proxy for each profile",
+      "b": "Each computer's own internet connection, so each teammate posts from their own IP address. No proxy to buy or run"
     },
     {
       "f": "Queue, schedule, amplify",
@@ -47,7 +52,7 @@
     {
       "f": "AI agents",
       "t": "API",
-      "b": "MCP server, REST API, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
+      "b": "MCP server, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
     },
     {
       "f": "Bought engagement",
@@ -63,7 +68,7 @@
     },
     {
       "q": "Is Blowhorn an antidetect browser?",
-      "a": "No. Blowhorn uses your real Chrome, signed in as you, and hands CAPTCHAs and 2FA back to you. Curious what sites can see about your browser?",
+      "a": "No. Blowhorn uses your real browser, signed in as you, and hands CAPTCHAs and 2FA back to you. Curious what sites can see about your browser?",
       "link": {
         "href": "https://tells.blowhorn.ai/",
         "label": "Run the free check at Blowhorn Tells"

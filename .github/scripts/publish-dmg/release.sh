@@ -13,7 +13,7 @@ versioned=(dist/Blowhorn-*-mac-*.dmg)
   echo "## Download"
   echo
   echo "- macOS: \`$(basename "${versioned[0]}")\`"
-  echo "- Download: https://github.com/${GH_REPO}/releases/download/${VERSION}/Blowhorn-mac.dmg"
+  echo "- Download: https://github.com/${GH_REPO}/releases/download/${VERSION}/$(basename "${versioned[0]}")"
   echo
   echo "## SHA-256"
   echo

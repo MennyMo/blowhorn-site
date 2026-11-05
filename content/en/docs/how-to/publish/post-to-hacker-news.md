@@ -21,7 +21,7 @@ that and no way to turn it on.
 ## Before the first run
 
 1. **Store the profile's Hacker News login.** Both keys are needed; the
-   password is read from your account and never from `config.yaml`.
+   password is read from your account.
 
    ```bash
    blowhorn profile set your-profile HN_USERNAME=<account> HN_PASSWORD=<password>
@@ -33,7 +33,7 @@ that and no way to turn it on.
    blowhorn profile get your-profile
    ```
 
-2. **Map the profile to a Chrome profile**, if it is not mapped already.
+2. **Map the profile to a Google Chrome profile**, if it is not mapped already.
    Hacker News is driven through a browser, like LinkedIn, X, and Reddit.
    See [Map Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/).
 

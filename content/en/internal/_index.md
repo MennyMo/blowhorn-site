@@ -1,7 +1,7 @@
 ---
 title: Internal
 layout: internal
-description: Blowhorn's internal strategy, research and finance, for named team members only.
+description: Blowhorn's internal strategy, finance, engineering, design, specs, plans and research, for named team members only.
 # Rendered only by `hugo --environment internal`.
 # Keep internal pages out of the site-wide lists (menus, the search index,
 # llms.txt, the sitemap and related-page lists), even in the internal build.

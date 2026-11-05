@@ -6,7 +6,7 @@ aliases: [/docs/how-to/uninstall/]
 ---
 
 
-Remove Blowhorn from your computer: the background service, the Chrome native host,
+Remove Blowhorn from your computer: the background service, the Google Chrome native host,
 the launchers, the desktop app and the checkout's build products. The sign-in
 on this computer goes with the app. Your other data stays unless you ask for it
 to go. The account on the shared store is never touched.
@@ -43,7 +43,7 @@ blowhorn uninstall
 The command removes, in order, reporting each item as `removed`, `not
 present`, `not unregistered` or `failed`:
 
-1. **The background service.** A loaded `ai.blowhorn.service` is booted out
+1. **The background service.** A loaded `ai.blowhorn.service` (the installed app's label; a checkout's is `ai.blowhorn.service.dev`) is booted out
    and waited for, then its file under `~/Library/LaunchAgents` is removed. A
    label the app registered as its login item is booted out the same way; its
    Login Items entry is unregistered by the app itself in step 5. The attach
@@ -56,8 +56,8 @@ present`, `not unregistered` or `failed`:
 3. **The every-profile install entries.** The external-extensions file and
    Blowhorn's own entry in the managed policy, removed with the same
    administrator prompt that wrote them; other keys in that file stay.
-4. **The launchers.** `~/.local/bin/blowhorn` and `~/.local/bin/blowhorn-axi`,
-   when they carry the installer's marker. A file there that `tools/install.sh` did
+4. **The launchers.** `~/.local/bin/blowhorn`, `~/.local/bin/blowhorn-axi`
+   and `~/.local/bin/blowhorn-mcp`, when they carry the installer's marker. A file there that `tools/install.sh` did
    not write is kept and says so.
    Pass `--bin-dir` if you installed elsewhere. The marked block the
    installer or the app added to your shell startup file (`.zshrc`,
@@ -83,26 +83,27 @@ guided setup progress (`onboarding-progress.json`). The next time you open
 Blowhorn it starts as a first run. A signed-in session that actually survived
 is the only case that can pick up a setup you left partway.
 
-Kept at the end, and named: the store connection file
-(`~/.config/blowhorn/store.yaml`), the rest of the app's state
+Kept at the end, and named: the store connection file an older version
+wrote (`~/.config/blowhorn/store.yaml`; Blowhorn no longer reads it), the rest of the app's state
 under `~/Library/Application Support/Blowhorn` (its preferences, its engine
-record and, for the engine the app carries, that engine's folder `home/` with
-your profiles' settings), Blowhorn's own Chrome trees, the per-user
-Library state, the checkout's `data/cache/`, and the scheduler pause file.
+record and, for the engine the app carries, that engine's folder `home/`),
+Blowhorn's own Chrome trees, the per-user Library state, the checkout's
+`data/cache/` (which holds each profile's runtime state on this computer), and
+the scheduler pause file. A `data/profiles/` folder left by an older version is
+never named and never touched: your profiles live in your Blowhorn account.
 
 The checkout itself (for example `~/code/blowhorn`, with `tools/uninstall.sh` in it)
 is never removed, under any flag, and the summary names it. Delete that folder
 yourself if you no longer need it. The engine's `home/` is not a checkout:
 `--purge` removes it with the rest of the app's state.
 
-The summary ends by saying the shared store was not touched. If your store
-connection shows `127.0.0.1` (for example `postgresql://127.0.0.1:9432`), that
-is the local tunnel Blowhorn opens to your account's database, not a database
-on this computer.
+The summary ends by saying your Blowhorn account was not touched: your
+profiles, content items, schedules and run history live in your account, not on
+this computer, and no flag removes them.
 
 ## Uninstall from the app
 
-In Settings, **uninstall Blowhorn…** opens a confirm dialog and quits the
+In Settings, on the **Background & updates** page, **uninstall Blowhorn…** opens a confirm dialog and quits the
 app; a helper the app leaves behind then runs the same command above,
 once the app is gone (the command refuses while the app is running, so
 the helper waits for it to quit first). It runs the engine the app
@@ -137,8 +138,12 @@ the account's token list. It does not delete the account.
 
 ## Dragging the app to the Trash
 
-Dragging `Blowhorn.app` to the Trash starts the removal; running the
-command once more finishes it:
+Prefer **uninstall Blowhorn…** in Settings, or `blowhorn uninstall`: both run
+while the app still exists, which is the only time it can take its own entries
+out of System Settings > General > Login Items & Extensions.
+
+To remove Blowhorn by dragging it instead, run the command once more before you
+empty the Trash:
 
 1. Drag the app to the Trash, as you would any Mac app.
 2. In a terminal, run `blowhorn` once (any arguments, or none).
@@ -150,12 +155,25 @@ difference from running `blowhorn uninstall` yourself with the app still
 installed, which keeps your data: only use the Trash when you mean to
 remove everything. Opening the trashed app instead offers the same finish.
 
-If you empty the Trash before running the command, the engine is gone with
-the app. The launcher then removes the files it can still reach (itself,
-the shell startup block, the background service and attach-Chrome agent
-files, the Chrome native host entry) and names what it could not: the
-sign-in in your Keychain and the account token's revocation, which only
-the full command can do.
+### If you already emptied the Trash
+
+The engine is gone with the app, so the full removal cannot run. Two steps
+still clean up:
+
+1. In a terminal, run `blowhorn` once. The launcher removes the files it can
+   still reach: itself, the shell startup block, the background service and
+   attach-Chrome agent files, the Chrome native host entry, and the app's own
+   folder, `~/Library/Application Support/Blowhorn` (its preferences, so a
+   later install does not inherit open at login). It names what it could not
+   remove: the sign-in in your Keychain and the account token's revocation.
+2. Clear the Login Items the app left, which only the app can unregister.
+   Either install Blowhorn again and open it once - its first launch removes
+   entries left by the deleted copy before it registers its own - then
+   uninstall it from Settings, or remove **Blowhorn** under System Settings >
+   General > Login Items & Extensions yourself.
+
+Installing again and running `blowhorn uninstall` also removes the Keychain
+sign-in and revokes the account token.
 
 ## Without a checkout
 
@@ -203,11 +221,11 @@ When your account will never be reachable again from this computer, give the
 records up instead with `blowhorn uninstall --discard-unsynced-runs`, which
 asks you to type `discard` (pass `--yes` from a script or with piped input).
 
-If this computer was never signed in to the store (no `~/.config/blowhorn/store.yaml`),
-the records can never be sent from here, and `blowhorn store --replay-spool`
-fails with "no connection is configured". The refusal says so and points to
-`--discard-unsynced-runs`, or to `blowhorn store --import` first if you want
-to keep them.
+The replay sends the records to the account this computer is signed in to.
+If it is signed out, `blowhorn store --replay-spool` fails with "Not signed in
+to Blowhorn": run `blowhorn auth login`, then replay. If you can no longer sign
+in to that account, the records cannot be sent from here; give them up with
+`--discard-unsynced-runs`.
 
 To quit the desktop app, click the Blowhorn icon in the menu bar and choose
 **Quit Blowhorn**. Closing the window is not enough: the app keeps running in
@@ -226,8 +244,9 @@ rm -rf ~/code/blowhorn
 ## Reinstalling afterwards
 
 Installing the app again from its DMG, or a fresh `./tools/install.sh` from the
-same checkout, produces a working install. The store connection file is picked
-up as it was. The sign-in is not.
+same checkout, produces a working install. Your Blowhorn account and
+everything in it are untouched; sign in again with `blowhorn auth login` or
+from the app.
 
 ## Replacing the app by hand
 

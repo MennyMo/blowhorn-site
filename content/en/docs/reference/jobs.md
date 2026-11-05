@@ -9,7 +9,7 @@ What a schedule activity holds, when it runs, and what keeps it from
 running. This page describes; the steps live in the how-to guides
 linked under Related.
 
-A pass runs every ten minutes and claims the activities that are due. Several
+The service runs a pass when an activity falls due, and at least once a minute, and claims the activities that are due. Several
 computers sharing one store share the queue: a running activity carries a lease,
 and an activity whose lease lapsed is reclaimable by the next pass.
 
@@ -21,7 +21,7 @@ and an activity whose lease lapsed is reclaimable by the next pass.
 | Platforms | Activity filter, not a posting target: which activities the command reads |
 | Profiles | Which profiles the run acts as |
 | Recurrence | When the activity comes due again |
-| Driver mode | How the run reaches Chrome: `default`, `extension`, `extension-classic`, `extension-background`, `cdp`, or `persistent` |
+| Driver mode | How the run reaches Google Chrome: `default`, `extension`, `extension-classic`, `extension-background`, `cdp`, or `persistent` |
 | Status | Where the activity stands; `running` is a lease, never a lock |
 
 `blowhorn schedule list` shows each activity and whether it is due.
@@ -75,7 +75,25 @@ its usual preset everywhere else. Leave it blank and the activity
 inherits the profile's preset, exactly as before. A hold or a run
 report names the source as `schedule` when the activity's own setting
 decided it. `blowhorn schedule list` shows each activity's own setting,
-the preset it effectively runs and where that preset came from.
+the preset it effectively runs and where that preset came from. The
+app's activity editor and the **Rules** row of the item's details dialog show the same column as **rules of
+engagement**, with `cautious` as Safety on, `standard` as Weapons tight
+and `brisk` as Weapons free; the stored value does not change.
+
+The activity's own setting is kept as set, looser than the profile's or
+the platform's choice or not; it is never pulled back to the Posture
+page. Only the warm-up and a limit the platform itself publishes stand
+above it. `blowhorn schedule get <activity> --json` carries
+`published_limits`: each limit the platform publishes on the activity's
+action (count, window, the platform's page and the day it was read), and
+`above`, the presets whose cap for that profile would go past it. A cap
+that would go past one is cut to it, and the tick prints
+`Activity N: the brisk setting would allow … so this stops at …`. An
+activity whose published window is already full is held as
+`held by X's published limit (…)`, a `trigger-now` included: it skips the
+Posture checks, never the platform's own limit. The limits themselves
+are listed under
+[A limit the platform publishes is the one hard stop](/docs/how-to/settings/choose-your-rules-of-engagement/#a-limit-the-platform-publishes-is-the-one-hard-stop).
 
 ## Pause scopes
 

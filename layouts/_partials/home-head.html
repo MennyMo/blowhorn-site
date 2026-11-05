@@ -1,7 +1,7 @@
 {{- /* Shared Open Graph, JSON-LD and hero-rotation head for the home page
   and the Reveille preview. */ -}}
     {{- $hero := partial "hero-variant.html" . }}
-    {{- $heroDesc := printf "%s %s" $hero.headline $hero.subhead }}
+    {{- $heroDesc := printf "%s %s" $hero.headline ($hero.subhead | default site.Data.hero.tagline) }}
     {{- partial "hero-rotation-head.html" . }}
     {{- partial "machines-rotation-head.html" . }}
     <meta property="og:type" content="website">
@@ -27,6 +27,6 @@
         "url": "https://blowhorn.ai/",
         "description": {{ $heroDesc | jsonify | safeJS }},
         "author": { "@type": "Organization", "name": "Blowhorn", "url": "https://blowhorn.ai/" },
-        "downloadUrl": {{ printf "https://github.com/layer5io/blowhorn-site/releases/download/v%s/Blowhorn-mac.dmg" site.Data.download.version | jsonify | safeJS }}
+        "downloadUrl": {{ printf "https://github.com/blowhorn-ai/blowhorn-site/releases/download/v%s/Blowhorn-%s-mac-universal.dmg" site.Data.download.version site.Data.download.version | jsonify | safeJS }}
       }
     </script>

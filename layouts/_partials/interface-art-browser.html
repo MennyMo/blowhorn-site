@@ -1,0 +1,27 @@
+{{- /* Chrome on a Mac, in miniature: the frame the "web" and "extension"
+   interface art share. Traffic lights at the far left of the tab strip,
+   then the tabs; a toolbar with back, forward and reload, the rounded
+   omnibox and (for the extension) the pinned Blowhorn icon; a thin
+   bookmarks bar. The page itself is the caller's, after this partial.
+   Call with a dict:
+     tab    title of the active tab
+     favicon  "blowhorn" for the app icon, or a platform id for its mark
+     url    host and path shown in the omnibox
+     pin    true to show the pinned extension in the toolbar */ -}}
+{{- $icon := "assets/brand/logo/blowhorn-app-icon.svg" | relURL -}}
+<span class="ia-tabstrip">
+  <span class="ia-lights"><i></i><i></i><i></i></span>
+  <span class="ia-tab on">
+    {{- if eq .favicon "blowhorn" -}}<img src="{{ $icon }}" alt="" width="9" height="9">{{- else -}}{{ partial "interface-art-mark.html" .favicon }}{{- end -}}
+    <span class="ia-tab-title">{{ .tab }}</span><span class="ia-tab-x"></span>
+  </span>
+  <span class="ia-tab ia-tab-bg"><i class="ia-fav f-mail"></i><span class="ia-tab-title">Inbox</span></span>
+  <span class="ia-tab-new"></span>
+</span>
+<span class="ia-toolbar">
+  <svg class="ia-nav" viewBox="0 0 30 10" width="30" height="10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 2L2 5l3 3M2 5h6"/><path class="ia-nav-off" d="M14 2l3 3-3 3M17 5h-6"/><path d="M28 5a3 3 0 1 1-1-2.2M27.4 1.2v1.8h-1.8"/></svg>
+  <span class="ia-omni"><svg viewBox="0 0 10 10" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 3h4M7.5 3h1M1.5 7h1M4.5 7h4"/><circle cx="6.5" cy="3" r="1"/><circle cx="3.5" cy="7" r="1"/></svg><span class="ia-mono">{{ .url }}</span></span>
+  {{- if .pin -}}<img class="ia-pin" src="{{ $icon }}" alt="" width="11" height="11">{{- end -}}
+  <span class="ia-avatar"></span>
+</span>
+<span class="ia-bookmarks"><span class="ia-bm"><i class="ia-fav f-docs"></i>Docs</span><span class="ia-bm"><i class="ia-fav f-cal"></i>Calendar</span><span class="ia-bm"><i class="ia-fav f-team"></i>Team</span></span>

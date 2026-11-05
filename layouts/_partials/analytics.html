@@ -1,18 +1,21 @@
-{{- /* Google Analytics 4 on every production page. The id comes from
-  [services.googleAnalytics] in hugo.toml. Analytics storage is enabled while
-  advertising storage and personalization remain disabled. Production builds
-  only (`hugo` with no -e flag, as `make site-build` and the deploy run
-  it): the dev build, live servers and deploy previews (HUGO_PREVIEW=true)
-  render nothing. head.html and docs-head.html both call this partial; Docsy's
-  own head is not used. */ -}}
+{{- /* Google Analytics 4 with Google Consent Mode v2, consent first. The id
+  comes from [services.googleAnalytics] in hugo.toml. Every consent signal
+  (analytics_storage, ad_storage, ad_user_data, ad_personalization) defaults to
+  denied before the config command, and gtag.js itself is not requested until
+  the reader accepts in the cookie notice (consent.html, assets/js/consent.js),
+  so nothing reaches Google without consent. Hugo's embedded
+  google_analytics.html template loads gtag.js on every page unconditionally,
+  so it can't be used here. Production builds only (`hugo` with no -e flag, as
+  `make site-build` and the deploy run it): the dev build, the live
+  servers and deploy previews (HUGO_PREVIEW=true) render nothing. head.html and
+  docs-head.html both call this partial; Docsy's own head is not used. */ -}}
 {{- if partial "analytics-enabled.html" . }}
 {{- with site.Config.Services.GoogleAnalytics.ID }}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ . | urlquery }}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('consent', 'default', {
-        analytics_storage: 'granted',
+        analytics_storage: 'denied',
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied'
@@ -20,5 +23,7 @@
       gtag('js', new Date());
       gtag('config', '{{ . }}');
     </script>
+    {{- $consent := resources.Get "js/consent.js" | minify | fingerprint }}
+    <script src="{{ $consent.RelPermalink }}" data-ga-id="{{ . }}" defer></script>
 {{- end }}
 {{- end -}}

@@ -13,7 +13,7 @@ actions:
   - id: amplify
     behavior: Reposts a post from each of your profiles.
   - id: follow
-    behavior: Follows the accounts you list.
+    behavior: Name a target account. With --limit 0, follow that account, or several comma-separated. With a positive limit, follow up to that many of the target's followers, never the target itself.
   - id: unfollow
     behavior: Unfollows one account.
   - id: find

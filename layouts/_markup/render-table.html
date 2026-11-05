@@ -6,7 +6,12 @@
   hugo.toml) renders as a coverage matrix: each body cell holding one legend
   letter gets a cov-* class (Y live, S coming soon, P partial, A any site,
   ? unverified, N no, D closed), and the Blowhorn row, or a Blowhorn column,
-  gets cov-us. The Markdown stays a plain table; the colours live in site.css. */ -}}
+  gets cov-us. The Markdown stays a plain table; the colours live in site.css.
+
+  Every table sits in a keyboard-focusable scroll wrapper, so a wide one
+  scrolls inside itself on a phone instead of scrolling the whole page. It is
+  a named group, not a region: a page has many tables, and a region is a
+  landmark that would need a unique name each time. */ -}}
 {{- $class := .Attributes.class | default "" }}
 {{- $matrix := in (split $class " ") "coverage" }}
 {{- $states := dict "Y" "yes" "S" "soon" "P" "partial" "A" "any" "?" "unknown" "N" "no" "D" "closed" }}
@@ -14,7 +19,7 @@
 {{- if $matrix }}
   {{- range .THead }}{{ range $i, $c := . }}{{ if eq (strings.TrimSpace (string $c.Text)) "Blowhorn" }}{{ $usCol = $i }}{{ end }}{{ end }}{{ end }}
 {{- end }}
-{{- if $matrix }}<div class="coverage-scroll" tabindex="0" role="region" aria-label="Coverage table">{{ end }}
+<div class="table-scroll" tabindex="0" role="group" aria-label="{{ if $matrix }}Coverage table{{ else }}Table{{ end }}">
 <table{{ with .Attributes.id }} id="{{ . }}"{{ end }}{{ with $class }} class="{{ . }}"{{ end }}>
   <thead>
     {{- range .THead }}
@@ -42,4 +47,4 @@
     {{- end }}
   </tbody>
 </table>
-{{- if $matrix }}</div>{{ end }}
+</div>

@@ -28,8 +28,11 @@ disableHugoGeneratorInject = true
 # page does not get HEAD's date; a page's own `lastmod` front matter wins.
 enableGitInfo = true
 
-# The site has no taxonomies and no feeds.
-disableKinds = ["taxonomy", "term", "rss"]
+# Taxonomies and feeds exist for the Resources center only (tags on
+# resources; the /major/ dispatches feed is a custom output format).
+# Everything else stays taxonomy-free and feed-free.
+disableKinds = []
+
 
 # Segments. `public` is every page outside /internal/; `internal` is the
 # /internal/ section. A plain `hugo` build renders the public segment only.
@@ -107,6 +110,13 @@ renderSegments = ["public"]
   isPlainText = true
   notAlternative = true
 
+# One taxonomy: tags. Resources pages carry them; nothing else does.
+# There is deliberately no categories taxonomy - a video's categories
+# front matter is a plain parameter (the category tree is the section
+# tree under /resources/videos/), not a term list.
+[taxonomies]
+  tag = "tags"
+
 [outputFormats.md]
   baseName = "index"
   mediaType = "text/markdown"
@@ -115,6 +125,16 @@ renderSegments = ["public"]
 
 # Major Blowhorn's "Dispatches from the barracks" feed at /major/feed.xml.
 [outputFormats.dispatches]
+  baseName = "feed"
+  mediaType = "application/rss+xml"
+  isPlainText = false
+  notAlternative = true
+
+# Resources feeds, same shape as dispatches: /resources/feed.xml for the
+# whole center and /resources/tags/<tag>/feed.xml per tag (the tag feeds
+# are feed-only pages of type tagfeed). The in-product-intelligence tag
+# feed is a published contract: the desktop homepage reads it.
+[outputFormats.resourcesfeed]
   baseName = "feed"
   mediaType = "application/rss+xml"
   isPlainText = false
@@ -140,9 +160,9 @@ renderSegments = ["public"]
 [params]
   # Shared opening of the "Strong signal" section on every /compare/<slug>/ page.
   versus_belief = "Blowhorn doesn't sell followers, likes or repost packages, and it never will. A like from someone paid to click is weak signal: it moves a number and nothing else. Strong signal is a reply, a question, a repost with a real take from someone who knows your work, a thread that turns into a discussion. Blowhorn exists to get your message in front of the people who would answer it, through the profiles of real people who chose to back you."
-  description = "Blowhorn is a social media console that takes one message and broadcasts, reposts and amplifies it across every profile and platform your community runs, on autopilot. Runs on your machine."
+  description = "Blowhorn is a social media console that takes one message and broadcasts, reposts and amplifies it across every profile and platform your community runs, on autopilot. Runs on your computer."
   copyright = "Layer5, Inc."
-  github_repo = "https://github.com/layer5io/blowhorn-site"
+  github_repo = "https://github.com/blowhorn-ai/blowhorn-site"
   github_branch = "master"
   # The account service URL. /signup, /login and
   # /early-access redirect here, and the welcome page links to it.

@@ -15,8 +15,8 @@
         <section class="section-body" aria-labelledby="glance">
           <h2 id="glance" class="h2">How Blowhorn handles your data</h2>
           <ul class="grid grid-3 trust-grid">
-            {{- range .Params.glance }}
-            <li class="card">
+            {{- range $i, $g := .Params.glance }}
+            <li class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $.Params.glance)) }}">
               <h3 class="h3">{{ .title }}</h3>
               <p>{{ .text }}</p>
               <p class="ui"><a href="{{ .link | relURL }}">{{ .linkText }}</a></p>
@@ -28,9 +28,9 @@
         <section class="section-body" aria-labelledby="policies">
           <h2 id="policies" class="h2">Policies</h2>
           <ul class="grid grid-3 trust-grid">
-            {{- range .Params.policies }}
+            {{- range $i, $pol := .Params.policies }}
             {{- $url := .url }}{{ if not (strings.HasPrefix $url "https://") }}{{ $url = $url | relURL }}{{ end }}
-            <li class="card policy-card">
+            <li class="card policy-card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $.Params.policies)) }}">
               <h3 class="h3"><a href="{{ $url }}">{{ .title }}</a></h3>
               {{- with .status }}
               <p class="caption policy-status">{{ . }}</p>

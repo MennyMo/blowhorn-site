@@ -5,7 +5,7 @@ weight: 192
 ---
 
 
-Sessions expire. When one does, sign in again by hand in the mapped Chrome
+Sessions expire. When one does, sign in again by hand in the mapped Google Chrome
 profile, or run `blowhorn profile auth` for that platform. Scheduled passes
 never wait for a person: an unattended job whose session is gone fails by
 name instead of hanging.

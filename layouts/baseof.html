@@ -9,6 +9,7 @@
     <a class="skip-link ui" href="#main">Skip to content</a>
     {{- block "sprite" . }}{{ end }}
 
+    {{- partial "tells-bar.html" . }}
     {{ partial "header.html" . }}
     {{- block "main" . }}{{ end }}
 
@@ -16,5 +17,6 @@
     {{- block "scripts" . }}{{ end }}
     {{- $codeCard := resources.Get "js/code-card.js" | minify | fingerprint }}
     <script src="{{ $codeCard.RelPermalink }}" defer></script>
+    {{- partial "docs-attribution.html" . }}
   </body>
 </html>

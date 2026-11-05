@@ -5,27 +5,27 @@ weight: 36
 ---
 
 
-`make onboarding-e2e` walks the desktop app's first-run wizard from sign-in
+`make onboarding-e2e` walks the desktop app's first-muster wizard from sign-in
 through a dry run of the first post, and Create account on its own. It uses the app you just built
-(`desktop/out`), a local stand-in for the Blowhorn service, and a throwaway Chrome
+(`desktop/out`), a local stand-in for the Blowhorn service, and a throwaway Google Chrome
 profile. It does not sign in to a social platform, and it does not open your
 own Chrome profile. The throwaway Chrome has two profiles, as a person's now
 does: Chrome's main profile, started once and left empty, and a second profile
 set aside for Blowhorn, which gets the extension and any planted logins. The
-walk passes the Chrome profile intro and checks that the main profile is listed
-with no **Use with Blowhorn** switch.
+walk passes the Chrome profile intro and checks that the Chrome profiles screen
+lists the second profile and does not show the main profile.
 
 The throwaway home is seeded from the same `.blowhorn.yaml` a packaged app
 seeds, then given a `postgres` backend. That is the file an older install
 left behind. The walk reaches the console only when the engine opens Cloud
-anyway. In the app, Activity shows the draft and Routines runs a preview-only
+anyway. In the app, Activity shows the draft and Routines runs a dry fire
 check. A `blowhorn post --dry-run` then reports the fixture row without
 publishing it.
 
 It runs four walks. The happy path and `linkedin-session` are the same walk,
 but `linkedin-session` first plants a cookie named `li_at` in the throwaway
 Chrome profile. Only the cookie's name matters, as with the planted Slack
-login. With the cookie, Confirm and then Check again have to record exactly
+login. With the cookie, Confirm and then Discover have to record exactly
 one LinkedIn account in the local Cloud: connected, with no credential,
 and mapped to the new profile. `blowhorn profile accounts` has to list it
 too. Without the cookie, no LinkedIn account may be recorded. In both walks,
@@ -40,21 +40,26 @@ After setup, both walks also check the console a new person sees:
   Home's button opens its own step, not the Profiles table. LinkedIn's row
   there says which Chrome profile to sign in to and offers **Open LinkedIn
   sign-in** and **Check again**, with no form field.
-- **Profile detail:** the mapped profile's LinkedIn card shows that same
-  guidance (or, with the planted cookie, that LinkedIn is connected) and a
-  **Check again** button. It shows no setting name like `LI_PASSWORD` and no
-  password field, and its **advanced** fields start collapsed; opened, they
-  hold no password field either.
+- **Discover:** on Confirm troops and in a profile's **Browser** tab after setup, each press must read **Checking…** while it runs
+  and then leave a result line. With the planted cookie, the walk marks the
+  LinkedIn account disconnected in the local Cloud first: the press must
+  reconnect that same account and say so, and a second press must say
+  **Nothing new found** and leave one LinkedIn account.
+- **Browser tab:** the mapped profile's LinkedIn row shows that same guidance (or, with
+  the planted cookie, that LinkedIn is found), with **Set up** and **Open in Chrome**.
+  **Discover** sits at the top of the list. It shows no setting name like `LI_PASSWORD`, no
+  password field, no **advanced** section (by its label or its slot) and no raw `LI_`, `X_` or `RDDT_`
+  field: LinkedIn's sign-in is the person's own Chrome session.
   `blowhorn chrome open-profile <profile> --sign-in linkedin --dry-run` must pick the
   Chrome profile confirm mapped.
 - **New activity:** `blowhorn schedule destinations` reports no blog set up
   for the local organization, and the picker offers no organization
   blog action. The unit tests cover an organization that has one.
 - **Next run:** saving a daily Accept LinkedIn invitations from that picker
-  stores one enabled routine in the local Cloud, and Home then shows
-  "Next: Accept LinkedIn invitations". The rail's status line never shows a
-  "next check" countdown: on watch it names that same next run, and
-  otherwise it keeps its own reason and promises no next run.
+  stores one enabled routine in the local Cloud, and **Activity > Routines**
+  lists it with its next run at the time the step typed. Home names no next run. The rail's status line
+  never shows a countdown: it says what this computer is doing, and otherwise it
+  keeps its own reason.
 
 `empty-profile` covers
 a new organization with no planted logins. `sign-up` presses Create account,
@@ -90,13 +95,15 @@ The check walks the variants in turn; `--variant <name>` runs one:
   saved logins.
 - **sign-up:** Create account. It checks that the browser opens Blowhorn's
   sign-up page (`/registration`), never the sign-in page, and that once the
-  stand-in confirms the email the wizard reaches You're signed in without
+  stand-in confirms the email the wizard moves past the sign-in without
   anything being pressed in the app.
 
 Every walk also checks three things that a real re-run once got wrong:
 
-- **Setting up your account moves on by itself.** With one organization the
-  wizard goes from You're signed in to Confirm troops with one Next.
+- **Signing in and setting up your account move on by themselves.** A
+  sign-in that worked never stops on You're signed in, and with one
+  organization the wizard reaches the Chrome profile intro with nothing
+  pressed after Sign in.
 - **One sign-in opens one browser tab.** The recorder that stands in for the
   browser must see exactly one open of the local Cloud, `/login` for sign-in
   and `/registration` for Create account, counted after the callback has had
@@ -114,15 +121,20 @@ check reads `launchctl print gui/<uid>/ai.blowhorn.service` before the first
 walk and after the last, and fails if the registration changed. It only reads:
 a leftover registration from an earlier run is reported, never removed.
 
-Each step prints its name. A failure names the step and leaves a screenshot
-of that screen in the temp directory the script prints at the start. If the
-local Cloud stand-in raises, the check stops and prints that error. Pass
-`ONBOARDING_E2E_ARTIFACTS` when you want those screenshots in a directory you
-choose.
+Each step prints its name. Each variant writes its run to
+`data/cache/e2e/onboarding/<run-id>/` in the checkout, the directory the script
+prints at the start: `shots/` holds a screenshot per step, `logs/electron.log`
+the app's output, and `run.json` each step's outcome. A failure names the step,
+leaves a screenshot of that screen, and records the failure in `run.json`. If
+the local Cloud stand-in raises, the check stops and prints that error. The
+folder is git-ignored and nothing prunes it, so delete old runs when you no
+longer need them. Pass `ONBOARDING_E2E_ARTIFACTS` to put the screenshots and
+the log in a directory you choose; `run.json` is then written only if that
+directory is inside `data/cache/e2e/` or `BLOWHORN_LIVE_EVIDENCE_DIR`.
 
-A desktop release runs this check after the app is built and before it
-packages the DMG. The verify phase runs it again with `--app` pointed at
-the app inside the mounted DMG. A broken onboarding stops the release there.
+A desktop release runs this check once, after it makes the DMG, with
+`--app` pointed at the app inside the mounted DMG. A broken onboarding
+stops the release there, before anything is published.
 The same script is what `make onboarding-e2e` runs.
 
 A program the check starts opens the sign-in URL. Your default browser
@@ -134,12 +146,16 @@ and `--password-store=basic`. A user-data directory outside that temp
 directory is refused. Every Chrome Blowhorn itself starts on that folder
 during the check, such as the extension's store page during setup, carries
 the same two switches, so macOS never shows "Keychain Not Found". The
+check also sets `BLOWHORN_MUTE_AUDIO=1`, so the app and every Chrome it
+starts stay silent. The
 throwaway Chrome profile has no Google account, like many people's: the
 email in the wizard is what finds the person in the local Cloud. The happy
 path ends by checking that `blowhorn chrome profiles --json` still reports
 identity `ok` for the Chrome profile it mapped. A `drift` there means the
 mapping no longer matches what Chrome shows, and every later run of that
-profile would be refused. If branded Chrome cannot load the unpacked extension,
-the check uses a cached Chrome for Testing build. The check also sets
+profile would be refused. The check runs only in the installed Google Chrome
+and loads the unpacked extension into it over the debugging pipe. If Google
+Chrome is missing, or will not load the extension, the check stops and says so.
+It never downloads or falls back to another browser. The check also sets
 `BLOWHORN_KEYCHAIN=0`, so the engine keeps the fixture token in the
 throwaway home and does not write the login keychain.

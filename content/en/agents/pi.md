@@ -46,7 +46,7 @@
     },
     {
       "q": "Does my agent see my social passwords?",
-      "a": "No. Blowhorn posts through your own signed-in Chrome; the agent only runs commands and reads their output. Review what you allow it to run, as with any tool that acts on your accounts."
+      "a": "No. Blowhorn posts through your own signed-in browser; the agent only runs commands and reads their output. Review what you allow it to run, as with any tool that acts on your accounts."
     }
   ],
   "major": "Four tools and a bash prompt. That is a lean, mean posting machine, soldier.",

@@ -17,7 +17,7 @@ Blowhorn repository, no git and no Python on your computer.
 Download the latest build from
 [blowhorn.ai/download](https://blowhorn.ai/download/): it hands you the
 current release's files from the
-[blowhorn-site releases](https://github.com/layer5io/blowhorn-site/releases).
+[blowhorn-site releases](https://github.com/blowhorn-ai/blowhorn-site/releases).
 
 - `Blowhorn-mac.dmg` - the latest build, for Apple silicon and Intel Macs.
 - `SHA256SUMS.txt` - the checksums for that release.
@@ -40,12 +40,15 @@ The line for `Blowhorn-mac.dmg` must read `OK`.
    disk image disappears when you eject it, so the app does not use its
    engine there and asks you to move it to Applications.
 
-You need macOS 13 or newer and Google Chrome. Chrome is not bundled: Blowhorn
+Requires macOS 13 or newer, on Apple silicon or Intel, and Google Chrome
+142 or newer.
+See [System requirements](/docs/reference/requirements/) for the full list.
+Chrome is not bundled: Blowhorn
 drives the Chrome profiles you already sign in to, through its Chrome
 extension, which you add to each Chrome profile you post from
 ([Install the Chrome extension](/docs/how-to/set-up/install-the-chrome-extension/)).
 
-## First run
+## First muster
 
 The app opens on its Setup screen until its engine is ready; after that the
 guided setup takes over (see below). Setup checks, in order, the engine
@@ -75,7 +78,7 @@ Connecting the Blowhorn Chrome extension to this computer takes no pop-up:
 - **Guided setup:** the first time you open the app, the guided setup walks
   you through signing in, Getting ready and the rest, one step at a time.
 
-See [Set up Blowhorn the first time](/docs/how-to/set-up/first-run-setup/).
+See [Set up Blowhorn at first muster](/docs/how-to/set-up/first-muster-setup/).
 
 Then check sessions and run a dry-run post. Nothing is published until you
 post without `--dry-run`.
@@ -86,8 +89,8 @@ outside the app, so replacing or updating the app keeps them.
 ## The `blowhorn` command
 
 The app also puts the command line on this computer. Each time it
-opens, it writes two small launcher files, `blowhorn` and `blowhorn-axi`,
-into `~/.local/bin`. It does not ask to edit your shell startup files.
+opens, it writes three small launcher files, `blowhorn`, `blowhorn-axi` and
+`blowhorn-mcp` (the MCP server an AI client starts), into `~/.local/bin`. It does not ask to edit your shell startup files.
 If a PATH block was added before, the app keeps that block up to date.
 Open a new terminal afterwards and `blowhorn --help` runs the
 engine the app carries: the same engine, the same profiles and settings as
@@ -109,20 +112,20 @@ Updates come from the same releases page, and you need no GitHub account
 for them. The app checks for a newer release every four hours (or when you
 press **check now**), and once more each time you open it. When an installed
 Blowhorn opens and that check finds a newer release it can install, a
-prompt in the console window asks before anything is downloaded. **Download** downloads,
-installs and reopens the app; if the install fails, a dialog says so and
-your current version is put back. **Later** installs nothing and skips that
+prompt in the console window asks before anything is downloaded. **Update now** downloads,
+installs and reopens the app, with its progress over the whole window; if the
+install fails, that window says so and your current version is put back. **Later** installs nothing and skips that
 version, so the next release asks again; **Update** in the app still offers
 it meanwhile. The **?** icon next to the title explains how the update
 installs.
 
-**Update** in the app and **Download** on that dialog take the same path.
+**Update** in the app and **Update now** on that prompt take the same path.
 They download the newer `.dmg` and check the app inside it before touching
 your installed app: it must be Blowhorn (its bundle id and name), it must
 be the version the release names, and it must be newer than yours. Only
 then does Blowhorn install it and relaunch. When the app cannot install
-the update itself, it opens the
-release page and you download the newer `.dmg`,
+the update itself, it says why and offers the
+release page, where you download the newer `.dmg`,
 verify it as in [Download](#download), and drag the app over the old copy.
 The background service and your settings are kept. The engine is part of
 the app, so updating the app updates the engine too.

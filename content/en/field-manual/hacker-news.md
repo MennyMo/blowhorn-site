@@ -40,4 +40,4 @@ Private Please-Upvote posted his launch in a group chat with "go vote!" Corporal
 
 ## What Blowhorn does on Hacker News
 
-Blowhorn submits links and text posts and comments from your own Chrome. It never votes: there's nothing to configure and no way to turn it on. It allows at most 2 link submissions per profile per UTC day and fails a title over 80 characters rather than cutting it ([Platforms](/docs/reference/platforms/)). Every submission is permanent, so dry-run first.
+Blowhorn submits links and text posts and comments from your own browser. It never votes: there's nothing to configure and no way to turn it on. It allows at most 2 link submissions per profile per UTC day and fails a title over 80 characters rather than cutting it ([Platforms](/docs/reference/platforms/)). Every submission is permanent, so dry-run first.

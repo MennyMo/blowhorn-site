@@ -18,12 +18,15 @@ from pathlib import Path
 
 # Published path -> ids that must exist on that page: the section anchors other
 # pages link to, and the sprite symbols and labels the page itself references.
+# The preview home pages (/home-reveille/, /home-oil/) are not listed: they were
+# noindex previews, out of the sitemap and llms.txt, and are no longer built
+# (`build: render: never`), so they were never part of the public contract.
 PAGES = {
     "index.html": [
         "glyph-menubar", "glyph-terminal", "glyph-clock", "glyph-extension",
         "glyph-download", "main", "hero-title", "hero-art-title", "platforms", "platforms-title",
         "plat-panel-category", "plat-panel-role", "plat-panel-constellation", "plat-panel-action", "how",
-        "how-title", "trust", "trust-title", "download", "download-title", "pricing", "pricing-title",
+        "how-title", "teams", "teams-title", "trust", "trust-title", "download", "download-title", "pricing", "pricing-title",
     ],
     "integrations/index.html": [
         "main", "integrations-title", "action-filter",
@@ -31,18 +34,11 @@ PAGES = {
         "action-react", "action-follow", "action-unfollow", "action-accept",
         "action-withdraw", "action-find", "action-analytics",
     ],
-    "home-reveille/index.html": [
-        "main", "hero-title", "hero-art-title", "fan-title", "platforms", "platforms-title", "how",
-        "how-title", "trust", "trust-title", "download", "download-title",
-    ],
     "download/index.html": [
         "main", "glyph-download", "download-title", "download-status",
     ],
     "download/thanks/index.html": [
         "main", "thanks-title", "steps", "download-fallback", "updates-email",
-    ],
-    "home-oil/index.html": [
-        "main", "hero-title", "platforms", "sound-wave", "how", "signal", "trust", "control", "download", "download-title",
     ],
     "legal/index.html": [
         "main", "glance", "policies",
@@ -56,7 +52,7 @@ PAGES = {
         "main", "your-accounts", "downloads",
     ],
     "brand/index.html": [
-        "main", "logo", "clear-space", "color", "type", "major", "usage",
+        "main", "logo", "clear-space", "color", "type", "major", "thunderlung", "usage",
     ],
     "agents/index.html": [
         "main", "agents-title", "pick-title",
@@ -115,6 +111,9 @@ PAGES = {
     "use-cases/conference/index.html": [
         "main", "use-case-title", "pains-title", "gets-title", "faq-title", "cta-title",
     ],
+    "use-cases/linkedin-outreach/index.html": [
+        "main", "use-case-title", "pains-title", "gets-title", "faq-title", "cta-title",
+    ],
     "solutions/index.html": [
         "main", "solutions-title", "by-role-title", "by-use-case-title", "by-category-title",
     ],
@@ -131,6 +130,9 @@ PAGES = {
         "main", "solution-title", "pains-title", "gets-title", "compare-title", "faq-title", "cta-title",
     ],
     "solutions/employee-advocacy/index.html": [
+        "main", "solution-title", "pains-title", "gets-title", "compare-title", "faq-title", "cta-title",
+    ],
+    "solutions/distributed-teams/index.html": [
         "main", "solution-title", "pains-title", "gets-title", "compare-title", "faq-title", "cta-title",
     ],
     "compare/index.html": [
@@ -286,6 +288,12 @@ PAGES = {
     "welcome/index.html": [
         "main", "download-the-app", "sign-in", "connect-chrome",
     ],
+    "coming-soon/thanks/index.html": [
+        "main", "thanks-title",
+    ],
+    "newsletter/index.html": [
+        "main", "newsletter-title", "signup-form",
+    ],
 }
 # Redirect pages: published path -> the URL its redirect page must point to.
 # GitHub Pages serves no server-side redirects, so each path is a meta refresh
@@ -310,10 +318,12 @@ FILES = [
     "llms-full.txt",
     "assets/brand/tokens.json",
     "assets/brand/LICENSES.md",
+    "assets/brand/cards.css",
     "assets/brand/marketing/blowhorn-social-banner-16x9.png",
     "assets/brand/logo/blowhorn-favicon-32.svg",
     "assets/brand/logo/blowhorn-apple-touch-icon-180.png",
     "brand/blowhorn-brand-kit.zip",
+    "brand/blowhorn-logo-kit.zip",
 ]
 
 

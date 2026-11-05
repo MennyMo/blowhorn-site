@@ -1,49 +1,115 @@
 {{- /* The download page at /download/ (content/en/download/_index.md). The
   button goes to /download/thanks/, which starts the disk image download and
   walks through setup, so it works without script. assets/js/download.js fills
-  in the version, size, date and release notes from the newest GitHub release. */ -}}
+  in the version, size, date and release notes from the newest GitHub release.
+  Each card states its own minimum (.download-req), matching the requirements
+  block below it. The bookmarklet card's draggable link writes
+  data/bookmarklet.json as a safeHTMLAttr href, because Go templates rewrite
+  javascript: URLs and percent-encode safeURL ones; check_bookmarklet.py keeps
+  the code equal to the docs page. The Windows card is a placeholder: no link, a
+  decorative hanging "Coming soon" sign, and a "Notify me when available"
+  button that reveals an email form for the Windows waitlist (topic
+  "windows" on the signup service, separate from the newsletter list).
+  Without JavaScript the form is visible and posts to the service, which
+  redirects to /coming-soon/thanks/; with JavaScript download.js hides it
+  until the button is clicked and submits it in place. */ -}}
 {{ define "sprite" }}
     {{ partial "sprite.html" . }}
 {{- end }}
 
 {{ define "main" }}
     {{- $thanks := "download/thanks/" | relURL }}
+    {{- $dmgName := printf "Blowhorn-%s-mac-universal.dmg" site.Data.download.version }}
+    {{- $dmg := printf "https://github.com/blowhorn-ai/blowhorn-site/releases/download/v%s/%s" site.Data.download.version $dmgName }}
     <main id="main" class="page download-page">
       <div class="wrap">
         <header class="section-head download-head">
           <p class="label">Download</p>
           <h1 id="download-title" class="display-xl">Blowhorn for Mac</h1>
-          <p class="body-lg muted">One macOS disk image for Apple silicon and Intel, plus a Chrome extension. Setup takes about a minute.</p>
+          <p class="body-lg muted">One macOS disk image for Apple silicon and Intel, plus a Chrome extension, the Blowhorn command and a capture bookmarklet. Setup takes about a minute.</p>
         </header>
         <div class="download-grid section-body">
-          <div id="download-status" class="download-card" data-repo="layer5io/blowhorn-site" data-asset="Blowhorn-mac.dmg" aria-live="polite">
+          <div id="download-status" class="download-card card-paper" data-repo="blowhorn-ai/blowhorn-site" data-asset="Blowhorn-mac.dmg" aria-live="polite">
             <img class="download-icon" src="{{ "assets/brand/logo/blowhorn-app-icon.svg" | relURL }}" alt="" width="72" height="72">
-            <p class="h3">Blowhorn for Mac</p>
+            <h2 class="h3">Blowhorn for Mac</h2>
+            <p>The Mac app runs your activities and installs the Blowhorn command.</p>
+            <p class="download-req caption">Requires macOS 13 or newer</p>
             <p class="actions">
-              <a class="button button-primary button-pop" href="{{ $thanks }}">
+              <a class="button button-primary" href="{{ $thanks }}">
                 <svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#glyph-download"></use></svg>
                 Download for Mac
               </a>
-              <span class="caption muted">Blowhorn-mac.dmg</span>
+              <span class="caption muted">Blowhorn-{{ site.Data.download.version }}-mac-universal.dmg</span>
             </p>
-            <p class="meta caption"><span><a href="https://github.com/layer5io/blowhorn-site/releases/tag/v{{ site.Data.download.version }}">Release notes</a></span></p>
+            <p class="download-fallback caption muted">Your download starts automatically. If it didn't start, <a href="{{ $dmg }}">download Blowhorn Desktop manually</a>.</p>
+            <p class="meta caption"><span><a href="https://github.com/blowhorn-ai/blowhorn-site/releases/tag/v{{ site.Data.download.version }}">Release notes</a></span></p>
           </div>
-          <div class="download-card">
+          <div class="download-card card-field">
             <img class="download-icon" src="{{ "assets/platforms/google-chrome-logo.svg" | relURL }}" alt="Google Chrome logo" width="72" height="72">
-            <h2 class="h3">The Blowhorn Chrome extension</h2>
-            <p>Blowhorn posts from your own signed-in Chrome through its extension. Add it to each Chrome profile you post from.</p>
-            <p class="actions"><a class="button button-primary" href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">Add to Chrome</a></p>
+            <h2 class="h3">The Blowhorn browser extension</h2>
+            <p>Blowhorn posts from your own signed-in browser through its extension. Add it to each browser profile you post from.</p>
+            <p class="download-req caption">Requires Google Chrome 142 or newer</p>
+            <p class="actions"><a class="button button-primary" href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">Add to browser</a></p>
             <p class="meta caption"><a href="{{ "docs/how-to/set-up/install-the-chrome-extension/" | relURL }}">Install guide</a></p>
+          </div>
+          <div class="download-card card-plain">
+            <img class="download-icon" src="{{ "assets/icons/blowhorn-terminal.svg" | relURL }}" alt="Terminal prompt" width="72" height="72">
+            <h2 class="h3">The Blowhorn command</h2>
+            <p>The Mac app installs the Blowhorn command, so there is nothing else to download. Set it up from the install guide.</p>
+            <p class="actions"><a class="button button-primary" href="{{ "docs/how-to/set-up/install-the-app/#the-blowhorn-command" | relURL }}">Install the CLI</a></p>
+            <p class="meta caption"><a href="{{ "docs/reference/cli/" | relURL }}">CLI reference</a></p>
+          </div>
+          <div class="download-card card-dispatch">
+            <img class="download-icon" src="{{ "assets/icons/blowhorn-bookmark.svg" | relURL }}" alt="Bookmark" width="72" height="72">
+            <h2 class="h3">The Blowhorn bookmarklet</h2>
+            <p>Click it on any page to start a Blowhorn post from that page, its title and the text you selected.</p>
+            <p class="download-req caption">Requires the Blowhorn Mac app and Google Chrome</p>
+            <p class="actions">
+              <a class="button button-primary" {{ printf "href=\"%s\"" (site.Data.bookmarklet.code | htmlEscape) | safeHTMLAttr }}>{{ site.Data.bookmarklet.name }}</a>
+              <span class="caption muted">Drag to your Google Chrome bookmarks bar</span>
+            </p>
+            <p class="meta caption"><a href="{{ "docs/how-to/publish/manage-the-content-worksheet/#capture-a-page-from-the-browser" | relURL }}">How to add it</a></p>
+          </div>
+          <div class="download-card card-stamp download-card-soon" aria-labelledby="windows-title">
+            <svg class="soon-sign" viewBox="0 0 200 100" aria-hidden="true" focusable="false">
+              <path class="soon-sign-string" d="M100 9 22 52M100 9l78 43" />
+              <rect class="soon-sign-edge" x="6" y="44" width="188" height="52" rx="12" />
+              <rect class="soon-sign-face" x="6" y="40" width="188" height="50" rx="12" />
+              <rect class="soon-sign-rim" x="11" y="45" width="178" height="40" rx="8" />
+              <text class="soon-sign-text" x="100" y="66" text-anchor="middle" dominant-baseline="middle">COMING SOON</text>
+              <circle class="soon-sign-nail" cx="100" cy="9" r="6" />
+              <circle class="soon-sign-glint" cx="98" cy="7" r="2" />
+            </svg>
+            <img class="download-icon" src="{{ "assets/brand/logo/blowhorn-app-icon.svg" | relURL }}" alt="" width="72" height="72">
+            <h2 id="windows-title" class="h3">Blowhorn for Windows<span class="visually-hidden">, coming soon</span></h2>
+            <p>We're working on it. Really.</p>
+            <p class="actions"><button class="button button-primary windows-notify-toggle" type="button" id="windows-notify-toggle" aria-expanded="false" aria-controls="windows-notify-form" hidden>Notify me when available</button></p>
+            <form id="windows-notify-form" class="newsletter windows-notify" method="post" action="https://api.blowhorn.ai/api/waitlist">
+              <label class="newsletter-label ui" for="windows-notify-email">Email address</label>
+              <div class="newsletter-row">
+                <input type="email" id="windows-notify-email" name="email" autocomplete="email" placeholder="Email address" required maxlength="254">
+                <button class="button button-primary" type="submit">Notify me</button>
+              </div>
+              <input type="hidden" name="topic" value="windows">
+              <input type="hidden" name="source_page" value="{{ .RelPermalink }}">
+              <p class="signup-honeypot" aria-hidden="true">
+                <label for="windows-notify-website">Website</label>
+                <input id="windows-notify-website" name="website" type="text" tabindex="-1" autocomplete="off">
+              </p>
+              <p class="caption muted">One email when Windows support ships, nothing else. Your address is only used for that, and every email carries an unsubscribe link.</p>
+              <p id="windows-notify-status" class="windows-notify-status" role="status"></p>
+            </form>
           </div>
         </div>
         <aside class="download-requirements" aria-labelledby="requirements-title">
           <div>
             <p class="label">What you need</p>
-            <h2 id="requirements-title" class="h3">A Mac, Chrome, and your social profiles</h2>
+            <h2 id="requirements-title" class="h3">A Mac, Google Chrome, and your social profiles</h2>
+            <p class="caption muted download-requirements-note">Requires macOS 13 or newer and Google Chrome 142 or newer. <a href="{{ "docs/reference/requirements/" | relURL }}">System requirements</a></p>
           </div>
           <ul class="download-requirements-list">
             <li><strong>macOS</strong><span>13 or newer</span></li>
-            <li><strong>Google Chrome</strong><span>One extension per profile</span></li>
+            <li><strong>Google Chrome</strong><span>142 or newer</span></li>
             <li><strong>Profiles</strong><span>As many as you want</span></li>
           </ul>
           <p class="caption muted download-verify"><a href="{{ "docs/how-to/set-up/install-the-app/#download" | relURL }}">How to verify your download</a></p>

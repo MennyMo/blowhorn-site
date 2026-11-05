@@ -76,7 +76,7 @@ ALWAYS_EXCLUDED = ("internal", "gtm")
 INDEX_NAMES = ("_index.md", "index.md", "README.md")
 # Links to the private product repository must never ship: every reader
 # would get a 404.
-PRIVATE_REPO_MARK = "github.com/leecalcote/blowhorn"
+PRIVATE_REPO_MARK = "github.com/blowhorn-ai/blowhorn"
 
 LINK = re.compile(r"(!?)\[([^\]]*)\]\(([^)]*)\)")
 AUTOLINK = re.compile(r"<([A-Za-z][A-Za-z0-9+.-]*:[^<>\s]*)>")

@@ -33,7 +33,7 @@
   {{ with .Description -}}
   <p class="body-lg docs-lead">{{ . | markdownify }}</p>
   {{ end -}}
-  {{ .Content }}
+  {{ partial "docs-content.html" . }}
   {{- if .Params.contents }}{{ partial "internal-contents.html" . }}{{ end }}
   {{- $files := where .Resources "MediaType.SubType" "ne" "svg+xml" }}
   {{- with .Params.downloads }}{{ $files = $files | append (resources.Match .) }}{{ end }}

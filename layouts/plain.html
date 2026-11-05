@@ -1,0 +1,17 @@
+{{- /* Simple content pages (thanks, newsletter): heading + lead + prose.
+  heading_id gives the h1 an anchor for the site contract. */ -}}
+{{ define "main" }}
+    <main id="main" class="page">
+      <div class="wrap">
+        <div class="page-head">
+          <h1 class="h1"{{ with .Params.heading_id }} id="{{ . }}"{{ end }}>{{ .Params.heading | default .Title }}</h1>
+          {{- with .Params.lead }}
+          <p class="body-lg muted">{{ . | $.RenderString }}</p>
+          {{- end }}
+        </div>
+        <div class="prose">
+          {{ .Content }}
+        </div>
+      </div>
+    </main>
+{{- end }}

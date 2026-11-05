@@ -7,8 +7,8 @@ description: What LinkedIn's feed rewards (time spent reading, real conversation
 lead: "The Major's most decorated front, and his most crowded cemetery. LinkedIn tells you more about its feed than anyone. Listen."
 layout: field-manual
 weight: 10
-checked: 13 October 2026
-lastmod: 2026-10-13
+checked: 28 October 2026
+lastmod: 2026-10-28
 ---
 
 ## Roll call of the fallen
@@ -68,9 +68,10 @@ Private Pod joined a group of forty that liked each other's posts every morning 
 These come from forums, analysts and our own scars. Nothing here comes from LinkedIn itself.
 
 - <span class="hypothesis">Hypothesis:</span> posts with an outside link in the body reach fewer people than posts without one. Widely repeated by LinkedIn creators; LinkedIn has not said so. Test it on your own posts before you believe it.
-- <span class="hypothesis">Hypothesis:</span> the first hour after posting matters most, because early reactions decide how far a post travels. LinkedIn hasn't published this.
+- <span class="hypothesis">Hypothesis:</span> the first hour or two after posting, the "golden hour" creators talk about, decides how far a post travels. Reported windows run from about 60 to 120 minutes. LinkedIn hasn't published one.
+- <span class="hypothesis">Hypothesis:</span> comment velocity, real comments arriving early, does most of the work in that window. LinkedIn has said it protects authentic conversation (cited above), not that it times it. Post when your readers are at work, and be there to reply ([Won or lost in the first hour](/resources/articles/won-or-lost-in-the-first-hour/)).
 - <span class="hypothesis">Hypothesis:</span> invitation limits sit somewhere around 100 a week for most accounts and work on a rolling seven-day window. This is what outreach tools report ([one example](https://docs.outboundry.com/articles/how-many-linkedin-connections-can-i-send-through-outboundry)); LinkedIn publishes no number.
 
 ## What Blowhorn does on LinkedIn
 
-Blowhorn posts, comments, reposts, invites people to a Page, connects, accepts invitations and withdraws stale ones, from your own Chrome ([Platforms](/docs/reference/platforms/)). It types at human pace, clicks once, never retries a public action on a guess and hands every CAPTCHA to you ([How Blowhorn paces itself](/docs/explanation/reliability-and-anti-bot-design/)). It always skips a flagged invitation. It can still be blocked. Use the [dry run](/docs/how-to/publish/post-content/) first, run LinkedIn slowly, and keep amplify to one personal profile.
+Blowhorn posts, comments, reposts, invites people to a Page, connects, accepts invitations and withdraws stale ones, from your own browser ([Platforms](/docs/reference/platforms/)). It types at human pace, clicks once, never retries a public action on a guess and hands every CAPTCHA to you ([How Blowhorn paces itself](/docs/explanation/reliability-and-anti-bot-design/)). It always skips a flagged invitation. It can still be blocked. Use the [dry run](/docs/how-to/publish/post-content/) first, run LinkedIn slowly, and keep amplify to one personal profile.

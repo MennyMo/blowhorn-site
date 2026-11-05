@@ -23,7 +23,7 @@ permanent place, so it does not start from there.
 
 1. Quit Blowhorn from the popup's power button, then open it again.
 2. If the line comes back, download Blowhorn again from the
-   [releases page](https://github.com/layer5io/blowhorn-site/releases) and
+   [releases page](https://github.com/blowhorn-ai/blowhorn-site/releases) and
    drag it to Applications, replacing the old copy. Your settings and data
    live outside the app, so they are kept.
 
@@ -40,7 +40,7 @@ before the run could use it.
 
 1. Update Blowhorn. See [Update Blowhorn](/docs/how-to/manage/update-blowhorn/).
 2. If it still happens, download Blowhorn again from the
-   [releases page](https://github.com/layer5io/blowhorn-site/releases) and
+   [releases page](https://github.com/blowhorn-ai/blowhorn-site/releases) and
    drag it to Applications, replacing the old copy.
 3. If it still happens after that, share the log the `Details:` line names.
 

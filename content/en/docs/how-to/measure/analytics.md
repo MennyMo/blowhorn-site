@@ -45,8 +45,8 @@ and id from it. Add `--disabled` to list a page without collecting from it,
 and add it again without the flag to collect from it again. Collection walks
 the enabled pages and only those, so two organizations sharing one install
 each collect their own pages. When your organization has no pages yet, the
-card in the app says "connect a LinkedIn page" and the add form is right
-there.
+card in the app says "no company page connected yet" and its **connect page**
+button takes you to the add form, which is right there.
 
 An organization that has not configured any pages yet keeps collecting the
 pages it collected before per-organization configuration. Run
@@ -87,7 +87,7 @@ blowhorn analytics activity 42 --profile ada --json
 platform the activity is addressed to:
 
 - **Delivery** (measured): whether it went out and when, the link to the live
-  item, the computer and Chrome profile that ran it, and for a failed attempt
+  item, the computer and Google Chrome profile that ran it, and for a failed attempt
   the error and the fix to try next. An activity that is due but has not run
   yet reads as pending. One whose sending click was made but never read back
   reads as unconfirmed, with no link: check the platform before assuming it
@@ -111,6 +111,19 @@ you pick it.
 
 A computer that is not connected to a store yet says so in one sentence and
 exits 3.
+
+## Read several activities' results at once
+
+```bash
+blowhorn analytics activities 164 165 166
+blowhorn analytics activities 164 165 166 --json
+```
+
+`activities` prints the same result `activity` does for each number, in the
+order given, from one set of reads of your account rather than one per
+activity. A number your queue no longer has is listed as not found instead of
+failing the rest. This is what the app's New order **Debrief** shows in
+Performance for the posts an order just wrote.
 
 ## Import content exports
 

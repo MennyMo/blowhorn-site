@@ -27,7 +27,7 @@
     {
       "f": "Where it acts",
       "t": "SocialBee's cloud",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "Evergreen category queues",
@@ -47,7 +47,7 @@
     {
       "f": "AI agents",
       "t": "AI copilot",
-      "b": "MCP server, REST API, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
+      "b": "MCP server, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
     },
     {
       "f": "Bought engagement",

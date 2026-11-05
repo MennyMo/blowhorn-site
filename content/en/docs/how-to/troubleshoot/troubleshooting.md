@@ -20,7 +20,7 @@ Start from what you saw. Each symptom names its fix page.
 ## Sign-in problems
 
 - **LinkedIn, X or Reddit says the session expired.** Sign in again in your
-  mapped Chrome profile, or run `blowhorn profile auth` for that platform. See
+  mapped Google Chrome profile, or run `blowhorn profile auth` for that platform. See
   [Fix a sign-in that stopped working](/docs/how-to/troubleshoot/sign-in-problems/).
 - **A CAPTCHA or second factor appears mid-run.** The run stops and hands the
   browser back to you. Complete the challenge by hand, then run again. See
@@ -38,6 +38,10 @@ Start from what you saw. Each symptom names its fix page.
 - **The menu-bar popup says the engine couldn't start, isn't responding, or
   asks you to move Blowhorn to Applications.** See [Fix Blowhorn when its
   engine won't start](/docs/how-to/troubleshoot/engine-wont-start/).
+- **macOS says Blowhorn is damaged and can't be opened.** See [Fix
+  "Blowhorn is damaged and can't be opened"](/docs/how-to/troubleshoot/damaged-cant-be-opened/).
+- **The app icon bounces in the dock and no window appears.** See [Open
+  the app when it bounces in the dock](/docs/how-to/troubleshoot/bounces-in-dock/).
 - **An update sits on one step, or says it stalled.** See [Update
   Blowhorn](/docs/how-to/manage/update-blowhorn/#if-an-update-stalls).
 
@@ -61,11 +65,9 @@ Start from what you saw. Each symptom names its fix page.
 - **Nothing is claimed on this computer.** You may be paused. See [Pause and
   resume posting](/docs/how-to/schedule/pause/).
 - **Every account-backed command exits 3 saying your account is unavailable.**
-  Bring your connection back; nothing was claimed and nothing is lost. The
-  full story lives in the account-unavailable guide, which ships when the
-  customer account path does. Until then: run `blowhorn store` to probe the
-  connection now, and `blowhorn schedule status` to read the last tick's view
-  of it. It never probes, because the app polls it every 15 seconds.
+  Nothing was claimed and nothing is lost. Run `blowhorn store`, find the
+  sentence it prints in [Fix cannot reach your account](/docs/how-to/troubleshoot/store-unavailable/),
+  and do what it says; usually that is `blowhorn auth login`.
 
 ## Related
 

@@ -1,0 +1,40 @@
+{{- /* One video card: poster facade with a play button (opens the shared
+  player dialog via assets/js/resources.js), title linking to the video's
+  own page, summary, duration and tag chips. Expects a video leaf page.
+  The card carries data-* hooks (category, tags, search text) so the
+  collection filtering in resources.js can show and hide it. */ -}}
+{{- /* Context: dict "page" (the video), "i" (its index in the grid) and "deal"
+  (the grid's variants from card-deal.html, one per card, also printed on a
+  filtered grid as data-card-deal so a filter can hand them out again). */ -}}
+{{- $variant := index .deal .i }}
+{{- with .page }}
+{{- $cat := path.Base (strings.TrimSuffix "/" .Parent.RelPermalink) -}}
+{{- $sources := slice -}}
+{{- with .Params.video -}}
+  {{- with .mp4 }}{{ $sources = $sources | append (dict "src" (. | relURL) "type" "video/mp4") }}{{ end -}}
+  {{- with .webm }}{{ $sources = $sources | append (dict "src" (. | relURL) "type" "video/webm") }}{{ end -}}
+{{- end -}}
+{{- $tagSlugs := slice -}}
+{{- range .GetTerms "tags" }}{{ $tagSlugs = $tagSlugs | append .Data.Term }}{{ end -}}
+{{- $column := .Params.column | default "" }}
+{{- $columnLabel := partial "column-label.html" $column -}}
+<li class="video-card {{ $variant }}" data-card data-category="{{ $cat }}" data-tags="{{ delimit $tagSlugs " " }}{{ with $column }} column:{{ . }}{{ end }}" data-column="{{ $column }}" data-search="{{ lower (printf "%s %s %s %s" .Title .Description (delimit (.Params.tags | default slice) " ") $columnLabel) }}">
+  <button type="button" class="video-card-poster" data-play-video data-title="{{ .Title }}" data-sources="{{ $sources | jsonify }}"{{ with .Params.video }}{{ with .poster }} data-poster="{{ . | relURL }}"{{ end }}{{ end }} aria-label="Play video: {{ .Title }}">
+    {{- with .Params.video -}}
+      {{- with .poster }}<img src="{{ . | relURL }}" alt="" width="1920" height="1080" loading="lazy">{{ else }}<span class="poster-fallback" aria-hidden="true"></span>{{ end -}}
+    {{- end -}}
+    <span class="video-card-play" aria-hidden="true"><span class="play-disc">&#9654;</span></span>
+    {{- with .Params.duration }}<span class="video-card-duration">{{ . }}</span>{{ end -}}
+  </button>
+  <div class="video-card-body">
+    <p class="label">{{ .Parent.Title }}{{ with $columnLabel }} · {{ . }}{{ end }}</p>
+    <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+    <p>{{ .Description }}</p>
+    {{- with .GetTerms "tags" }}
+    <ul class="video-card-tags">
+      {{- range . }}<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end -}}
+    </ul>
+    {{- end }}
+  </div>
+</li>
+{{- end }}

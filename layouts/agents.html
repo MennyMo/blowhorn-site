@@ -7,18 +7,19 @@
             <p class="label">Agentic AI Marketing</p>
             <h1 id="agents-title" class="display">{{ .Params.lead }}</h1>
             <p class="body-lg muted">{{ .Description }}</p>
-            <p class="actions"><a class="button button-primary button-pop" href="{{ "download/" | relURL }}">Download for Mac</a></p>
+            <p class="actions"><a class="button button-primary" href="{{ "download/" | relURL }}">Download Blowhorn</a></p>
           </div>
         </header>
         <section class="agent-section" aria-labelledby="pick-title">
           <div class="section-head"><h2 id="pick-title" class="h2">Pick your agent</h2></div>
           {{ partial "agents/others.html" . }}
         </section>
+        {{ partial "tells-callout.html" (merge site.Data.tells.callouts.agents (dict "id" "agents" "placement" "agents")) }}
         <section class="agent-section" aria-labelledby="why-title">
           <div class="section-head"><h2 id="why-title" class="h2">Why it works with any agent</h2></div>
           <div class="grid grid-3">
-            {{- range .Params.pillars }}
-            <div class="card glass"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
+            {{- range $i, $pl := .Params.pillars }}
+            <div class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $.Params.pillars)) }}"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
             {{- end }}
           </div>
         </section>

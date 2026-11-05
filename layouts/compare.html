@@ -17,7 +17,7 @@
             <h2 id="matrix-title" class="h2">At a glance</h2>
             <p class="muted">By group, because products within a group differ. Checked against vendor pages in October 2026.</p>
           </div>
-          <div class="compare-scroll glass">
+          <div class="compare-scroll card-plain">
             <table class="compare-table">
               <thead>
                 <tr>
@@ -53,8 +53,8 @@
             <h2 id="why-title" class="h2">Why it matters</h2>
           </div>
           <ul class="grid grid-3">
-            {{- range .Params.why }}
-            <li class="card">
+            {{- range $i, $w := .Params.why }}
+            <li class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $.Params.why)) }}">
               <h3 class="h3">{{ .title }}</h3>
               <p>{{ .body }}</p>
               <p class="ui"><a href="{{ .link | relURL }}">Read the details</a></p>

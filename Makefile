@@ -63,6 +63,8 @@ include .github/build/Makefile.show-help.mk
 #                      Run internal-site.yml (build, Cloudflare Access, Worker
 #                      deploy at internal.blowhorn.ai, verify) and watch it:
 #                      make site-internal-deploy [REF=<blowhorn ref>] [WATCH=0].
+#   site-internal-poll Decide whether internal-site-auto.yml deploys (see
+#                      .github/scripts/internal-poll.sh).
 #   site-internal-access, site-internal-access-check, site-internal-worker-deploy,
 #   site-internal-verify
 #                      The steps of internal-site.yml (see docs/deploy.md).
@@ -76,6 +78,8 @@ include .github/build/Makefile.show-help.mk
 #   dmg-resolve, dmg-download, dmg-package, dmg-verify, dmg-release,
 #   dmg-pin-download, dmg-sync-docs
 #                      The steps of publish-dmg.yml (see docs/distribution.md).
+#   npm-fetch, npm-verify, npm-publish, npm-confirm
+#                      The steps of publish-blowhorn-axi.yml (see docs/distribution.md).
 #   docs-sync          Sync the user docs from a blowhorn checkout
 #                      into content/en/docs/: make docs-sync REF=<tag|branch|sha>
 #                      (see docs/deploy.md).
@@ -98,20 +102,20 @@ BIN_DIR ?= .bin
 # actionlint from PATH when installed; otherwise a pinned copy is downloaded into $(BIN_DIR).
 ACTIONLINT ?= $(shell command -v actionlint 2>/dev/null)
 # Workflows owned by this repo. Template workflows (labeler and friends) are left as-is.
-WORKFLOWS ?= .github/workflows/site.yml .github/workflows/publish-dmg.yml .github/workflows/sync-docs.yml .github/workflows/cloud-auth-smoke.yml .github/workflows/product-ci.yml .github/workflows/internal-site.yml
+WORKFLOWS ?= .github/workflows/site.yml .github/workflows/publish-dmg.yml .github/workflows/sync-docs.yml .github/workflows/cloud-auth-smoke.yml .github/workflows/product-ci.yml .github/workflows/internal-site.yml .github/workflows/internal-site-auto.yml .github/workflows/publish-blowhorn-axi.yml
 # A blowhorn checkout for `make docs-sync` (the sync-docs.yml
 # workflow checks the product repo out at this path).
 SOURCE_DIR ?= product
 # The private blowhorn clone that config/internal/hugo.toml mounts
-# (module import github.com/leecalcote/blowhorn, replaced with this directory).
+# (module import github.com/blowhorn-ai/blowhorn, replaced with this directory).
 BLOWHORN_DIR ?= ../blowhorn
 BLOWHORN_ABS = $(abspath $(BLOWHORN_DIR))
-BLOWHORN_MODULE := github.com/leecalcote/blowhorn
+BLOWHORN_MODULE := github.com/blowhorn-ai/blowhorn
 DOCS_DIR ?= content/en/docs
 # Branch the sync-docs.yml workflow pushes and opens its pull request from.
 SYNC_BRANCH ?= docs-sync
 # The internal site's hosting workflow (site-internal-deploy) and its blowhorn ref.
-INTERNAL_SITE_REPO ?= layer5io/blowhorn-site
+INTERNAL_SITE_REPO ?= blowhorn-ai/blowhorn-site
 INTERNAL_WORKFLOW ?= internal-site.yml
 REF ?= master
 
@@ -208,11 +212,15 @@ site-internal-deploy:
 		gh run watch "$$run_id" -R $(INTERNAL_SITE_REPO) --exit-status; \
 	fi
 
+## Decide whether internal-site-auto.yml deploys: always on push or dispatch; on schedule, only when blowhorn master changed a mounted path in the last 2 hours (needs DMG_SOURCE_TOKEN).
+site-internal-poll:
+	.github/scripts/internal-poll.sh
+
 ## Read-only: confirm CLOUDFLARE_API_TOKEN can read Zero Trust, Access applications and policies, and Workers.
 site-internal-access-check:
 	python3 .github/scripts/internal_access.py check
 
-## Create or update the Cloudflare Access application and allow policy (internal-worker/access.json), then verify they are default-deny.
+## Create or update the Cloudflare Access application, allow policy and trusted-network bypass policy (internal-worker/access.json), then verify they are default-deny.
 site-internal-access:
 	python3 .github/scripts/internal_access.py ensure
 
@@ -231,7 +239,7 @@ test-internal-worker:
 
 ## Fail unless BLOWHORN_DIR is a blowhorn clone with the internal sources.
 check-blowhorn:
-	@test -d "$(BLOWHORN_ABS)/marketing/strategy/hugo/strategy" || { echo "Error: no blowhorn clone at BLOWHORN_DIR=$(BLOWHORN_DIR) ($(BLOWHORN_ABS)). Clone it beside this repository (git clone https://github.com/leecalcote/blowhorn ../blowhorn) or pass BLOWHORN_DIR=path/to/blowhorn."; exit 1; }
+	@test -d "$(BLOWHORN_ABS)/marketing/strategy/hugo/strategy" || { echo "Error: no blowhorn clone at BLOWHORN_DIR=$(BLOWHORN_DIR) ($(BLOWHORN_ABS)). Clone it beside this repository (git clone https://github.com/blowhorn-ai/blowhorn ../blowhorn) or pass BLOWHORN_DIR=path/to/blowhorn."; exit 1; }
 
 
 ## Build and serve the site once with the file-watcher off (no live reload).
@@ -263,8 +271,9 @@ check-third-party: site-build
 check-urls: site-build
 	python3 .github/scripts/check-site-contract.py $(BUILD_DIR)
 
-## Validate every data file that has a JSON Schema in schemas/ (data/hero.json, data/machines.json, data/home_ai.json, data/roles.json, data/use_cases.json, data/solutions.json, data/themes.json, data/integrations.json, data/hero_demo.json, data/actions.json, data/action_examples.json).
+## Validate every data file that has a JSON Schema in schemas/ (data/hero.json, data/machines.json, data/home_ai.json, data/roles.json, data/use_cases.json, data/solutions.json, data/themes.json, data/integrations.json, data/hero_demo.json, data/actions.json, data/action_examples.json, data/tells.json, data/docs_events.json, data/activity_feed.sample.json, internal-worker/access.json).
 ## Role, use-case and solution schemas $ref shared line/text/card types; ajv -r loads that file.
+## data/docs_events.json $refs the docs event payload types in schemas/defs/docs-event.schema.json (ajv -r).
 ## check_action_examples.py also requires every supported YAML action to have an example.
 ## check_action_matrix.py --source checks action groups, matrix exceptions and platform order.
 check-schemas:
@@ -277,9 +286,15 @@ check-schemas:
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/themes.schema.json -d data/themes.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/integrations.schema.json -d data/integrations.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/hero_demo.schema.json -d data/hero_demo.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/activity_feed.schema.json -d data/activity_feed.sample.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/actions.schema.json -d data/actions.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/action_examples.schema.json -d data/action_examples.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/tells.schema.json -d data/tells.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/docs_events.schema.json -r schemas/defs/docs-event.schema.json -d data/docs_events.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/internal_access.schema.json -d internal-worker/access.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/bookmarklet.schema.json -d data/bookmarklet.json
 	python3 .github/scripts/check_action_examples.py
+	python3 .github/scripts/check_bookmarklet.py
 	python3 .github/scripts/check_action_matrix.py --source
 
 ## Production build, then fail if / is not the home-page theme (themes.json default plus _index.md front matter), the Reveille preview lost today's look, or a theme-specific content file appeared outside content/en/home-reveille.md.
@@ -295,11 +310,27 @@ check-action-matrix: site-build
 	python3 .github/scripts/check_action_matrix.py $(BUILD_DIR)
 
 ## Build for production once, then validate-html, check-links, check-third-party and check-urls, plus check-schemas (what site.yml runs).
-site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-download-links
+site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-download-links check-feeds check-brand-kits check-tells check-tips
 
 ## Production build, then fail if any built page or script links to /releases/latest/download (an axi release can hold Latest; build download URLs from data/download.json).
 check-download-links: site-build
 	python3 .github/scripts/check_download_links.py $(BUILD_DIR)
+
+## Production build, then fail if the Brand page links a kit zip the build does not publish, or states its size wrong.
+check-brand-kits: site-build
+	python3 .github/scripts/check_brand_kits.py $(BUILD_DIR)
+
+## Production build, then validate the Resources RSS feeds, including the desktop contract feed (issue #253, Part D).
+check-feeds: site-build
+	python3 .github/scripts/check_feeds.py $(BUILD_DIR)
+
+## Source check, no build: fail if a published article or video lacks a column (blowhorn #1555), or a published tip lacks a video or a unique tipOrder (blowhorn #1554).
+check-tips:
+	python3 .github/scripts/check_tips.py
+
+## Production build, then fail if a Blowhorn Tells placement (data/tells.json) left its page or a Tells link lost its UTM tags.
+check-tells: site-build
+	python3 .github/scripts/check_tells.py $(BUILD_DIR)
 
 ## Production build, then fail if a page says Layer5 Cloud or Blowhorn Cloud, or names Layer5 outside the footer and the legal pages (users see Blowhorn).
 check-naming: site-build
@@ -318,7 +349,7 @@ workflow-check:
 ifeq ($(ACTIONLINT),)
 	@test -x $(BIN_DIR)/actionlint || (mkdir -p $(BIN_DIR) && cd $(BIN_DIR) && \
 		curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/v$(ACTIONLINT_VERSION)/scripts/download-actionlint.bash | \
-		bash -s -- $(ACTIONLINT_VERSION) .)
+		TAR_OPTIONS="--no-same-owner" bash -s -- $(ACTIONLINT_VERSION) .)
 	$(BIN_DIR)/actionlint -color $(WORKFLOWS)
 else
 	$(ACTIONLINT) -color $(WORKFLOWS)
@@ -421,6 +452,26 @@ dmg-pin-download:
 dmg-sync-docs:
 	.github/scripts/publish-dmg/sync-docs.sh
 
+# publish-blowhorn-axi.yml steps. Each reads its inputs from the environment, as
+# the workflow sets them; see the script headers in .github/scripts/publish-npm/.
+# They need only bash, curl, gh, node and npm (no Go, Hugo or site dependencies).
+
+## publish-blowhorn-axi step 1: fetch PACKAGE-VERSION.tgz from TARBALL_URL (HTTPS) or release RELEASE_TAG; TARBALL into GITHUB_ENV.
+npm-fetch:
+	.github/scripts/publish-npm/fetch.sh
+
+## publish-blowhorn-axi step 2: check TARBALL's sha256 (SHA256), name, version and repository.url; refuse an already-published version.
+npm-verify:
+	.github/scripts/publish-npm/verify.sh
+
+## publish-blowhorn-axi step 3: npm publish TARBALL with --provenance under DIST_TAG (default latest), over OIDC.
+npm-publish:
+	.github/scripts/publish-npm/publish.sh
+
+## publish-blowhorn-axi step 4: poll npm for PACKAGE@VERSION for about 5 minutes, then warn (never fails).
+npm-confirm:
+	.github/scripts/publish-npm/confirm.sh
+
 ## Empty the build cache, reinstall dependencies, and run the site locally.
 clean:
 	npm run clean
@@ -429,6 +480,12 @@ clean:
 
 .PHONY: \
 	check-schemas \
+	check-brand-kits \
+	check-naming \
+	check-download-links \
+	check-feeds \
+	check-tips \
+	check-tells \
 	check-theme \
 	check-platform-docs \
 	check-action-matrix \
@@ -475,6 +532,10 @@ clean:
 	dmg-release \
 	dmg-pin-download \
 	dmg-sync-docs \
+	npm-fetch \
+	npm-verify \
+	npm-publish \
+	npm-confirm \
 	docs-cli-reference \
 	docs-sync \
 	docs-sync-base \

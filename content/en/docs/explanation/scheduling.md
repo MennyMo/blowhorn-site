@@ -12,11 +12,14 @@ the arrangement; the words and commands are in
 
 {{< major >}}One awake computer, set up for the profile. That's all the schedule needs.{{< /major >}}
 
-One pass runs every ten minutes. It wakes, claims the activities that are
-due, runs them one at a time, writes the ledger, and sleeps again. A
-pass that finds nothing due costs nothing and changes nothing. The
-service owns the passes while the app is closed; your terminal owns
-the pass you trigger by hand, which never waits for the interval.
+The service runs a pass whenever something is due, and at least once a
+minute otherwise. A pass claims the activities that are due, runs them one
+at a time, writes the ledger, and the service sleeps until the next due time
+or the next minute, whichever comes first. A pass that finds nothing due
+costs one short check of the schedule and changes nothing. Saving a routine
+on this computer wakes the service at once. The service owns the passes while
+the app is closed; your terminal owns the run you start by hand, which never
+waits for a due time.
 
 Several computers share one queue through leases, not locks. A claimed activity
 says running with a lease timestamp, and the holder renews the lease

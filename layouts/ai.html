@@ -13,12 +13,12 @@
             <h1 id="ai-title" class="display">{{ $p.lead }}</h1>
             <p class="body-lg muted">{{ $p.intro | default .Description }}</p>
             <p class="actions">
-              {{- if $p.soon }}<a class="button button-primary button-pop" href="{{ "ai/blowhorn-axi/" | relURL }}">Use blowhorn-axi today</a>
-              {{- else }}<a class="button button-primary button-pop" href="{{ "download/" | relURL }}">Download free</a>{{ end }}
+              {{- if $p.soon }}<a class="button button-primary" href="{{ "ai/blowhorn-axi/" | relURL }}">Use blowhorn-axi today</a>
+              {{- else }}<a class="button button-primary" href="{{ "download/" | relURL }}">Download free</a>{{ end }}
               <a class="button" href="{{ (site.GetPage "/agents").RelPermalink }}">Agentic AI marketing</a>
             </p>
             {{- if not $p.soon }}
-            <p class="caption muted">For macOS 13 or later.</p>
+            <p class="caption muted">See <a href="/docs/reference/requirements/">System requirements</a>.</p>
             {{- end }}
           </div>
           <figure class="ai-persona">
@@ -35,7 +35,7 @@
             {{ partial "code-card.html" (dict "code" .code "title" .title "lang" (.lang | default "bash") "prompt" .prompt "copy" (ne .copy false)) }}
             {{- end }}
           </div>
-          {{- with $p.code_note }}<p class="caption muted ai-note">{{ . }}</p>{{ end }}
+          {{- with $p.code_note }}<p class="caption muted ai-note">{{ . | markdownify }}</p>{{ end }}
         </section>
         {{- end }}
 
@@ -43,8 +43,8 @@
         <section class="agent-section" aria-labelledby="ai-ways-title">
           <div class="section-head"><h2 id="ai-ways-title" class="h2">{{ $p.ways_title }}</h2></div>
           <ul class="grid grid-2 ai-ways">
-            {{- range . }}
-            <li class="card glass">
+            {{- range $i, $w := . }}
+            <li class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-2" "n" (len $p.ways)) }}">
               <p class="ai-status{{ if .soon }} ai-soon{{ end }}">{{ .status }}</p>
               <h3 class="h3"><a href="{{ (site.GetPage .path).RelPermalink }}">{{ .t }}</a></h3>
               <p>{{ .b }}</p>
@@ -54,12 +54,16 @@
         </section>
         {{- end }}
 
+        {{- if not .IsPage }}
+        {{ partial "tells-callout.html" (merge site.Data.tells.callouts.agents (dict "id" "ai" "placement" "ai")) }}
+        {{- end }}
+
         {{- with $p.cards }}
         <section class="agent-section" aria-labelledby="ai-cards-title">
           <div class="section-head"><h2 id="ai-cards-title" class="h2">{{ $p.cards_title }}</h2></div>
           <div class="grid {{ if eq (len .) 4 }}grid-2 ai-grid-4{{ else }}grid-3{{ end }}">
-            {{- range . }}
-            <div class="card glass"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
+            {{- range $i, $c := . }}
+            <div class="card {{ partial "card-variant.html" (dict "i" $i "grid" (cond (eq (len $p.cards) 4) "grid-2" "grid-3") "n" (len $p.cards)) }}"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
             {{- end }}
           </div>
         </section>
@@ -69,8 +73,8 @@
         <section class="agent-section" aria-labelledby="ai-rules-title">
           <div class="section-head"><h2 id="ai-rules-title" class="h2">{{ $p.rules_title }}</h2></div>
           <div class="grid grid-3">
-            {{- range . }}
-            <div class="card glass"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
+            {{- range $i, $c := . }}
+            <div class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $p.rules)) }}"><h3 class="h3">{{ .t }}</h3><p>{{ .b }}</p></div>
             {{- end }}
           </div>
         </section>

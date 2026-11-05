@@ -8,7 +8,7 @@
       "weight": 10,
       "headline": "Post where developers actually talk.",
       "lead": "Hacker News, GitHub, Reddit and Slack, plus LinkedIn, X and Bluesky, from one queue. Posted as you, at a human pace.",
-      "description": "One queue for the networks technical companies use: Hacker News, GitHub, Reddit and Slack, plus LinkedIn, X and Bluesky, posted as you from your own Chrome.",
+      "description": "One queue for the networks technical companies use: Hacker News, GitHub, Reddit and Slack, plus LinkedIn, X and Bluesky, posted as you from your own browser.",
       "art": {
         "src": "assets/brand/cast/major-6-hat-left-horn.webp",
         "alt": "Major Blowhorn, a teal rooster drill sergeant in a campaign hat, pointing and shouting through his gold bullhorn, Caribbean Green sound waves pouring out of it"
@@ -42,7 +42,7 @@
         },
         {
           "t": "Human-paced by design",
-          "b": "Types key by key in your own Chrome, caps itself, and hands every CAPTCHA and 2FA prompt to you."
+          "b": "Types key by key in your own browser, caps itself, and hands every CAPTCHA and 2FA prompt to you."
         }
       ],
       "prompt": "Submit the launch post to Hacker News, react on the GitHub release issue, tell #general in Slack, then --dry-run the rest.",
@@ -64,7 +64,7 @@
         },
         {
           "q": "How does it post to each network?",
-          "a": "LinkedIn, X, Reddit and Hacker News: Blowhorn types in your own Chrome, signed in as you. Slack, Bluesky and GitHub go through their APIs."
+          "a": "LinkedIn, X, Reddit and Hacker News: Blowhorn types in your own browser, signed in as you. Slack, Bluesky and GitHub go through their APIs."
         },
         {
           "q": "What about Instagram, TikTok, Facebook and YouTube?",
@@ -154,6 +154,10 @@
         {
           "q": "Will the same post go out twice?",
           "a": "Your computers coordinate through one queue, so the same post isn't sent from two of them."
+        },
+        {
+          "q": "Do teammates need a proxy?",
+          "a": "No. Each teammate posts from their own computer's internet connection, with their own IP address. There is no proxy to buy or set up."
         }
       ],
       "related": [
@@ -168,6 +172,109 @@
         {
           "label": "How amplification works",
           "page": "/docs/how-to/publish/amplify-a-post"
+        },
+        {
+          "label": "Pricing",
+          "page": "/pricing"
+        }
+      ]
+    },
+    {
+      "slug": "distributed-teams",
+      "name": "Distributed teams",
+      "title": "Blowhorn for distributed teams",
+      "weight": 25,
+      "headline": "One queue for your whole team. No proxies.",
+      "lead": "Teammates anywhere run Blowhorn on their own computers and work from one shared queue. Every post goes out over the poster's own internet connection, so there is no proxy to buy, run or explain.",
+      "description": "Blowhorn for distributed teams: one shared queue across your teammates' computers, each posting from its own internet connection and IP address. No proxy to buy or run.",
+      "art": {
+        "src": "assets/brand/cast/recruit-chick-laptop-lap.webp",
+        "alt": "A recruit chick in a teal helmet and field pack, sitting cross-legged and typing on a laptop with a Major Blowhorn sticker"
+      },
+      "pains": [
+        {
+          "t": "A proxy for every account",
+          "b": "Tools that post from their own servers, or juggle many profiles in one browser, need an IP address for each account. You pay for every one."
+        },
+        {
+          "t": "One more system to babysit",
+          "b": "Proxies expire, slow down and get blocked. Someone has to rent them, assign them and notice when one breaks."
+        },
+        {
+          "t": "Addresses that look wrong",
+          "b": "Sites can spot a proxy or data center address, and a shared one can carry a stranger's history into your account."
+        }
+      ],
+      "gets": [
+        {
+          "t": "Their own IP address",
+          "b": "Each post leaves from the computer that runs it, over that teammate's own internet connection. Your account keeps the queue in sync and never posts."
+        },
+        {
+          "t": "No proxy bill",
+          "b": "No proxy or dedicated IP to buy for each account. The internet your team already has is the one Blowhorn uses."
+        },
+        {
+          "t": "Nothing extra to run",
+          "b": "No proxy pool to rent, assign, rotate or keep healthy, and no proxy setting to get wrong. Install, sign in, post."
+        },
+        {
+          "t": "Lower risk",
+          "b": "No proxy or data center address for a site to flag. A teammate's own connection is the one the platform already knows for them."
+        }
+      ],
+      "prompt": "Schedule the launch post for 9:00 Pacific, have every teammate's profile amplify it at 9:05, then --dry-run the rest.",
+      "major": "Every soldier fires from their own foxhole. No rented trenches.",
+      "compare": [
+        "/compare/expandi",
+        "/compare/dripify",
+        "/compare/multilogin",
+        "/compare/gologin",
+        "/compare/adspower",
+        "/compare/social-browser"
+      ],
+      "faq": [
+        {
+          "q": "Do I need a proxy?",
+          "a": "No. Blowhorn has no proxy setting. Each computer posts over its own internet connection, with its own IP address."
+        },
+        {
+          "q": "Does anything post from Blowhorn's servers?",
+          "a": "No. Your account keeps the queue, schedule and run history in sync. Every action runs on one of your computers."
+        },
+        {
+          "q": "Can teammates in different cities share one queue?",
+          "a": "Yes. Every computer signed in to your account works from the same queue, wherever it is, coordinated so the same post isn't sent from two computers."
+        },
+        {
+          "q": "Do profiles on one computer get separate addresses?",
+          "a": "No. Profiles on one computer share that computer's connection. Separate addresses come from separate people on their own computers."
+        },
+        {
+          "q": "Can I invite my team?",
+          "a": "Team invites are Coming soon. Today teammates install Blowhorn on their own computers, sign in to your account and add their own profiles."
+        },
+        {
+          "q": "What if a teammate uses a VPN?",
+          "a": "Sites can see a VPN as well as a proxy. Check what a site sees in that teammate's browser.",
+          "link": {
+            "href": "https://tells.blowhorn.ai/",
+            "label": "Run the free check at Blowhorn Tells"
+          }
+        }
+      ],
+      "related": [
+        {
+          "label": "Employee advocacy",
+          "page": "/solutions/employee-advocacy"
+        },
+        {
+          "label": "How Blowhorn works",
+          "page": "/docs/explanation/how-it-works"
+        },
+        {
+          "label": "Pause and resume",
+          "page": "/docs/how-to/schedule/pause"
         },
         {
           "label": "Pricing",
@@ -204,7 +311,7 @@
       "gets": [
         {
           "t": "Your computers press Post",
-          "b": "Every action runs on one of your computers, in your Chrome or through the platform's API. Your account keeps them in sync and never posts."
+          "b": "Every action runs on one of your computers, in your browser or through the platform's API. Your account keeps them in sync and never posts."
         },
         {
           "t": "Every developer channel, one queue",
@@ -271,8 +378,8 @@
       "title": "Blowhorn for LinkedIn automation",
       "weight": 40,
       "headline": "LinkedIn automation without handing over your login.",
-      "lead": "Blowhorn works LinkedIn in your own Chrome, signed in as you, at a human pace. No server logs in as you.",
-      "description": "LinkedIn posting and careful outreach from your own Chrome, signed in as you: no password, 2FA secret or session cookie handed to a vendor's server.",
+      "lead": "Blowhorn works LinkedIn in your own browser, signed in as you, at a human pace. No server logs in as you.",
+      "description": "LinkedIn posting and careful outreach from your own browser, signed in as you: no password, 2FA secret or session cookie handed to a vendor's server.",
       "art": {
         "src": "assets/brand/cast/trench-trooper-base.webp",
         "alt": "Trench Trooper, a muddy pig in a helmet holding a rifle with a teal tab bayonet and a gold periscope"
@@ -293,8 +400,8 @@
       ],
       "gets": [
         {
-          "t": "Your Chrome, as you",
-          "b": "Blowhorn does the typing and clicking in your own Chrome profile. No vendor server logs in as you."
+          "t": "Your browser, as you",
+          "b": "Blowhorn does the typing and clicking in your own browser profile. No vendor server logs in as you."
         },
         {
           "t": "Human-paced by design",
@@ -310,7 +417,7 @@
         }
       ],
       "prompt": "Withdraw LinkedIn invitations older than a month, accept the safe ones, then --dry-run invite for our page.",
-      "major": "Hold the line, soldier. Your login stays in your Chrome.",
+      "major": "Hold the line, soldier. Your login stays in your browser.",
       "compare": [
         "/compare/expandi",
         "/compare/waalaxy",
@@ -330,7 +437,7 @@
         },
         {
           "q": "Who signs in to LinkedIn?",
-          "a": "You do, in your own Chrome. Blowhorn types and clicks there, and LinkedIn's session cookies stay in Chrome on each computer."
+          "a": "You do, in your own browser. Blowhorn types and clicks there, and LinkedIn's session cookies stay in the browser on each computer."
         }
       ],
       "related": [
@@ -339,12 +446,12 @@
           "page": "/docs/explanation/invitation-safety"
         },
         {
-          "label": "Why your own Chrome",
+          "label": "Why your own browser",
           "page": "/docs/explanation/your-own-chrome"
         },
         {
-          "label": "Reliability and anti-bot design",
-          "page": "/docs/explanation/reliability-and-anti-bot-design"
+          "label": "Careful LinkedIn outreach",
+          "page": "/use-cases/linkedin-outreach"
         },
         {
           "label": "Blowhorn for founders",
@@ -357,9 +464,9 @@
       "name": "Multi-profile",
       "title": "Blowhorn for many profiles",
       "weight": 50,
-      "headline": "Many profiles. Real Chrome. No disguises.",
-      "lead": "Every brand, founder and project you speak for, from one menu bar. Each profile runs in its own real Chrome profile, signed in as itself.",
-      "description": "Run many brand, founder and project profiles from one desk: each in its own real Chrome profile, no fake fingerprints, from one coordinated queue.",
+      "headline": "Many profiles. A real browser. No disguises.",
+      "lead": "Every brand, founder and project you speak for, from one menu bar. Each profile runs in its own real browser profile, signed in as itself.",
+      "description": "Run many brand, founder and project profiles from one desk: each in its own real browser profile, no fake fingerprints, from one coordinated queue.",
       "art": {
         "src": "assets/brand/cast/mouse-marine-base.webp",
         "alt": "Mouse Marine, a mallard in a green beret riding a gold trackball on a small tank through teal water, cursor spear raised"
@@ -380,8 +487,8 @@
       ],
       "gets": [
         {
-          "t": "Real Chrome, real you",
-          "b": "Each Blowhorn profile maps to its own Chrome profile on each computer. No fake fingerprints."
+          "t": "Real browser, real you",
+          "b": "Each Blowhorn profile maps to its own browser profile on each computer. No fake fingerprints."
         },
         {
           "t": "One automation at a time",
@@ -408,7 +515,7 @@
       "faq": [
         {
           "q": "Is this an antidetect browser?",
-          "a": "No. Blowhorn is real Chrome, signed in as each profile. It does the typing and clicking.",
+          "a": "No. Blowhorn is a real browser, signed in as each profile. It does the typing and clicking.",
           "link": {
             "href": "https://tells.blowhorn.ai/",
             "label": "See what sites can read about your browser"
@@ -433,7 +540,7 @@
           "page": "/docs/reference/profiles"
         },
         {
-          "label": "Map Chrome profiles",
+          "label": "Map browser profiles",
           "page": "/docs/how-to/set-up/map-chrome-profiles"
         },
         {

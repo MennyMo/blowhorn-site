@@ -45,14 +45,14 @@ A pull request never deploys. Its run still uploads the built site as the
 ### Verify a deployment
 
 ```bash
-gh-axi run list -R layer5io/blowhorn-site --workflow site.yml
+gh-axi run list -R blowhorn-ai/blowhorn-site --workflow site.yml
 ```
 
 The newest run on `master` should show both jobs green. The deployment is live
 at the Pages URL within a minute of the `deploy` job finishing:
 
 - <https://blowhorn.ai/> once DNS points at GitHub Pages (below).
-- <https://layer5io.github.io/blowhorn-site/> is the project URL. Because the
+- <https://blowhorn-ai.github.io/blowhorn-site/> is the project URL. Because the
   custom domain is already set on Pages, GitHub redirects this URL to
   `https://blowhorn.ai/`, so nothing is reachable there until the DNS records
   below are in place. The artifact itself deploys fine either way.
@@ -64,9 +64,9 @@ not from a branch. The one-time setup, done with an account that administers
 the repository:
 
 ```bash
-gh-axi api -X POST repos/layer5io/blowhorn-site/pages --field build_type=workflow
+gh-axi api -X POST repos/blowhorn-ai/blowhorn-site/pages --field build_type=workflow
 # or, if Pages already exists:
-gh-axi api -X PUT repos/layer5io/blowhorn-site/pages --field build_type=workflow
+gh-axi api -X PUT repos/blowhorn-ai/blowhorn-site/pages --field build_type=workflow
 ```
 
 This was done on 2026-10-08: Pages exists with `build_type: workflow` and the
@@ -98,7 +98,7 @@ Form A, a flattened CNAME (Cloudflare resolves it to GitHub's addresses itself):
 
 | Type | Name | Target | Proxy |
 |---|---|---|---|
-| CNAME | `@` | `layer5io.github.io` | DNS only |
+| CNAME | `@` | `blowhorn-ai.github.io` | DNS only |
 
 Form B, GitHub Pages' fixed addresses:
 
@@ -125,14 +125,14 @@ certificate, and enforce HTTPS once GitHub reports it issued (Settings > Pages
 shows "Enforce HTTPS" as available):
 
 ```bash
-gh-axi api repos/layer5io/blowhorn-site/pages --jq '.cname, .https_certificate.state'
-printf '{"https_enforced":true}' | gh-axi api -X PUT repos/layer5io/blowhorn-site/pages --input -
+gh-axi api repos/blowhorn-ai/blowhorn-site/pages --jq '.cname, .https_certificate.state'
+printf '{"https_enforced":true}' | gh-axi api -X PUT repos/blowhorn-ai/blowhorn-site/pages --input -
 ```
 
 If the custom domain ever has to be set again:
 
 ```bash
-gh-axi api -X PUT repos/layer5io/blowhorn-site/pages --field cname=blowhorn.ai
+gh-axi api -X PUT repos/blowhorn-ai/blowhorn-site/pages --field cname=blowhorn.ai
 ```
 
 Certificate issuance usually takes a few minutes and can take up to a day. If
@@ -142,13 +142,13 @@ it stalls, the usual cause is the Cloudflare proxy being on for the record.
 
 | Type | Name | Target | Proxy |
 |---|---|---|---|
-| CNAME | `www` | `layer5io.github.io` | DNS only |
+| CNAME | `www` | `blowhorn-ai.github.io` | DNS only |
 
 With `blowhorn.ai` as the Pages custom domain and this record in place, GitHub
 answers `www.blowhorn.ai` with a redirect to `https://blowhorn.ai/`.
 
 ```bash
-dig +short CNAME www.blowhorn.ai   # expect: layer5io.github.io.
+dig +short CNAME www.blowhorn.ai   # expect: blowhorn-ai.github.io.
 curl -sI https://www.blowhorn.ai   # expect 301 to https://blowhorn.ai/
 ```
 
@@ -160,7 +160,7 @@ Every page and asset reference is root-relative (`/css/site.<hash>.css`,
 path, nested ones included. A build with a different base URL
 (`make site-build BASE_URL=...` or `make build-preview`) prefixes every
 reference with that URL's path. The project URL
-`layer5io.github.io/blowhorn-site/` redirects to blowhorn.ai, so nothing is
+`blowhorn-ai.github.io/blowhorn-site/` redirects to blowhorn.ai, so nothing is
 served under that path in production.
 
 The public URLs are a contract, checked by `make site-check`:
@@ -181,7 +181,11 @@ The public URLs are a contract, checked by `make site-check`:
   Blowhorn (no early-access form: anyone without a plan starts the beta
   there), whose URL is `params.cloud_url` in `hugo.toml` alone. None of these
   is listed in `sitemap.xml` or `llms.txt`.
-- `/assets/brand/...` (from `static/assets/brand/`), `/favicon.ico`, `/CNAME`.
+- `/assets/brand/...` (from `static/assets/brand/`), `/assets/brand/cards.css`
+  (the card variants, published from `assets/css/cards.css` for tells.blowhorn.ai;
+  [DESIGN.md](../DESIGN.md), Cards), `/favicon.ico`, `/CNAME`.
+- The two brand kits on `/brand/`: `/brand/blowhorn-brand-kit.zip` (the full kit,
+  the URL the kit has always had) and `/brand/blowhorn-logo-kit.zip`.
 - Generated: `/sitemap.xml`, `/robots.txt` (which names the sitemap),
   `/llms.txt`, `/llms-full.txt` and `/index.md`.
 
@@ -276,7 +280,7 @@ Run the same flow locally from a product checkout at `./product`
 (or pass `SOURCE_DIR` for a checkout elsewhere):
 
 ```bash
-git clone git@github.com:leecalcote/blowhorn.git product
+git clone git@github.com:blowhorn-ai/blowhorn.git product
 make docs-sync REF=master   # or a tag, branch or SHA
 make check                  # what the sync pull request runs
 ```
@@ -294,6 +298,14 @@ chrome-devtools-axi emulate --color-scheme dark
 chrome-devtools-axi screenshot /path/to/evidence/home-390-dark.png --full-page
 chrome-devtools-axi eval 'document.documentElement.scrollWidth > document.documentElement.clientWidth'   # must be false
 ```
+
+Two capture gotchas. Headless Chrome will not shrink a window below 500 px, so
+`resize 390 844` silently shoots at 500: use
+`emulate --viewport "390x844x2,mobile"` for phone widths and check
+`innerWidth`. The ambient background is a `position: fixed` layer, so a
+`--full-page` shot taller than the viewport shows a hard seam where the layer
+ends; set the viewport height to `document.documentElement.scrollHeight`
+before shooting instead.
 
 ## Internal section (Hugo segments and module mounts)
 
@@ -320,11 +332,11 @@ these with `BLOWHORN_SITE_DIR` (default `../blowhorn-site`).
 `hugo.toml` declares Hugo's default project mounts explicitly
 (`content/en`, `data`, `layouts`, `i18n`, `archetypes`, `assets`, `static`),
 since declaring any mount drops the defaults. `config/internal/hugo.toml`
-adds a module import, `github.com/leecalcote/blowhorn`, with its own mounts:
+adds a module import, `github.com/blowhorn-ai/blowhorn`, with its own mounts:
 
 ```toml
 [[module.imports]]
-  path = "github.com/leecalcote/blowhorn"
+  path = "github.com/blowhorn-ai/blowhorn"
   ignoreConfig = true
   [[module.imports.mounts]]
     source = "marketing/strategy/hugo/strategy"
@@ -349,12 +361,64 @@ adds a module import, `github.com/leecalcote/blowhorn`, with its own mounts:
     source = "marketing/capability-comparison/compare-segments.csv"
     target = "assets/internal/compare-segments.csv"
   [[module.imports.mounts]]
+    source = "marketing/brand/hugo/assets"
+    target = "content/internal/assets"
+  [[module.imports.mounts]]
+    source = "marketing/assets.manifest.json"
+    target = "static/internal/marketing-assets/assets.manifest.json"
+  [[module.imports.mounts]]
+    source = "marketing/cast"
+    target = "static/internal/marketing-assets/cast"
+    files = ["**/*-640.webp"]
+  [[module.imports.mounts]]
     source = "internal/engineering/hugo/engineering"
     target = "content/internal/engineering"
+  [[module.imports.mounts]]
+    source = "internal/design/hugo/design"
+    target = "content/internal/design"
+  [[module.imports.mounts]]
+    source = "internal/design"
+    target = "content/internal/design"
+    excludeFiles = ["hugo/**", "README.md"]
+  [[module.imports.mounts]]
+    source = "internal/specs/hugo/specs"
+    target = "content/internal/specs"
+  [[module.imports.mounts]]
+    source = "internal/specs"
+    target = "content/internal/specs"
+    excludeFiles = ["hugo/**", "README.md"]
+  [[module.imports.mounts]]
+    source = "internal/plans/hugo/plans"
+    target = "content/internal/plans"
+  [[module.imports.mounts]]
+    source = "internal/plans"
+    target = "content/internal/plans"
+    excludeFiles = ["hugo/**", "README.md"]
+  [[module.imports.mounts]]
+    source = "internal/research/hugo/research"
+    target = "content/internal/research"
+  [[module.imports.mounts]]
+    source = "internal/research"
+    target = "content/internal/research"
+    excludeFiles = ["hugo/**", "README.md"]
 ```
 
+Four sections render the blowhorn repository's own document folders as
+they are: `internal/design`, `internal/specs`, `internal/plans` and
+`internal/research` mount directly into `/internal/<area>/`, so the plans,
+designs, specs and research that live only in the repository are on the
+internal site without moving or copying a file. Each area's `hugo/<area>/`
+folder carries only the section scaffold (`_index.md`: title, weight,
+description); the raw mount excludes that folder and the area's root
+`README.md`, which is the folder's GitHub index, not a site page. The
+Each document carries only `title` (its own first heading) and
+`layout: internal` as front matter, added in place in the repository;
+nothing else about the documents changes. Relative links between
+documents keep their repository shape and resolve in the repository, not
+in the site.
+
 `make site-internal-build` points the import at the clone with
-`HUGO_MODULE_REPLACEMENTS="github.com/leecalcote/blowhorn -> <abs BLOWHORN_DIR>"`,
+`HUGO_MODULE_REPLACEMENTS="github.com/blowhorn-ai/blowhorn -> <abs BLOWHORN_DIR>"`,
 so nothing is downloaded, copied or vendored. Because the import lives
 only in the internal environment, the public build never reads the private
 repository. Hugo replaces `module.imports` per environment instead of
@@ -398,11 +462,12 @@ is each page's `weight`. The public build never renders any of it.
 
 ### Where the internal build runs
 
-blowhorn's `.github/workflows/internal-site.yml` checks out both
-repositories side by side, runs `make site-internal-build` from the blowhorn
-clone and uploads `public-internal/` as a private workflow artifact. There
-is no private host. It never runs in this repository's Actions, whose
-artifacts and logs are public.
+The internal build and Worker deploy run in this repository's Actions
+(`.github/workflows/internal-site.yml`), started by hand, by
+`internal-site-auto.yml`, or by `repository_dispatch`. The private product
+checkout is sparse, never uploaded, and removed before the job ends; build
+and wrangler output stay suppressed because this repository is public. There
+is no private host and no artifact of `public-internal/`.
 
 ### Footguns
 
@@ -423,13 +488,16 @@ artifacts and logs are public.
 The internal build is served by the `blowhorn-internal` Cloudflare Worker
 (`internal-worker/`) at https://internal.blowhorn.ai/, behind a Cloudflare
 Access application. Nobody reaches a page, asset or file there without
-signing in to Access as one of the named emails in
-`internal-worker/access.json`.
+signing in to Access as someone the allow list admits: anyone at an allowed
+email domain (layer5.io), a named team member, or an extra address from the
+`INTERNAL_ACCESS_EXTRA_EMAILS` secret. See "Who can read it" below. The one
+exception is a request from a trusted network in `bypass_ip_ranges`, which
+reaches the site without signing in; see "Trusted networks" below.
 
 | Layer | What it enforces |
 | --- | --- |
-| Access application (self-hosted, the whole hostname) | Login required; one reusable `allow` policy whose only rules are the named emails in `access.json`. Anything not allowed is denied. |
-| Worker (`internal-worker/src/worker.js`, `run_worker_first`) | Every request, assets included, must carry an Access token signed by the team's keys, for this application's audience, unexpired, for an email on the same list. Otherwise 403. A missing or misconfigured Access application fails closed. |
+| Access application (self-hosted, the whole hostname) | Login required; one reusable `allow` policy whose only rules are the email domains, named emails and extras, and the login methods in `allowed_idps`. When `bypass_ip_ranges` is not empty, one reusable `bypass` policy whose only rules are those IP ranges comes first (precedence 1, the allow policy 2). Anything not allowed is denied. |
+| Worker (`internal-worker/src/worker.js`, `run_worker_first`) | Every request, assets included, must carry an Access token signed by the team's keys, for this application's audience, unexpired, for an email the Worker admits: a named address, or an address whose domain is exactly one of `ALLOWED_EMAIL_DOMAINS` (no subdomain or look-alike match). The only exception is a request whose `CF-Connecting-IP` (set by Cloudflare's edge, not the client) is inside `ALLOWED_IP_RANGES`, the same `bypass_ip_ranges`. Otherwise 403. A missing or misconfigured Access application, or an empty allow list, fails closed. |
 | `wrangler.json` | Custom domain only: `workers_dev` and `preview_urls` are off, so no other hostname serves the Worker. `verify-worker` confirms it after each deploy. |
 
 The root (`/`) serves the `/internal/` page, whose table of contents
@@ -437,26 +505,152 @@ The root (`/`) serves the `/internal/` page, whose table of contents
 tree on every build. Locally, `make site-internal` still redirects `/` to
 `/internal/`.
 
+### Who can read it
+
+The allow list has three sources, all read by `.github/scripts/internal_access.py`
+so the Access policy and the Worker's allow list always match:
+
+- **Email domains.** `allowed_email_domains` in `internal-worker/access.json`
+  (today `layer5.io`) admits every address at that domain. The match is exact:
+  `sub.layer5.io` and `layer5.io.example.com` are not admitted.
+- **Named emails in the repository.** `allowed_emails` in the same file. This
+  repository is public, so list only the team's own addresses, each at an
+  allowed domain (a test in `.github/scripts/test_internal_access.py` checks it).
+- **Extra people, from a secret.** The `INTERNAL_ACCESS_EXTRA_EMAILS` repository
+  secret holds addresses outside the domains, one per line or comma-separated.
+  Set it from a file, never on the command line or in the repository:
+
+  ```sh
+  gh secret set INTERNAL_ACCESS_EXTRA_EMAILS -R blowhorn-ai/blowhorn-site < extras.txt
+  ```
+
+  The secret's name is in `extra_emails_env`. The deploy fails unless it is set,
+  so an unconfigured secret can never silently drop teammates. Under Actions each
+  address is masked before any output, and the scripts print only counts. A
+  malformed entry fails the run by count, without echoing it.
+
+A change to the secret takes effect on the next deploy. To apply it now, run
+`make site-internal-deploy` by hand.
+
+### Trusted networks
+
+`bypass_ip_ranges` in `internal-worker/access.json` lists the networks that
+reach the site without signing in, as CIDRs with no host bits set (a single
+address is `/32` for IPv4 or `/128` for IPv6). Client operating systems often
+rotate temporary IPv6 addresses inside the same `/64` (privacy extensions),
+so a home network should be listed as that `/64` rather than one `/128`.
+It is the one place to edit them. From it:
+
+- `internal_access.py ensure` creates or updates the reusable `bypass` policy
+  named `bypass_policy_name`, whose only rules are those IP ranges, and
+  attaches it to the application before the allow policy. Access issues no
+  token for a bypassed request.
+- `internal-deploy.sh` passes the same list to the Worker as
+  `ALLOWED_IP_RANGES`, so the Worker serves those networks without a token.
+
+The verification fails unless the application has exactly the bypass policy
+then the allow policy, and the bypass policy holds exactly the configured
+ranges and nothing else (no Everyone, no email rule). Empty the list, or
+remove the key, to drop the bypass: the next deploy detaches the policy.
+Addresses in this file are public, so add only networks you are happy to
+name. `make site-internal-verify` probes from a GitHub runner, which is not a
+trusted network, so it still expects the Access login.
+
+To change the list, edit `bypass_ip_ranges` in a pull request and merge; the
+push to `master` redeploys (see "Shipping an update").
+
+### Login methods
+
+`allowed_idps` lists the login methods on the Access login page, by Cloudflare
+identity provider type. Automatic redirect to one method is off, so the page
+shows every method allowed. Each type must match exactly one login method on
+the account. `internal_access.py` resolves the types to ids at run time, and
+the deploy fails, naming the type, when there are none or more than one.
+
+- **One-time PIN** (`onetimepin`): Access emails a code to the address signing
+  in. This is how the allowed addresses sign in today. If it is missing from
+  Zero Trust > Settings > Authentication > Login methods, add it there.
+- **Google** (`google`): add it before listing it, because the deploy fails on
+  an `allowed_idps` type with no login method behind it.
+  1. In Google Cloud Console, create an OAuth 2.0 client ID of type Web
+     application. Set the authorized redirect URI to
+     `https://<team>.cloudflareaccess.com/cdn-cgi/access/callback` and the
+     authorized JavaScript origin to `https://<team>.cloudflareaccess.com`
+     (`<team>` is the Zero Trust team name).
+  2. Set the OAuth consent screen to user type External, publishing status In
+     production, with only the `openid`, `email` and `profile` scopes.
+  3. Add it in Zero Trust > Settings > Authentication > Login methods > Add new
+     > Google, with the client ID and secret. Or send `POST
+     /accounts/{account_id}/access/identity_providers` with `type` `google` and
+     `config` holding `client_id` and `client_secret`.
+  4. In a pull request, add `"google"` to `allowed_idps` in `access.json`, then
+     merge. The client secret stays in Cloudflare, never in the repository.
+
+Any Cloudflare identity provider type can be listed the same way.
+
 ### Shipping an update
 
-From a leecalcote/blowhorn clone (or here): `make site-internal-deploy`
-(`REF=<branch|tag|sha>` to build something other than master, `WATCH=0` to
-not wait). It runs `.github/workflows/internal-site.yml` by
-`workflow_dispatch`; other workflows in this repository can call the same file
-with `workflow_call` and `secrets: inherit`. Ship after a change to the
-internal documents (`marketing/strategy/**`, the comparison CSVs) merges.
+`.github/workflows/internal-site.yml` builds and deploys. It redeploys on its
+own after a change to anything the internal build is made from:
+
+- **Site side (this repository).** `.github/workflows/internal-site-auto.yml`
+  calls it on every push to `master` that touches `config/internal/**`,
+  `internal-worker/**`, `static-internal/**`, `layouts/**`, `assets/**`,
+  `.github/scripts/internal*`, either internal workflow, the `Makefile`, or
+  the toolchain (`package.json`, `package-lock.json`, `.nvmrc`, `go.mod`,
+  `go.sum`, `hugo.toml`, `postcss.config.js`).
+- **Product side (blowhorn-ai/blowhorn), polled.** Every 15 minutes the same
+  workflow runs `make site-internal-poll`, which asks the GitHub API, with
+  `DMG_SOURCE_TOKEN`, whether blowhorn `master` has a commit in the last 30
+  minutes under a mounted path (`marketing/strategy/**`,
+  `marketing/capability-comparison/**`, `marketing/brand/**` including the
+  asset catalog, `marketing/cast/**`, `marketing/assets.manifest.json`, or
+  `internal/{engineering,design,specs,plans,research,features}/**`). If so it deploys
+  that `master` SHA. The run fails, rather than skipping, when
+  `DMG_SOURCE_TOKEN` is missing or cannot read the repository. Polling keeps
+  the work on this public repository's free minutes; the private repository
+  spends none. A change is redeployed on each poll for about 30 minutes, which
+  rides out one delayed or dropped scheduled run without eight repeats.
+- **Product side, pushed.** A client with a token that can dispatch on this
+  repository sends `repository_dispatch` with event type
+  `deploy-internal-site` and optional
+  `client_payload: {"blowhorn_ref": "<sha-or-master>"}`:
+
+  ```sh
+  gh api repos/blowhorn-ai/blowhorn-site/dispatches \
+    -f event_type=deploy-internal-site -f 'client_payload[blowhorn_ref]=master'
+  ```
+
+  blowhorn's `.github/workflows/internal-site-dispatch.yml` does this on a
+  merge under the mounted paths, with the repository secret
+  `SITE_DISPATCH_TOKEN` (a token with Contents: write on
+  blowhorn-ai/blowhorn-site, which `repository_dispatch` requires). Without
+  that hook, the poll still picks the change up within about 15-45 minutes.
+- **By hand.** From a blowhorn-ai/blowhorn clone (or here):
+  `make site-internal-deploy` (`REF=<branch|tag|sha>` to build something other
+  than master, `WATCH=0` to not wait) runs the workflow by
+  `workflow_dispatch`. Actions > Internal site (auto) > Run workflow runs the
+  auto path by hand.
+
+Deploys queue on the workflow's `internal-site` concurrency group, so an
+automatic deploy waits for a running one instead of cancelling it.
 
 The workflow, in order (each step is a make target):
 
-1. Fails unless `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` and the
-   `BLOWHORN_INTERNAL_READ_KEY` environment secret are set.
-2. `site-internal-access-check`: read-only probe of the token's permissions.
-3. `site-internal-access`: creates or updates the Access policy and
-   application, reads them back, and fails unless they are exactly the
-   managed default-deny pair. This runs before any private content reaches
-   the runner.
-4. Checks out leecalcote/blowhorn (sparse: `marketing/strategy`,
-   `marketing/capability-comparison`) with the read-only deploy key.
+1. Fails unless `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`,
+   `INTERNAL_ACCESS_EXTRA_EMAILS` and the `BLOWHORN_INTERNAL_READ_KEY`
+   environment secret are set.
+2. `site-internal-access-check`: read-only probe of the token's permissions,
+   including the login methods.
+3. `site-internal-access`: creates or updates the Access policy, application
+   and login methods, reads them back, and fails unless they are exactly the
+   managed default-deny pair with the configured domains, emails and login
+   methods. This runs before any private content reaches the runner.
+4. Checks out blowhorn-ai/blowhorn (sparse: `marketing/strategy`,
+   `marketing/capability-comparison`, `marketing/brand`, `marketing/cast`,
+   `marketing/assets.manifest.json`, `internal/engineering`,
+   `internal/design`, `internal/specs`, `internal/plans`,
+   `internal/research`, `internal/features`) with the read-only deploy key.
 5. `site-internal-build` with `BASE_URL=https://internal.blowhorn.ai/`, output
    suppressed.
 6. `site-internal-worker-deploy`: `wrangler deploy` with a filtered summary,
@@ -464,6 +658,24 @@ The workflow, in order (each step is a make target):
 7. `site-internal-verify`: unauthenticated probes of `/`, a deep link, an
    asset and a guessed URL must all redirect to the Access login. A 2xx
    deletes the Worker and fails the run.
+
+### Dynamic pages (signups, fleet stats)
+
+Two pages are rendered by the Worker per request from D1, after the same
+Access check as every static page, so their data changes without a build:
+
+- `/internal/signups/` and `/internal/signups/export`: the `SIGNUPS_DB`
+  binding (`blowhorn-signups`), written by the public signup worker.
+- `/engineering/fleet/` (moved from `/internal/fleet/`, which now 301s here), plus `data.json`, `workload.csv` and `disk.csv` beside
+  it (each takes `?days=N`, default 7, at most 90): the `FLEET_DB` binding
+  (`blowhorn-fleet-stats`). A zero-token cron on Bastion writes teammate
+  workload every hour and machine disk free every 6 hours into its
+  `snapshots` table (`kind`, `collected_at`, JSON `body`). The teammate workload table defaults to Done 24h descending (highest first, numeric); clicking a column header still sorts, and that choice is kept across refreshes. The collector, its
+  schedule and its least-privilege D1 token live in koopverse/firstmate
+  `fleet/fleet-stats/` (koopverse/firstmate#72).
+
+`.github/scripts/resolve-d1.sh` swaps every placeholder `database_id` in
+`wrangler.json` for the real one, creating a database that does not exist yet.
 
 ### This repository is public
 
@@ -479,18 +691,30 @@ checkout after building. Keep it that way in any change to the workflow or
 - `CLOUDFLARE_API_TOKEN` (repository secret) needs: Account > Workers
   Scripts > Edit; Account > Account Settings > Read; Zone (blowhorn.ai) >
   Workers Routes > Edit; Account > Access: Apps and Policies > Edit;
-  Account > Access: Organizations, Identity Providers, and Groups > Read.
+  Account > Access: Organizations, Identity Providers, and Groups > Read
+  (the last also reads the login methods that `allowed_idps` names).
 - `CLOUDFLARE_ACCOUNT_ID` (repository secret).
+- `INTERNAL_ACCESS_EXTRA_EMAILS` (repository secret): the extra addresses
+  allowed to sign in, one per line or comma-separated. Set with `gh secret set`
+  from a file; see "Who can read it". The deploy fails without it.
 - `BLOWHORN_INTERNAL_READ_KEY` (secret of the `internal-site` environment,
   which deploys from master only): the private half of an SSH deploy key
-  added read-only to leecalcote/blowhorn. It can read that one repository and
+  added read-only to blowhorn-ai/blowhorn. It can read that one repository and
   cannot write to it or reach any other. Rotate it by adding a new deploy key
   and replacing the secret; revoke it by deleting the deploy key.
+- `DMG_SOURCE_TOKEN` (repository secret, shared with `publish-dmg.yml`,
+  `sync-docs.yml` and `product-ci.yml`): read access to blowhorn-ai/blowhorn.
+  `internal-site-auto.yml` passes it only to the scheduled poll, which sends
+  it only to the GitHub API.
+- `SITE_DISPATCH_TOKEN` (secret on blowhorn-ai/blowhorn, not here): lets the
+  product repository send `deploy-internal-site`.
 
 ### Changing who can read it
 
-Edit `allowed_emails` in `internal-worker/access.json` in a pull request (so
-the change is reviewed), merge, and run `make site-internal-deploy`. The
-workflow updates the Access policy and the Worker's list together. Do not edit
-the policy in the Cloudflare dashboard: the next deploy resets it, and a
-mismatch fails verification.
+Edit `allowed_email_domains`, `allowed_emails` or `allowed_idps` in
+`internal-worker/access.json` in a pull request (so the change is reviewed)
+and merge; the push to `master` redeploys. The workflow updates the Access
+policy, the login methods and the Worker's allow list together. Extra people
+change through the `INTERNAL_ACCESS_EXTRA_EMAILS` secret, not the repository.
+Do not edit the policy or login methods in the Cloudflare dashboard: the next
+deploy resets them, and a mismatch fails verification.

@@ -9,8 +9,8 @@
 
 This repository is two things for **Layer5 Blowhorn**:
 
-1. **The marketing site** at [blowhorn.ai](https://blowhorn.ai). It is a [Hugo](https://gohugo.io) site with [Docsy](https://www.docsy.dev) as a Hugo module, built like [docs.layer5.io](https://github.com/layer5io/docs) and deployed to GitHub Pages by [`site.yml`](.github/workflows/site.yml). The Pages custom domain is already blowhorn.ai, so the project URL <https://layer5io.github.io/blowhorn-site/> only redirects there; the site is reachable once the domain's DNS points at Pages, as [`docs/deploy.md`](docs/deploy.md) describes.
-2. **Public downloads.** macOS disk images and their checksums are published as [GitHub Releases](https://github.com/layer5io/blowhorn-site/releases) on this repository. No release binary is committed here.
+1. **The marketing site** at [blowhorn.ai](https://blowhorn.ai). It is a [Hugo](https://gohugo.io) site with [Docsy](https://www.docsy.dev) as a Hugo module, built like [docs.layer5.io](https://github.com/layer5io/docs) and deployed to GitHub Pages by [`site.yml`](.github/workflows/site.yml). The Pages custom domain is already blowhorn.ai, so the project URL <https://blowhorn-ai.github.io/blowhorn-site/> only redirects there; the site is reachable once the domain's DNS points at Pages, as [`docs/deploy.md`](docs/deploy.md) describes.
+2. **Public downloads.** macOS disk images and their checksums are published as [GitHub Releases](https://github.com/blowhorn-ai/blowhorn-site/releases) on this repository. No release binary is committed here.
 
 Blowhorn is a social media console that takes one message and broadcasts, reposts and amplifies it across every profile and platform your community runs, on autopilot. One message out, many ears in.
 
@@ -37,10 +37,10 @@ The Chrome extension ships through the Chrome Web Store, not from this repositor
 | Brand assets | [`static/assets/brand/`](static/assets/brand/), served at `/assets/brand/`: version 1 of the brand kit (logo system, Major Blowhorn, marketing art, `tokens.json`) and the three self-hosted fonts; attribution in [`LICENSES.md`](static/assets/brand/LICENSES.md) |
 | How the site deploys and how the domain is wired | [`docs/deploy.md`](docs/deploy.md) |
 | How releases are published | [`docs/distribution.md`](docs/distribution.md) |
-| Release binaries | [Releases](https://github.com/layer5io/blowhorn-site/releases) on this repository |
-| Product source and build pipeline | Private: [`blowhorn`](https://github.com/leecalcote/blowhorn) |
+| Release binaries | [Releases](https://github.com/blowhorn-ai/blowhorn-site/releases) on this repository |
+| Product source and build pipeline | Private: [`blowhorn`](https://github.com/blowhorn-ai/blowhorn) |
 
-**Reporting problems.** The product repository is private, so use [this repository's issues](https://github.com/layer5io/blowhorn-site/issues) for everything public: site content, a download that will not open, a wrong checksum, or a bug in the app. Maintainers triage app bugs into the product repository. The [Layer5 Slack](https://slack.layer5.io) works too.
+**Reporting problems.** The product repository is private, so use [this repository's issues](https://github.com/blowhorn-ai/blowhorn-site/issues) for everything public: site content, a download that will not open, a wrong checksum, or a bug in the app. Maintainers triage app bugs into the product repository. The [Layer5 Slack](https://slack.layer5.io) works too.
 
 ## Working on the site
 
@@ -62,10 +62,10 @@ Every CI step that runs repository logic is a make target, and the workflow call
 | Target | What it runs | Run by |
 |---|---|---|
 | `setup-ci` | `npm ci` (the locked dependencies) | `site.yml` |
-| `workflow-check` | actionlint on `site.yml`, `publish-dmg.yml`, `sync-docs.yml`, `cloud-auth-smoke.yml` and `product-ci.yml` | `site.yml` |
+| `workflow-check` | actionlint on `site.yml`, `publish-dmg.yml`, `sync-docs.yml`, `cloud-auth-smoke.yml`, `product-ci.yml`, `internal-site.yml`, `internal-site-auto.yml` and `publish-blowhorn-axi.yml` | `site.yml` |
 | `test-scripts` | unit tests for the check scripts in `.github/scripts/` | `site.yml` |
 | `site-check` | one production build, then the checks below | `site.yml` |
-| `check-schemas` | `data/hero.json`, `data/roles.json`, `data/use_cases.json`, `data/solutions.json`, `data/themes.json`, `data/integrations.json`, `data/hero_demo.json`, `data/actions.json` and `data/action_examples.json` validate against `schemas/`; role, use-case and solution schemas `$ref` shared `line`/`text`/`card` types in `schemas/defs/cast-page.schema.json` (ajv `-r`) ([docs/hero-variants.md](docs/hero-variants.md)). Every supported YAML action must have an example ([docs/action-examples.md](docs/action-examples.md)). Every action group in `data/actions.json` exists and holds an action (`check_action_matrix.py --source`) | `site-check` |
+| `check-schemas` | `data/hero.json`, `data/machines.json`, `data/home_ai.json`, `data/tells.json`, `data/roles.json`, `data/use_cases.json`, `data/solutions.json`, `data/themes.json`, `data/integrations.json`, `data/hero_demo.json`, `data/actions.json`, `data/action_examples.json`, `data/docs_events.json`, `data/activity_feed.sample.json` and `data/bookmarklet.json` validate against `schemas/`; role, use-case and solution schemas `$ref` shared `line`/`text`/`card` types in `schemas/defs/cast-page.schema.json`, and the docs events schema its payload types in `schemas/defs/docs-event.schema.json` (ajv `-r`, [docs/docs-attribution.md](docs/docs-attribution.md)) ([docs/hero-variants.md](docs/hero-variants.md)). The download page's bookmarklet must equal the code block in the content worksheet guide (`check_bookmarklet.py`). Every supported YAML action must have an example ([docs/action-examples.md](docs/action-examples.md)). Every action group in `data/actions.json` exists and holds an action (`check_action_matrix.py --source`) | `site-check` |
 | `check-theme` | `/` uses `data/themes.json` default plus `content/en/_index.md` front matter (Signal). `/home-reveille/` keeps today's look. Counts in `data-count-*` spans match supported YAML actions. `?theme=` swaps tokens only, not layout. Fails a new theme-specific content file outside the approved `content/en/home-reveille.md` | `site-check` |
 | `check-platform-docs` | Every supported platform has a docs page that renders the shared `supported-actions` table from YAML. Fails a missing page, a page that skips the shortcode, or a docs page that still carries a hand-written action list or Action / What it does table | `site-check` |
 | `check-action-matrix` | The site action matrix (`/integrations/actions/`) and the docs all-actions table (`/docs/reference/platforms/actions/`, shortcode `all-actions`) hold exactly the cells `data/actions.json` plus `data/platforms/*.yaml` give, in order, with the right link. Status is shown by exception: fails a rendered "supported" label or check mark, a coming-soon column without its clock, or an exception label that drifts from `data/integrations.json` `matrix.exceptions`. Fails a dead page or `#action-<id>` anchor, a hand-written table, or a lost link from `/` or `/integrations/` | `site-check` |
@@ -73,14 +73,22 @@ Every CI step that runs repository logic is a make target, and the workflow call
 | `check-links` | every local link, image, font and `srcset` reference resolves | `site-check` |
 | `check-third-party` | no page, or stylesheet or script it loads, requests another host (except the disclosed GitHub release lookup) | `site-check` |
 | `check-urls` | every published URL and anchor still exists | `site-check` |
+| `check-no-internal` | the public build holds nothing from `/internal/` | `site-check` |
+| `check-naming` | no page says Layer5 Cloud or Blowhorn Cloud, names Layer5 outside the footer and legal pages, says machines, or says Macs in marketing copy; the docs say Chrome profile and Chrome extension | `site-check` |
+| `check-download-links` | no page or script links to `/releases/latest/download` | `site-check` |
+| `check-feeds` | the Resources RSS feeds validate | `site-check` |
+| `check-brand-kits` | the Brand page links only kit zips the build publishes, at their real sizes | `site-check` |
+| `check-tells` | every Blowhorn Tells placement in `data/tells.json` is still on its page (header, bar, footer, home band, compare, `/ai/`, `/agents/`, thanks, docs, 404), and every tagged Tells link carries the right UTM parameters ([docs/tells.md](docs/tells.md)) | `site-check` |
 | `dmg-resolve`, `dmg-download`, `dmg-package`, `dmg-verify`, `dmg-release` | the five steps of publishing a DMG release, each reading its inputs from the environment ([docs/distribution.md](docs/distribution.md#local-checks)) | `publish-dmg.yml` |
 | `dmg-check DMG=...` | sanity-check a disk image before publishing | `dmg-package` runs the same script (`check-dmg.sh`) |
 | `dmg-sync-docs` | after a public release, start `sync-docs.yml` at the product tag `desktop-<version>` | `publish-dmg.yml` |
+| `npm-fetch`, `npm-verify`, `npm-publish`, `npm-confirm` | the four steps of publishing blowhorn-axi to npm (blowhorn-mcp publishes from [its own repository](https://github.com/blowhorn-ai/blowhorn-mcp)), each reading its inputs from the environment ([docs/distribution.md](docs/distribution.md#local-checks)) | `publish-blowhorn-axi.yml` |
 | `docs-cli-reference` | regenerate the CLI reference pages in the product checkout from its CLI schema and parser, before the sync ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
 | `docs-sync REF=...` | copy the product docs from a `blowhorn` checkout into `content/en/docs/` ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
 | `docs-sync-base` | check out the `docs-sync` branch on the open sync PR's head, or on `master` when none is open ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
 | `docs-sync-start-checks` | start `site.yml` on the `docs-sync` branch after a sync ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
 | `docs-sync-merge` | merge the sync pull request once its site checks pass, then start the `master` site run that deploys ([docs/deploy.md](docs/deploy.md#product-docs-sync)) | `sync-docs.yml` |
+| `site-internal-poll` | decide whether to redeploy internal.blowhorn.ai: always on push or manual run; on schedule, only when blowhorn `master` changed a path the internal build mounts in the last 2 hours ([docs/deploy.md](docs/deploy.md#shipping-an-update)) | `internal-site-auto.yml` |
 | `product-ci SUITE=python\|desktop` | run the private product repo's CI on a checkout of it, printing only step results and pass/fail counts (output stays in a private log; public logs never show product code) | `product-ci.yml` |
 
 Each check target builds for production first, so it also runs on its own. `labeler.yml`, `label-commenter.yml` and `slack.yml` only call third-party actions and run no repository logic, so they have no target.
@@ -93,7 +101,7 @@ A theme is presentation: tokens, CSS, and layout partials that read the **same**
 
 Reveille is the site-wide default (light, dark follows the OS). Signal is a dark token layer on the public home page (`theme: signal` in `content/en/_index.md`). Homepage *layout* still comes from the theme's `home` field in `data/themes.json` (`layouts/_partials/home/signal.html` vs `reveille.html`); those partials consume `data/integrations.json`, `data/actions.json`, `data/platforms/*.yaml` and the same Markdown. `?theme=signal` and `?theme=reveille` swap the token layer on any page; they do not change homepage layout (`/` stays Signal, `/home-reveille/` stays today's look).
 
-Nothing on the site loads from another host except Google Analytics 4: no CDN and no web fonts from elsewhere. The id is in `[services.googleAnalytics]` in `hugo.toml`. `layouts/_partials/analytics.html` loads gtag.js on every production page, enables analytics storage and keeps advertising storage denied. It renders only in production builds. The other request to another host while browsing is the download page's release lookup on GitHub's API (`assets/js/download.js`). The footer newsletter form posts to Layer5's Mailchimp list only when submitted. The [privacy page](https://blowhorn.ai/privacy.html) discloses all three. `make site-check` fails a build that loads anything else from another host. The public URLs (`/`, `/privacy.html`, `/terms.html`, `/assets/brand/...`) and the home page's anchors (`#platforms`, `#how`, `#trust`, `#download`) are linked from outside this repository; the same check fails a build that loses one.
+Nothing on the site loads from another host except Google Analytics 4: no CDN and no web fonts from elsewhere. The id is in `[services.googleAnalytics]` in `hugo.toml`. `layouts/_partials/analytics.html` loads gtag.js on every production page, enables analytics storage and keeps advertising storage denied. It renders only in production builds. The other request to another host while browsing is the download page's release lookup on GitHub's API (`assets/js/download.js`). The footer newsletter form posts to Blowhorn's own signup service only when submitted. The [privacy page](https://blowhorn.ai/privacy.html) discloses all three. The MCP connection guides send three consent-gated GA4 events through that same tag ([docs/docs-attribution.md](docs/docs-attribution.md)). `make site-check` fails a build that loads anything else from another host. The public URLs (`/`, `/privacy.html`, `/terms.html`, `/assets/brand/...`) and the home page's anchors (`#platforms`, `#how`, `#trust`, `#download`) are linked from outside this repository; the same check fails a build that loses one.
 
 The site also publishes [`/llms.txt`](https://blowhorn.ai/llms.txt), [`/llms-full.txt`](https://blowhorn.ai/llms-full.txt) and a Markdown copy of every page (`/legal/privacy/index.md`), as docs.layer5.io does.
 
@@ -104,6 +112,8 @@ The site also publishes [`/llms.txt`](https://blowhorn.ai/llms.txt), [`/llms-ful
 | [`site.yml`](.github/workflows/site.yml) | Pull requests, pushes to `master`, manual runs | Lints the workflows, runs the check-script unit tests, builds the site with the pinned Hugo, Go and Node.js, runs `make site-check` and uploads the Pages artifact. On `master` it deploys the artifact to GitHub Pages. |
 | [`publish-dmg.yml`](.github/workflows/publish-dmg.yml) | Manual, or `repository_dispatch` (`publish-dmg`) from product CI | Downloads a built DMG over HTTPS, checks it, verifies signing and notarization on a macOS runner (required for any public release), then creates the release with versioned assets, the `Blowhorn-mac.dmg` alias and checksums. Drafts by default; never overwrites. |
 | [`sync-docs.yml`](.github/workflows/sync-docs.yml) | Manual, or `repository_dispatch` (`sync-docs`) from product CI | Checks out the product docs at the requested ref, opens or updates the `docs-sync` pull request (`docs: sync from <ref>`), starts the site checks on it itself (`gh workflow run site.yml`), merges it once those checks pass, and starts the `master` run that deploys. |
+| [`internal-site.yml`](.github/workflows/internal-site.yml) | Manual (`make site-internal-deploy`), `repository_dispatch` (`deploy-internal-site`) from the product repo, or called by `internal-site-auto.yml` | Builds the internal site from a read-only checkout of the product repo and deploys it to internal.blowhorn.ai behind Cloudflare Access ([docs/deploy.md](docs/deploy.md#internal-site-hosting-internalblowhornai-cloudflare-access)). |
+| [`internal-site-auto.yml`](.github/workflows/internal-site-auto.yml) | Pushes to `master` on the internal build's paths, every 15 minutes, manual runs | Calls `internal-site.yml` on a site-side push, or when its poll finds a product-repo change under the internal mounts. |
 
 <div>&nbsp;</div>
 
@@ -143,4 +153,4 @@ Find out more on the <a href="https://layer5.io/community">Layer5 community</a>.
 ✔️<em><strong>Explore more</strong></em> in the <a href="https://layer5.io/community/handbook">Community Handbook</a>.<br />
 </p>
 <p align="center">
-<i>Not sure where to start?</i> Grab an open issue with the <a href="https://github.com/issues?q=is%3Aopen+is%3Aissue+archived%3Afalse+repo%3Alayer5io%2Fblowhorn-site+label%3A%22help+wanted%22">help-wanted label</a>.</p>
+<i>Not sure where to start?</i> Grab an open issue with the <a href="https://github.com/issues?q=is%3Aopen+is%3Aissue+archived%3Afalse+repo%3Ablowhorn-ai%2Fblowhorn-site+label%3A%22help+wanted%22">help-wanted label</a>.</p>

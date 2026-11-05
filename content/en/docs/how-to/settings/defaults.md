@@ -7,8 +7,10 @@ aliases: [/docs/how-to/configure-blowhorn/]
 
 
 Set the defaults every run starts from: pace, excluded profiles, dry-run,
-notifications and logs. Change them in the app's Settings, or with `blowhorn
-config set` for the whole checkout.
+notifications and logs. Change them in the app, or with `blowhorn config set`
+for the whole checkout. In the app, pace, daily caps, quiet hours, how much
+runs at once, approval and dry fire are on the Posture screen; the rest
+are on Settings' **Advanced** page.
 
 ## See what is in effect
 
@@ -21,7 +23,7 @@ blowhorn config show --json
 
 ```bash
 blowhorn config set defaults.pace slow
-blowhorn config set defaults.exclude ada,kate
+blowhorn config set defaults.exclude ada,company
 blowhorn config set defaults.dry_run true
 ```
 
@@ -57,16 +59,19 @@ override the standing per-platform paces. `blowhorn config show --json`
 reports the effective pace for every platform and which setting supplied
 it.
 
-In the app, Settings shows the same per-platform paces as rows under the
-pace setting: pick a pace for one platform there, or clear it to run at
-the pace again.
+In the app, the **by platform** table on the Posture screen shows the same
+per-platform paces: pick a pace for one platform there (or **a number…** for
+a multiplier such as 1.5), or press × to run at the pace again, then **save
+limits**. While `BLOWHORN_PACE` is set, the table says that pace is in effect
+on every platform.
 
 ## Cap a day's actions
 
-Every platform and action has a built-in daily ceiling. Settings shows the
-same caps as rows under the pacing settings, one per platform and action:
-type a lower cap of your own there, or clear it to go back to the ceiling.
-A cap of your own can only lower the ceiling, never raise it.
+Every platform and action has a built-in daily ceiling. The **by platform**
+table on the Posture screen shows each one as the empty box's placeholder:
+type a lower cap of your own there, or press × to go back to the ceiling.
+The cap saves when you close the window. A cap of your own can only lower the ceiling, never
+raise it.
 
 ```bash
 blowhorn config set defaults.caps.x.post_per_day 3
@@ -76,12 +81,11 @@ To read one option and learn which document holds it:
 
 ```bash
 blowhorn config get defaults.profile
-blowhorn config get store.password        # set / not set, never the value
 ```
 
-Your account connection is configured the same way, but its `store.*` keys live
-in a private file, never in `.blowhorn.yaml`. During early access your
-Blowhorn administrator sets them up.
+Blowhorn reaches your account through `blowhorn auth login`, not through an
+option. The one store option is `defaults.store.organization`, which picks the
+organization Blowhorn uses when the sign-in did not choose one.
 
 ## Choose where output is written
 
@@ -107,4 +111,5 @@ judged by the date in the file name. Nothing else in the directory is pruned.
 - [Choose how Blowhorn reaches Chrome](/docs/how-to/settings/launch-mode/) - the launch and driver settings these defaults sit above
 - [Schedule a job](/docs/how-to/schedule/schedule-a-job/) - per-job parameters that beat these defaults
 - [Review what ran](/docs/how-to/measure/review-runs/) - read the logs these settings keep
+- [Choose your rules of engagement](/docs/how-to/settings/choose-your-rules-of-engagement/) - the preset these dials start from, and the Posture screen
 - [You're in control](/docs/explanation/youre-in-control/) - how pace and dry run fit with the built-in limits

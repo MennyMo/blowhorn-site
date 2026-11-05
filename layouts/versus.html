@@ -10,13 +10,24 @@
 {{- end }}
 {{ define "main" }}
     {{- $p := .Params -}}
+    {{- /* Platform logo lookup for the optional network_logos strip. Files are
+      the platforms' own art under static/assets/platforms/, unmodified. */ -}}
+    {{- $platLogos := dict
+      "linkedin" (dict "src" "assets/platforms/linkedin-in-bug.png" "alt" "LinkedIn")
+      "x" (dict "src" "assets/platforms/x-logo-black.png" "alt" "X")
+      "reddit" (dict "src" "assets/platforms/reddit-logo.png" "alt" "Reddit")
+      "hacker-news" (dict "src" "assets/platforms/hacker-news-y18.svg" "alt" "Hacker News")
+      "github" (dict "src" "assets/platforms/github-invertocat-black.svg" "alt" "GitHub")
+      "bluesky" (dict "src" "assets/platforms/bluesky-butterfly-blue.svg" "alt" "Bluesky")
+      "slack" (dict "src" "assets/platforms/slack-mark.svg" "alt" "Slack")
+    -}}
     <main id="main" class="page agent-page versus-page">
       <div class="wrap">
         <header class="agent-hero glass">
           <div class="agent-hero-copy">
             <p class="label"><a href="{{ (site.GetPage "/compare").RelPermalink }}">Compare</a> &middot; {{ $p.group }}</p>
             <h1 id="versus-title" class="display">{{ .Title }}</h1>
-            <p class="body-lg versus-verdict">{{ $p.verdict }}</p>
+            <p class="body-lg versus-verdict card-paper">{{ $p.verdict }}</p>
           </div>
           <div class="agent-hero-art" aria-hidden="true">
             <span class="agent-mark agent-mark-xl">{{ $p.mark }}</span>
@@ -31,18 +42,27 @@
             <p class="muted">If {{ $p.competitor }} is the better fit, go use it. We mean that.</p>
           </div>
           <div class="versus-split versus-fit">
-            <div class="versus-col">
+            <div class="card card-plain versus-col">
               <h3 class="h3">Choose {{ $p.competitor }} if</h3>
               <ul class="versus-list">{{ range $p.them }}<li>{{ . }}</li>{{ end }}</ul>
               <p class="ui"><a href="{{ $p.site_url }}" rel="noopener">Go to {{ $p.competitor }}</a></p>
             </div>
-            <div class="versus-col versus-us">
+            <div class="card card-paper versus-col versus-us">
               <h3 class="h3">Choose Blowhorn if</h3>
               <ul class="versus-list">{{ range $p.us }}<li>{{ . }}</li>{{ end }}</ul>
+              {{- with $p.network_logos }}
+              <ul class="army-plats versus-plats">
+                {{- range . -}}
+                  {{- $logo := index $platLogos . -}}
+                  {{- with $logo }}<li><img src="{{ .src | relURL }}" alt="{{ .alt }}" width="28" height="28" loading="lazy"></li>{{ end -}}
+                {{- end }}
+              </ul>
+              {{- end }}
               <p class="ui"><a href="{{ "download/" | relURL }}">Get Blowhorn</a></p>
             </div>
           </div>
         </section>
+
 
         {{- if $p.wins }}
         <section class="agent-section" aria-labelledby="wins-title">
@@ -59,10 +79,32 @@
         </section>
         {{- end }}
 
+        {{- /* Optional cast or scene art: one figure per page, from the
+          approved catalog, with the catalog's alt text. */ -}}
+        {{- with $p.art }}
+        <section class="agent-section versus-art">
+          <figure class="versus-figure glass">
+            <img src="{{ .src | relURL }}" alt="{{ .alt }}" loading="lazy">
+            {{- with .caption }}<figcaption class="muted">{{ . }}</figcaption>{{ end }}
+          </figure>
+        </section>
+        {{- end }}
+
+        {{- /* Optional terminal code card: one CLI or MCP example that shows
+          the difference better than words. */ -}}
+        {{- with $p.codecard }}
+        <section class="agent-section" aria-labelledby="codecard-title">
+          <div class="section-head">
+            <h2 id="codecard-title" class="h2">{{ .heading | default "See it in the terminal" }}</h2>
+          </div>
+          {{ partial "code-card.html" (dict "code" .code "title" (.title | default "terminal") "lang" (.lang | default "bash") "prompt" true) }}
+        </section>
+        {{- end }}
+
         <section class="agent-section" aria-labelledby="table-title">
           <div class="section-head">
             <h2 id="table-title" class="h2">Side by side</h2>
-            <p class="muted">{{ $p.competitor }} pricing as of Oct 2026: {{ $p.price_them }} (<a href="{{ $p.price_src }}" rel="noopener">source</a>). Blowhorn: free plan available, see <a href="{{ "pricing/" | relURL }}">pricing</a>.</p>
+            <p class="muted">{{ $p.competitor }} pricing as of {{ dateFormat "Jan 2006" $p.lastmod }}: {{ $p.price_them }} (<a href="{{ $p.price_src }}" rel="noopener">source</a>). Blowhorn: free plan available, see <a href="{{ "pricing/" | relURL }}">pricing</a>.</p>
           </div>
           <div class="compare-scroll versus-table-wrap">
             <table class="compare-table versus-table">
@@ -80,6 +122,14 @@
               </tbody>
             </table>
           </div>
+          {{- with $p.logos }}
+          <div class="section-head">
+            <h3 class="h3">Networks Blowhorn posts on today</h3>
+          </div>
+          <ul class="versus-logos">
+            {{- range . }}<li><span class="logo-tile"><img src="{{ .src | relURL }}" alt="{{ .alt }}" width="28" height="28" loading="lazy"></span><span class="ui">{{ .alt }}</span></li>{{ end }}
+          </ul>
+          {{- end }}
         </section>
 
         <section class="agent-section versus-belief" aria-labelledby="belief-title">
@@ -88,15 +138,31 @@
           <p>{{ $p.signal }}</p>
         </section>
 
+        {{- with $p.code }}
+        {{- /* Optional terminal code card: one CLI example that shows the
+          difference better than words. Renders only on pages that set `code`.
+          Pages use either heading/lede or intro/title; both render one card. */ -}}
+        <section class="agent-section versus-code" aria-labelledby="code-title">
+          <div class="section-head">
+            {{- with .heading }}<h2 id="code-title" class="h2">{{ . }}</h2>{{ end }}
+            {{- with .lede }}<p class="muted">{{ . }}</p>{{ end }}
+            {{- with .intro }}<p class="muted">{{ . }}</p>{{ end }}
+          </div>
+          {{ partial "code-card.html" (dict "title" (.title | default "terminal") "lang" "bash" "code" .code "prompt" true) }}
+        </section>
+        {{- end }}
+
         {{ partial "major-says.html" (dict "line" $p.major) }}
+
+        {{ partial "tells-callout.html" (merge site.Data.tells.callouts.compare (dict "id" "compare" "placement" "compare")) }}
 
         <section class="agent-section" aria-labelledby="faq-title">
           <div class="section-head">
             <h2 id="faq-title" class="h2">Frequently Asked Questions</h2>
           </div>
           <div class="agent-faq versus-faq">
-            {{- range $p.faq }}
-            <details class="glass"><summary class="ui">{{ .q }}</summary><p>{{ .a }}{{ with .link }} <a href="{{ .href }}">{{ .label }}</a>{{ end }}</p></details>
+            {{- range $i, $f := $p.faq }}
+            <details class="card {{ partial "card-variant.html" (dict "i" $i "grid" "stack" "n" (len $p.faq) "variants" (slice "card-field" "card-plain")) }}"><summary class="ui">{{ .q }}</summary><p>{{ .a }}{{ with .link }} <a href="{{ cond (eq .href site.Data.tells.url) (partial "tells-link.html" (dict "placement" "compare")) .href }}">{{ .label }}</a>{{ end }}</p></details>
             {{- end }}
           </div>
         </section>
@@ -104,7 +170,7 @@
         <section class="agent-section agent-cta glass" aria-labelledby="cta-title">
           <h2 id="cta-title" class="h2">One message out, many ears in</h2>
           <p class="muted">If that sounds like what you've been missing, give Blowhorn a try. It's free during early access.</p>
-          <p class="actions"><a class="button button-primary button-pop" href="{{ "download/" | relURL }}">Download for Mac</a></p>
+          <p class="actions"><a class="button button-primary" href="{{ "download/" | relURL }}">Download Blowhorn</a></p>
         </section>
 
         <section class="agent-section" aria-labelledby="more-title">

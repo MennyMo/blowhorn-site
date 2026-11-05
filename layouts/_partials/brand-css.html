@@ -1,0 +1,8 @@
+{{- /* The brand stylesheet, one bundle for every page: head.html and
+  docs-head.html both call this partial, so the marketing and docs heads can
+  never ship different sheets. It also publishes the unminified card
+  variants at a stable URL, /assets/brand/cards.css, so tells.blowhorn.ai can
+  <link> the same file. */ -}}
+{{- (resources.Get "css/cards.css" | resources.Copy "assets/brand/cards.css").Publish }}
+{{- $css := slice (resources.Get "css/site.css") (resources.Get "css/themes.css") (resources.Get "css/home-signal.css") (resources.Get "css/action-matrix.css") (resources.Get "css/resources.css") (resources.Get "css/cards.css") | resources.Concat "css/site.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">

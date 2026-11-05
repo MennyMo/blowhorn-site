@@ -72,14 +72,14 @@ blowhorn content posts
 blowhorn content list --pending --json
 
 # One profile's activities; only X activities.
-blowhorn content list --profile kate
+blowhorn content list --profile company
 blowhorn content list --platform x
 
 # One activity, every column, its state and its problems.
 blowhorn content get 12 --json
 
 # Create an activity: it takes the next activity number, which is never reused.
-blowhorn content upsert --payload '{"Platform":"linkedin","Profile":"kate","Message Text":"Our v2.0 release is out","Approved?":"yes"}'
+blowhorn content upsert --payload '{"Platform":"linkedin","Profile":"company","Message Text":"Our v2.0 release is out","Approved?":"yes"}'
 
 # Update in place: the payload is merged over the activity; columns it does not
 # name are left as they were.
@@ -105,9 +105,10 @@ without retyping it. It holds no credential and reaches no account: it hands
 the page's address, title, and any selected text to the desktop app, which
 opens Activity › Upcoming on a new entry pre-filled from it.
 
-To install it: in the app, **Activity › Upcoming → from browser → copy code**, then add
-a bookmark in your browser named `Blowhorn: capture` and paste the code as
-its address.
+To install it, open **Settings › Setup** (or **Activity › Upcoming → from browser**) and
+drag the **Blowhorn: capture** link onto your Google Chrome bookmarks bar. If you
+would rather paste, choose **copy code**, add a bookmark in Google Chrome named
+`Blowhorn: capture`, and paste the code as its address.
 
 or paste this:
 

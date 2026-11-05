@@ -6,8 +6,17 @@
       "name": "DevRel",
       "weight": 10,
       "headline": "Ship the release. Announce it everywhere, as you.",
-      "lead": "LinkedIn, X, Reddit, Hacker News, Bluesky, GitHub and Slack in one queue, posted from your own Chrome, signed in as you. Your agent drafts and dry-runs; you hold the switch.",
-      "description": "Blowhorn for developer relations: one queue for the networks developers use, including Hacker News and GitHub, posted as you from your own Chrome.",
+      "lead": "LinkedIn, X, Reddit, Hacker News, Bluesky, GitHub and Slack in one queue, posted from your own browser, signed in as you. Your agent drafts and dry-runs; you hold the switch.",
+      "platforms": [
+        "linkedin",
+        "x",
+        "reddit",
+        "hacker-news",
+        "slack",
+        "bluesky",
+        "github"
+      ],
+      "description": "Blowhorn for developer relations: one queue for the networks developers use, including Hacker News and GitHub, posted as you from your own browser.",
       "art": {
         "src": "assets/brand/cast/keyboard-warrior-base.webp",
         "alt": "Keyboard Warrior, a gold rooster in a teal helmet holding a keyboard with green keys like a shield"
@@ -33,7 +42,7 @@
         },
         {
           "t": "Posted as you",
-          "b": "Blowhorn does the typing and clicking in your own Chrome. No vendor server logs in as you, and nothing is branded \"sent via Blowhorn\"."
+          "b": "Blowhorn does the typing and clicking in your own browser. No vendor server logs in as you, and nothing is branded \"sent via Blowhorn\"."
         },
         {
           "t": "Your agent drives, you approve",
@@ -44,6 +53,29 @@
           "b": "Schedule the announcement and have every profile you add amplify it at the moment you pick."
         }
       ],
+      "agent": {
+        "title": "Release posts, drafted by your assistant",
+        "body": "Your assistant can draft the release posts straight from your changelog. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. Every write is a dry run until you confirm, and an agent can never approve its own content.",
+        "prompt": "Draft the v2.4 release posts from CHANGELOG.md for LinkedIn, X and Hacker News on my profile. Do a dry run, show me the payloads, wait for me to say \"go\", then confirm and tell me what was queued.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Your release, drafted by your assistant, fired by you",
+            "href": "/resources/articles/your-release-drafted-by-your-assistant/"
+          },
+          {
+            "label": "Five minutes from ~/.local/bin/blowhorn-mcp to your first dry run",
+            "href": "/resources/articles/five-minutes-to-your-first-dry-run/"
+          }
+        ]
+      },
       "prompt": "Draft the release posts from CHANGELOG.md, run blowhorn with --dry-run, show me, then schedule them for Tuesday 9:00.",
       "major": "Release notes are orders, soldier. Every channel hears them by oh-nine-hundred.",
       "faq": [
@@ -78,7 +110,7 @@
           "page": "/agents"
         },
         {
-          "label": "Why your own Chrome",
+          "label": "Why your own browser",
           "page": "/docs/explanation/your-own-chrome"
         }
       ]
@@ -89,6 +121,16 @@
       "weight": 20,
       "headline": "Your team is the amplifier.",
       "lead": "Schedule one message and have every profile you add amplify it at the moment you pick: real teammates and supporters, each posting as themselves, in the first hour. No 100-seat minimum.",
+      "platforms": [
+        "linkedin",
+        "x",
+        "slack",
+        "bluesky",
+        "youtube",
+        "instagram",
+        "tiktok",
+        "facebook"
+      ],
       "description": "Blowhorn for marketing managers: make a sound wave from your team's own profiles, each posting as themselves, coordinated from one queue.",
       "art": {
         "src": "assets/brand/cast/general-base.webp",
@@ -115,7 +157,7 @@
         },
         {
           "t": "Their sessions stay theirs",
-          "b": "Each teammate's browser session stays in their own Chrome; Blowhorn acts as them there."
+          "b": "Each teammate's sessions stay in their own browser; Blowhorn acts as them there."
         },
         {
           "t": "One pause for the whole wave",
@@ -126,12 +168,35 @@
           "b": "Run history and analytics from every computer in one place. Analytics cover LinkedIn, X and Bluesky."
         }
       ],
+      "agent": {
+        "title": "Campaign rows, queued and held for you",
+        "body": "Your assistant can queue a row per campaign post. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. With approval mode on, its queued work waits for you, and an agent can never approve its own content.",
+        "prompt": "Queue this week's campaign rows from campaign.csv for my company profile. Do a dry run, show me every row, wait for me to say \"go\", then confirm and list what is waiting for my approval.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Let an agent rally the first hour without approving itself",
+            "href": "/resources/articles/rally-the-first-hour-without-approving-itself/"
+          },
+          {
+            "label": "Why your assistant rehearses first",
+            "href": "/resources/articles/why-your-assistant-rehearses-first/"
+          }
+        ]
+      },
       "prompt": "",
       "major": "A hundred-seat minimum is for armies. You need a squad and a launch day.",
       "faq": [
         {
           "q": "Do teammates hand over their passwords?",
-          "a": "No. Their browser sessions stay in their own Chrome, and Blowhorn acts as them there."
+          "a": "No. Their sessions stay in their own browser, and Blowhorn acts as them there."
         },
         {
           "q": "Can I invite my team?",
@@ -170,8 +235,17 @@
       "name": "Founders",
       "weight": 30,
       "headline": "You're the company's voice. Keep its keys.",
-      "lead": "Every launch, across your personal, company and project profiles, from one queue on computers you own. Blowhorn does the typing and clicking in your own Chrome, so nobody else holds the sign-ins that are your company.",
-      "description": "Blowhorn for founders: every profile you speak for, from one queue on your own computers, posted as you from your own Chrome.",
+      "lead": "Every launch, across your personal, company and project profiles, from one queue on computers you own. Blowhorn does the typing and clicking in your own browser, so nobody else holds the sign-ins that are your company.",
+      "platforms": [
+        "linkedin",
+        "x",
+        "reddit",
+        "hacker-news",
+        "slack",
+        "bluesky",
+        "github"
+      ],
+      "description": "Blowhorn for founders: every profile you speak for, from one queue on your own computers, posted as you from your own browser.",
       "art": {
         "src": "assets/brand/cast/major-6-hat-left-horn.webp",
         "alt": "Major Blowhorn, a teal rooster drill sergeant in a campaign hat, pointing and shouting through his gold bullhorn, Caribbean Green sound waves pouring out of it"
@@ -193,7 +267,7 @@
       "gets": [
         {
           "t": "Many profiles, one desk",
-          "b": "Every brand, founder and project profile you speak for, from one menu bar app, each in its own Chrome profile."
+          "b": "Every brand, founder and project profile you speak for, from one menu bar app, each in its own browser profile."
         },
         {
           "t": "Your computers act",
@@ -208,12 +282,35 @@
           "b": "One command stops one action, one computer or all of them. Another starts it again."
         }
       ],
+      "agent": {
+        "title": "Launch day, with you in charge",
+        "body": "Your assistant can line up your launch-day posts on your own profile while you stay in charge. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. Every write is a dry run until you confirm, and pause stops everything.",
+        "prompt": "Prepare my launch-day posts from launch.md for my personal profile, spaced across the day. Do a dry run, show me the schedule, wait for me to say \"go\", then confirm and summarize what is queued.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Your release, drafted by your assistant, fired by you",
+            "href": "/resources/articles/your-release-drafted-by-your-assistant/"
+          },
+          {
+            "label": "Five minutes from ~/.local/bin/blowhorn-mcp to your first dry run",
+            "href": "/resources/articles/five-minutes-to-your-first-dry-run/"
+          }
+        ]
+      },
       "prompt": "",
       "major": "Your company's sign-ins are not a houseguest's to keep.",
       "faq": [
         {
           "q": "What lives in my account?",
-          "a": "Your queue, schedule, profiles, run history and analytics, so every computer stays in sync. Browser cookies stay in Chrome on each computer, and your account never posts."
+          "a": "Your queue, schedule, profiles, run history and analytics, so every computer stays in sync. Cookies stay in the browser on each computer, and your account never posts."
         },
         {
           "q": "Will it post twice?",
@@ -230,8 +327,8 @@
           "page": "/use-cases/launch-day"
         },
         {
-          "label": "Where your data lives",
-          "page": "/docs/explanation/your-data"
+          "label": "Careful LinkedIn outreach",
+          "page": "/use-cases/linkedin-outreach"
         },
         {
           "label": "How scheduling works",
@@ -249,6 +346,15 @@
       "weight": 40,
       "headline": "Your release deserves more than a post and a prayer.",
       "lead": "Publish and amplify project milestones across project and maintainer profiles on GitHub, Slack, Hacker News, Reddit, LinkedIn, X and Bluesky, from one queue.",
+      "platforms": [
+        "linkedin",
+        "x",
+        "reddit",
+        "hacker-news",
+        "slack",
+        "bluesky",
+        "github"
+      ],
       "description": "Blowhorn for open source maintainers: announce releases and milestones on GitHub, Slack, Hacker News and every social network from one queue, as yourself.",
       "art": {
         "src": "assets/brand/cast/trench-trooper-periscope.webp",
@@ -286,6 +392,29 @@
           "b": "Every command has --help with examples, most have --json, and anything that publishes takes --dry-run."
         }
       ],
+      "agent": {
+        "title": "Release notes where contributors read",
+        "body": "Your assistant can turn a tagged release into notes for Hacker News, GitHub, Reddit, Slack and Bluesky. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. Every write is a dry run until you confirm.",
+        "prompt": "Write the release notes for v2.4 from the changelog for Hacker News, GitHub, Reddit, Slack and Bluesky on my project profile. Do a dry run, show me each one, wait for me to say \"go\", then confirm and report what was sent.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Ship release notes everywhere your contributors read",
+            "href": "/resources/articles/ship-release-notes-where-contributors-read/"
+          },
+          {
+            "label": "Why your assistant rehearses first",
+            "href": "/resources/articles/why-your-assistant-rehearses-first/"
+          }
+        ]
+      },
       "prompt": "",
       "major": "Shipping is half the mission. Telling the world is the other half.",
       "faq": [
@@ -327,6 +456,13 @@
       "weight": 50,
       "headline": "Rally the community. Everyone speaks for themselves.",
       "lead": "Announce to community Slack workspaces as yourself, then have maintainers and supporters amplify milestones from their own profiles in the first hour.",
+      "platforms": [
+        "linkedin",
+        "x",
+        "slack",
+        "bluesky",
+        "reddit"
+      ],
       "description": "Blowhorn for community managers: Slack announcements as yourself, and supporters amplifying from their own profiles.",
       "art": {
         "src": "assets/brand/cast/recruit-chick-salute.webp",
@@ -364,12 +500,35 @@
           "b": "Coordinated so the same post isn't sent from two computers. One command pauses everything."
         }
       ],
+      "agent": {
+        "title": "Rally the first hour, without the agent approving itself",
+        "body": "Your assistant can plan and queue your teammates' first-hour engagement. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. It can never approve its own content, and with approval mode on its queued work waits for you.",
+        "prompt": "Plan first-hour engagement for our announcement: queue a repost for each teammate profile. Do a dry run, show me the plan, wait for me to say \"go\", then confirm and list what is waiting for approval.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Let an agent rally the first hour without approving itself",
+            "href": "/resources/articles/rally-the-first-hour-without-approving-itself/"
+          },
+          {
+            "label": "Why your assistant rehearses first",
+            "href": "/resources/articles/why-your-assistant-rehearses-first/"
+          }
+        ]
+      },
       "prompt": "",
       "major": "Nobody speaks for a soldier. Every soldier speaks for themself.",
       "faq": [
         {
           "q": "Does a supporter give me their password?",
-          "a": "No. A supporter adds their own profile, signed in from their own Chrome."
+          "a": "No. A supporter adds their own profile, signed in from their own browser."
         },
         {
           "q": "Does Blowhorn install a Slack app?",
@@ -394,7 +553,7 @@
           "page": "/docs/how-to/publish/amplify-a-post"
         },
         {
-          "label": "Why your own Chrome",
+          "label": "Why your own browser",
           "page": "/docs/explanation/your-own-chrome"
         }
       ]
@@ -404,8 +563,17 @@
       "name": "Agencies and consultants",
       "weight": 60,
       "headline": "Show the client the dry-run. Then send it once.",
-      "lead": "Run several clients' profiles from one desk, in real Chrome profiles on your own computer. Dry-run every action, pause one client instantly, and never hand a vendor a client's 2FA secret.",
-      "description": "Blowhorn for agencies and consultants: client profiles in real Chrome on your own computer, with dry-run and pause on every action.",
+      "lead": "Run several clients' profiles from one desk, in real browser profiles on your own computer. Dry-run every action, pause one client instantly, and never hand a vendor a client's 2FA secret.",
+      "platforms": [
+        "linkedin",
+        "x",
+        "reddit",
+        "hacker-news",
+        "slack",
+        "bluesky",
+        "github"
+      ],
+      "description": "Blowhorn for agencies and consultants: client profiles in a real browser on your own computer, with dry-run and pause on every action.",
       "art": {
         "src": "assets/brand/cast/mouse-marine-salute.webp",
         "alt": "Mouse Marine, a mallard in a green beret saluting from a gold trackball on a small tank, cursor spear in hand"
@@ -434,14 +602,37 @@
           "b": "Pause one action while everything else keeps running, or pause every computer at once."
         },
         {
-          "t": "Real Chrome profiles",
-          "b": "Each Blowhorn profile maps to its own Chrome profile on each computer. No fake fingerprints."
+          "t": "Real browser profiles",
+          "b": "Each Blowhorn profile maps to its own browser profile on each computer. No fake fingerprints."
         },
         {
           "t": "One automation per profile",
           "b": "A person doesn't type into two browser windows at once, and neither does Blowhorn."
         }
       ],
+      "agent": {
+        "title": "Several client brands, a limit and a kill switch each",
+        "body": "Run each client brand as its own profile and let your assistant queue work for them. Blowhorn desktop 1.61.0 installs the blowhorn-mcp command in ~/.local/bin, so Claude Code, Claude Desktop, Cursor or VS Code can drive Blowhorn on your own computer. Per-profile risk limits apply to every agent action, and pause stops everything.",
+        "prompt": "Queue this week's posts for client brands Acme and Globex from posts.csv, each on its own profile. Do a dry run, show me per client, wait for me to say \"go\", then confirm and report what was queued.",
+        "links": [
+          {
+            "label": "Blowhorn MCP server",
+            "href": "/ai/mcp/"
+          },
+          {
+            "label": "Connect an assistant",
+            "href": "/docs/how-to/set-up/connect-mcp-client/"
+          },
+          {
+            "label": "Agents across client brands, with a kill switch in your hand",
+            "href": "/resources/articles/agents-across-client-brands-kill-switch/"
+          },
+          {
+            "label": "Why your assistant rehearses first",
+            "href": "/resources/articles/why-your-assistant-rehearses-first/"
+          }
+        ]
+      },
       "prompt": "",
       "major": "Receipts, soldier. Every order logged, every post sent once.",
       "faq": [
@@ -451,11 +642,11 @@
         },
         {
           "q": "Where do client credentials live?",
-          "a": "Browser cookies stay in Chrome on each computer. GitHub, Hacker News and Slack credentials sync from your account."
+          "a": "Cookies stay in the browser on each computer. GitHub, Hacker News and Slack credentials sync from your account."
         },
         {
           "q": "Is this an antidetect browser?",
-          "a": "No. Blowhorn is real Chrome, signed in as each profile. Want to see what sites can read about your browser?",
+          "a": "No. Blowhorn is a real browser, signed in as each profile. Want to see what sites can read about your browser?",
           "link": {
             "href": "https://tells.blowhorn.ai/",
             "label": "Run the free check at Blowhorn Tells"

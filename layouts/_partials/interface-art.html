@@ -1,6 +1,6 @@
 {{- /* Miniature product UI for one way in to Blowhorn: a crisp, scaled-down
    rendering of the actual surface (app window, browser, terminal), built
-   from hairlines, micro-type and the real app icon — never a doodle.
+   from hairlines, micro-type and the real app icon, never a doodle.
    Call with the interface kind: "desktop", "extension", "web", "cli", "mcp".
    Styles and the (quiet) motion live in site.css under "Interface art";
    motion only runs when the reader has not asked for reduced motion.
@@ -8,35 +8,56 @@
 {{- $kind := . -}}
 <span class="iface-art iface-art-{{ $kind }}" aria-hidden="true">
 {{- if eq $kind "desktop" -}}
-  <span class="ia-panel">
-    <span class="ia-bar"><span class="ia-lights"><i></i><i></i><i></i></span><span class="ia-caption">Blowhorn · Queue</span></span>
-    <span class="ia-split">
-      <span class="ia-rail"><i class="on"></i><i></i><i></i><i></i></span>
+  {{- /* The Blowhorn desktop console, as the app draws it (desktop/src/renderer/console/
+     ConsoleRail.tsx, places.ts and the Activity list in the product repository): a
+     hidden-inset title bar, so the traffic lights sit at the top of the left rail
+     and there is no URL bar; the Crowhorn and wordmark; the teal "+ New activity"
+     button; the five places as text, Activity lit with its "ready" count; the
+     dashed-rule status line. The main pane is Activity's Upcoming list: platform
+     mark, status word in the mono label face, preview text. */ -}}
+  <span class="ia-panel ia-app">
+    <span class="ia-app-rail">
+      <span class="ia-lights"><i></i><i></i><i></i></span>
+      <span class="ia-app-brand"><picture><source srcset="{{ "assets/brand/logo/blowhorn-icon-on-dark.svg" | relURL }}" media="(prefers-color-scheme: dark)"><img src="{{ "assets/brand/logo/blowhorn-icon.svg" | relURL }}" alt="" width="11" height="11"></picture><picture><source srcset="{{ "assets/brand/logo/blowhorn-wordmark-white.svg" | relURL }}" media="(prefers-color-scheme: dark)"><img class="ia-app-word" src="{{ "assets/brand/logo/blowhorn-wordmark.svg" | relURL }}" alt="" width="34" height="7"></picture></span>
+      <span class="ia-app-new"><b>+</b>New activity</span>
+      <span class="ia-app-nav">
+        <span class="ia-app-item">Home</span>
+        <span class="ia-app-item on">Activity<em>3 ready</em></span>
+        <span class="ia-app-item">Profiles<em>4</em></span>
+        <span class="ia-app-item">Performance</span>
+        <span class="ia-app-item">Safety</span>
+      </span>
+      <span class="ia-app-status"><i></i>On watch</span>
+    </span>
+    <span class="ia-app-main">
+      <span class="ia-app-bar"><span class="ia-seg"><b class="on">Upcoming</b><b>Routines</b><b>History</b></span></span>
+      <span class="ia-app-head"><span></span><span>Status</span><span>Preview</span></span>
       <span class="ia-rows">
-        <span class="ia-row sweep"><b class="ia-net n-li"></b><span class="ia-line w55"></span><span class="ia-pill">09:30</span></span>
-        <span class="ia-row"><b class="ia-net n-x"></b><span class="ia-line w70"></span><span class="ia-pill">09:31</span></span>
-        <span class="ia-row"><b class="ia-net n-rd"></b><span class="ia-line w45"></span><span class="ia-pill ok">Sent</span></span>
+        <span class="ia-row sweep">{{ partial "interface-art-mark.html" "linkedin" }}<span class="ia-state live"><i></i>Ready</span><span class="ia-prev">Launch day, 9:30</span></span>
+        <span class="ia-row">{{ partial "interface-art-mark.html" "x" }}<span class="ia-state live"><i></i>Ready</span><span class="ia-prev">Release notes</span></span>
+        <span class="ia-row">{{ partial "interface-art-mark.html" "bluesky" }}<span class="ia-state wait"><i></i>2:00 PM</span><span class="ia-prev">Team recap</span></span>
+        <span class="ia-row">{{ partial "interface-art-mark.html" "github" }}<span class="ia-state done"><i></i>Sent</span><span class="ia-prev">v1.42 is out</span></span>
       </span>
     </span>
   </span>
 {{- else if eq $kind "extension" -}}
-  <span class="ia-panel">
-    <span class="ia-bar ia-bar-tabs"><span class="ia-tab"><img src="{{ "assets/brand/logo/blowhorn-app-icon.svg" | relURL }}" alt="" width="10" height="10">Launch post · LinkedIn</span><span class="ia-lights"><i></i><i></i><i></i></span></span>
-    <span class="ia-url"><span class="ia-lock"></span><span class="ia-line w65"></span><img class="ia-pin" src="{{ "assets/brand/logo/blowhorn-app-icon.svg" | relURL }}" alt="" width="14" height="14"></span>
-    <span class="ia-rows">
-      <span class="ia-row"><span class="ia-line w75"></span></span>
-      <span class="ia-row sweep"><span class="ia-line w55"></span><span class="ia-pill ok">Posted as you</span></span>
-      <span class="ia-row"><span class="ia-line w65"></span></span>
+  <span class="ia-panel ia-browser">
+    {{- partial "interface-art-browser.html" (dict "tab" "Feed | LinkedIn" "favicon" "linkedin" "url" "linkedin.com/feed" "pin" true) -}}
+    <span class="ia-page">
+      <span class="ia-card"><span class="ia-who"><i class="ia-face"></i><span class="ia-line w45"></span></span><span class="ia-line w75"></span><span class="ia-line w60"></span></span>
+      <span class="ia-row sweep"><span class="ia-line w50"></span><span class="ia-pill ok">Sent as you</span></span>
     </span>
   </span>
 {{- else if eq $kind "web" -}}
-  <span class="ia-panel">
-    <span class="ia-bar ia-bar-tabs"><span class="ia-tab"><img src="{{ "assets/brand/logo/blowhorn-app-icon.svg" | relURL }}" alt="" width="10" height="10">Blowhorn</span><span class="ia-lights"><i></i><i></i><i></i></span></span>
-    <span class="ia-url"><span class="ia-lock"></span><span class="ia-mono">cloud.blowhorn.ai</span><span class="ia-live"><i></i>Live</span></span>
-    <span class="ia-rows">
-      <span class="ia-row sweep"><b class="ia-net n-li"></b><span class="ia-line w60"></span><span class="ia-pill">Queued</span></span>
-      <span class="ia-row"><b class="ia-net n-bs"></b><span class="ia-line w50"></span><span class="ia-pill">Queued</span></span>
-      <span class="ia-row"><b class="ia-net n-gh"></b><span class="ia-line w70"></span><span class="ia-pill ok">Approved</span></span>
+  <span class="ia-panel ia-browser">
+    {{- partial "interface-art-browser.html" (dict "tab" "Blowhorn" "favicon" "blowhorn" "url" "cloud.blowhorn.ai" "pin" false) -}}
+    <span class="ia-page">
+      <span class="ia-page-head"><span class="ia-page-title">Activity</span><span class="ia-live"><i></i>Live</span></span>
+      <span class="ia-rows">
+        <span class="ia-row sweep">{{ partial "interface-art-mark.html" "linkedin" }}<span class="ia-state live"><i></i>Ready</span><span class="ia-prev">Launch day, 9:30</span></span>
+        <span class="ia-row">{{ partial "interface-art-mark.html" "reddit" }}<span class="ia-state wait"><i></i>Needs you</span><span class="ia-prev">AMA thread</span></span>
+        <span class="ia-row">{{ partial "interface-art-mark.html" "github" }}<span class="ia-state done"><i></i>Sent</span><span class="ia-prev">v1.42 is out</span></span>
+      </span>
     </span>
   </span>
 {{- else if eq $kind "cli" -}}

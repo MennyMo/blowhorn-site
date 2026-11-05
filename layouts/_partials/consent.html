@@ -1,0 +1,19 @@
+{{- /* The cookie notice: a small card centered at the bottom of the screen, hidden until
+  assets/js/consent.js finds no stored choice, or the reader opens it from the
+  footer's "Cookie preferences" button. Accept grants analytics_storage and
+  loads Google Analytics; Decline and the close button keep everything denied.
+  Either choice is remembered in localStorage. Without JavaScript it never
+  shows and analytics never loads. */ -}}
+{{- if partial "analytics-enabled.html" . }}
+    <section id="consent" class="consent glass" aria-labelledby="consent-title" hidden>
+      <h2 id="consent-title" class="consent-title">Cookies</h2>
+      <p class="consent-text">May we use Google Analytics cookies to see which pages help? Nothing loads unless you accept. <a href="{{ (site.GetPage "/legal/privacy").RelPermalink }}#google-analytics">Details</a></p>
+      <div class="consent-actions">
+        <button type="button" class="button button-primary consent-button" data-consent="granted">Accept</button>
+        <button type="button" class="button button-secondary consent-button" data-consent="denied">Decline</button>
+      </div>
+      <button type="button" class="consent-close" data-consent="denied" aria-label="Close and decline">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+    </section>
+{{- end }}

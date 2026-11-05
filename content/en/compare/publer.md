@@ -19,7 +19,7 @@
   "us": [
     "One post should be lifted by many real profiles, not recycled",
     "Hacker News, Reddit, GitHub and Slack are where your audience is",
-    "You want posting to come from your own Chrome, signed in as you"
+    "You want posting to come from your own browser, signed in as you"
   ],
   "price_them": "Free plan for 3 accounts (X needs a paid plan); paid plans priced per social account",
   "price_src": "https://publer.com/pricing",
@@ -27,7 +27,7 @@
     {
       "f": "Where it acts",
       "t": "Publer's cloud",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "Networks",
@@ -52,7 +52,7 @@
     {
       "f": "AI agents",
       "t": "API and MCP on higher plans",
-      "b": "MCP server, REST API, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
+      "b": "MCP server, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
     },
     {
       "f": "Bought engagement",

@@ -27,7 +27,7 @@
     {
       "f": "Where it acts",
       "t": "Local browser sessions, you send",
-      "b": "Your computers, in your own signed-in Chrome or platform APIs"
+      "b": "Your computers, in your own signed-in browser or platform APIs"
     },
     {
       "f": "Networks",
@@ -52,7 +52,7 @@
     {
       "f": "AI agents",
       "t": "Local MCP server",
-      "b": "MCP server, REST API, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
+      "b": "MCP server, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
     },
     {
       "f": "Bought engagement",

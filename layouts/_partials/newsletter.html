@@ -1,12 +1,24 @@
-{{- /* Newsletter signup, posting to the company mailing list
-  form. A plain HTML form with no script. Called with the page (the footer)
-  or with a dict that sets id, label, button and class (the download thanks page). */ -}}
+{{- /* Newsletter signup, posting to Blowhorn's own signup service at
+  api.blowhorn.ai (see signup-worker/). A plain HTML form with no script:
+  the Worker stores the signup and redirects to /coming-soon/thanks/.
+  Called with the page (the footer) or with a dict that sets id, label,
+  button and class (the download thanks page, the Major page); a dict
+  call may also carry the page under "page" for the source_page field.
+  The off-screen field is a honeypot: the Worker answers success for it
+  without storing anything. */ -}}
 {{- $id := "newsletter-email" }}{{ $label := "Subscribe to our newsletter" }}{{ $button := "Subscribe" }}{{ $class := "" -}}
-{{- if reflect.IsMap . }}{{ with .id }}{{ $id = . }}{{ end }}{{ with .label }}{{ $label = . }}{{ end }}{{ with .button }}{{ $button = . }}{{ end }}{{ with .class }}{{ $class = printf " %s" . }}{{ end }}{{ end -}}
-<form class="newsletter{{ $class }}" name="newsletter" method="post" action="https://calcotestudios.us15.list-manage.com/subscribe/post?u=6b50be5aea3dfe1fd4c041d80&amp;id=6bb65defeb">
+{{- $page := . -}}
+{{- if reflect.IsMap . }}{{ with .id }}{{ $id = . }}{{ end }}{{ with .label }}{{ $label = . }}{{ end }}{{ with .button }}{{ $button = . }}{{ end }}{{ with .class }}{{ $class = printf " %s" . }}{{ end }}{{ with .page }}{{ $page = . }}{{ end }}{{ end -}}
+{{- $source := "" }}{{ with $page }}{{ with .RelPermalink }}{{ $source = . }}{{ end }}{{ end -}}
+<form class="newsletter{{ $class }}" name="newsletter" method="post" action="https://api.blowhorn.ai/api/subscribe">
               <label class="newsletter-label ui" for="{{ $id }}">{{ $label }}</label>
               <div class="newsletter-row">
-                <input type="email" id="{{ $id }}" name="EMAIL" autocomplete="email" placeholder="Email address" required>
+                <input type="email" id="{{ $id }}" name="email" autocomplete="email" placeholder="Email address" required>
                 <button class="button button-primary" type="submit">{{ $button }}</button>
               </div>
+              <input type="hidden" name="source_page" value="{{ $source }}">
+              <p class="signup-honeypot" aria-hidden="true">
+                <label for="{{ $id }}-website">Website</label>
+                <input id="{{ $id }}-website" name="website" type="text" tabindex="-1" autocomplete="off">
+              </p>
             </form>

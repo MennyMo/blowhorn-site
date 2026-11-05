@@ -18,7 +18,7 @@
   ],
   "us": [
     "You want careful LinkedIn hygiene, not volume prospecting",
-    "No vendor server should log in as you; Blowhorn acts from your own signed-in Chrome",
+    "No vendor server should log in as you; Blowhorn acts from your own signed-in browser",
     "You also speak on X, Reddit, Hacker News, GitHub, Bluesky and Slack, and want your people amplifying"
   ],
   "price_them": "Standard from $15 per license per month, lower on longer terms",
@@ -32,7 +32,7 @@
     {
       "f": "Where it acts",
       "t": "A desktop app on your computer",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "Many computers on one queue",

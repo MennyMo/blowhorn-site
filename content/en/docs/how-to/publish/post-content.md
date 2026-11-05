@@ -14,7 +14,7 @@ Nothing is published, nothing is written back:
 
 ```bash
 blowhorn post --check-queue
-blowhorn post --check-queue --profile marcus --platform linkedin
+blowhorn post --check-queue --profile personal --platform linkedin
 ```
 
 `--check-queue` is read-only: it opens no browser and reaches no platform.
@@ -22,21 +22,21 @@ blowhorn post --check-queue --profile marcus --platform linkedin
 ## Publish the queue
 
 ```bash
-blowhorn post --profile marcus                       # every platform with pending activities
-blowhorn post --platform linkedin --profile marcus --headless   # unattended: a background window, never headless
-blowhorn post --profile all --exclude marcus,kanvas  # fan out, holding profiles back
+blowhorn post --profile personal                       # every platform with pending activities
+blowhorn post --platform linkedin --profile personal --headless   # unattended: a background window, never headless
+blowhorn post --profile all --exclude personal,kanvas  # fan out, holding profiles back
 ```
 
 `--profile all` leaves out the excluded profiles (`--exclude`, else
 `BLOWHORN_EXCLUDE`, else `defaults.exclude`) and prints `Excluding
 profiles: …` when it does. To post as one of them, name it:
-`--profile marcus`.
+`--profile personal`.
 
 Rehearse first whenever the result matters. A dry run goes end to end
 without publishing and without marking the activity done:
 
 ```bash
-blowhorn post --profile marcus --dry-run
+blowhorn post --profile personal --dry-run
 ```
 
 A dry run still signs in where a real run would: on Hacker News it opens
@@ -61,19 +61,28 @@ blowhorn post --profile all --pace slow
 `--pace` takes `fast`, `normal`, `slow`, or a numeric multiplier such as
 `2.0`.
 
-## Attaching an image to a LinkedIn post
+## Attaching an image or video to a post
 
 An activity that fills `Image URL`, `GDrive Link`, or `Video URL` attaches that
-file to the post. Two things are worth knowing when such a post fails:
+file to the post. Three things are worth knowing when such a post fails:
 
 - An activity whose text holds a URL and an image keeps the image: Blowhorn
   removes the link preview LinkedIn generates first, because the preview
   takes the slot the image needs. An activity with a URL and no image keeps its
   preview.
-- A post never goes out without the image it asked for. If the file cannot
-  be attached, the activity fails and stays pending for a later run. Re-run once
-  the cause is understood rather than filling in `Date Promoted` to silence
-  it.
+- A post never goes out without the image it asked for, on any platform. If
+  the file cannot be downloaded or attached, the activity fails and stays
+  pending for a later run, and the run goes on to the next activity. Re-run
+  once the cause is understood rather than filling in `Date Promoted` to
+  silence it.
+- Blowhorn fetches the file itself before it opens the post. It accepts PNG,
+  JPEG, GIF, WebP, and HEIC images and MP4, MOV, and WebM videos, judged by
+  the file's contents rather than its name. It gives up on a host that goes
+  silent for 30 seconds, and on a transfer that runs past 10 minutes. It
+  refuses a file over 25 MiB for an image or 1024 MiB for a video. Those caps
+  are Blowhorn's own; a platform may accept less. See
+  [Messages and exit codes](/docs/reference/messages/) for the sentence each
+  refusal prints.
 
 ## Related
 

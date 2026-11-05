@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Shared line/text/card types: a bad card fails for role, use-case and
 solution data; a use case without title fails; a solution's compare list
-takes only /compare/ pages.
+takes only /compare/ pages; every role names the platforms the home page
+highlights for it (test_themes.py checks each id is a platform).
 
 Run with `make test-scripts` (CI runs it too).
 """
@@ -130,6 +131,27 @@ class CastPageSchemaTest(unittest.TestCase):
             )
         finally:
             tmp_path.unlink(missing_ok=True)
+
+
+    def test_role_platforms_are_required(self):
+        payload = json.loads((ROOT / "data/roles.json").read_text(encoding="utf-8"))
+        for bad in (None, [], ["linkedin", "linkedin"], ["Hacker News"]):
+            with self.subTest(platforms=bad):
+                broken = copy.deepcopy(payload)
+                if bad is None:
+                    del broken["roles"][0]["platforms"]
+                else:
+                    broken["roles"][0]["platforms"] = bad
+                tmp_path = write_tmp(broken)
+                try:
+                    result = ajv(ROOT / "schemas/roles.schema.json", tmp_path)
+                    self.assertNotEqual(
+                        result.returncode,
+                        0,
+                        f"role platforms {bad!r} should fail validation",
+                    )
+                finally:
+                    tmp_path.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":

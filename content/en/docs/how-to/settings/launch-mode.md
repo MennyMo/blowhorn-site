@@ -6,7 +6,7 @@ aliases: [/docs/how-to/choose-a-chrome-launch-mode/]
 ---
 
 
-Most runs should keep the default: Blowhorn drives Chrome through the Blowhorn
+Most runs should keep the default: Blowhorn drives Google Chrome through the Blowhorn
 Chrome extension and launches nothing of its own. Change it only when one run
 or one job needs a real Chrome window. Advanced page: the default is the right
 choice until you have a reason.

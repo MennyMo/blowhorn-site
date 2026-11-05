@@ -13,7 +13,7 @@
           <p class="label">{{ if .IsPage }}<a href="{{ $hub.RelPermalink }}">Field Manual</a> <span aria-hidden="true">/</span> {{ .LinkTitle }}{{ else }}Field Manual{{ end }}</p>
           <h1 class="h1">{{ $p.heading | default .Title }}</h1>
           {{- with $p.notice }}
-          <p class="notice" role="note">{{ . | $.RenderString }}</p>
+          <p class="notice card-field" role="note">{{ . | $.RenderString }}</p>
           {{- end }}
           <p class="body-lg muted">{{ $p.lead | $.RenderString }}</p>
           {{- with $p.checked }}<p class="caption muted">Sources checked {{ . }}.</p>{{ end }}
@@ -26,7 +26,7 @@
             <h2 id="fm-matrix-title" class="h2">Every action, every platform</h2>
             <p class="muted">What Blowhorn does on each platform, and how risky each action is by that platform's own rules. Scroll sideways on a phone.</p>
           </div>
-          <div class="compare-scroll glass">
+          <div class="compare-scroll card-plain">
             <table class="compare-table fm-matrix">
               <thead>
                 <tr>
@@ -68,8 +68,8 @@
         <section class="fm-section" aria-labelledby="fm-more-title">
           <div class="section-head"><h2 id="fm-more-title" class="h2">{{ if $.IsPage }}More from the Field Manual{{ else }}The briefings{{ end }}</h2></div>
           <ul class="grid grid-3">
-            {{- range . }}
-            <li class="card glass">
+            {{- range $i, $f := . }}
+            <li class="card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $pages)) }}">
               {{- with .Params.tag }}<p class="label">{{ . }}</p>{{ end }}
               <h3 class="h3"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h3>
               <p>{{ .Description }}</p>

@@ -1,0 +1,92 @@
+{
+  "$schema": "../schemas/tells.schema.json",
+  "url": "https://tells.blowhorn.ai/",
+  "pages": {
+    "home": "",
+    "checks": "checks/",
+    "agents": "agents/"
+  },
+  "utm": {
+    "source": "blowhorn.ai",
+    "medium": "referral",
+    "campaign": "tells"
+  },
+  "placements": [
+    "nav",
+    "bar",
+    "home",
+    "footer",
+    "compare",
+    "ai",
+    "agents",
+    "thanks",
+    "docs",
+    "404"
+  ],
+  "bar": {
+    "storage_key": "bh-tells-bar-v1",
+    "text": "Free tool: find out what websites can tell about your browser. Spoiler: plenty.",
+    "link": "Am I a Bot?"
+  },
+  "nav": {
+    "label": "Am I a Bot?",
+    "pill": "Free"
+  },
+  "home": {
+    "eyebrow": "Free tool",
+    "heading": "Am I a Bot?",
+    "body": "Websites quietly check whether you're a person or a script. Tells runs those same checks in your browser and explains each one in plain words. No sign-up, nothing to install, and it keeps no copy of your results.",
+    "cta": "Run the free check",
+    "secondary": "What each check means",
+    "agents_lead": "Building a bot on purpose? Point your script at it and read the JSON.",
+    "agents_link": "For AI agents and scripts",
+    "art": "assets/brand/cast/sleeper-cell-bot-radar.webp",
+    "art_640": "assets/brand/cast/sleeper-cell-bot-radar-640.webp",
+    "art_alt": "Sleeper Cell, the unit's privacy scout, spotting a bot on the radar"
+  },
+  "footer": {
+    "title": "Free tools",
+    "links": [
+      {
+        "page": "home",
+        "label": "Am I a Bot?"
+      },
+      {
+        "page": "checks",
+        "label": "What each check means"
+      },
+      {
+        "page": "agents",
+        "label": "For AI agents and scripts"
+      }
+    ]
+  },
+  "callouts": {
+    "compare": {
+      "heading": "Does your current tool look human?",
+      "body": "Websites check. Run the free Am I a Bot? test in the browser you use it in and see what they see.",
+      "cta": "Run the free check"
+    },
+    "agents": {
+      "heading": "Your AI agent swears it's human",
+      "body": "Websites have opinions. See what they can read about the browser your agent drives, in plain words.",
+      "cta": "Run the free check",
+      "secondary": "For AI agents and scripts",
+      "secondary_page": "agents"
+    }
+  },
+  "thanks": {
+    "text": "While that downloads: see what websites can tell about your browser. Takes a minute. Free, and slightly unsettling.",
+    "link": "Am I a Bot?"
+  },
+  "docs": {
+    "eyebrow": "Free tool",
+    "title": "Am I a Bot?",
+    "text": "See what sites can read about your Chrome profile.",
+    "link": "Run the check"
+  },
+  "missing": {
+    "text": "Good news: you probably aren't a bot. Want proof?",
+    "link": "Take the free test"
+  }
+}

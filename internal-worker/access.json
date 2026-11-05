@@ -1,9 +1,22 @@
 {
+  "$schema": "../schemas/internal_access.schema.json",
   "hostname": "internal.blowhorn.ai",
   "app_name": "Blowhorn internal site",
   "policy_name": "Blowhorn internal site: named team members",
   "session_duration": "24h",
+  "allowed_email_domains": [
+    "layer5.io"
+  ],
   "allowed_emails": [
     "lee.calcote@layer5.io"
+  ],
+  "extra_emails_env": "INTERNAL_ACCESS_EXTRA_EMAILS",
+  "allowed_idps": [
+    "onetimepin"
+  ],
+  "bypass_policy_name": "Blowhorn internal site: trusted networks",
+  "bypass_ip_ranges": [
+    "70.123.144.221/32",
+    "2603:808c:2800:73::/64"
   ]
 }

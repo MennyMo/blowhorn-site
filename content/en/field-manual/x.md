@@ -7,8 +7,8 @@ description: What X's For You feed rewards (replies, conversations, time spent, 
 lead: "Most generals hide their maps. X put its ranking code on GitHub. The Major read every line so you don't have to."
 layout: field-manual
 weight: 20
-checked: 13 October 2026
-lastmod: 2026-10-13
+checked: 28 October 2026
+lastmod: 2026-10-28
 ---
 
 ## Roll call of the fallen
@@ -61,7 +61,7 @@ X has published its For You ranking twice. In 2023 Twitter released its "heavy r
 
 ## Do's
 
-- **Ask a real question, then answer the replies.** The reply the author engages with was the heaviest positive weight X ever published.
+- **Ask a real question, then answer the replies.** In X's 2023 published weights, the reply the author engages with ranked among the heaviest positive weights.
 - **Write posts worth stopping for.** Dwell is in the model; a skim is a negative.
 - **Give people something to send.** Share by DM and copy link are counted actions.
 - **Space your posts out.** The author diversity decay means your own posts compete with each other.
@@ -80,8 +80,9 @@ X has published its For You ranking twice. In 2023 Twitter released its "heavy r
 Not from X. Treat as hunches until your own analytics agree.
 
 - <span class="hypothesis">Hypothesis:</span> posts with an outside link reach fewer people than posts without one. Widely reported by users. The 2026 code counts link clicks as a positive action, and we found no link penalty in the parts of the code we read. Test it yourself.
+- <span class="hypothesis">Hypothesis:</span> the first 30 to 60 minutes decide a post's reach, and a post that stalls early rarely recovers. Commonly reported; X hasn't published a window. What X has published is the weight on replies, quoted under [Conversation beats applause](#what-xs-ranking-rewards). Together they say: post when you can answer the first replies yourself ([Won or lost in the first hour](/resources/articles/won-or-lost-in-the-first-hour/)).
 - <span class="hypothesis">Hypothesis:</span> paid X Premium accounts get extra reach. Common belief; we didn't confirm it in the published code.
 
 ## What Blowhorn does on X
 
-Blowhorn posts (threads past 274 characters), replies, reposts or quotes for amplify, follows, and records follower trends, all from your own Chrome ([Platforms](/docs/reference/platforms/)). Follows are capped at 400 per profile a day and 15 in any 15 minutes; those are Blowhorn's limits, not numbers X guarantees. Sessions on X break more often than on other platforms; Blowhorn hands sign-in back to you. Keep amplify to a couple of profiles you really run, spread out in time, and never send copies.
+Blowhorn posts (threads past 274 characters), replies, reposts or quotes for amplify, follows, and records follower trends, all from your own browser ([Platforms](/docs/reference/platforms/)). Follows are capped at 400 per profile a day and 15 in any 15 minutes; those are Blowhorn's limits, not numbers X guarantees. Sessions on X break more often than on other platforms; Blowhorn hands sign-in back to you. Keep amplify to a couple of profiles you really run, spread out in time, and never send copies.

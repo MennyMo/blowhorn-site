@@ -16,7 +16,7 @@ name: Product CI
 # A failure says which step failed; run `make tests` in a product checkout to
 # see why.
 #
-# Run: gh workflow run product-ci.yml -R layer5io/blowhorn-site -f ref=<40-char commit sha>
+# Run: gh workflow run product-ci.yml -R blowhorn-ai/blowhorn-site -f ref=<40-char commit sha>
 # The result is reported on the product commit as the "product-ci" status.
 
 on:
@@ -55,7 +55,7 @@ jobs:
       - name: Check out the product commit (read-only)
         uses: actions/checkout@v4
         with:
-          repository: leecalcote/blowhorn
+          repository: blowhorn-ai/blowhorn
           ref: ${{ inputs.ref }}
           token: ${{ secrets.DMG_SOURCE_TOKEN }}
           path: product
@@ -86,7 +86,7 @@ jobs:
       - name: Check out the product commit (read-only)
         uses: actions/checkout@v4
         with:
-          repository: leecalcote/blowhorn
+          repository: blowhorn-ai/blowhorn
           ref: ${{ inputs.ref }}
           token: ${{ secrets.DMG_SOURCE_TOKEN }}
           path: product

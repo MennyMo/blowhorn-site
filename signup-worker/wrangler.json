@@ -1,0 +1,1 @@
+{"$schema":"../node_modules/wrangler/config-schema.json","compatibility_date":"2026-05-12","d1_databases":[{"binding":"SIGNUPS_DB","database_id":"00000000-0000-0000-0000-000000000000","database_name":"blowhorn-signups"}],"main":"src/worker.js","name":"blowhorn-signups","preview_urls":false,"routes":[{"custom_domain":true,"pattern":"api.blowhorn.ai"}],"workers_dev":false}

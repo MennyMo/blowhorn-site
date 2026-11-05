@@ -186,11 +186,11 @@ class SyncDocsTest(unittest.TestCase):
         result, site = self.assert_synced(product({
             "tutorials/quick.md": (
                 "---\ntitle: Quick\ndraft: true\n---\n\n"
-                "Open <https://github.com/leecalcote/blowhorn/releases>.\n"
-                "See [code](https://github.com/leecalcote/blowhorn/blob/master/x).\n"),
+                "Open <https://github.com/blowhorn-ai/blowhorn/releases>.\n"
+                "See [code](https://github.com/blowhorn-ai/blowhorn/blob/master/x).\n"),
         }))
         body = site["tutorials/quick.md"]
-        self.assertIn("https://github.com/leecalcote/blowhorn/releases", body)
+        self.assertIn("https://github.com/blowhorn-ai/blowhorn/releases", body)
         self.assertIn("private product repository", result.stderr)
 
     def test_draft_pages_stay_draft(self):

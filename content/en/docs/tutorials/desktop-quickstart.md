@@ -32,8 +32,8 @@ it macOS asks once whether to open an app downloaded from the internet. Choose
 Launch `Blowhorn.app`. It runs the engine it carries and never looks for a
 checkout of this repository. If that engine can't start, it opens on
 **Setup**. Otherwise the guided setup opens
-first: finish it ([Set up Blowhorn the first time](/docs/how-to/set-up/first-run-setup/)),
-then choose **run setup again** at the bottom of Settings. Setup shows four
+first: finish it ([Set up Blowhorn at first muster](/docs/how-to/set-up/first-muster-setup/)),
+then choose **run setup again** on Settings' **Setup** page. Setup shows four
 checks, each either `ok` or offering the action that fixes it.
 
 Work down the activities:
@@ -43,10 +43,10 @@ Work down the activities:
    [Fix Blowhorn when its engine won't start](/docs/how-to/troubleshoot/engine-wont-start/).
 2. **helper tools** - its Python ships in the app, so this activity has
    nothing to install.
-3. **organization connection** - the connection to your account. If it is not configured yet, click
-   its **import** action and follow
-   Connect to your account.
-4. **this computer on watch** - nothing to do here: once the activities above are ok
+3. **organization connection** - the connection to your account. When it warns, it
+   shows why (for example `Not signed in to Blowhorn. Sign in to continue.`) and a **test connection**
+   button; sign in from the app, then click **test connection** to check again.
+4. **this computer on duty** - nothing to do here: once the activities above are ok
    the app registers the service itself, and this activity only reports it. You do
    not need it to finish this tutorial.
 
@@ -55,7 +55,7 @@ connection**), so an activity that cannot answer will tell you rather than hang.
 
 ## 3. Turn on dry-run before anything else {#section-3-turn-on-dry-run-before-anything-else}
 
-Still on the Setup screen, find the **preview only by default** switch below the
+Still on the Setup screen, find the **dry fire by default** switch below the
 four activities and turn it **on**.
 
 This is the important step of this tutorial. With it on, runs you start from
@@ -67,7 +67,7 @@ Now click **open console**.
 ## 4. Look at the queue {#section-4-look-at-the-queue}
 
 The console's "posts" screen reads the same content queue the CLI does - it
-runs `blowhorn content list --json` once and its "ready" tab shows the activities that
+runs `blowhorn content list --json` once and its Ready tab shows the activities that
 are due, each with who would post it (the same selection
 `blowhorn post --check-queue` prints).
 
@@ -84,7 +84,7 @@ content in the console's rail - and **scheduled to post** lists what waits for
 a later `Promote On`.
 
 Installing the app is what installed the background service, and quitting the
-app does **not** stop it - the switch **keep this computer on watch after
+app does **not** stop it - the switch **keep this computer on duty after
 quit**, on by default, is the one thing that decides that. With it off,
 quitting stops the service (asking you first if a pass is in flight), and the
 next launch starts it again. See

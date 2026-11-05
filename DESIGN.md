@@ -1,6 +1,6 @@
 # Blowhorn site design rules
 
-The full design language lives in [DESIGN.md in the blowhorn repository](https://github.com/leecalcote/blowhorn/blob/master/DESIGN.md). This file holds the site's spacing and copy rules; keep the two in sync.
+The brand-wide design language (principles, colour, type, liquid glass, platform logos, the mascot) lives in `internal/DESIGN.md` in the product repository (private, so it is named rather than linked). This file is the one written source for the site's own rules below; the product page links here and does not repeat them.
 
 ## Whitespace and rhythm
 
@@ -26,6 +26,56 @@ Rules:
 - Never hard-code a margin or padding in px on a page template. Add or reuse a token.
 - Check 1280, 390 and 320 widths, light and dark, before merging.
 
+## Cards
+
+Two rules, from the owner's order of 2 Nov 2026:
+
+1. **No stripe on one edge.** A card, callout, quote, table row or panel never carries a coloured stripe on one side: no `border-left` or `border-right` (or inline start or end) in a colour, no inset shadow down one side, no `::before` bar, and no hard offset shadow (an outer shadow with no blur pushed off one or two edges, the retired `shadow-pop` sticker that the Download button and the Major card wore; Lee, 2 Nov 2026). Depth is the soft `--glass-shadow`. A card keeps an even border on all sides, or none. Emphasis comes from the eyebrow label, the type and the fill. Neutral 1px column rules, the selected-tab mark and checkmarks are structure, not stripes.
+2. **No single generic card.** Pick the variant by what the content is. No two cards in the same row share a variant, and no card shares one with the card directly above it, at any width the grid is shown at: a 3-column grid that drops to 2 columns on a tablet and 1 on a phone has to hold at all three.
+
+The variants live once, in `assets/css/cards.css`. The same file is published unminified at `/assets/brand/cards.css` for tells.blowhorn.ai. `.card` (padding, radius, gaps) stays the structural base in `site.css`; a variant only sets the look.
+
+How a grid gets its variants:
+
+- **A loop** calls `layouts/_partials/card-variant.html` with the card's index, the grid (`"grid" "grid-3"`, or `"cols"` with every column count it shows), the number of cards (`"n"`, required) and, if the default does not fit the content, the variants in order of preference. `card-deal.html` deals them card by card: each card takes the first variant that no card in its row and not the card above it holds, at any of those widths, and the build fails when the variants run out. A grid that shows 3 or 4 across needs four variants once it has a second row.
+- **A grid class** that holds cards lists its column counts in `card-deal.html`, so keep that map in step with the CSS. Card grids use fixed breakpoints, not `auto-fill`, so the counts are known.
+- **A filter** that hides cards (`resources.js`, `action-filter.js`) hands the variants out again: the grid prints its deal as `data-card-deal`, and `assets/js/card-deal.js` gives its first k entries to the k visible cards after each change (the deal for fewer cards is always the start of the deal for more). Load the filter through `layouts/_partials/filter-script.html`.
+- **Docs cards** come from the synced Markdown without a variant; `layouts/_partials/docs-content.html` deals each grid of them for the columns its container shows.
+- **A hand-written grid** names each card's variant; or, better, calls the helper with literal indexes; check it at every width the grid shows. Count only the cards drawn: collect a filtered list first, then range over it.
+
+Paper and Dispatch keep one palette in both themes, so they also set `--ink`, `--ink-muted`, `--link`, `--line` and `--surface-tint` for everything inside them. A component rule that reads those tokens stays legible inside either card without a per-variant override. A card link's round arrow chip fills with `--card-chip`, which defaults to `--surface-tint`; Field, whose own fill is that tint, sets it to `--surface` so the chip still shows.
+
+| Class | Name | Use for | Fill | Edge | Text (light / dark) | Contrast |
+|---|---|---|---|---|---|---|
+| `card-paper` | Field order | Major's voice, testimonials, the one featured item in a section | cream in both themes | 1.5px near-black, no shadow | near-black ink, charcoal muted | ink 15.2:1, muted 8.6:1 in both themes |
+| `card-dispatch` | Dispatch | developer notes, API and JSON facts, commands | near-black in both themes | 1px dashed teal-shade (#008F80) | cream ink, mint muted, teal-bright mono `>` label | ink 15.2:1, muted 12.1:1, label 8.5:1 |
+| `card-stamp` | Stamp | facts, stats, guarantees, proof points, compliance | none (the page shows through) | 2px ink (1px border plus a 1px inset ring, so the box matches the other variants); label boxed in mono caps | ink, ink-muted | 16.3:1 and 5.6 / 7.2:1 for muted; edge 16.3:1 |
+| `card-field` | Field | feature and explanation grids, the common case | surface-tint | none; the hover edge is line-strong | ink, ink-muted | 14.2 / 12.4:1 ink; 4.9 / 5.5:1 muted |
+| `card-plain` | Plain | secondary lists, link lists, low emphasis | none | 1px line-strong on all sides | ink, ink-muted | 16.3 / 16.3:1 ink; 5.6 / 7.2:1 muted; edge 3.7 / 4.4:1 |
+| `card-glass` | Glass | one floating surface over content: a menu, the header, a hero. Also the `.glass` panel class. Never on a grid | liquid glass (sheen, blur, rim) | rim highlight, no solid edge | ink, ink-muted | 16.0 / 15.0:1 ink; 5.5 / 6.6:1 muted |
+
+Ratios are WCAG 2.1 for the pair named, computed for light and dark. Two edges are deliberate:
+
+- **Paper in dark mode** keeps a near-black outline on a near-black page, so the edge you see is the cream fill against the page (15.2:1).
+- **Plain uses line-strong, not `--line`.** `--line` is 1.4:1 on white, under the 3:1 a UI boundary needs.
+
+Do:
+
+- Pick the variant by content, then check every card in its row and the card above it at 390, 820 and 1440px.
+- Give every card link the same hover: a 2px lift and a stronger edge, no glow. Nothing moves under reduced motion.
+- Let a featured item be paper, and let one stat row be stamps.
+- Let a featured item stand out by fill and type, never by a stripe.
+
+Don't:
+
+- Draw a stripe on one edge, on a card, a quote, a table row or a callout.
+- Give a button, card or tile a hard offset shadow (`4px 4px 0 0`); a primary button stands out by its teal fill and gloss.
+- Put the same variant on two cards in a row or on a card and the one above it, or make a whole grid one variant.
+- Put glass on a grid of cards, or on anything that is not a floating surface.
+- Hard-code a card's colours in a template: add a variant, or use an existing one.
+
+Live specimen: /brand/#cards.
+
 ## Concision
 
 Say less, more clearly. Turn the verbosity dial down a notch from your first draft.
@@ -36,34 +86,42 @@ Say less, more clearly. Turn the verbosity dial down a notch from your first dra
 - Keep facts, guardrail wording and SEO terms; cut the padding around them. Don't shorten legal text substantively.
 - No em dashes. No period at the end of a section title.
 
-## PR checklist: whitespace and concision
+## PR checklist: whitespace, cards and concision
 
 - [ ] Every heading has at least `--head-gap` before its content; nothing touches
 - [ ] New sections use the shared section and `.section-head` classes, not page-specific spacing
 - [ ] Sections are clearly separated (whitespace, then divider or background shift if needed)
 - [ ] Paragraphs stay within `--text-measure`; cards use `--card-pad` and `--grid-gap`
+- [ ] No coloured stripe on one edge of a card, callout, quote, table row or panel, and no hard offset shadow; no two cards in a row, and no card and the one above it, share a card variant, at any width the grid shows
 - [ ] Checked at 1280, 390 and 320 px, light and dark
 - [ ] Intros <= 2 sentences, card bodies <= ~30 words, one idea per sentence
 - [ ] No em dashes; no trailing periods on section titles
 
 ## Code and commands
 
-Anywhere the site shows a command a reader might run, it can be copied in one click. Full rule: the "Code and commands" section of the design language DESIGN.md.
+Rule (Lee, 12 Oct 2026): **anywhere the site shows a command a reader might run, it can be copied in one click.** Source: `layouts/_partials/code-card.html`, `layouts/_markup/render-codeblock.html`, `assets/js/code-card.js` and the "Terminal code card" section of `assets/css/site.css`.
 
-- Every code block is a terminal code card (`layouts/_partials/code-card.html`); docs fences get it through `layouts/_markup/render-codeblock.html`. Declare the language of the card's actual content.
-- Shell prompts (`$`) and sample output are never copied. Untyped or `text` fences are output: no copy button.
-- Inline `blowhorn ...` commands in prose get a small copy button; commands with placeholders are not copyable.
-- Copy buttons are real buttons with an `aria-label`, keyboard reachable, and announce "Copied" through `aria-live`.
+1. **Every code block is a terminal code card:** title bar with three dots, a file or `terminal` label, a language pill and a Copy button, in a window that is light in light mode and near-black in dark mode (a window, not a card variant; see Cards). Docs fences get it through the render hook; layouts call the partial.
+2. **Declare the language.** Each card names the language of its actual content (`bash`, `markdown`, `json`, `toml`, `yaml`...) so Chroma highlights it with the brand token colours. Markdown front matter is highlighted as YAML.
+3. **Prompts and output are never copied.** Shell cards draw a `$` before each command line (not before comments, blank lines or continuation lines) as an unselectable element that copy drops. Untyped or `text` fences are sample output: labelled `output`, muted, no copy button.
+4. **Inline commands in prose** (`blowhorn ...` in backticks) get a small copy button after them. Commands with placeholders such as `<url>` are not copyable; show them in a card with the placeholder explained instead.
+5. **Accessible:** the copy button is a real button with an `aria-label`, reachable by keyboard, and "Copied" is announced through an `aria-live` region. Code scrolls horizontally rather than wrapping; it must work at 320px.
+6. **No third-party scripts** for highlighting or copy: Hugo's built-in Chroma with class output, and a small local script.
+
+## Interface art
+
+The miniature product UI in the Product menu and the homepage "Ways in" section is one partial, `layouts/_partials/interface-art.html` (styles under "Interface art" in `assets/css/site.css`). It is drawn from the real surfaces, never invented:
+
+- **Desktop app** copies the console: lights at the top of the left rail (hidden-inset title bar, no URL bar), the Crowhorn and wordmark, "+ New activity", the five places (Home, Activity, Profiles, Performance, Safety) and the "on watch" status line, beside Activity's Upcoming list. Sources in the product repository: `desktop/src/renderer/console/ConsoleRail.tsx`, `places.ts` and `desktop/src/ui/PlatformIcon.tsx`. When the app's rail or vocabulary changes, update the art.
+- **Web app** and **Chrome extension** share a Chrome-on-Mac frame (`interface-art-browser.html`): lights at the far left of the tab strip, back/forward/reload, the omnibox, a bookmarks bar; the extension adds the pinned Blowhorn icon.
+- Platform marks are the app's monoline marks (`interface-art-mark.html`), not filled brand logos. App labels say "activity", never "post".
+- The menu's narrow rows draw the art at 92px; a container query in the same CSS keeps each piece legible there. Check both widths, light and dark.
 
 ## Mascot consistency
 
-Major Blowhorn must look the same in every scene. Image tools give no seed control, so consistency comes from references and a locked prompt, not luck. Full procedure and the prompt block: `marketing/brand/major-blowhorn/consistency.md` in the blowhorn repository.
+Mascot art comes from the product repository's locked style (`marketing/cast/major-blowhorn/STYLE-LOCKED.md` and `consistency.md` there: one locked prompt, reference images, no text in the art). The oil-painting process that used to be described here is historical; never start a new scene from it. On the site:
 
-- Start every new scene from the official vector art in `static/assets/brand/mascot/` or the canonical reference sheet (`marketing/brand/major-blowhorn/reference/`).
-- Paste the locked character and style prompt block verbatim into every generation, and attach the reference sheet plus the official mascot image as reference images every time.
-- Review each output against the sheet (comb, campaign hat, teal body, amber hackles, yellow beak and legs, medals, Old Thunderlung's dent and red tassel). Regenerate rejects. Log every prompt in `prompts.md`.
-- Default pose: open beak, barking into the horn like a bullhorn; trumpet-playing only occasionally.
-- Oil-painting style: attach `army.jpg`, `signal.jpg` and `hero.jpg` from `marketing/brand/oil-style/` as reference images for every new scene. Canonical look: broad charcoal campaign hat with a gold band, heavy red jowls under the beak, gold epaulettes on both shoulders.
+- Use the official art in `static/assets/brand/mascot/`; one character per page, and only Major and the General speak, in a speech bubble below.
 - Lore art for /major/ lives in `static/assets/brand/mascot/lore/` as WebP with alt text.
 
 ## Speech bubbles
@@ -82,5 +140,6 @@ Paper, mint and command keep their colours in dark mode so a voice looks the sam
 - Do pick the variant by who is talking, and use the same variant for the same voice on every page.
 - Do keep command to one per section.
 - Don't mix variants within one list, put links or buttons inside a bubble, or use teal (#00B39F) as a fill under white text (2.6:1).
+- Current assignments: Major's intros and asides (/major/ hero, the home Major card, /brand/, the 404) are `paper`; the home "Fall in, profiles" rally and the army demo's yells are `command`; the agent pages' Try saying prompts are `mint`; the /major/ Greatest hits list is neutral.
 - The storybook variant is retired: its only page, the /home-alt/ preview, was deleted with the flat storybook art.
 

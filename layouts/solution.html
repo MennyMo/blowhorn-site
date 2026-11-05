@@ -8,3 +8,8 @@
 {{ define "sprite" }}
     {{ partial "sprite.html" . }}
 {{- end }}
+
+{{ define "scripts" }}
+    {{- $proof := resources.Get "js/proof-rotation.js" | minify | fingerprint }}
+    <script src="{{ $proof.RelPermalink }}" defer></script>
+{{- end }}

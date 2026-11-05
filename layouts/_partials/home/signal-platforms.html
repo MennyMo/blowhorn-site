@@ -1,13 +1,17 @@
 {{- /* Signal platforms section: treatments driven by data/integrations.json.
   Reuses logo-tile. Old "Say it once" line is not used here. Supported
   name/logo/actions come from hugo.Data.platforms plus data/actions.json.
-  By-action chips are those vocabulary ids that yaml actually lists. */ -}}
+  By-action chips are those vocabulary ids that yaml actually lists.
+  By role: every role in data/roles.json, in weight order, highlights its
+  own platforms list; an id that is not a platform here fails the build. */ -}}
 {{- $data := site.Data.integrations -}}
+{{- $roles := sort site.Data.roles.roles "weight" -}}
 {{- $counts := partial "platform-counts.html" . -}}
 {{- $rows := slice -}}
 {{- range $data.platforms }}{{ $rows = $rows | append (partial "integration-row.html" .) }}{{ end -}}
 {{- $byId := dict -}}
 {{- range $rows }}{{ $byId = merge $byId (dict .id .) }}{{ end -}}
+{{- range $roles }}{{ $slug := .slug }}{{ range .platforms }}{{ if not (index $byId .) }}{{ errorf "data/roles.json role %q lists platform %q, which is not in data/integrations.json platforms" $slug . }}{{ end }}{{ end }}{{ end -}}
 {{- $actions := partial "action-index.html" $rows -}}
       <section id="platforms" class="section platforms-signal" aria-labelledby="platforms-title" data-platforms>
         <div class="wrap">
@@ -51,18 +55,15 @@
             {{- else if eq .kind "role" }}
             <div class="plat-roles">
               <div class="plat-role-picks" role="group" aria-label="Highlight platforms by role">
-                {{- range $i, $r := $data.roles }}
-                {{- $role := false -}}
-                {{- range site.Data.roles.roles }}{{ if eq .slug $r.id }}{{ $role = . }}{{ end }}{{ end -}}
-                {{- if not $role }}{{ errorf "integrations roles id %q is not a slug in data/roles.json" $r.id }}{{ end -}}
-                <button type="button" class="plat-role{{ if eq $i 0 }} is-on{{ end }}" data-plat-role="{{ $r.id }}" aria-pressed="{{ if eq $i 0 }}true{{ else }}false{{ end }}">{{ $role.name }}</button>
+                {{- range $i, $role := $roles }}
+                <button type="button" class="plat-role{{ if eq $i 0 }} is-on{{ end }}" data-plat-role="{{ $role.slug }}" aria-pressed="{{ if eq $i 0 }}true{{ else }}false{{ end }}">{{ $role.name }}</button>
                 {{- end }}
               </div>
               <ul class="plat-row plat-row-roles">
                 {{- range $rows }}
                 {{- $p := . -}}
                 {{- $roleIds := slice -}}
-                {{- range $data.roles }}{{ if in .platforms $p.id }}{{ $roleIds = $roleIds | append .id }}{{ end }}{{ end }}
+                {{- range $roles }}{{ if in .platforms $p.id }}{{ $roleIds = $roleIds | append .slug }}{{ end }}{{ end }}
                 <li data-plat-id="{{ $p.id }}" data-plat-roles="{{ delimit $roleIds " " }}">
                   <a class="platform" href="{{ $p.docs | relURL }}">
                     <span class="logo-tile"><img src="{{ $p.logo | relURL }}" alt="" width="28" height="28"></span>

@@ -5,7 +5,7 @@
   "description": "data/integrations.json: homepage platforms-section treatments and the map of networks. Supported name, logo and actions come from data/platforms/<id>.yaml via hugo.Data.platforms. Coming-soon rows keep their own name and logo. Hyphens never em dashes. GitHub must set posts to false.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["headline", "lede", "major", "catalogPath", "matrix", "defaultTreatment", "treatments", "categories", "roles", "platforms"],
+  "required": ["headline", "lede", "major", "catalogPath", "matrix", "defaultTreatment", "treatments", "categories", "platforms"],
   "properties": {
     "$schema": { "type": "string" },
     "headline": {
@@ -39,12 +39,6 @@
       "type": "array",
       "minItems": 1,
       "items": { "$ref": "#/definitions/category" }
-    },
-    "roles": {
-      "type": "array",
-      "minItems": 4,
-      "maxItems": 4,
-      "items": { "$ref": "#/definitions/role" }
     },
     "platforms": {
       "type": "array",
@@ -158,23 +152,6 @@
           "minLength": 1,
           "maxLength": 200,
           "not": { "pattern": "\u2014" }
-        },
-        "platforms": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": { "$ref": "#/definitions/id" }
-        }
-      }
-    },
-    "role": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "platforms"],
-      "properties": {
-        "id": {
-          "description": "Must match a slug in data/roles.json. Name and page come from that file.",
-          "$ref": "#/definitions/id"
         },
         "platforms": {
           "type": "array",

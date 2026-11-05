@@ -20,16 +20,15 @@ No browser opens. GitHub runs over the REST API end to end.
 Store a token as the profile's `GH_TOKEN`:
 
 ```bash
-blowhorn profile set marcus GH_TOKEN=<token>
+blowhorn profile set personal GH_TOKEN=<token>
 ```
 
-The token lands in the profile's GitHub credential in your account, never in
-`config.yaml`. A classic token needs the `repo` scope; a fine-grained
+The token lands in the profile's GitHub credential in your account. A classic token needs the `repo` scope; a fine-grained
 token needs read and write on **Issues**, and on **Pull requests** when
 the target is a PR. Then check the token without reacting to anything:
 
 ```bash
-blowhorn profile status --profile marcus --check-platform github
+blowhorn profile status --profile personal --check-platform github
 ```
 
 ## React from the command line
@@ -42,10 +41,10 @@ blowhorn post --platform github --profile all --amplify "https://github.com/laye
 blowhorn post --platform github --profile all --amplify "https://github.com/layer5io/layer5/pull/6210"
 
 # One profile, or an explicit subset.
-blowhorn post --platform github --profile marcus --amplify "https://github.com/layer5io/layer5/issues/42"
+blowhorn post --platform github --profile personal --amplify "https://github.com/layer5io/layer5/issues/42"
 
 # Hold one profile out of this run.
-blowhorn post --platform github --profile all --exclude marcus --amplify "https://github.com/layer5io/layer5/issues/42"
+blowhorn post --platform github --profile all --exclude personal --amplify "https://github.com/layer5io/layer5/issues/42"
 
 # Preview: reads which of the five each profile already left, and adds nothing.
 blowhorn post --platform github --profile all --amplify "https://github.com/layer5io/layer5/issues/42" --dry-run
@@ -57,7 +56,7 @@ Set `Platform` to GitHub and `Amplify` to the issue or PR URL on an activity,
 then run with no `--amplify` at all:
 
 ```bash
-blowhorn post --platform github --profile marcus
+blowhorn post --platform github --profile personal
 ```
 
 With the flag, the flag wins over the activity. An activity whose `Amplify` value is
@@ -100,5 +99,7 @@ once per reaction. Every other profile in the run is still tried.
   platforms.
 - [Follow accounts on GitHub](/docs/how-to/grow/follow-on-github/) - the other
   GitHub path, and the same 404 diagnosis for follows.
+- [Star repositories on GitHub](/docs/how-to/grow/star-on-github/) - star repositories
+  from every selected profile, and the same 404 diagnosis for starring.
 - [Sign a profile in to each platform](/docs/how-to/set-up/platform-accounts/) -
   storing and checking the token.

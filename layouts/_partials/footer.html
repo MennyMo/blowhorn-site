@@ -1,6 +1,7 @@
 {{- /* One footer for every page: a top band with the brand on the left and
   the newsletter on the right, then one row of short titled link columns
-  (Compare spans two and lists in two columns), and a bottom bar with the
+  (Compare spans two and lists in two columns; below 1080px Free tools and
+  Compare each take a full row), and a bottom bar with the
   copyright, the "Status" pill and the trademark note. The header menus carry
   the longer lists (roles, agent guides) with a line about each. The 404 page
   keeps only the bottom bar. Off the home page the in-page links lead back to
@@ -29,7 +30,7 @@
               <ul>
                 <li><a href="{{ "download/" | relURL }}">Download</a></li>
                 <li><a href="{{ "pricing/" | relURL }}">Pricing</a></li>
-                <li><a href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">Chrome extension</a></li>
+                <li><a href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">Browser extension</a></li>
                 <li><a href="{{ site.Params.github_repo }}/releases">Releases</a></li>
                 <li><a href="{{ $home }}#platforms">Platforms</a></li>
                 {{- with site.Data.integrations.matrix }}
@@ -40,12 +41,14 @@
             <div class="footer-col">
               <h2 class="footer-title">Resources</h2>
               <ul>
+                <li><a href="{{ (site.GetPage "/resources").RelPermalink }}">Resources</a></li>
+                <li><a href="{{ (site.GetPage "/resources/videos").RelPermalink }}">Videos</a></li>
+                <li><a href="{{ (site.GetPage "/resources/articles").RelPermalink }}">Articles</a></li>
                 <li><a href="{{ (site.GetPage "/docs").RelPermalink }}">Docs</a></li>
                 <li><a href="{{ (site.GetPage "/docs/reference/support").RelPermalink }}">Get help</a></li>
                 <li><a href="{{ (site.GetPage "/field-manual").RelPermalink }}">Field Manual</a></li>
                 <li><a href="{{ (site.GetPage "/major").RelPermalink }}">Meet Major</a></li>
                 <li><a href="{{ (site.GetPage "/brand").RelPermalink }}">Brand</a></li>
-                <li><a href="https://tells.blowhorn.ai/">Am I a Bot? Free check</a></li>
               </ul>
             </div>
             <div class="footer-col">
@@ -66,6 +69,16 @@
                 <li><a href="{{ (site.GetPage "/agents").RelPermalink }}">Agent guides</a></li>
               </ul>
             </div>
+            {{- with site.Data.tells.footer }}
+            <div class="footer-col footer-col-tools">
+              <h2 class="footer-title">{{ .title }}</h2>
+              <ul>
+                {{- range .links }}
+                <li><a href="{{ partial "tells-link.html" (dict "placement" "footer" "page" .page) }}">{{ .label }}</a></li>
+                {{- end }}
+              </ul>
+            </div>
+            {{- end }}
             <div class="footer-col footer-col-wide">
               <h2 class="footer-title">Compare</h2>
               <ul>
@@ -82,9 +95,13 @@
         <div class="footer-bottom caption">
           <span>&copy; 2026 {{ site.Params.copyright }}</span>
           {{ $status | safeHTML }}
+          {{- if partial "analytics-enabled.html" . }}
+          <button type="button" class="footer-consent" data-consent-open aria-controls="consent">Cookie preferences</button>
+          {{- end }}
           {{- if ne .Kind "404" }}
           <span class="footer-tm">LinkedIn, X, Reddit, Hacker News, Slack, Bluesky, GitHub, YouTube, Instagram, TikTok and Facebook are trademarks of their respective owners. Blowhorn is not affiliated with or endorsed by any of them.</span>
           {{- end }}
         </div>
       </div>
     </footer>
+    {{- partial "consent.html" . }}

@@ -4,10 +4,11 @@
 
 ## How it works
 
-1. Install Blowhorn for Mac and the Blowhorn Chrome extension.
+{{ with .Params.steps }}{{ range $i, $st := . }}{{ add $i 1 }}. {{ $st.t }}: {{ $st.b }}
+{{ end }}{{ else }}1. Install Blowhorn for Mac and the Blowhorn browser extension.
 2. {{ .Params.wire_title }}: {{ .Params.wire_body }}
 3. Say what you want. {{ .Params.tool }} turns it into blowhorn commands, and you approve what publishes.
-
+{{ end }}
 `{{ .Params.wire_file }}`
 
 ```{{ .Params.wire_lang }}
@@ -26,7 +27,7 @@
 - "{{ . }}"
 {{- end }}
 {{ end }}
-## Commands
+## {{ .Params.commands_title | default "Commands" }}
 
 ```{{ .Params.commands_lang | default "bash" }}
 {{ .Params.commands }}
@@ -37,7 +38,7 @@
 - **{{ .t }}**: {{ .b }}
 {{- end }}
 
-## What {{ cond (eq .File.ContentBaseName "cli") "the CLI" .Params.tool }} can do on each platform
+## What {{ cond (eq .File.ContentBaseName "cli") "the CLI" (.Params.who | default .Params.tool) }} can do on each platform
 {{ range sort hugo.Data.platforms "weight" }}
 {{- $pl := . }}
 ### {{ $pl.name }}

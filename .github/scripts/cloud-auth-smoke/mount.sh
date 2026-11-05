@@ -4,7 +4,7 @@
 # at $MOUNT. Prints the engine directory and, on Actions, exports ENGINE and
 # BLOWHORN_VERSION for later steps. macOS only (hdiutil).
 set -euo pipefail
-repo="${GITHUB_REPOSITORY:-layer5io/blowhorn-site}"
+repo="${GITHUB_REPOSITORY:-blowhorn-ai/blowhorn-site}"
 work="${RUNNER_TEMP:-$(mktemp -d)}"
 mount="${MOUNT:-$work/blowhorn-dmg}"
 tag="${RELEASE_TAG:-}"

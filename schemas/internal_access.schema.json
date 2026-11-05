@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/internal_access.schema.json",
+  "title": "Internal site access",
+  "description": "internal-worker/access.json: who may read internal.blowhorn.ai. .github/scripts/internal_access.py turns it into the Cloudflare Access policy and login methods, and internal-deploy.sh into the Worker's allow list. Only the team's own addresses belong here; other people come from the secret named by extra_emails_env, so they never enter this public repository.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "hostname",
+    "app_name",
+    "policy_name",
+    "session_duration",
+    "allowed_email_domains",
+    "allowed_emails",
+    "extra_emails_env",
+    "allowed_idps"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Editor hint: the relative path to this schema. Ignored by the scripts."
+    },
+    "hostname": {
+      "type": "string",
+      "description": "The public hostname the Access application protects and the Worker serves. Lower case, no scheme or path.",
+      "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$"
+    },
+    "app_name": {
+      "type": "string",
+      "description": "Display name of the self-hosted Access application in Zero Trust.",
+      "minLength": 1
+    },
+    "policy_name": {
+      "type": "string",
+      "description": "Name of the one reusable allow policy the script manages. Renaming it orphans the existing policy, so change it only with the policy in hand.",
+      "minLength": 1
+    },
+    "session_duration": {
+      "type": "string",
+      "description": "How long one Access login lasts before the person signs in again, in Cloudflare's duration format (for example 24h).",
+      "minLength": 1
+    },
+    "allowed_email_domains": {
+      "type": "array",
+      "description": "Email domains whose every address may sign in (for example layer5.io). Matched exactly: subdomains and look-alike domains are not included. Use an empty list to admit named emails only.",
+      "items": {
+        "type": "string",
+        "description": "One lower-case domain name, without @ or a wildcard.",
+        "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$"
+      }
+    },
+    "allowed_emails": {
+      "type": "array",
+      "description": "Named addresses that may sign in, in addition to the domains. Repository-listed addresses are public, so keep them to the team's own. Wildcards are not allowed.",
+      "items": {
+        "type": "string",
+        "description": "One lower-case email address, with no wildcard.",
+        "pattern": "^[a-z0-9._%+-]+@[a-z0-9-]+(\\.[a-z0-9-]+)+$"
+      }
+    },
+    "extra_emails_env": {
+      "type": "string",
+      "description": "Name of the environment variable (a GitHub secret in the workflow) that holds extra addresses, one per line or comma-separated. Its values are never printed and never committed.",
+      "pattern": "^[A-Z][A-Z0-9_]*$"
+    },
+    "allowed_idps": {
+      "type": "array",
+      "description": "Login methods offered on the Access login page, by Cloudflare identity provider type (for example onetimepin for One-time PIN, or google). Each type must match exactly one identity provider on the account.",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "description": "A Cloudflare identity provider type, in lower case.",
+        "pattern": "^[a-z0-9_-]+$"
+      }
+    },
+    "bypass_policy_name": {
+      "type": "string",
+      "description": "Name of the one reusable bypass policy the script manages. Required when bypass_ip_ranges is not empty. Renaming it orphans the existing policy.",
+      "minLength": 1
+    },
+    "bypass_ip_ranges": {
+      "type": "array",
+      "description": "Networks that reach the site without signing in: the Access bypass policy (ordered before the allow policy) and the Worker's IP allow list both come from this one list. Omit it or leave it empty for no bypass.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "description": "One CIDR with no host bits set, for example 192.0.2.1/32, 2001:db8::1/128, or 2001:db8:0:73::/64 for a whole IPv6 network.",
+        "pattern": "^[0-9a-fA-F:.]+/[0-9]{1,3}$"
+      }
+    }
+  }
+}

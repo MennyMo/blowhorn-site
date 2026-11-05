@@ -23,8 +23,8 @@ from a content activity. Put the URL in the activity's `Amplify` column and set
 {{< major >}}Your launch deserves more than nine likes. Fall in, profiles.{{< /major >}}
 
 ```bash
-blowhorn post --platform linkedin --profile marcus --dry-run
-blowhorn post --platform linkedin --profile marcus
+blowhorn post --platform linkedin --profile personal --dry-run
+blowhorn post --platform linkedin --profile personal
 ```
 
 On X and Reddit, `--amplify` with a URL overrides the activity's `Amplify`

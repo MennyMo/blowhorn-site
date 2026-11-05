@@ -62,4 +62,4 @@ Private Link-Drop arrived in r/programming with his product link and no history.
 
 ## What Blowhorn does on Reddit
 
-Blowhorn posts to the subreddit a row names (never a guessed one), comments, and has an upvote amplify action, from your own Chrome ([Platforms](/docs/reference/platforms/)). Read that last one against Reddit's rule above: an upvote from more than one profile you run on the same post is what Reddit calls vote manipulation. Our advice: never use Reddit amplify across your own profiles. Post from one account, as yourself, and let Reddit's voters do the voting.
+Blowhorn posts to the subreddit a row names (never a guessed one), comments, and has an upvote amplify action, from your own browser ([Platforms](/docs/reference/platforms/)). Read that last one against Reddit's rule above: an upvote from more than one profile you run on the same post is what Reddit calls vote manipulation. Our advice: never use Reddit amplify across your own profiles. Post from one account, as yourself, and let Reddit's voters do the voting.

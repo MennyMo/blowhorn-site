@@ -20,7 +20,7 @@ glance:
     link: /legal/privacy/#in-chrome-through-the-blowhorn-extension
     linkText: What the extension reads
   - title: No analytics in the app
-    text: The app carries no analytics or crash-reporting library. The one thing it sends about itself is failure reports, described on the privacy page. This website uses Google Analytics to count visits only if you accept its cookie notice, and those cookies are the only ones the site sets. You can change your choice under Cookie preferences. Its other outside request is the release lookup on GitHub. The newsletter form sends your email address to Mailchimp only when you submit it. The privacy page describes all three.
+    text: The app carries no analytics or crash-reporting library. The one thing it sends about itself is failure reports, described on the privacy page. This website uses Google Analytics to count visits only if you accept its cookie notice, and those cookies are the only ones the site sets. You can change your choice under Cookie preferences. Its other outside request is the release lookup on GitHub. The newsletter form sends your email address to Blowhorn's own signup service only when you submit it. The privacy page describes all three.
     link: /legal/privacy/#this-website
     linkText: What this website does
   - title: One account for your queue, analytics and credentials
@@ -61,13 +61,13 @@ Curious what websites can read about your browser? [Blowhorn Tells](https://tell
 
 ## Report a security issue
 
-If you think you have found a security vulnerability in Blowhorn, send the details privately to [security@blowhorn.ai](mailto:security@blowhorn.ai) rather than opening a public issue. We acknowledge and analyze each report within 10 working days and keep the reporter updated while it is addressed. The [security policy](https://github.com/layer5io/blowhorn-site/blob/master/SECURITY.md) explains what to report and how fixes are disclosed.
+If you think you have found a security vulnerability in Blowhorn, send the details privately to [security@blowhorn.ai](mailto:security@blowhorn.ai) rather than opening a public issue. We acknowledge and analyze each report within 10 working days and keep the reporter updated while it is addressed. The [security policy](https://github.com/blowhorn-ai/blowhorn-site/blob/master/SECURITY.md) explains what to report and how fixes are disclosed.
 
 ## Frequently Asked Questions {#questions}
 
-- About privacy: open an issue on the [site repository](https://github.com/layer5io/blowhorn-site/issues), or use the contact channels in the account [privacy policy](https://layer5.io/company/legal/privacy/).
+- About privacy: open an issue on the [site repository](https://github.com/blowhorn-ai/blowhorn-site/issues), or use the contact channels in the account [privacy policy](https://layer5.io/company/legal/privacy/).
 - About the terms: email [legal@blowhorn.ai](mailto:legal@blowhorn.ai).
 
 ## Changes to these policies
 
-Each policy shows the date it last changed at the top of its page, and every edit to these pages is recorded in the [site repository's history](https://github.com/layer5io/blowhorn-site/commits/master/content/en/legal).
+Each policy shows the date it last changed at the top of its page, and every edit to these pages is recorded in the [site repository's history](https://github.com/blowhorn-ai/blowhorn-site/commits/master/content/en/legal).

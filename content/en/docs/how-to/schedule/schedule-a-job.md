@@ -15,10 +15,14 @@ Open **Activity** in the rail and switch to its **Routines** view. It opens on a
 day in the month opens that day, and the day view becomes the one it
 remembers.
 
-To add one, choose "schedule something", or click a free time in the day or week
-calendar to start one at that time. Pick what it should do (for example, accept
-LinkedIn invitations, or post on X), who it is for, and how often: every day at
-a time, weekdays, or every few hours. Advanced opens the full editor, with the
+To add one, press the round **+** button in the lower right (or ⌘N) and
+under When to march choose **Repeat it?** and a standing order, or click a free time
+in the day or week calendar to start one at that time. A standing order opens the
+routine editor on the profiles you picked, and runs on one platform, so pick only
+one under Dispatch to. (The rest of that
+window, New order, queues a one-off post or runs an action such as an invite
+once; see
+[Use the desktop app](/docs/reference/use-the-desktop-app/#the-console).) The routine editor has the
 command, the browser route, and the exact call, for a case those choices do not
 cover. A command that only runs in one place, such as accept on LinkedIn, can
 only be saved for that place. One you saved on "all" before keeps running there.
@@ -43,12 +47,23 @@ day risks the account. `blowhorn schedule why <activity>` says when a series
 has stopped; give the job a new time, as above, to restart the series with a
 fresh set of retries.
 
-If you have no routines yet, the screen offers "add sample routines…" instead: it
-previews a starter set of activities first, and writes them only when you apply the
-preview. It never edits routines you already set up.
+If you have no routines yet, the screen offers "add sample routines…" instead. It shows
+each starter routine with its character, what it does and when it runs. Tick the ones
+you want, then add them. A starter routine can be ticked only once the platform it needs
+is connected to its profile; until then it says which connection to make. Starter
+routines are added to what you have, and they never replace or edit routines you
+already set up. A starter routine that was added is greyed out for the rest of that
+visit, so adding again never makes a second copy; if an add stops partway, the ones
+that landed stay added and the rest can be ticked again. Once you have routines, the
+"add sample routines…" button stays in the Routines header, so you can add starter
+routines later; a starter routine you already have is greyed out there too. The
+"invite connections" starter routine invites to a preset company page; to invite to another
+page, open the routine after adding it and change its page.
 
-Open a job (click it, or focus it and press Enter) to change it, or choose "do it now"
-to run it without waiting for its time. With "preview only" on, check now previews the pass and claims nothing. When the account is not connected, the preview says the activity is blocked and why, in the same words a real run would meet.
+Open a job (click it, or focus it and press Enter) and its details appear in a
+dialog, a box over the screen. Open its **What**, **When** or **Rules** row to
+change it in place, or choose **Do it now** to run it without waiting for its
+time. The pill beside its title puts it **On hold** or back **In effect**. With "dry fire" on, a run rehearses the routine and claims nothing. When the account is not connected, the preview says the activity is blocked and why, in the same words a real run would meet.
 
 ## From the command line
 
@@ -124,8 +139,8 @@ heartbeat so `blowhorn schedule status` can report it, and appends one line per
 pass to the run ledger. When the pass cannot reach your account it claims nothing,
 exits 3, and says so in one line.
 
-One activity can run under its own Risk Profile while the rest run under the
-profile's choice: see [One activity on its own preset](/docs/how-to/settings/choose-your-risk-profile/#one-activity-on-its-own-preset).
+One activity can run under its own rules of engagement while the rest run under the
+profile's choice: see [One activity on its own rules of engagement](/docs/how-to/settings/choose-your-rules-of-engagement/#one-activity-on-its-own-rules-of-engagement).
 
 ## Related
 

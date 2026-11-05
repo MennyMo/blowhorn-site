@@ -15,7 +15,16 @@
 {{ range $item.gets }}
 - **{{ .t }}.** {{ .b }}
 {{- end }}
-{{ with $item.compare }}
+{{ with $item.agent }}
+## {{ .title }}
+
+{{ .body }}
+
+"{{ .prompt }}"
+{{ range .links }}
+- [{{ .label }}]({{ if hasPrefix .href "/" }}{{ .href | absURL }}{{ else }}{{ .href }}{{ end }})
+{{- end }}
+{{ end }}{{ with $item.compare }}
 ## Compare product by product
 {{ range . }}{{ $pg := site.GetPage . }}
 - [{{ $pg.Title }}]({{ $pg.Permalink }})

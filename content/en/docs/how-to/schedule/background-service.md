@@ -6,28 +6,33 @@ weight: 153
 
 
 Scheduled passes keep running with no window open. One background service owns
-the timer and runs a pass every ten minutes, starting with one as soon as it
-starts.
+the schedule: it runs a pass when an activity falls due, re-scans at least once
+a minute, and starts with a pass as soon as it starts.
 
 ## Check the service
 
 ```bash
 blowhorn service status
-blowhorn service tick-now --follow
+blowhorn service start
 ```
 
 `service status` names the owner, whether the service is running, the last
-pass and the pass in flight. `tick-now` asks the running service for a pass
-now and watches it. In the app, the "this computer" screen shows the same state.
+pass and the pass in flight. `service start` loads the service if it is stopped
+and asks a running one to look at the schedule now. In the app, the "this
+computer" screen shows the same state.
 
-When this install is signed in to a Blowhorn account, one tick runs at a time. A
+While no pass is running, the service also tells your Blowhorn account that this
+computer is still here, about once a minute, so the computer shows online there
+between passes. It sends nothing while you are signed out.
+
+When this install is signed in to a Blowhorn account, one pass runs at a time. A
 second `blowhorn schedule tick` or `blowhorn schedule trigger-now` while that
-tick is running stops, and Blowhorn says it is already running a tick on this
+pass is running stops, and Blowhorn says it is already running on this
 install.
 
 The owner tells you who manages it: the desktop app registered it itself, or
 the command line installed it from a file. When the app owns it, the app's
-setting "keep this computer on watch after quit" (on by default)
+setting "keep this computer on duty after quit" (on by default)
 decides whether quitting stops it. Quitting with a pass in flight asks what to
 do, in a small prompt in the Blowhorn window that lists what is running:
 
@@ -52,6 +57,9 @@ copy of the app's data) does not register, re-register, or remove the shared
 background service. Scheduling on this computer runs from the normal install.
 That run also leaves `~/.zshrc`, `~/.local/bin`, the app's open-at-login item,
 the `blowhorn://` link handler and the installed app in `/Applications` alone.
+It never reads the account you signed in with in your login Keychain, and it
+keeps its own sign-in and Google Chrome folders inside its data folder. Its menu bar
+icon reads `test`, and its tooltip says `Blowhorn (test)`.
 It still reads the service's state, so Setup shows it, and when it quits it
 stops any Chrome it started on a throwaway folder under the system temp
 directory.
@@ -67,6 +75,14 @@ On a computer without the desktop app:
 ```bash
 blowhorn service install
 ```
+
+A checkout installs its own service under the label `ai.blowhorn.service.dev`, so
+it never replaces the installed app's `ai.blowhorn.service`. The engine inside
+Blowhorn.app cannot install one: `service install` and `service update` stop with
+one line that names the fix, Open Blowhorn, then This computer, then Register the
+service. A file-installed `ai.blowhorn.service` that a checkout wrote before this
+label existed shows as legacy in `service status`; `service update` moves it to
+`ai.blowhorn.service.dev`.
 
 `service test` validates the schedule and previews a pass the way the service
 would run it. `service stop` drains the pass in flight before it stops; the

@@ -5,12 +5,12 @@
   "description": "Blotato is an AI content engine with a hosted MCP that publishes to 9 networks through official APIs. Blowhorn is for real-person amplification on developer networks, driven by your agent through a CLI.",
   "layout": "versus",
   "weight": 50,
-  "lastmod": "2026-10-12",
+  "lastmod": "2026-11-02",
   "competitor": "Blotato",
   "mark": "Bl",
   "site_url": "https://www.blotato.com/",
   "group": "AI-native agent tools",
-  "verdict": "Blotato is an AI content engine with a hosted MCP that publishes to 9 networks through official APIs. Blowhorn is for real-person amplification on developer networks, driven by your agent through a CLI.",
+  "verdict": "Blotato is an AI content engine with a hosted MCP that publishes to 9 networks through official APIs, and if you generate AI media at volume it earns its keep. Blowhorn isn't a bot. It's you: real-person amplification on developer networks, driven by your agent through a CLI.",
   "them": [
     "You generate AI media and video at volume",
     "You build in n8n or Make",
@@ -32,12 +32,22 @@
     {
       "f": "Where it acts",
       "t": "Blotato's cloud, through official APIs",
-      "b": "Your computers: your own signed-in Chrome for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
+      "b": "Your computers: your own signed-in browser for LinkedIn, X, Reddit and Hacker News; the platform's API for GitHub, Bluesky and Slack"
     },
     {
       "f": "AI media generation",
       "t": "Yes",
       "b": "No"
+    },
+    {
+      "f": "Free plan",
+      "t": "No: a 7-day trial, card required, and the trial excludes the API and MCP server",
+      "b": "Free during early access"
+    },
+    {
+      "f": "Team seats and approvals",
+      "t": "One user per account, no approval step",
+      "b": "Many profiles can amplify: profiles teammates and supporters add join the wave today; team invites are Coming soon"
     },
     {
       "f": "Amplify one post",
@@ -52,7 +62,7 @@
     {
       "f": "AI agents",
       "t": "Hosted MCP, REST API, n8n and Make",
-      "b": "MCP server, REST API, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
+      "b": "MCP server, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
     },
     {
       "f": "Bought engagement",
@@ -60,7 +70,7 @@
       "b": "None. Blowhorn sells no followers, likes or reposts"
     }
   ],
-  "signal": "AI can make more content than any audience can read. The scarce thing is attention from people who care. Blowhorn spends its effort there: your message, amplified by people who know you, with replies that turn into discussion.",
+  "signal": "Platforms are cracking down on bots while feeds fill with generated content nobody engages with. AI can make more content than any audience can read. The scarce thing is attention from people who care: likes don't move feeds. Blowhorn spends its effort there: your message, amplified by people who know you, with replies that turn into discussion.",
   "faq": [
     {
       "q": "Is Blotato better than Blowhorn?",
@@ -71,5 +81,25 @@
   "sitemap": {
     "changefreq": "monthly",
     "priority": 0.5
-  }
+  },
+  "art": {
+    "src": "assets/brand/cast/mouse-marine-base.webp",
+    "alt": "Mouse Marine (profiles and the desktop app), base",
+    "caption": "Many profiles, one desk: your people amplify as themselves."
+  },
+  "codecard": {
+    "title": "terminal",
+    "lang": "bash",
+    "heading": "Preview the sound wave before it breaks",
+    "code": "# See every profile that would amplify, before anything goes out\nblowhorn post --check-queue --json"
+  },
+  "network_logos": [
+    "linkedin",
+    "x",
+    "reddit",
+    "hacker-news",
+    "github",
+    "bluesky",
+    "slack"
+  ]
 }

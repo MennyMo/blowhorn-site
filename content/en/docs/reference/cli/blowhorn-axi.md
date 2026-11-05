@@ -41,7 +41,7 @@ Examples:
 ```bash
 blowhorn-axi
 blowhorn-axi profile list
-blowhorn-axi slack send --profile rian --to https://acme.slack.com/archives/C0123/p1776000000000100 --text-file reply.md
+blowhorn-axi slack send --profile work --to https://acme.slack.com/archives/C0123/p1776000000000100 --text-file reply.md
 ```
 
 Output: text.
@@ -84,8 +84,8 @@ blowhorn-axi profile status [-h] [--profile PROFILE] [--offline] [--full]
 Examples:
 
 ```bash
-blowhorn-axi profile status --profile rian
-blowhorn-axi profile status --profile rian --full
+blowhorn-axi profile status --profile work
+blowhorn-axi profile status --profile work --full
 ```
 
 Output: text.
@@ -115,9 +115,9 @@ blowhorn-axi slack send [-h] [--profile PROFILE] [--confirm] [--dry-run] [--to T
 Examples:
 
 ```bash
-blowhorn-axi slack send --profile rian --to https://acme.slack.com/archives/C0123/p1776000000000100 --text-file reply.md
-blowhorn-axi slack send --profile rian,alex --to https://acme.slack.com/archives/C0123/p1776000000000100 --text-file reply.md --confirm
-blowhorn-axi slack send --profile rian --to '#general' --workspace acme.slack.com --text - --confirm
+blowhorn-axi slack send --profile work --to https://acme.slack.com/archives/C0123/p1776000000000100 --text-file reply.md
+blowhorn-axi slack send --profile work,personal --to https://acme.slack.com/archives/C0123/p1776000000000100 --text-file reply.md --confirm
+blowhorn-axi slack send --profile work --to '#general' --workspace acme.slack.com --text - --confirm
 ```
 
 Output: text.
@@ -144,8 +144,8 @@ blowhorn-axi slack edit [-h] [--profile PROFILE] [--confirm] [--dry-run] [--perm
 Examples:
 
 ```bash
-blowhorn-axi slack edit --profile rian --permalink https://acme.slack.com/archives/C0123/p1776000000000400 --text-file fixed.md
-blowhorn-axi slack edit --profile rian --permalink https://acme.slack.com/archives/C0123/p1776000000000400 --message 'Fixed link' --confirm
+blowhorn-axi slack edit --profile work --permalink https://acme.slack.com/archives/C0123/p1776000000000400 --text-file fixed.md
+blowhorn-axi slack edit --profile work --permalink https://acme.slack.com/archives/C0123/p1776000000000400 --message 'Fixed link' --confirm
 ```
 
 Output: text.
@@ -168,8 +168,8 @@ blowhorn-axi slack delete [-h] [--profile PROFILE] [--confirm] [--dry-run] [--pe
 Examples:
 
 ```bash
-blowhorn-axi slack delete --profile rian --permalink https://acme.slack.com/archives/C0123/p1776000000000400
-blowhorn-axi slack delete --profile rian --permalink https://acme.slack.com/archives/C0123/p1776000000000400 --confirm
+blowhorn-axi slack delete --profile work --permalink https://acme.slack.com/archives/C0123/p1776000000000400
+blowhorn-axi slack delete --profile work --permalink https://acme.slack.com/archives/C0123/p1776000000000400 --confirm
 ```
 
 Output: text.
@@ -194,8 +194,8 @@ blowhorn-axi slack react [-h] [--profile PROFILE] [--confirm] [--dry-run] [--per
 Examples:
 
 ```bash
-blowhorn-axi slack react --profile rian,alex --permalink https://acme.slack.com/archives/C0123/p1776000000000100 --emoji white_check_mark --confirm
-blowhorn-axi slack react --profile rian --permalink https://acme.slack.com/archives/C0123/p1776000000000100 --emoji eyes --remove --confirm
+blowhorn-axi slack react --profile work,personal --permalink https://acme.slack.com/archives/C0123/p1776000000000100 --emoji white_check_mark --confirm
+blowhorn-axi slack react --profile work --permalink https://acme.slack.com/archives/C0123/p1776000000000100 --emoji eyes --remove --confirm
 ```
 
 Output: text.

@@ -15,7 +15,7 @@
         <header class="page-head">
           <p class="label">Integrations</p>
           <h1 id="integrations-title" class="display">Every network on the map</h1>
-          <p class="body-lg muted"><span data-count-platforms>{{ $counts.platforms }}</span> supported now, <span data-count-soon>{{ $counts.comingSoon }}</span> coming soon, <span data-count-activities>{{ $counts.activities }}</span> actions in the queue. Blowhorn posts as you through your own Chrome or a platform API. It does not post to GitHub: it rallies reactions on the issue.</p>
+          <p class="body-lg muted"><span data-count-platforms>{{ $counts.platforms }}</span> supported now, <span data-count-soon>{{ $counts.comingSoon }}</span> coming soon, <span data-count-activities>{{ $counts.activities }}</span> actions in the queue. Blowhorn posts as you through your own browser or a platform API. It does not post to GitHub: it rallies reactions on the issue.</p>
           {{- with site.Data.integrations.matrix }}
           <p class="integrations-matrix-link"><a class="button button-secondary" href="{{ (strings.TrimPrefix "/" .path) | relURL }}" data-matrix-link>{{ .cta }}</a></p>
           {{- end }}
@@ -35,10 +35,11 @@
             <h2 id="cat-{{ .id }}" class="h2">{{ .name }}</h2>
             <p class="muted">{{ .summary }}</p>
           </div>
-          <ul class="grid grid-3 section-body">
-            {{- range .platforms }}
-            {{- $p := index $byId . }}
-            <li class="card integration-card" data-action-card data-actions="{{ delimit $p.actionIds " " }}" data-plat-id="{{ $p.id }}">
+          {{- $deal := partial "card-deal.html" (dict "n" (len .platforms) "grid" "grid-3") }}
+          <ul class="grid grid-3 section-body" data-card-deal="{{ delimit $deal " " }}">
+            {{- range $i, $pid := .platforms }}
+            {{- $p := index $byId $pid }}
+            <li class="card integration-card {{ index $deal $i }}" data-action-card data-actions="{{ delimit $p.actionIds " " }}" data-plat-id="{{ $p.id }}">
               <a class="integration-card-main" href="{{ $p.docs | relURL }}">
                 <span class="logo-tile"><img src="{{ $p.logo | relURL }}" alt="" width="28" height="28"></span>
                 <h3 class="h3">{{ $p.name }}</h3>
@@ -64,9 +65,9 @@
             <p class="muted">{{ $act.description }}</p>
           </div>
           <ul class="grid grid-3 section-body">
-            {{- range $act.platforms }}
+            {{- range $i, $pl := $act.platforms }}
             <li>
-              <a class="card card-link" href="{{ .docs | relURL }}#{{ $act.slug }}">
+              <a class="card card-link {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $act.platforms)) }}" href="{{ .docs | relURL }}#{{ $act.slug }}">
                 <span class="logo-tile"><img src="{{ .logo | relURL }}" alt="" width="28" height="28"></span>
                 <h3 class="h3">{{ .name }}</h3>
                 <p>{{ .viaLabel }}</p>
@@ -82,6 +83,5 @@
 {{ end }}
 
 {{ define "scripts" }}
-    {{- $js := resources.Get "js/action-filter.js" | minify | fingerprint }}
-    <script src="{{ $js.RelPermalink }}" defer></script>
+    {{- partial "filter-script.html" "js/action-filter.js" }}
 {{ end }}

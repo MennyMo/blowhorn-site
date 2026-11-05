@@ -7,115 +7,131 @@ aliases: [/docs/how-to/add-a-profile/]
 ---
 
 
-A profile is one voice you post as. Create one from the desktop app or from
-the command line.
+A profile is one voice you post as: a person in your organization, or a
+brand that represents nobody. Create one from the desktop app or from the
+command line.
 
-**Early access:** creating a profile resolves the person against a Blowhorn account, and customer onboarding for that account is not open yet.
+**Early access:** profiles live in your organization in your Blowhorn account, and customer onboarding for that account is not open yet.
 This page stays a draft until it is.
 
-A profile is two halves. The directory `data/profiles/<name>/` holds
-`config.yaml` and the per-profile data; the row in your account's profiles is
-what every job reads to select it. Creating a profile writes both, the row
-first. A profile with a directory and no row looks healthy in
-`blowhorn profile list`, but no job can reach it. What each half holds is
-in the [Profile reference](/docs/reference/profiles/).
+A profile has three things you set: its **name**, what you type after
+`--profile`; an optional **description**; and **who it represents**. Its
+accounts on each platform are not part of the form: Google Chrome profile
+discovery finds the ones you are signed in to, and each platform card
+connects the rest. What a profile holds is in the
+[Profile reference](/docs/reference/profiles/).
 
 ## Before you start
 
-- Your account must be reachable. With your account down the create is refused
-  (exit 3) and nothing is written on either side, not even the directory.
-  Check with `blowhorn store`, or the Setup screen's store row in the
-  desktop app.
-- The person needs an account in your organization, and you need its email.
-  A profile is never created without one: there is no `--force` and no
-  placeholder. If no account holds the email, create the account first.
+- Sign in and choose your organization ([Sign in](/docs/how-to/set-up/sign-in/)). With your
+  account unreachable the create is refused (exit 3) and nothing is written.
+- The person the profile represents must be a member of your organization.
+  Invite them to your organization in Blowhorn first, or create the profile as a brand.
 
 ## From the desktop app
 
 1. Open **Profiles** and click **add profile**.
-2. Fill in the name, the email (required: it finds the account) and any
-   handles you know.
-3. Click **create profile**.
+2. Type the **name**: lowercase letters, digits, `-` or `_`. Add a
+   **description** if you like.
+3. Under **who is this profile?**, choose **you**, **someone in your
+   organization** and pick the member, or **nobody · a brand**.
+4. Click **create profile**.
 
-When no account holds the email, the refusal is shown inline; create the
-account and try again. When several accounts hold it, the form lists them
-and asks which one this profile is; choosing one and clicking **create
-profile** again sends that account's id through.
+Then give the profile its accounts: open the profile and choose its
+**Browser** tab. It lists the profile's own Chrome profile first, then the
+Chrome profiles no other profile uses yet, and says `No Chrome profile yet`
+when none is mapped. Turn one on to map it and attach the accounts signed in
+there. Each card counts the accounts the profile uses there, connected ones
+included even when Chrome shows no sign-in for them. Use a platform card for
+anything else, such as a GitHub token.
+
+The profile's header states its worst problem in the list's own words, such
+as `Not signed in · authenticate` or `Chrome profile changed`, and reads
+`Ready` only when nothing needs you. The **Checked** column says how long ago
+the last session check ran; hover it for the exact date and time.
+
+A profile you create for someone else is listed for them too, so their own
+Blowhorn shows it once they sign in to your organization. They can read it
+but not change it: editing a profile takes its ownership or the Edit Profile
+permission in your organization. The accounts linked to it are read only by
+its owner and by people who can view your organization's profiles, so the
+person it represents sees the profile without its accounts unless they hold
+that permission.
+
+Your organization's profiles and members are read from your Blowhorn account. When
+either read fails, the screen names the failure where it would have listed
+them, rather than show an empty list. The Add form's member picker says
+`can't read your organization's members`. Every other profile picker says
+`can't read your organization's profiles`: the routine and post editors in
+Activity, the LinkedIn admin picker in Performance, the excluded profiles in
+Settings, and Diagnostics.
+
+## Edit a profile
+
+Select the profile on **Profiles**. Its name, description and **who is this
+profile?** are editable; the represented person's name and email are shown
+from their member record and are changed in your Blowhorn account, not here. Click
+**save**. Renaming a profile changes what you type after `--profile`, and
+any routine or excluded-profiles entry that names the old name needs the new
+one. Its Chrome mapping and its content items follow the profile, because
+they hold its id.
 
 ## From the command line
 
-```bash
-blowhorn profile set sam --create EMAIL=sam@example.com
-```
-
-`EMAIL` is required: it is how the account is found (exact,
-case-insensitive). Add the handles you know in the same command:
+List the members a profile can represent:
 
 ```bash
-blowhorn profile set sam --create EMAIL=sam@example.com \
-  LI_PROFILE_URL=https://www.linkedin.com/in/sam/ X_USERNAME=samposts \
-  RDDT_USERNAME=sam_r BLUESKY_HANDLE=sam.bsky.social GH_USERNAME=samgh
+blowhorn org members
 ```
 
-The reply names the account the profile is bound to. Passwords and tokens
-are set afterwards with a plain `blowhorn profile set sam KEY=VALUE`.
-
-Rehearse with `--dry-run`: it touches neither your account nor the disk, and
-it still refuses everything a real run would refuse.
-
-### When the email cannot decide
-
-Two refusals name `--subject <uuid>` as the way through:
-
-- **No account holds the email.** Create the account first, or, when the
-  profile's address legitimately differs from the account's, name the
-  account with `--subject`.
-- **Several accounts hold the email.** The refusal lists their ids and
-  names; pick one and pass it as `--subject`.
-
-`EMAIL` stays required with `--subject`. It is refused when it names no
-live account, and refused when the email resolves unambiguously to a
-different account: binding a profile to the wrong person is the failure
-worth a refusal.
-
-### Refusals that mean a conflict
-
-- **The email already belongs to another profile**: one person, one
-  profile. Use the existing one.
-- **The name is held by another profile**: pick another name.
-
-Re-creating your own deleted profile with the same name revives its row.
-Any handle left blank in the file is never read as "clear it".
-
-## Register a profile that exists only locally
-
-A directory created before profiles had rows, or restored from a trash
-copy, needs a row before any job can select it:
+Create the profile from a JSON document on stdin:
 
 ```bash
-blowhorn profile set sam --register
+echo '{"name": "personal", "description": "Your personal posts", "userId": "<a member id from org members>"}' \
+  | blowhorn profile create --payload-stdin
 ```
 
-`--register` resolves the person exactly as `--create` does, scaffolds
-nothing, and is safe to run again. The directory is the profile's
-identity, so a `config.yaml` whose `PROFILE` names something else, or is
-empty or missing, is refused; fix the file, or pass `PROFILE=sam`.
+Leave `userId` out for a brand. The document takes only `name`,
+`description` and `userId`: an email, a handle or a credential is refused,
+and so is a name another profile already uses. Rehearse with `--dry-run`,
+which makes every check and sends nothing.
+
+Edit it the same way, naming it by its name or its id:
+
+```bash
+echo '{"name": "personal", "description": "Your personal posts and talks"}' \
+  | blowhorn profile update personal --payload-stdin
+```
+
+The document is the whole of the fields you set: a description left out is
+cleared, and a `userId` left out makes the profile a brand.
 
 ## Delete a profile
 
+From the desktop app, select the profile and click **delete profile**. From
+a terminal:
+
 ```bash
-blowhorn profile delete sam --yes
+blowhorn profile delete personal --yes
 ```
 
-The command retires the profile's row first, then moves `data/profiles/sam/`
-aside. With your account unreachable the delete is refused and nothing moves.
+Name it by its id instead when two profiles in your organization share a
+name, as `blowhorn profile list` prints it. Only the profile with that id is
+deleted:
+
+```bash
+blowhorn profile delete 3f2b8c1e-5a7d-4e2f-9b1c-6d4a2e8f0c17 --yes
+```
+
+The profile is deleted in your organization and unlinked from its
+accounts; the accounts themselves are kept. With your account unreachable
+the delete is refused and nothing changes.
 
 ## Related
 
 - [Sign in](/docs/how-to/set-up/sign-in/) - sign in before profiles mean anything.
 - [Map Blowhorn profiles to Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/) - give
-  the profile its Chrome.
+  the profile its Chrome and the accounts signed in there.
 - [Sign a profile in to each platform](/docs/how-to/set-up/platform-accounts/) - the sessions
   and credentials each platform needs.
-- [Profile reference](/docs/reference/profiles/) - what each half of a
-  profile holds.
+- [Profile reference](/docs/reference/profiles/) - what a profile holds.

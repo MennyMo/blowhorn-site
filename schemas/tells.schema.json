@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/tells.schema.json",
+  "title": "Blowhorn Tells promotion",
+  "description": "data/tells.json: where the free Am I a Bot? tool (Blowhorn Tells) lives and the copy for every place the site promotes it. Every link is built by layouts/_partials/tells-link.html from url, pages and utm, with utm_content set to one of placements; the partial fails the build on an unknown page or placement, and .github/scripts/check_tells.py fails it when a placement goes missing from its page. Plain text, hyphens never em dashes. Marketing copy says browser, never Chrome; only the docs card says Chrome profile.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["url", "pages", "utm", "placements", "bar", "nav", "home", "footer", "callouts", "thanks", "docs", "missing"],
+  "definitions": {
+    "text": { "type": "string", "minLength": 1, "not": { "pattern": "\u2014" } },
+    "page": { "type": "string", "enum": ["home", "checks", "agents"] },
+    "callout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["heading", "body", "cta"],
+      "properties": {
+        "heading": { "$ref": "#/definitions/text" },
+        "body": { "$ref": "#/definitions/text" },
+        "cta": { "$ref": "#/definitions/text" },
+        "secondary": { "$ref": "#/definitions/text" },
+        "secondary_page": { "$ref": "#/definitions/page" }
+      }
+    }
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "url": { "description": "The Tells home page, with its trailing slash.", "type": "string", "pattern": "^https://[^/]+/$" },
+    "pages": {
+      "description": "Paths on Tells, relative to url, that the site links to.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["home", "checks", "agents"],
+      "properties": {
+        "home": { "type": "string", "const": "" },
+        "checks": { "type": "string", "pattern": "^[a-z0-9-]+/$" },
+        "agents": { "type": "string", "pattern": "^[a-z0-9-]+/$" }
+      }
+    },
+    "utm": {
+      "description": "The fixed UTM parameters every Tells link carries; utm_content is the placement.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "medium", "campaign"],
+      "properties": {
+        "source": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+        "medium": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "campaign": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+      }
+    },
+    "placements": {
+      "description": "Every utm_content value the site may send. check_tells.py maps each to the page it must appear on.",
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+    },
+    "bar": {
+      "description": "The site-wide announcement bar above the header (layouts/_partials/tells-bar.html). storage_key remembers a dismissal in localStorage; change it to show the bar again to everyone who closed it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["storage_key", "text", "link"],
+      "properties": {
+        "storage_key": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "text": { "$ref": "#/definitions/text" },
+        "link": { "$ref": "#/definitions/text" }
+      }
+    },
+    "nav": {
+      "description": "The top-level header item, just before Pricing.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "pill"],
+      "properties": {
+        "label": { "$ref": "#/definitions/text" },
+        "pill": { "$ref": "#/definitions/text" }
+      }
+    },
+    "home": {
+      "description": "The Signal home page band after Trust (layouts/_partials/home/tells.html).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eyebrow", "heading", "body", "cta", "secondary", "agents_lead", "agents_link", "art", "art_640", "art_alt"],
+      "properties": {
+        "eyebrow": { "$ref": "#/definitions/text" },
+        "heading": { "$ref": "#/definitions/text" },
+        "body": { "$ref": "#/definitions/text" },
+        "cta": { "$ref": "#/definitions/text" },
+        "secondary": { "$ref": "#/definitions/text" },
+        "agents_lead": { "$ref": "#/definitions/text" },
+        "agents_link": { "$ref": "#/definitions/text" },
+        "art": { "description": "Path under static/ to the 1280x720 art (the 1280w srcset candidate).", "type": "string", "pattern": "^assets/.+\\.webp$" },
+        "art_640": { "description": "Path under static/ to the 640x360 version of the same art (the 640w srcset candidate).", "type": "string", "pattern": "^assets/.+\\.webp$" },
+        "art_alt": { "$ref": "#/definitions/text" }
+      }
+    },
+    "footer": {
+      "description": "The footer's Free tools column.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "links"],
+      "properties": {
+        "title": { "$ref": "#/definitions/text" },
+        "links": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["page", "label"],
+            "properties": {
+              "page": { "$ref": "#/definitions/page" },
+              "label": { "$ref": "#/definitions/text" }
+            }
+          }
+        }
+      }
+    },
+    "callouts": {
+      "description": "Copy for layouts/_partials/tells-callout.html: compare on every /compare/<slug>/ page, agents on /ai/ and /agents/.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["compare", "agents"],
+      "properties": {
+        "compare": { "$ref": "#/definitions/callout" },
+        "agents": { "$ref": "#/definitions/callout" }
+      }
+    },
+    "thanks": {
+      "description": "The card on /download/thanks/ after the install steps.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "link"],
+      "properties": {
+        "text": { "$ref": "#/definitions/text" },
+        "link": { "$ref": "#/definitions/text" }
+      }
+    },
+    "docs": {
+      "description": "The card in every docs page's table of contents column (end of the page below 1280px).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eyebrow", "title", "text", "link"],
+      "properties": {
+        "eyebrow": { "$ref": "#/definitions/text" },
+        "title": { "$ref": "#/definitions/text" },
+        "text": { "$ref": "#/definitions/text" },
+        "link": { "$ref": "#/definitions/text" }
+      }
+    },
+    "missing": {
+      "description": "The line under the 404 page's message.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "link"],
+      "properties": {
+        "text": { "$ref": "#/definitions/text" },
+        "link": { "$ref": "#/definitions/text" }
+      }
+    }
+  }
+}

@@ -1,4 +1,5 @@
-{{- /* True when the build carries Google Analytics: a production build with
-  an id in [services.googleAnalytics], not a deploy preview. analytics.html
-  asks this one partial. */ -}}
+{{- /* True when the build carries Google Analytics and its cookie notice:
+  a production build with an id in [services.googleAnalytics], not a deploy
+  preview. analytics.html, consent.html and the footer's "Cookie preferences"
+  button all ask this one partial. */ -}}
 {{- return and hugo.IsProduction (ne (getenv "HUGO_PREVIEW") "true") (ne site.Config.Services.GoogleAnalytics.ID "") -}}

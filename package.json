@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "description": "The blowhorn.ai website",
-  "repository": "github:layer5io/blowhorn-site",
+  "repository": "github:blowhorn-ai/blowhorn-site",
   "homepage": "https://blowhorn.ai",
   "author": "Layer5 Authors",
   "license": "Apache-2.0",
-  "bugs": "https://github.com/layer5io/blowhorn-site/issues",
+  "bugs": "https://github.com/blowhorn-ai/blowhorn-site/issues",
   "scripts": {
     "_hugo": "hugo",
     "_hugo-dev": "npm run _hugo -- -e dev -DFE",

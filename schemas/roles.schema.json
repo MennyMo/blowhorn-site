@@ -39,6 +39,7 @@
         "weight",
         "headline",
         "lead",
+        "platforms",
         "description",
         "art",
         "pains",
@@ -67,6 +68,16 @@
         },
         "lead": {
           "$ref": "#/definitions/text"
+        },
+        "platforms": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Platforms that matter to this role, by id in data/integrations.json platforms. The home page's Platforms section highlights them under By role; the build fails on an id that is not a platform there.",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          }
         },
         "description": {
           "$ref": "#/definitions/text",
@@ -104,6 +115,60 @@
           "maxItems": 4,
           "items": {
             "$ref": "#/definitions/card"
+          }
+        },
+        "agent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "body",
+            "prompt"
+          ],
+          "description": "Optional agent and MCP section: a short heading, 2-3 sentences, one example prompt for the role (dry run first, then wait for go), and optional links.",
+          "properties": {
+            "title": {
+              "$ref": "#/definitions/line"
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 480,
+              "not": {
+                "pattern": "—"
+              }
+            },
+            "prompt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 480,
+              "not": {
+                "pattern": "—"
+              }
+            },
+            "links": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "href"
+                ],
+                "properties": {
+                  "label": {
+                    "$ref": "#/definitions/line"
+                  },
+                  "href": {
+                    "type": "string",
+                    "pattern": "^(/[a-z0-9/-]*|https://.+)$",
+                    "description": "A site path or an https URL."
+                  }
+                }
+              }
+            }
           }
         },
         "prompt": {

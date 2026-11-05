@@ -38,13 +38,78 @@
   }
 }
 
+// ---------- Blowhorn Tells card ----------
+
+// layouts/_partials/tells-docs-card.html renders twice: under the table of
+// contents (shown from 1280px, unless the column is collapsed) and at the
+// end of the page (everywhere else). Exactly one shows at any width. The
+// link and arrow share their style with the announcement bar (site.css).
+.tells-docs-card {
+  max-width: 24rem;
+  margin-top: var(--space-12);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-tint);
+  color: var(--ink);
+}
+
+.tells-docs-card > * {
+  margin: 0;
+}
+
+.tells-docs-card > * + * {
+  margin-top: var(--space-1);
+}
+
+.tells-docs-card-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 700;
+  color: var(--ink-wordmark);
+}
+
+.tells-docs-card-text {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.tells-docs-card .tells-docs-card-link {
+  margin-top: var(--space-2);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.tells-docs-card-toc {
+  display: none;
+  margin-top: var(--space-8);
+}
+
+@media (min-width: 1280px) {
+  .tells-docs-card-toc {
+    display: block;
+  }
+
+  .tells-docs-card-end {
+    display: none;
+  }
+
+  .docs-wrap.toc-collapsed .tells-docs-card-toc {
+    display: none;
+  }
+
+  .docs-wrap.toc-collapsed .tells-docs-card-end {
+    display: block;
+  }
+}
+
 // ---------- Table of contents collapse ----------
 
 // The toggle sits in the TOC header (layouts/_partials/toc.html); the
 // state rides on .docs-wrap and persists across docs pages
 // (assets/js/docs-toggle.js). Collapsed, the TOC column shrinks to a
 // narrow rail holding only the toggle, and the content takes the freed
-// width — the same trade the internal layout makes for a page with no
+// width - the same trade the internal layout makes for a page with no
 // table of contents at all. Below 1280px the TOC is hidden anyway and
 // the class is inert.
 .td-toc-toggle {
@@ -136,7 +201,7 @@
 // Start here is a single-column list, not a three-column grid: inside
 // the docs column (sidebar plus table of contents) three columns land
 // around 200px wide, tall and skinny. Each Start item is a
-// full-width row — title left, description right — stacking on narrow
+// full-width row - title left, description right - stacking on narrow
 // viewports. The old .docs-start class keeps working until the product
 // sync brings the new .docs-start-list markup, and vice versa.
 // NOTE: site.css (loaded after this skin) defines .grid/.grid-3, so a
@@ -156,7 +221,6 @@ div.docs-start-list {
   flex-direction: column;
   gap: var(--space-1);
   padding: var(--space-4) var(--space-6);
-  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
 }
 
@@ -179,33 +243,38 @@ div.docs-start-list {
   }
 }
 
-// Quadrants: auto-fit with a 280px floor collapses to one column
-// instead of going skinny. Div-qualified for the same reason as above:
-// site.css's .grid-2 would otherwise win on load order.
+// Quadrants: one column, then 2 x 2 from 640px. Fixed columns, not auto-fit,
+// so the card variants dealt for 1 and 2 across (docs-content.html,
+// card-deal.html "docs-quadrants") hold at every width. Div-qualified for
+// the same reason as above: site.css's .grid-2 would otherwise win on load order.
 div.docs-quadrants {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   margin-top: var(--space-6);
 }
 
+@media (min-width: 640px) {
+  div.docs-quadrants {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .docs-quadrants .docs-card {
   padding: var(--space-4) var(--space-6);
-  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
 }
 
+// The fill, edge, text colour and hover lift are the card variant each card is
+// dealt (layouts/_partials/docs-content.html, assets/css/cards.css).
 .docs-card {
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  color: var(--ink);
 }
 
 .docs-card:hover {
-  background: var(--surface-tint);
   text-decoration: none;
-  color: var(--ink);
 }
 
 .docs-card > span {
@@ -407,17 +476,39 @@ div.docs-quadrants {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   color: var(--ink);
+  background-image: none;
 }
 
 .td-sidebar__toggle::before {
   content: "";
   display: block;
-  width: 18px;
+  width: 14px;
   height: 12px;
   margin: auto;
-  border-top: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  background: linear-gradient(currentColor, currentColor) center/100% 2px no-repeat;
+  background:
+    linear-gradient(currentColor, currentColor) top / 100% 2px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat,
+    linear-gradient(currentColor, currentColor) bottom / 100% 2px no-repeat;
+}
+
+.td-sidebar__toggle[aria-expanded="true"]::before {
+  content: "";
+  height: 14px;
+  background:
+    linear-gradient(
+      45deg,
+      transparent calc(50% - 1px),
+      currentColor calc(50% - 1px),
+      currentColor calc(50% + 1px),
+      transparent calc(50% + 1px)
+    ),
+    linear-gradient(
+      -45deg,
+      transparent calc(50% - 1px),
+      currentColor calc(50% - 1px),
+      currentColor calc(50% + 1px),
+      transparent calc(50% + 1px)
+    );
 }
 
 .td-breadcrumbs {

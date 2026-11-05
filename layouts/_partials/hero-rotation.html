@@ -1,8 +1,10 @@
 {{- /* The home page hero rotation, from data/hero.json (schema:
-  schemas/hero.schema.json). Returns heroes (id, headline, subhead, cta, art; rotating ones first, in
-  rotation order, then the rest), rotating (how many rotate), arts (each art once), medias (each Signal hero visual
-  once: video or demo), video (media.video), default (the variant no-JS
-  visitors see), defaultMedia (its visual), mode and intervalSeconds. Fails the build when rotation.ids names an
+  schemas/hero.schema.json). Returns tagline (the one line under every
+  headline), heroes (id, headline, cta, art, media; rotating ones first, in
+  rotation order, then the rest), rotating (how many rotate), arts (each art
+  once), medias (each Signal hero visual once: video or demo), video
+  (media.video), default (the variant no-JS visitors see), defaultMedia (its
+  visual), mode and intervalSeconds. Fails the build when rotation.ids names an
   unknown variant or when default is not in the rotation. Mode and interval
   are schema-checked; this partial only resolves ids. See docs/hero-variants.md. */ -}}
 {{- $data := site.Data.hero -}}
@@ -22,7 +24,7 @@
   {{- $v := index $match 0 -}}
   {{- $art := $v.art | default "stage" -}}
   {{- $media := $v.media | default $mediaDefault -}}
-  {{- $heroes = $heroes | append (dict "id" $v.id "headline" $v.headline "subhead" $v.subhead "cta" ($v.cta | default (dict "label" "See how it works" "href" "#how")) "art" $art "media" $media) -}}
+  {{- $heroes = $heroes | append (dict "id" $v.id "headline" $v.headline "cta" ($v.cta | default (dict "label" "See how it works" "href" "#how")) "art" $art "media" $media) -}}
   {{- if not (in $arts $art) }}{{ $arts = $arts | append $art }}{{ end -}}
   {{- if not (in $medias $media) }}{{ $medias = $medias | append $media }}{{ end -}}
 {{- end -}}
@@ -34,7 +36,7 @@
   {{- if not (in $ids .id) -}}
     {{- $art := .art | default "stage" -}}
     {{- $media := .media | default $mediaDefault -}}
-    {{- $heroes = $heroes | append (dict "id" .id "headline" .headline "subhead" .subhead "cta" (.cta | default (dict "label" "See how it works" "href" "#how")) "art" $art "media" $media) -}}
+    {{- $heroes = $heroes | append (dict "id" .id "headline" .headline "cta" (.cta | default (dict "label" "See how it works" "href" "#how")) "art" $art "media" $media) -}}
     {{- if not (in $arts $art) }}{{ $arts = $arts | append $art }}{{ end -}}
     {{- if not (in $medias $media) }}{{ $medias = $medias | append $media }}{{ end -}}
   {{- end -}}
@@ -52,4 +54,4 @@
 {{- with $default.media }}{{ $defaultMedia = . }}{{ end -}}
 {{- $seconds := 0 -}}
 {{- with $cfg.intervalSeconds }}{{ $seconds = . }}{{ end -}}
-{{- return dict "heroes" $heroes "arts" $arts "medias" $medias "video" $video "defaultMedia" $defaultMedia "default" $default.id "rotating" $rotating "mode" $cfg.mode "intervalSeconds" (int $seconds) -}}
+{{- return dict "tagline" $data.tagline "heroes" $heroes "arts" $arts "medias" $medias "video" $video "defaultMedia" $defaultMedia "default" $default.id "rotating" $rotating "mode" $cfg.mode "intervalSeconds" (int $seconds) -}}

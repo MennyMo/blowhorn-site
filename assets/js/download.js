@@ -1,5 +1,5 @@
 // Fills the Download section from the newest desktop release on
-// layer5io/blowhorn-site. This repository also publishes blowhorn-axi
+// blowhorn-ai/blowhorn-site. This repository also publishes blowhorn-axi
 // releases (tags axi-vX.Y.Z), and GitHub's "latest" release is whichever
 // stable release was created most recently, so /releases/latest points at
 // an axi release whenever one is newer, and its download URL 404s. The
@@ -63,6 +63,11 @@
     var assets = Array.isArray(release.assets) ? release.assets : [];
     var version = release.tag_name || release.name || "";
     var aliasAsset = assets.find(function (a) { return a.name === alias; });
+    // The file a visitor saves is named after the URL, so the page shows the
+    // versioned disk image (same bytes as the alias) and falls back to the alias.
+    var versioned = assets.find(function (a) {
+      return a.name === "Blowhorn-" + version.replace(/^v/, "") + "-mac-universal.dmg";
+    }) || aliasAsset;
     var sums = assets.find(function (a) { return a.name === "SHA256SUMS.txt"; });
     if (!aliasAsset) {
       return;
@@ -71,13 +76,16 @@
     // Keep the page's own button (it goes to the thanks page, which starts the
     // download); only the label, file size and details below it change.
     var icon = card.querySelector(".download-icon");
+    var requirement = card.querySelector(".download-req");
     var actions = card.querySelector(".actions");
+    var fallback = card.querySelector(".download-fallback");
     var size = actions && actions.querySelector(".caption");
     if (size) {
-      size.textContent = aliasAsset.name + " · " + megabytes(aliasAsset.size);
+      size.textContent = versioned.name + " · " + megabytes(versioned.size);
     }
-    var title = el("p", "Blowhorn " + version + " for Mac", { class: "h3" });
-    var children = (icon ? [icon] : []).concat([title, actions]);
+    var title = el("h2", "Blowhorn " + version + " for Mac", { class: "h3" });
+    var body = el("p", "The Mac app runs your activities and installs the Blowhorn command.");
+    var children = (icon ? [icon] : []).concat([title, body], requirement ? [requirement] : [], [actions], fallback ? [fallback] : []);
 
     var meta = el("p", null, { class: "meta caption" });
     var date = release.published_at ? publishedOn(release.published_at) : null;
@@ -130,4 +138,62 @@
       // The static card already downloads the pinned build, so a failed
       // lookup only means no version details. Never claim "no build" on an error.
     });
+})();
+
+// Windows notify signup on the coming-soon card: the button reveals the
+// waitlist form (topic "windows", stored separately from the newsletter
+// list), and submitting it posts JSON to the signup service and shows an
+// inline result, mirroring assets/js/signup.js. Without JavaScript, or
+// without fetch, the toggle stays hidden and the form stays visible: it
+// posts to the service, which redirects to a thanks page. An invalid
+// address is caught by the browser's own validation, and a failed
+// submission leaves the entered address in place.
+(function () {
+  "use strict";
+
+  var toggle = document.getElementById("windows-notify-toggle");
+  var form = document.getElementById("windows-notify-form");
+  if (!toggle || !form || !window.fetch) {
+    return;
+  }
+  var status = document.getElementById("windows-notify-status");
+  var email = document.getElementById("windows-notify-email");
+  toggle.hidden = false;
+  form.hidden = true;
+  toggle.addEventListener("click", function () {
+    var open = form.hidden;
+    form.hidden = !open;
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open && email) {
+      email.focus();
+    }
+  });
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var data = {};
+    new FormData(form).forEach(function (value, key) {
+      data[key] = value;
+    });
+    fetch(form.action, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(data),
+    })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body };
+        });
+      })
+      .then(function (pair) {
+        if (pair.res.ok && pair.body.ok) {
+          form.reset();
+          status.textContent = "You are on the list. We will email you when Blowhorn for Windows is ready.";
+        } else {
+          status.textContent = (pair.body && pair.body.error) || "Something went wrong. Please try again.";
+        }
+      })
+      .catch(function () {
+        status.textContent = "Something went wrong. Please try again.";
+      });
+  });
 })();

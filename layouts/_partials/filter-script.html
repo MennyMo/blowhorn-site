@@ -1,0 +1,5 @@
+{{- /* The script tag for a page whose cards a filter can hide: assets/js/card-deal.js
+  bundled ahead of the filter script named in the context ("js/resources.js" or
+  "js/action-filter.js"), which hands the card variants out again after each filter. */ -}}
+{{- $js := slice (resources.Get "js/card-deal.js") (resources.Get .) | resources.Concat (replace . ".js" ".bundle.js") | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" defer></script>

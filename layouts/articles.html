@@ -1,0 +1,51 @@
+{{ define "main" }}
+<main id="main" class="page resources-page articles-page">
+  <div class="wrap">
+    <p class="eyebrow">Resources</p>
+    <h1>{{ .Title }}</h1>
+    <p class="lead">{{ .Params.lead | default .Description }}</p>
+
+    <div class="collection-tools">
+      <label class="collection-search">
+        <span class="sr-only">Search articles</span>
+        <input type="search" placeholder="Search articles" data-collection-search>
+      </label>
+      {{- $tags := slice }}
+      {{- range .Pages }}{{ range .Params.tags }}{{ $tags = $tags | append . }}{{ end }}{{ end }}
+      <div class="tag-chips-row" role="group" aria-label="Filter by tag">
+        <ul class="tag-chips">
+          {{- range sort ($tags | uniq) }}
+          {{- with $.Site.GetPage (printf "/tags/%s" .) }}<li><button type="button" class="tag-chip" data-tag-chip="{{ .Data.Term }}" aria-pressed="false">{{ .LinkTitle }}</button></li>{{ end }}
+          {{- end }}
+        </ul>
+      </div>
+      <div class="tag-chips-row" role="group" aria-label="Filter by column">
+        <ul class="tag-chips">
+          {{- range slice "desk-of-the-general" "boot-camp" "from-the-field" }}
+          <li><button type="button" class="tag-chip" data-tag-chip="column:{{ . }}" aria-pressed="false">{{ partial "column-label.html" . }}</button></li>
+          {{- end }}
+        </ul>
+      </div>
+      <p class="collection-status" data-collection-status role="status"></p>
+    </div>
+
+    {{- $paginator := .Paginate (.Pages.ByDate.Reverse) 9 }}
+    {{- $deal := partial "card-deal.html" (dict "n" (len $paginator.Pages) "grid" "stack" "variants" (slice "card-field" "card-plain")) }}
+    <div class="articles-list" data-collection-grid data-collection-noun="articles" data-card-deal="{{ delimit $deal " " }}">
+      {{- range $i, $v := $paginator.Pages }}{{ partial "article-card.html" (dict "page" $v "i" $i "deal" $deal) }}{{ end }}
+    </div>
+
+    {{- if gt $paginator.TotalPages 1 }}
+    <nav class="pager" aria-label="Articles pages">
+      {{- if $paginator.HasPrev }}<a class="pager-link" href="{{ $paginator.Prev.URL }}">Newer</a>{{ end }}
+      <span class="pager-status">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
+      {{- if $paginator.HasNext }}<a class="pager-link" href="{{ $paginator.Next.URL }}">Older</a>{{ end }}
+    </nav>
+    {{- end }}
+  </div>
+</main>
+{{ end }}
+
+{{ define "scripts" }}
+    {{- partial "filter-script.html" "js/resources.js" }}
+{{ end }}

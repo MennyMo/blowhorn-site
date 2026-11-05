@@ -6,8 +6,9 @@ weight: 161
 
 
 Every action run appends one line per profile and platform to the run ledger,
-dry or real. Read it back in the app under Activity › History, or grouped any way you
-like:
+dry or real. Read it back in the app under Activity › History, newest first; a long
+history comes a window-full at a time, and the arrows under the list turn the page.
+Or read it grouped any way you like:
 
 ```bash
 blowhorn analytics operations --group-by host

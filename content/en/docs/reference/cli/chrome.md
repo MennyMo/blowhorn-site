@@ -1,7 +1,7 @@
 ---
 title: "blowhorn chrome"
 linkTitle: "chrome"
-description: "blowhorn chrome: attach-chrome, confirm, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap."
+description: "blowhorn chrome: active-tab, attach-chrome, confirm, create-profile, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap."
 weight: 103
 ---
 
@@ -11,8 +11,10 @@ The `blowhorn chrome` commands. Each one's `--help` prints the same text.
 
 | Command | What it does |
 | --- | --- |
+| [`chrome active-tab`](#blowhorn-chrome-active-tab) | Ask the Chrome extension for the front tab's address and title, through the bridge, and print it. |
 | [`chrome attach-chrome`](#blowhorn-chrome-attach-chrome) | Start or report a dedicated Chrome that is open to remote debugging with no Allow dialog, so `--chrome-launch cdp` can attach to a real Chrome unattended. |
 | [`chrome confirm`](#blowhorn-chrome-confirm) | Apply the confirm screen's confirmed choices. |
+| [`chrome create-profile`](#blowhorn-chrome-create-profile) | Give Blowhorn a Google Chrome profile of its own, for a Chrome that has only its main profile. |
 | [`chrome discover`](#blowhorn-chrome-discover) | Report, for every Chrome profile, the platform accounts discovery can see there -- the read behind onboarding's confirm screen. |
 | [`chrome extension-enable`](#blowhorn-chrome-extension-enable) | Open the Blowhorn extension's Chrome Web Store page in each Chrome profile you name, so you can turn the extension on there with one click. |
 | [`chrome extension-install`](#blowhorn-chrome-extension-install) | Write the native-messaging host manifest Chrome launches for the Blowhorn Chrome extension, and print where the unpacked extension lives so you can load it. |
@@ -22,8 +24,34 @@ The `blowhorn chrome` commands. Each one's `--help` prints the same text.
 | [`chrome open-profile`](#blowhorn-chrome-open-profile) | Open a window in the Chrome profile a Blowhorn profile is mapped to on this machine, so you can look at it or sign in to a platform there yourself. |
 | [`chrome profiles`](#blowhorn-chrome-profiles) | List every profile Chrome knows. |
 | [`chrome status`](#blowhorn-chrome-status) | Report whether Google Chrome is installed, whether it is running, whether its remote-debugging switch is on (chrome://inspect/#remote-debugging), the debugging port it recorded, how many profiles i... |
-| [`chrome suggest`](#blowhorn-chrome-suggest) | Print a proposed mapping from every Blowhorn profile in the store to a Chrome profile on this machine, matched by display name (a Chrome profile named `Kate` proposes for the Blowhorn profile kate)... |
+| [`chrome suggest`](#blowhorn-chrome-suggest) | Print a proposed mapping from every Blowhorn profile in the store to a Chrome profile on this machine, matched by display name (a Chrome profile named `Company` proposes for the Blowhorn profile co... |
 | [`chrome unmap`](#blowhorn-chrome-unmap) | Remove one of a Blowhorn profile's Chrome profile mappings on this machine. |
+
+## blowhorn chrome active-tab
+
+Ask the Chrome extension for the front tab's address and title, through the bridge, and print it. The popover's New order asks here first (#2007): a tab the extension answers needs no Apple Event, so macOS never prompts for Chrome. This command navigates nowhere, probes no tab's page, and contacts no platform: it reads only the front tab's own address and title, from the Chrome profile whose bridge answers first. No Chrome with the extension, a held bridge, or a Chrome with no front tab answers with no tab, and `--json` carries connected and a detail saying why. That read writes nothing but the bridge lock, the same lock `chrome extension-status` writes. `--json` emits the answer as one object, for a script or the desktop app.
+
+```text
+blowhorn chrome active-tab [OPTIONS]
+```
+
+| Flag | Type | Default | Description |
+| --- | --- | --- | --- |
+| `--json` | boolean | `false` | Emit the report as JSON with a stable shape, for a script or the desktop app |
+| `--platform` | string |  | Accepted and ignored by `blowhorn chrome`: this command never acts on a platform, so `--platform` has no effect here -- including a value inherited from `BLOWHORN_PLATFORM` or defaults.platform in .blowhorn.yaml |
+| `--pace` | string |  | Accepted by `blowhorn chrome active-tab` because `--pace` is a global flag, but this command does no paced work -- it sleeps between nothing -- so the value changes nothing about how it runs and appears only in the Pace column of the -v summary. Resolved as CLI flag, then `BLOWHORN_PACE`, then defaults.pace in .blowhorn.yaml (normal when none is set); an unrecognized value is rejected before anything runs |
+| `--risk-profile` | string |  | Accepted by `blowhorn chrome active-tab` because `--risk-profile` is a global flag, but this command does no gated work -- no Risk Profile hold, cap or pace applies to it -- so the value changes nothing about how it runs. A value after the command word wins over one before it; an unrecognized value is rejected before anything runs |
+
+Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `--log-dir`, `--profile`, `--exclude`, `--headless`, `--chrome-launch`, `--headed`, `--dry-run`, `--verbose`.
+
+Examples:
+
+```bash
+blowhorn chrome active-tab
+blowhorn chrome active-tab --json
+```
+
+Output: json with `--json`, text otherwise.
 
 ## blowhorn chrome attach-chrome
 
@@ -67,13 +95,13 @@ Output: json with `--json`, text otherwise.
 
 Apply the confirm screen's confirmed choices: turn Chrome profiles into Blowhorn profiles, attach the discovered platform accounts, and map each Chrome profile -- the one write onboarding makes, and the person's confirm is the consent it records. The choices arrive as one JSON document on stdin (`--payload-stdin`), so a GitHub token or a Bluesky app password in it reaches neither argv nor the daily log:
 
-\{"assignments": \[\{"directory": "Profile 3", "profile": "ada-example", "create": true, "email": "ada@example.com", "subject": "&lt;uuid, only when the email names several&gt;", "platforms": \{"linkedin": \{"attach": true, "session": true\}, "x": \{"attach": true\}, "github": \{"attach": true, "token": "..."\}, "bluesky": \{"attach": true, "app_password": "..."\}, "slack": \{"attach": true\}\}\}\]\}
+\{"assignments": \[\{"directory": "Profile 3", "profile": "ada-example", "create": true, "userId": "&lt;the member's uuid, as `org members` lists them; omit it for a brand&gt;", "platforms": \{"linkedin": \{"attach": true, "session": true\}, "x": \{"attach": true\}, "github": \{"attach": true, "token": "..."\}, "bluesky": \{"attach": true, "app_password": "..."\}, "slack": \{"attach": true\}\}\}\]\}
 
-Per assignment, in order: the Blowhorn profile (an existing one the payload names, the one the directory is already mapped to, or a new one created under the usual create rule -- the email, the payload's or the Chrome profile's Google account, must resolve to exactly one Blowhorn user in the organization, or `subject` names the one; a slug the payload omits is proposed from the Google name); then the attached platforms' non-secret handles, written the way `profile set` writes them; then the mapping, exactly as `chrome map` records it (without opening a pairing page -- pairing happens on the profile's first run or with `chrome map`). A platform row the payload marks with "session": true (LinkedIn, Hacker News) stores a confirmed-session credential naming this Chrome profile directory instead of a password: it satisfies eligibility the way a session-capture platform's identity key does, because the run checks that Chrome session before it reaches for a password. GitHub stores `GH_USERNAME` and still waits for `GH_TOKEN`; Bluesky stores the handle and still waits for the app password; both may ride in the same payload. Slack stores nothing: its session is captured afterwards by 'profile auth `--platform` slack', and the result says so.
+Per assignment, in order: the Blowhorn profile (an existing one the payload names by `profileId` or by `profile`, the one the directory is already mapped to, or, with "create": true, a new one created in your Blowhorn account representing the member `userId` names, or nobody for a brand; a name the payload omits is proposed from the Google name, and a profile the organization does not have is never created without "create"); then the attached platforms' credentials, stored in your Blowhorn account and nowhere on this computer; then the mapping, exactly as `chrome map` records it and, when the extension is already on in that Chrome profile, paired the same way, opening the extension's pairing page there, since a run refuses a mapping the extension cannot prove; a profile without the extension on yet is paired once it is (the desktop's setup does this, or `chrome map`); then each attached platform's username as the profile's account there: a connection registered and linked to the profile, named for the username and pointing at its account page when the username is a handle, which is where the profile's handles are read from. A platform row the payload marks with "session": true (LinkedIn, Hacker News) stores a confirmed-session credential naming this Chrome profile directory instead of a password: it satisfies eligibility the way a session-capture platform's identity key does, because the run checks that Chrome session before it reaches for a password. GitHub stores `GH_USERNAME` and still waits for `GH_TOKEN`; Bluesky stores the handle and still waits for the app password; both may ride in the same payload. Slack stores nothing: its session is captured afterwards by 'profile auth `--platform` slack', and the result says so.
 
 A profile the document marks with "in_use": false is recorded not in use: this computer's mapping for that directory is removed, the Blowhorn profile is added to defaults.exclude when that name is not already there, and the profile and its credentials are kept. A platform row with "attach": false is recorded not in use for that profile in .blowhorn.chrome-not-in-use.json beside the config file; a platform left out of the assignment is left as it was recorded. The credential is kept, and a later run on this computer skips a platform still recorded not in use. Marking a platform in use clears that skip for the Blowhorn profile on every Chrome directory in the record, so a later choice in the same document wins. Marking the profile in use again removes it from defaults.exclude only when this screen added that name; a name already in the list is left as written, spelling and notes included. Omitting "in_use" applies only the attached rows, as before.
 
-Each assignment answers for itself in the result -- profile, whether it was created, the keys written per platform, the mapping, or the one-sentence refusal -- so a partial confirm is a successful confirm: what landed stays landed, and what refused says why, by name. The exit code is 0 when at least one assignment landed and 1 when none did; a store that cannot be reached is the named cause and exit 3. With `--dry-run` every check runs and nothing is written, created or mapped.
+Each assignment answers for itself in the result -- profile, whether it was created, the keys written per platform, the mapping, the accounts recorded, or the one-sentence refusal -- so a partial confirm is a successful confirm: what landed stays landed, and what refused says why, by name. The exit code is 0 when at least one assignment landed and 1 when none did; a store that cannot be reached is the named cause and exit 3. With `--dry-run` every check runs and nothing is written, created or mapped.
 
 ```text
 blowhorn chrome confirm [OPTIONS]
@@ -94,6 +122,32 @@ Examples:
 ```bash
 cat assignments.json | blowhorn chrome confirm --payload-stdin --json
 cat assignments.json | blowhorn chrome confirm --payload-stdin --dry-run --json
+```
+
+Output: json with `--json`, text otherwise.
+
+## blowhorn chrome create-profile
+
+Give Blowhorn a Google Chrome profile of its own, for a Chrome that has only its main profile. Asks Chrome to open a new window in the profile directory `Blowhorn`. Chrome creates that profile the first time and opens it again every time after, so running this twice makes no second one. Chrome gives the new profile a default name such as `Person 1`, which Blowhorn shows as Blowhorn's profile. Sign in there to LinkedIn, X and the other sites Blowhorn should use, then `blowhorn chrome discover` finds the profile and its accounts. Reads Local State only to say whether the profile was already listed; writes nothing, maps nothing, and drives nothing in the window. If no Chrome is running, Chrome starts to open the window and is left running. Your own profiles, windows and tabs are left as they are.
+
+```text
+blowhorn chrome create-profile [OPTIONS]
+```
+
+| Flag | Type | Default | Description |
+| --- | --- | --- | --- |
+| `--json` | boolean | `false` | Emit the report as JSON with a stable shape, for a script or the desktop app |
+| `--platform` | string |  | Accepted and ignored by `blowhorn chrome`: this command never acts on a platform, so `--platform` has no effect here -- including a value inherited from `BLOWHORN_PLATFORM` or defaults.platform in .blowhorn.yaml |
+| `--pace` | string |  | Accepted by `blowhorn chrome create-profile` because `--pace` is a global flag, but this command does no paced work -- it sleeps between nothing -- so the value changes nothing about how it runs and appears only in the Pace column of the -v summary. Resolved as CLI flag, then `BLOWHORN_PACE`, then defaults.pace in .blowhorn.yaml (normal when none is set); an unrecognized value is rejected before anything runs |
+| `--risk-profile` | string |  | Accepted by `blowhorn chrome create-profile` because `--risk-profile` is a global flag, but this command does no gated work -- no Risk Profile hold, cap or pace applies to it -- so the value changes nothing about how it runs. A value after the command word wins over one before it; an unrecognized value is rejected before anything runs |
+
+Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `--log-dir`, `--profile`, `--exclude`, `--headless`, `--chrome-launch`, `--headed`, `--dry-run`, `--verbose`.
+
+Examples:
+
+```bash
+blowhorn chrome create-profile
+blowhorn chrome create-profile --json
 ```
 
 Output: json with `--json`, text otherwise.
@@ -161,11 +215,13 @@ Output: json with `--json`, text otherwise.
 
 ## blowhorn chrome extension-install
 
-Write the native-messaging host manifest Chrome launches for the Blowhorn Chrome extension, and print where the unpacked extension lives so you can load it. The manifest is com.blowhorn.chrome_extension.json under Chrome's NativeMessagingHosts directory (~/Library/Application Support/Google/Chrome/NativeMessagingHosts on macOS, ~/.config/google-chrome/NativeMessagingHosts on Linux), named com.blowhorn.chrome_extension, type stdio, path an executable launcher chrome_extension-host in Blowhorn's directory (~/Library/Application Support/Blowhorn on macOS, ~/.local/share/blowhorn on Linux) that runs this Python on the native-host program, and allowed_origins naming the extension id from the key in extension/manifest.json, the Chrome Web Store id and the older unpacked id. If you already installed the host, run this command again and reload the extension once. A missing key or an unreadable extension manifest is one sentence and nothing is written; `--dry-run` prints both paths and the manifest and writes nothing. This command does not launch Chrome and does not load the extension.
+Write the native-messaging host manifest Chrome launches for the Blowhorn Chrome extension, and print where the unpacked extension lives so you can load it. The manifest is com.blowhorn.chrome_extension.json under Chrome's NativeMessagingHosts directory (~/Library/Application Support/Google/Chrome/NativeMessagingHosts on macOS, ~/.config/google-chrome/NativeMessagingHosts on Linux), named com.blowhorn.chrome_extension, type stdio, path an executable launcher chrome_extension-host in Blowhorn's directory (~/Library/Application Support/Blowhorn on macOS, ~/.local/share/blowhorn on Linux) that runs the Python native-host program by default, or the Rust host with `--native-host` rust, and allowed_origins naming the extension id from the key in extension/manifest.json, the Chrome Web Store id and the older unpacked id. If you already installed the host, run this command again and reload the extension once. A missing key or an unreadable extension manifest is one sentence and nothing is written; `--dry-run` prints both paths and the manifest and writes nothing. This command does not launch Chrome and does not load the extension.
 
 `--profile` &lt;name&gt; names the Blowhorn profile whose mapped Chrome profile should get the extension (resolved through `blowhorn chrome map` on this machine); `--chrome-profile` `<directory>` names the Chrome profile directory itself, as `blowhorn chrome profiles` prints it, and can be given more than once. Either one writes the native host as above, checks the directory is in Chrome's Local State, and prints the steps to load the extension in that profile alone: Chrome has no file this command can write that installs an extension in one profile only, since the policy and the external-extensions file both reach every profile. A profile with no mapping, a directory Chrome does not have, and either flag with `--all-profiles` are one sentence and nothing is written; a store that cannot be reached is the named cause and exit 3. A `--profile` inherited from `BLOWHORN_PROFILE` or defaults.profile does not count.
 
-`--all-profiles` also asks Chrome to install that extension in every Chrome profile on this machine. It is every Chrome profile, not `--profile` all. The default route writes ExtensionInstallForcelist: silent, every profile, Chrome shows Managed by your organization, and macOS may ask for an administrator password once. On macOS that policy is your own user's, never the computer's, so other macOS users' Chrome is left alone. On Linux the policy file (/etc/opt/chrome/policies/managed/blowhorn.json) and the external file (/usr/share/google-chrome/extensions/&lt;id&gt;.json) need root, Blowhorn never asks for it, and a write this user cannot make is refused with the file, its exact content and the sudo command that writes that one file. Never run this command under sudo: the host and launcher would land under root's home, which your Chrome never reads, so a run under sudo is refused by name. `--external` writes Chrome's external-extensions file instead, so Chrome offers the install in each profile, one click there, and does not show that banner. `--external` without `--all-profiles` is refused and writes nothing. Switching route removes the other route's file for this extension id. Both routes name the extension id from that same key and the Chrome Web Store update url; Chrome can fetch the extension only once that id is published. A policy file that exists and cannot be read is one sentence and nothing is written. Per-profile lines say what Chrome was asked to do, never that a profile's copy was confirmed. Those lines cover the configured Chrome data directory. The policy route applies the extension to every Chrome profile on this machine. `--json` appends one trailing object (manifest, launcher, extension_dir, removed), for a script or the desktop app. With `--all-profiles` that object also carries route, extension_id, profiles, profiles_error and profiles_scope; with `--profile` or `--chrome-profile` it carries targets.
+`--all-profiles` also asks Chrome to install that extension in every Chrome profile on this machine. It is every Chrome profile, not `--profile` all. The default route writes ExtensionInstallForcelist: silent, every profile, Chrome shows Managed by your organization, and macOS may ask for an administrator password once. On macOS that policy is your own user's, never the computer's, so other macOS users' Chrome is left alone. On Linux the policy file (/etc/opt/chrome/policies/managed/blowhorn.json) and the external file (/usr/share/google-chrome/extensions/&lt;id&gt;.json) need root, Blowhorn never asks for it, and a write this user cannot make is refused with the file, its exact content and the sudo command that writes that one file. Never run this command under sudo: the host and launcher would land under root's home, which your Chrome never reads, so a run under sudo is refused by name. `--external` writes Chrome's external-extensions file instead, so Chrome offers the install in each profile, one click there, and does not show that banner. `--external` without `--all-profiles` is refused and writes nothing. Switching route removes the other route's file for this extension id. Both routes name the extension id from that same key and the Chrome Web Store update url; Chrome can fetch the extension only once that id is published. A policy file that exists and cannot be read is one sentence and nothing is written. Per-profile lines say what Chrome was asked to do, never that a profile's copy was confirmed. Those lines cover the configured Chrome data directory. The policy route applies the extension to every Chrome profile on this machine. `--json` appends one trailing object (manifest, launcher, extension_dir, removed), for a script or the desktop app. With `--all-profiles` that object also carries route, extension_id, profiles, profiles_error and profiles_scope; with `--profile` or `--chrome-profile` it carries targets. `--ensure`, with exactly one `--profile` or `--chrome-profile`, ensures the extension for that profile the way a run does on demand: it repairs the native host when missing or stale, registers the extension for that profile's data directory when nothing is there yet, and re-probes hello once. A profile already carrying a Chrome Web Store install is left alone, and a store install too old for this Blowhorn is reported with Chrome's own update step, never forced. `--ensure` refuses `--all-profiles` and `--external`, writes nothing with `--dry-run`, and never starts, restarts, or kills Chrome.
+
+`--native-host` rust points the same launcher at the Rust native host instead of the Python one: the launcher execs engine/rust/target/release/blowhorn-host in this checkout (built with 'cargo build `--release` -p blowhorn-host' in engine/rust), or the binary `--rust-host` names. It is off by default. A Rust host that is missing or not executable is one sentence, nothing is written, and the installed launcher stays as it is. The choice is kept in the launcher itself: a later install or `--ensure` with no `--native-host`, the desktop app's automatic one included, keeps the Rust host while its binary is still executable, and puts the Python launcher back, saying so, once it is not. `--native-host` python switches back. `--json` carries native_host, python or rust, and native_host_fallback, the sentence when the Rust host was replaced.
 
 ```text
 blowhorn chrome extension-install [OPTIONS]
@@ -175,7 +231,10 @@ blowhorn chrome extension-install [OPTIONS]
 | --- | --- | --- | --- |
 | `--all-profiles` | boolean | `false` | Also ask Chrome to install the Chrome extension in every Chrome profile on this machine. The default is the policy route (silent, every profile, Managed by your organization). This is every Chrome profile, not `--profile` all. |
 | `--external` | boolean | `false` | With `--all-profiles`, write Chrome's external-extensions file instead of the policy, so Chrome offers the install in each profile and does not show Managed by your organization. Refused without `--all-profiles`; nothing is written. |
+| `--ensure` | boolean | `false` | Ensure the extension for one named Chrome profile, the way a run does when it finds the extension missing, stale, or outdated: repair the native host, register the extension for that profile's data directory when nothing is there yet, and re-probe hello once. Needs exactly one `--profile` or `--chrome-profile`, and refuses `--all-profiles` and `--external`. A profile already carrying a Chrome Web Store install is left alone: Chrome's updater owns it, and this never forces a store update. Writes nothing with `--dry-run`. Never starts, restarts, or kills Chrome. |
 | `--chrome-profile` | string, repeatable |  | A Chrome profile directory, exactly as `blowhorn chrome profiles` prints it (`Profile 12`): write the host and print the steps to load the extension in that profile alone. Repeatable. Refused with `--all-profiles` |
+| `--native-host` | string |  | Which native host the launcher runs: python (the default) or rust, the Rust host from engine/rust built with 'cargo build `--release` -p blowhorn-host'. Unset keeps what is installed. A Rust host that is missing or not executable is refused and nothing is written. One of `python`, `rust`. |
+| `--rust-host` | string |  | With `--native-host` rust, the Rust host binary the launcher runs instead of this checkout's engine/rust/target/release/blowhorn-host. Refused without `--native-host` rust |
 | `--json` | boolean | `false` | Emit the report as JSON with a stable shape, for a script or the desktop app |
 | `--platform` | string |  | Accepted and ignored by `blowhorn chrome`: this command never acts on a platform, so `--platform` has no effect here -- including a value inherited from `BLOWHORN_PLATFORM` or defaults.platform in .blowhorn.yaml |
 | `--pace` | string |  | Accepted by `blowhorn chrome extension-install` because `--pace` is a global flag, but this command does no paced work -- it sleeps between nothing -- so the value changes nothing about how it runs and appears only in the Pace column of the -v summary. Resolved as CLI flag, then `BLOWHORN_PACE`, then defaults.pace in .blowhorn.yaml (normal when none is set); an unrecognized value is rejected before anything runs |
@@ -193,15 +252,20 @@ blowhorn chrome extension-install --all-profiles
 blowhorn chrome extension-install --all-profiles --dry-run
 blowhorn chrome extension-install --all-profiles --external
 blowhorn chrome extension-install --all-profiles --json
-blowhorn chrome extension-install --profile kate
+blowhorn chrome extension-install --profile company
 blowhorn chrome extension-install --chrome-profile 'Profile 12'
+blowhorn chrome extension-install --profile company --ensure
+blowhorn chrome extension-install --profile company --ensure --dry-run
+blowhorn chrome extension-install --native-host rust
+blowhorn chrome extension-install --native-host rust --rust-host ~/bin/blowhorn-host
+blowhorn chrome extension-install --native-host python
 ```
 
 Output: json with `--json`, text otherwise.
 
 ## blowhorn chrome extension-mode
 
-Show or set how runs drive the Blowhorn Chrome extension. background is the default. Both modes open Blowhorn's tab inactive beside the tab you are on, in a Blowhorn group that is collapsed by default, and take a screenshot through the debugger without selecting the tab. Nothing brings the tab forward. classic keeps focus emulation on only while an action holds the debugger and sends input through the page. background turns focus emulation on from the first page and sends trusted input. With no MODE it reports the mode a run started now would use and where it comes from: the `BLOWHORN_EXTENSION_ROLLBACK` override, your Blowhorn account setting, or the background default. A job whose driver mode is extension-classic or extension-background outranks the account setting for that job. Setting MODE writes extensionMode to your account's Blowhorn preferences in your Blowhorn account (sign in first with `blowhorn auth login`); default clears it. `--group` collapsed or open writes chromeGroup the same way: how the Blowhorn tab group sits beside your tabs between steps. Collapsed is the default. `--json` emits the report as one object, for a script or the desktop app.
+Show or set how runs drive the Blowhorn Chrome extension. background is the default. Both modes open Blowhorn's tab inactive beside the tab you are on (or in its own window with `--window` own-window), in a Blowhorn group that is collapsed by default, and take a screenshot through the debugger without selecting the tab. Nothing brings the tab forward. classic keeps focus emulation on only while an action holds the debugger and sends input through the page. background turns focus emulation on from the first page and sends trusted input. With no MODE it reports the mode a run started now would use and where it comes from: the `BLOWHORN_EXTENSION_ROLLBACK` override, your Blowhorn account setting, or the background default. A job whose driver mode is extension-classic or extension-background outranks the account setting for that job. Setting MODE writes extensionMode to your account's Blowhorn preferences in your Blowhorn account (sign in first with `blowhorn auth login`); default clears it. `--group` collapsed or open writes chromeGroup the same way: how the Blowhorn tab group sits beside your tabs between steps. Collapsed is the default. `--window` side-tab or own-window writes chromeWindow the same way: where Blowhorn works. side-tab is an inactive tab beside your tabs, the default. own-window is one window of its own, mostly behind yours with an edge showing, opened without focus and reused for the browser session; on a Mac keep that edge showing, since a window fully covered, minimized, hidden or on another desktop reads like a background tab. `--json` emits the report as one object, for a script or the desktop app.
 
 ```text
 blowhorn chrome extension-mode [OPTIONS] [MODE]
@@ -214,6 +278,7 @@ blowhorn chrome extension-mode [OPTIONS] [MODE]
 | Flag | Type | Default | Description |
 | --- | --- | --- | --- |
 | `--group` | string |  | collapsed or open: how the Blowhorn tab group sits beside your tabs between steps. default clears the account setting (collapsed) |
+| `--window` | string |  | side-tab or own-window: where Blowhorn works, in an inactive tab beside your tabs or in a window of its own, mostly behind yours with an edge showing, that never takes focus (on a Mac, keep that edge showing). default clears the account setting (side-tab) |
 | `--json` | boolean | `false` | Emit the report as JSON with a stable shape, for a script or the desktop app |
 | `--platform` | string |  | Accepted and ignored by `blowhorn chrome`: this command never acts on a platform, so `--platform` has no effect here -- including a value inherited from `BLOWHORN_PLATFORM` or defaults.platform in .blowhorn.yaml |
 | `--pace` | string |  | Accepted by `blowhorn chrome extension-mode` because `--pace` is a global flag, but this command does no paced work -- it sleeps between nothing -- so the value changes nothing about how it runs and appears only in the Pace column of the -v summary. Resolved as CLI flag, then `BLOWHORN_PACE`, then defaults.pace in .blowhorn.yaml (normal when none is set); an unrecognized value is rejected before anything runs |
@@ -228,13 +293,14 @@ blowhorn chrome extension-mode
 blowhorn chrome extension-mode classic
 blowhorn chrome extension-mode default --json
 blowhorn chrome extension-mode --group open
+blowhorn chrome extension-mode --window own-window --json
 ```
 
 Output: json with `--json`, text otherwise.
 
 ## blowhorn chrome extension-status
 
-Report whether the Blowhorn Chrome extension is installed and connected: the unpacked extension directory, the native-host manifest (missing, current, or stale against this checkout's extension/manifest.json), the launcher, and whether the Chrome extension answers hello on its socket. An answered hello proves the extension is loaded in the real Chrome and talking; this command navigates nowhere, probes no tab, and contacts no platform. A manifest whose launcher is gone is not installed. The report also says which install route is on disk: policy (ExtensionInstallForcelist, every Chrome profile, Managed by your organization), external (Chrome offers the install in each profile), or none. That read writes nothing. Which Chrome profile accepted that install is not something this command can see. It does name each Chrome profile whose Secure Preferences or Preferences record a Chrome Web Store install of the extension, with its version, and tells a store install too old for this Blowhorn to update in chrome://extensions, never to load it unpacked. The one thing written is the bridge lock beside the socket (chrome_extension.lock in Blowhorn's directory: ~/Library/Application Support/Blowhorn on macOS, ~/.local/share/blowhorn on Linux), which every Blowhorn client holds while it talks to the Chrome extension: while a run holds it, no hello is written, the Chrome extension is reported not checked, and `--json` carries bridge_busy: true with a detail saying a run may be holding the bridge. `--json` emits the report as one object, for a script or the desktop app.
+Report whether the Blowhorn Chrome extension is installed and connected: the unpacked extension directory, the native-host manifest (missing, current, or stale against this checkout's extension/manifest.json), the launcher, and whether the Chrome extension answers hello on its socket. An answered hello proves the extension is loaded in the real Chrome and talking; this command navigates nowhere, probes no tab, and contacts no platform. A manifest whose launcher is gone is not installed. The report also says which install route is on disk: policy (ExtensionInstallForcelist, every Chrome profile, Managed by your organization), external (Chrome offers the install in each profile), or none. That read writes nothing. Which Chrome profile accepted that install is not something this command can see. It does name each Chrome profile whose Secure Preferences or Preferences record a Chrome Web Store install of the extension, with its version, and tells a store install too old for this Blowhorn to update in chrome://extensions, never to load it unpacked. The one thing written is a lock beside each Chrome profile's own socket, in Blowhorn's directory (~/Library/Application Support/Blowhorn on macOS, ~/.local/share/blowhorn on Linux), which every Blowhorn client holds while it talks to that profile's Chrome extension: while a run holds one profile's lock, that profile's hello is not written, is reported not checked, and `--json` carries bridge_busy: true with a detail saying a run may be holding the bridge; another profile's run never waits on it. `--json` emits the report as one object, for a script or the desktop app.
 
 ```text
 blowhorn chrome extension-status [OPTIONS]
@@ -274,7 +340,7 @@ blowhorn chrome map [OPTIONS] name directory
 
 | Argument | Required | Description |
 | --- | --- | --- |
-| `name` | yes | The Blowhorn profile, as the store's profiles name it (kate) |
+| `name` | yes | The Blowhorn profile, as the store's profiles name it (company) |
 | `directory` | yes | The Chrome profile directory, exactly as `blowhorn chrome profiles` prints it (`Default`, `Profile 12`) |
 
 | Flag | Type | Default | Description |
@@ -292,11 +358,11 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn chrome map kate 'Profile 12'
-blowhorn chrome map kate 'Profile 3' --for linkedin,slack
-blowhorn chrome map kate 'Profile 12' --replace
-blowhorn chrome map kate 'Profile 12' --dry-run
-blowhorn chrome map alex Default --json
+blowhorn chrome map company 'Profile 12'
+blowhorn chrome map company 'Profile 3' --for linkedin,slack
+blowhorn chrome map company 'Profile 12' --replace
+blowhorn chrome map company 'Profile 12' --dry-run
+blowhorn chrome map personal Default --json
 ```
 
 Output: json with `--json`, text otherwise.
@@ -311,7 +377,7 @@ blowhorn chrome open-profile [OPTIONS] name
 
 | Argument | Required | Description |
 | --- | --- | --- |
-| `name` | yes | The Blowhorn profile, as the store's profiles name it (kate) |
+| `name` | yes | The Blowhorn profile, as the store's profiles name it (company) |
 
 | Flag | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -326,9 +392,9 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn chrome open-profile kate
-blowhorn chrome open-profile kate --sign-in linkedin
-blowhorn chrome open-profile kate --sign-in linkedin --json
+blowhorn chrome open-profile company
+blowhorn chrome open-profile company --sign-in linkedin
+blowhorn chrome open-profile company --sign-in linkedin --json
 ```
 
 Output: json with `--json`, text otherwise.
@@ -392,7 +458,7 @@ Output: json with `--json`, text otherwise.
 
 ## blowhorn chrome suggest
 
-Print a proposed mapping from every Blowhorn profile in the store to a Chrome profile on this machine, matched by display name (a Chrome profile named `Kate` proposes for the Blowhorn profile kate), and apply nothing. Each row says why: 'name match', `none` when no Chrome profile matches, `ambiguous` when two match, 'already mapped' for a profile that has a mapping, and the holder's name when the matching directory is mapped to someone else. Apply a row you agree with by running the `blowhorn chrome map` line it prints.
+Print a proposed mapping from every Blowhorn profile in the store to a Chrome profile on this machine, matched by display name (a Chrome profile named `Company` proposes for the Blowhorn profile company), and apply nothing. Each row says why: 'name match', `none` when no Chrome profile matches, `ambiguous` when two match, 'already mapped' for a profile that has a mapping, and the holder's name when the matching directory is mapped to someone else. Apply a row you agree with by running the `blowhorn chrome map` line it prints.
 
 `--json` emits the same rows as JSON. A store that cannot be reached is the named cause and exit 3.
 
@@ -428,7 +494,7 @@ blowhorn chrome unmap [OPTIONS] name [directory]
 
 | Argument | Required | Description |
 | --- | --- | --- |
-| `name` | yes | The Blowhorn profile, as the store's profiles name it (kate) |
+| `name` | yes | The Blowhorn profile, as the store's profiles name it (company) |
 | `directory` | no | The Chrome profile directory to unmap, as `blowhorn chrome profiles` prints it; needed only when the profile has more than one mapped on this machine |
 
 | Flag | Type | Default | Description |
@@ -443,9 +509,9 @@ Also takes the [shared flags](/docs/reference/cli/shared-flags/): `--config`, `-
 Examples:
 
 ```bash
-blowhorn chrome unmap kate
-blowhorn chrome unmap kate 'Profile 3'
-blowhorn chrome unmap kate --dry-run --json
+blowhorn chrome unmap company
+blowhorn chrome unmap company 'Profile 3'
+blowhorn chrome unmap company --dry-run --json
 ```
 
 Output: json with `--json`, text otherwise.

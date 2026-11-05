@@ -1,7 +1,8 @@
 {{- /* The Brand page at /brand/ (content/en/brand/_index.md): the logo files,
-  colors, type, Major Blowhorn and the usage rules, with the brand kit zip in
-  static/brand/. Every logo is placed as its own file, never recoloured: the
-  "don't" examples are the one place a mark is distorted, on purpose, with CSS.
+  colors, type, Major Blowhorn, Old Thunderlung and the usage rules, with the two
+  kit zips (the full brand kit and the logos only) in static/brand/. Every logo
+  is placed as its own file, never recoloured: the "don't" examples are the one
+  place a mark is distorted, on purpose, with CSS.
   Colors come from data/brand_colors.json, the kit's own colors file. */ -}}
 {{- /* Download links for one brand asset: SVG first, as the master and the
   file shown on the page, then PNG and WebP renders of it from the same folder.
@@ -30,10 +31,80 @@
                 </div>
               </li>
 {{- end -}}
+{{- /* The two kit downloads, in the hero and the closing call to action:
+  the full kit as the primary button, the logos only as the secondary one. */ -}}
+{{- define "partials/brand-kit-downloads.html" -}}
+{{- $icon := `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11"></path><path d="M7 11l5 5 5-5"></path><path d="M4 19h16"></path></svg>` -}}
+            <div class="brand-downloads">
+              <div class="brand-download">
+                <a class="button button-primary" href="{{ .full.url | relURL }}" download>
+                  {{ $icon | safeHTML }}
+                  Download full brand kit
+                </a>
+                <p class="caption muted">ZIP, {{ .full.size }}. Logos, colors, type, usage rules, Major Blowhorn, the troops, Old Thunderlung, the scenes and the launch press graphics.</p>
+              </div>
+              <div class="brand-download">
+                <a class="button button-secondary" href="{{ .logos.url | relURL }}" download>
+                  {{ $icon | safeHTML }}
+                  Download logos only
+                </a>
+                <p class="caption muted">ZIP, {{ .logos.size }}. Logos, icons and wordmarks in SVG and PNG, light and dark.</p>
+              </div>
+            </div>
+{{- end -}}
+{{- /* A grid of character tiles on cream, each with PNG and WebP downloads.
+  Takes dir (under assets/brand/mascot/), items (name, file without extension,
+  alt, w, h) and who (the name the download labels start with). */ -}}
+{{- define "partials/brand-character-grid.html" -}}
+          <ul class="mascot-grid">
+            {{- range .items }}
+            <li class="asset">
+              <div class="asset-stage stage-cream">
+                <img src="{{ printf "%s%s.webp" $.dir .file | relURL }}" alt="{{ .alt }}" width="{{ .w }}" height="{{ .h }}" loading="lazy">
+              </div>
+              <div class="asset-meta">
+                <div>
+                  {{- /* A hyphenated word ("three-quarter") wraps as one piece. */}}
+                  <p class="ui asset-name">{{ replaceRE `([^\s,]+-[^\s,]+)` `<span class="nowrap">$1</span>` (.name | htmlEscape) | safeHTML }}</p>
+                </div>
+                {{- $name := printf "%s, %s" $.who .name }}{{ $file := .file }}
+                <span class="asset-gets" role="group" aria-label="Download {{ $name }}">
+                  {{- range slice (dict "ext" "png" "label" "PNG") (dict "ext" "webp" "label" "WebP") }}
+                  <a class="asset-get caption{{ if eq .ext "png" }} asset-get-primary{{ end }}" href="{{ printf "%s%s.%s" $.dir $file .ext | relURL }}" download aria-label="Download {{ $name }} as {{ .label }}">{{ .label }}</a>
+                  {{- end }}
+                </span>
+              </div>
+            </li>
+            {{- end }}
+          </ul>
+{{- end -}}
+{{- /* Cast tiles on a dark stage with a WebP download. Takes items (name, note,
+  file, alt, w, h) from static/assets/brand/troops/ and who (the label prefix). */ -}}
+{{- define "partials/brand-troop-grid.html" -}}
+          <ul class="mascot-grid troop-grid">
+            {{- range .items }}
+            <li class="asset">
+              <div class="asset-stage troop-stage">
+                <img src="{{ printf "assets/brand/troops/%s-640.webp" .file | relURL }}" alt="{{ .alt }}" width="{{ .w }}" height="{{ .h }}" loading="lazy">
+              </div>
+              <div class="asset-meta">
+                <div>
+                  <p class="ui asset-name">{{ .name }}</p>
+                  {{- with .note }}
+                  <p class="caption muted">{{ . }}</p>
+                  {{- end }}
+                </div>
+                <span class="asset-gets" role="group" aria-label="Download {{ .name }}">
+                  <a class="asset-get caption asset-get-primary" href="{{ printf "assets/brand/troops/%s.webp" .file | relURL }}" download aria-label="Download {{ .name }} as WebP">WebP</a>
+                </span>
+              </div>
+            </li>
+            {{- end }}
+          </ul>
+{{- end -}}
 {{ define "main" }}
     {{- $logo := "assets/brand/logo/" -}}
     {{- $mascot := "assets/brand/mascot/" -}}
-    {{- $kit := .Params.kit.url | relURL -}}
     {{- $colors := hugo.Data.brand_colors -}}
     <main id="main" class="page brand-page">
       <div class="wrap">
@@ -43,11 +114,7 @@
             <h1 class="display">{{ .Title }}</h1>
             <p class="body-lg muted">{{ .Params.lead }}</p>
             <div class="brand-hero-actions">
-              <a class="button button-primary button-pop" href="{{ $kit }}" download>
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11"></path><path d="M7 11l5 5 5-5"></path><path d="M4 19h16"></path></svg>
-                Download brand kit
-              </a>
-              <p class="caption muted">ZIP, {{ .Params.kit.size }}. SVG and PNG, light and dark, colors and a PDF of this page.</p>
+              {{- partial "brand-kit-downloads.html" .Params.kits }}
             </div>
           </div>
           <figure class="brand-showcase">
@@ -68,7 +135,10 @@
           <a href="#color">Color</a>
           <a href="#type">Type</a>
           <a href="#major">Major Blowhorn</a>
+          <a href="#thunderlung">Old Thunderlung</a>
+          <a href="#cast">The cast</a>
           <a href="#bubbles">Speech bubbles</a>
+          <a href="#cards">Cards</a>
           <a href="#usage">Usage</a>
         </nav>
 
@@ -153,7 +223,7 @@
         <section id="color" class="brand-section" aria-labelledby="color-title">
           <div class="section-head">
             <h2 id="color-title" class="h2">Color</h2>
-            <p class="muted">Lead with teal and charcoal. Yellow is the accent, kept under a tenth of any layout. Coral belongs to the rooster, and he doesn't share.</p>
+            <p class="muted">Lead with teal and charcoal. Yellow is the accent, kept under a tenth of any layout. Coral is the rooster's, and an accent wherever it reads well.</p>
           </div>
           <div class="color-ratio" aria-hidden="true">
             <span class="ratio-teal"></span><span class="ratio-charcoal"></span><span class="ratio-near-black"></span><span class="ratio-white"></span><span class="ratio-yellow"></span><span class="ratio-coral"></span>
@@ -162,9 +232,10 @@
           {{- range first 2 $colors.groups }}
           <h3 class="h3 brand-subhead">{{ .name }}</h3>
           <ul class="swatches">
-            {{- range .colors }}
+            {{- $n := len .colors }}
+            {{- range $i, $c := .colors }}
             {{- $rgb := delimit .rgb ", " }}
-            <li class="swatch">
+            <li class="swatch {{ partial "card-variant.html" (dict "i" $i "grid" "swatches" "n" $n) }}">
               <span class="swatch-chip chip-{{ .token }}" aria-hidden="true"></span>
               <div class="swatch-meta">
                 <p class="ui swatch-name">{{ .name }}</p>
@@ -199,8 +270,8 @@
             <p class="muted">Three families, all free under the SIL Open Font License. The logo files don't need any of them: every letter is outlined.</p>
           </div>
           <ul class="grid grid-3 type-grid">
-            {{- range .Params.fonts }}
-            <li class="card type-card">
+            {{- range $i, $f := .Params.fonts }}
+            <li class="card type-card {{ partial "card-variant.html" (dict "i" $i "grid" "grid-3" "n" (len $.Params.fonts)) }}">
               <p class="type-aa {{ .class }}" aria-hidden="true">Aa</p>
               <p class="label">{{ .role }}</p>
               <h3 class="h3">{{ .family }}</h3>
@@ -217,7 +288,7 @@
             <h2 id="major-title" class="h2">Major Blowhorn</h2>
             <p class="muted">The mascot. Drill sergeant, rooster, part of the brand whether you asked or not. <a href="{{ (site.GetPage "/major").RelPermalink }}">Meet the Major</a></p>
           </div>
-          <div class="major-card brand-major">
+          <div class="major-card card-paper brand-major">
             <figure class="major-figure">
               <img src="{{ printf "%slocked-6/major-6-hat-left.webp" $mascot | relURL }}" alt="Major Blowhorn, a teal rooster in a drill sergeant's campaign hat, pointing and shouting into his bullhorn" width="657" height="560">
             </figure>
@@ -231,24 +302,30 @@
               </ul>
             </div>
           </div>
-          <ul class="mascot-grid">
-            {{- range .Params.mascot }}
-            <li class="asset">
-              <div class="asset-stage stage-cream">
-                <img src="{{ printf "%s%s.webp" $mascot .file | relURL }}" alt="{{ .alt }}" width="{{ .w }}" height="{{ .h }}" loading="lazy">
-              </div>
-              <div class="asset-meta">
-                <p class="ui asset-name">{{ .name }}</p>
-                {{- $name := printf "Major Blowhorn, %s" .name }}{{ $file := .file }}
-                <span class="asset-gets" role="group" aria-label="Download {{ $name }}">
-                  {{- range slice (dict "ext" "png" "label" "PNG") (dict "ext" "webp" "label" "WebP") }}
-                  <a class="asset-get caption{{ if eq .ext "png" }} asset-get-primary{{ end }}" href="{{ printf "%s%s.%s" $mascot $file .ext | relURL }}" download aria-label="Download {{ $name }} as {{ .label }}">{{ .label }}</a>
-                  {{- end }}
-                </span>
-              </div>
-            </li>
-            {{- end }}
-          </ul>
+          {{- partial "brand-character-grid.html" (dict "dir" $mascot "items" .Params.mascot "who" "Major Blowhorn") }}
+        </section>
+
+        <section id="thunderlung" class="brand-section" aria-labelledby="thunderlung-title">
+          <div class="section-head">
+            <h2 id="thunderlung-title" class="h2">Old Thunderlung</h2>
+            <p class="muted">Major Blowhorn's family bugle. Six generations of Blowhorns have carried it, and it has the dent to prove it.</p>
+            <p class="muted">It only sounds for real messages to real ears, so bots and bought crowds can't hear it. Nobody else plays it. As Major puts it: "Is not instrument. Is colleague."</p>
+          </div>
+          {{- partial "brand-character-grid.html" (dict "dir" $mascot "items" .Params.thunderlung "who" "Old Thunderlung") }}
+          <p class="caption muted brand-note">The red cord and tassels are its uniform. The plain version is for small or busy spaces.</p>
+        </section>
+
+        <section id="cast" class="brand-section" aria-labelledby="cast-title">
+          <div class="section-head">
+            <h2 id="cast-title" class="h2">The cast</h2>
+            <p class="muted">Major Blowhorn does not work alone. These are the troops who carry each message out, the barnyard recruits who joined them, and the troublemakers they keep out.</p>
+          </div>
+          <h3 class="h3 troop-group">The troops</h3>
+          {{- partial "brand-troop-grid.html" (dict "items" .Params.troops) }}
+          <h3 class="h3 troop-group">Barnyard recruits</h3>
+          {{- partial "brand-troop-grid.html" (dict "items" .Params.recruits) }}
+          <h3 class="h3 troop-group">Troublemakers</h3>
+          {{- partial "brand-troop-grid.html" (dict "items" .Params.troublemakers) }}
         </section>
 
         <section id="bubbles" class="brand-section" aria-labelledby="bubbles-title">
@@ -269,6 +346,50 @@
             <li>Neutral is for quotes and lists of lines, where colour would get noisy.</li>
             <li>Paper, mint and command keep their colours in dark mode; neutral follows the theme.</li>
             <li>Don't put links or buttons in a bubble, don't mix variants in one list, and don't draw a tail as a separate shape: use the bubble partial.</li>
+          </ul>
+        </section>
+
+        <section id="cards" class="brand-section" aria-labelledby="cards-title">
+          <div class="section-head">
+            <h2 id="cards-title" class="h2">Cards</h2>
+            <p class="muted">Five surfaces for cards, one for a floating panel. Pick the variant by what the content is, and never give two neighbours in a row or a column the same one. No card has a stripe on one edge.</p>
+          </div>
+          <ul class="card-specimens">
+            <li class="card card-paper">
+              <p class="label">Field order</p>
+              <p class="ui"><code>card-paper</code></p>
+              <p class="caption">Major's voice, testimonials, the one featured item in a section. Cream paper, near-black outline, hard shadow. Keeps its colours in dark mode.</p>
+            </li>
+            <li class="card card-dispatch">
+              <p class="label">Dispatch</p>
+              <p class="ui"><code>card-dispatch</code></p>
+              <p class="caption">Developer notes, API and JSON facts, commands. Near-black with a dashed teal edge and a mono prompt.</p>
+            </li>
+            <li class="card card-stamp">
+              <p class="label">Stamp</p>
+              <p class="ui"><code>card-stamp</code></p>
+              <p class="caption">Facts, stats, guarantees, proof points, compliance. No fill, a 2px ink edge, a boxed label.</p>
+            </li>
+            <li class="card card-field">
+              <p class="label">Field</p>
+              <p class="ui"><code>card-field</code></p>
+              <p class="caption">Feature and explanation grids, the common case. A flat tint with no edge.</p>
+            </li>
+            <li class="card card-plain">
+              <p class="label">Plain</p>
+              <p class="ui"><code>card-plain</code></p>
+              <p class="caption">Secondary lists and link lists. No fill, one hairline on every side.</p>
+            </li>
+          </ul>
+          <div class="card card-glass card-specimen-glass">
+            <p class="label">Glass</p>
+            <p class="ui"><code>card-glass</code></p>
+            <p class="caption">The liquid glass surface, for one floating panel over content: a menu, the header, a hero. Never a card in a grid.</p>
+          </div>
+          <ul class="brand-rules">
+            <li>Every card link lifts 2px and brightens its edge on hover. There is no glow, and nothing moves under reduced motion.</li>
+            <li>Structure stays on the card (padding, radius, gaps). The variant only sets the look.</li>
+            <li>The full rules and contrast ratios are in DESIGN.md, "Cards".</li>
           </ul>
         </section>
 
@@ -333,11 +454,11 @@
           <p class="muted brand-note">And no retired marks or old names. If it isn't in the kit, it isn't the logo.</p>
 
           <div class="grid grid-2 brand-name">
-            <div class="card">
+            <div class="card card-field">
               <h3 class="h3">The name</h3>
               <p>Blowhorn. One word, capital B. Always just Blowhorn, in formal copy too. Never BlowHorn, never Blow Horn.</p>
             </div>
-            <div class="card">
+            <div class="card card-plain">
               <h3 class="h3">The tagline</h3>
               <p>One message out, many ears in. Set it in Bricolage Grotesque, sentence case, and let it stand on its own.</p>
             </div>
@@ -345,14 +466,11 @@
         </section>
 
         <section class="brand-cta" aria-labelledby="cta-title">
-          <div>
+          <div class="brand-cta-copy">
             <h2 id="cta-title" class="h2">Take it with you</h2>
-            <p class="muted">Every file on this page, in SVG and PNG, plus the colors and a PDF of these rules.</p>
+            <p class="muted">The kit has the logos in SVG and PNG, the cast, scenes and press graphics in WebP, the colors and a PDF of the rules.</p>
           </div>
-          <a class="button button-primary button-pop" href="{{ $kit }}" download>
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v11"></path><path d="M7 11l5 5 5-5"></path><path d="M4 19h16"></path></svg>
-            Download brand kit
-          </a>
+          {{- partial "brand-kit-downloads.html" .Params.kits }}
         </section>
         <p class="caption muted brand-legal">Blowhorn and the Blowhorn logos are trademarks (see the <a href="{{ "legal/terms/#trademarks-and-brand-assets" | relURL }}">terms</a>). Use them to refer to Blowhorn, not as part of your own product's name or logo.</p>
       </div>

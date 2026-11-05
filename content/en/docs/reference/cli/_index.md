@@ -28,7 +28,7 @@ This is a standing rule, not a one-off pass. `tests/test_cli_help_coverage.py` e
 CLI framework: Python `Typer` (inspired by modern CLIs like `docker`, `kubectl`, and `gh`).
 If `typer`/`click` are missing, `blowhorn` attempts a one-time bootstrap install via `python -m pip install typer click` using the active interpreter.
 Should that bootstrap fail, `blowhorn` falls back to an argparse parser built from the same help and example constants as the Typer app, and the same test file asserts the two surfaces expose the same commands with identical prose - so the fallback can never drift into a second, staler help text.
-For a fresh virtualenv, install the full project runtime with `pip install -r engine/requirements.txt`; the CLI depends on `PyYAML`, `requests`, `playwright`, `tweepy`, `psycopg`, `pandas`, and `xlrd` in addition to `typer` and `click` (`gspread` and `oauth2client` are still listed only for the migration script's last step and go with it).
+For a fresh virtualenv, install the full project runtime with `pip install -r engine/requirements.txt`, which declares every runtime dependency and its version range. `psycopg`, `gspread` and `oauth2client` are still listed only for one-time maintainer scripts; no command imports them, and they go with those scripts.
 
 Global flags (available on all commands):
 
@@ -50,11 +50,11 @@ Global flags (available on all commands):
 `all` is a reserved alias, not a real profile name. When you use `--profile all`, Blowhorn expands to all configured profiles and then removes any names passed via `--exclude` / `--e`.
 Use `--exclude none` when you want to clear configured default exclusions for a single run.
 When you pass explicit profile names with `--profile your-profile,second-profile`, those named profiles are processed even if they appear in the configured exclusion list.
-Chrome is never run headless. With `--headless`, Chrome puts `HeadlessChrome/<version>` in the `User-Agent` header of every request while its client hints still say Google Chrome, which tells every site the run is automated. So `--headless` now means *unattended*: the browser opens as a background window (minimized, kept out of the foreground, the same window a flagless run opens), and no one is waited for at a sign-in or challenge. Use `--headed` when you want the window visible and in front so you can finish a sign-in yourself. `blowhorn schedule tick` runs its jobs unattended but never forces visibility onto them - each job resolves its own from its params, then the environment, then Settings - so scheduled jobs never wait for someone who is not there whatever the window does. `trigger-now` runs its one activity attended, so it may wait for you.
+Google Chrome is never run headless. With `--headless`, Chrome puts `HeadlessChrome/<version>` in the `User-Agent` header of every request while its client hints still say Google Chrome, which tells every site the run is automated. So `--headless` now means *unattended*: the browser opens as a background window (minimized, kept out of the foreground, the same window a flagless run opens), and no one is waited for at a sign-in or challenge. Use `--headed` when you want the window visible and in front so you can finish a sign-in yourself. `blowhorn schedule tick` runs its jobs unattended but never forces visibility onto them - each job resolves its own from its params, then the environment, then Settings - so scheduled jobs never wait for someone who is not there whatever the window does. `trigger-now` runs its one activity attended, so it may wait for you.
 
 `--headed` and `--headless` are one choice with two spellings, so exactly one of them survives resolution. `--headed` wins a tie, but only from an equal or higher-precedence layer: `defaults.headed: true` in `.blowhorn.yaml` does **not** cancel a `--headless` typed on the command line or set through `BLOWHORN_HEADLESS`. A run that passes `--headless` opens the background window whatever the file says.
 
-Blowhorn drives only the installed Google Chrome: `/Applications/Google Chrome.app` on macOS, `google-chrome` or `google-chrome-stable` on `PATH` or `/opt/google/chrome/chrome` on Linux ([Linux](/docs/reference/chrome/#linux); Chromium is not supported yet). When it is missing, every browser-backed command refuses with one sentence instead of starting Playwright's bundled Chromium, whose user agent and client-hint brands both read `HeadlessChrome`. The refusal comes before the browser driver is started and ends the command with exit 1: a `--profile all` run stops there rather than repeating the sentence for every profile and platform and finishing as if it had run.
+Blowhorn drives only the installed Google Chrome ([requirements](/docs/reference/chrome/#requirements)). When it is missing, every browser-backed command refuses with one sentence instead of starting Playwright's bundled Chromium, whose user agent and client-hint brands both read `HeadlessChrome`. The refusal comes before the browser driver is started and ends the command with exit 1: a `--profile all` run stops there rather than repeating the sentence for every profile and platform and finishing as if it had run.
 
 `--chrome-launch <auto|cdp|persistent|extension>` says how this run reaches that Chrome, for one run: `extension` (the default) drives Chrome through the [Blowhorn Chrome extension](/docs/reference/chrome/#the-extension-default) and starts no Playwright Chrome; `persistent` launches Blowhorn's own Chrome from `chrome.automation_data_dir` with the mapped Chrome profile directory inside it, `cdp` attaches to a Chrome that is already open (it must be `ready` per `blowhorn chrome status`; your daily Chrome asks you to Allow the first connection of the run, a [dedicated attach Chrome](/docs/reference/chrome/#a-dedicated-attach-chrome-no-allow-dialog) does not, and the run works in its own visible window), and `auto` attaches when Chrome is ready and launches otherwise, saying `using blowhorn chrome (persistent): <next step>` once on stderr when it falls back. Resolved as the flag, then `BLOWHORN_CHROME_LAUNCH`, then `BLOWHORN_BROWSER_DRIVER`, then `defaults.chrome.launch_mode` in `.blowhorn.yaml`, then the built-in `extension`; `BLOWHORN_EXTENSION_ROLLBACK=1` selects `persistent` in place of `BLOWHORN_BROWSER_DRIVER=extension`, the file's value or the built-in; any other value is refused before anything runs, naming the four. Every browser run needs the profile mapped with `blowhorn chrome map` first, in either mode: an unmapped profile you named is `ERROR` and exit 1, one reached through `--profile all` is one `WARNING` line and the walk continues. A job `blowhorn schedule tick` or `trigger-now` runs resolves its own driver: the job's driver mode, then `BLOWHORN_BROWSER_DRIVER`, then `defaults.chrome.launch_mode`, then the built-in `extension`, with `BLOWHORN_EXTENSION_ROLLBACK=1` beating a job's `extension` as it beats `BLOWHORN_BROWSER_DRIVER=extension`, the file's value and the built-in; `blowhorn schedule tick` and `trigger-now` hand their `--chrome-launch` to every job they run, and a `tick` with none of its own leaves the launch mode unset so each job resolves its own; an explicit `--chrome-launch` on the tick still wins. `trigger-now` keeps a launch mode only when `--chrome-launch` or `BLOWHORN_CHROME_LAUNCH` chose it; otherwise its job resolves its own mode the same way. A forced `cdp` against a Chrome that is not ready is refused with `chrome status`'s next-step sentence; the run tells you to click Allow before it connects and waits up to 120 seconds for it; a connection still unanswered then is refused by name. A job `schedule tick` runs is unattended: it is told nothing and waits 20 seconds, so it fails by name rather than hangs. `trigger-now` is attended and gets the 120-second window and the notice. `blowhorn chrome status` shows the mode a run would use right now; see [Launch modes](/docs/reference/chrome/#launch-modes) and [Choose how Blowhorn reaches Chrome](/docs/how-to/settings/launch-mode/).
 
@@ -64,7 +64,7 @@ Blowhorn drives only the installed Google Chrome: `/Applications/Google Chrome.a
 
 For commands that support multi-profile execution (`post`, `accept`, `follow`, `unfollow`, `comment`, `analytics`, `report`), you can pass `--profile all` or a comma-delimited subset such as `--profile profile-a,profile-b` to run only that set of profiles.
 
-All commands accept `--dry-run`, but they do not all preview the same amount. `post`, `report`, `find`, `withdraw`, and `accept` run their real pipeline with every write suppressed, so they print what *would* happen. (`withdraw` goes further: preview is its default and it acts only when you pass `--apply` - for it `--dry-run` simply forces the preview it would have produced anyway. `accept` does the same on the received-invitations page: it opens the page, resolves the same Accept controls a real run would click, names everyone it found, and clicks nobody - see [Accepting incoming invitations](/docs/how-to/grow/accept-invitations/).) The remaining action commands - `follow`, `unfollow`, `comment`, and `analytics` - stop immediately and report `dry-run: no changes made` without doing any work. (`source --platform github` lists the audience and, on `--dry-run`, writes nothing; a real run stores one row per login and prints no email address.) (`follow --platform github` is the one exception inside that list: it has no browser to stop before, so its preview performs the real follower walk and names exactly who would be followed - see [Previewing a GitHub follow run](/docs/how-to/grow/follow-on-github/#previewing-a-github-follow-run).) (`unfollow` runs on Bluesky only, with `--platform bluesky --target <handle>`, and its `--limit` is accepted and not read. On X, or with no platform, the platform is refused by name before a browser opens and the run exits 1, dry run included: X unfollow does not run until a follow-back badge and a confirmed landing are both read. `unfollow` cannot be scheduled.) `schedule`, `desktop`, `service`, `store`, `auth`, `uninstall` and `setup` are not covered by that sentence: they implement their own dry-run output (for example `schedule tick --dry-run` reports the activities it would run, `service start --dry-run` prints the command it would run, `store --import --dry-run` prints the import report without writing the connection file, `auth login --dry-run` names where it would sign you in and opens, waits for and saves nothing, `auth logout --dry-run` lists what it would remove, and `uninstall --dry-run` lists every item it would remove or keep, and `setup --dry-run` reports each step it would write as `planned`). Either way nothing is published.
+All commands accept `--dry-run`, but they do not all preview the same amount. `post`, `report`, `find`, `withdraw`, and `accept` run their real pipeline with every write suppressed, so they print what *would* happen. (`withdraw` goes further: preview is its default and it acts only when you pass `--apply` - for it `--dry-run` simply forces the preview it would have produced anyway. `accept` does the same on the received-invitations page: it opens the page, resolves the same Accept controls a real run would click, names everyone it found, and clicks nobody - see [Accepting incoming invitations](/docs/how-to/grow/accept-invitations/).) The remaining action commands - `follow`, `unfollow`, `comment`, and `analytics` - stop immediately and report `dry-run: no changes made` without doing any work. (`source --platform github` lists the audience and, on `--dry-run`, writes nothing; a real run stores one row per login and prints no email address.) (`follow --platform github` and `star` are the exceptions inside that list: neither has a browser to stop before, so follow's preview performs the real follower walk and names exactly who would be followed - see [Previewing a GitHub follow run](/docs/how-to/grow/follow-on-github/#previewing-a-github-follow-run) - and star's preview reads each repository's star state and names exactly which would be starred, issuing no PUT - see [Star repositories on GitHub](/docs/how-to/grow/star-on-github/).) (`unfollow` runs on Bluesky only, with `--platform bluesky --target <handle>`, and its `--limit` is accepted and not read. On X, or with no platform, the platform is refused by name before a browser opens and the run exits 1, dry run included: X unfollow does not run until a follow-back badge and a confirmed landing are both read. `unfollow` cannot be scheduled.) `schedule`, `desktop`, `service`, `store`, `auth`, `uninstall` and `setup` are not covered by that sentence: they implement their own dry-run output (for example `schedule tick --dry-run` reports the activities it would run, `service start --dry-run` prints the command it would run, `store --replay-spool --dry-run` counts what a replay would push without writing any of it, `auth login --dry-run` names where it would sign you in and opens, waits for and saves nothing, `auth logout --dry-run` lists what it would remove, and `uninstall --dry-run` lists every item it would remove or keep, and `setup --dry-run` reports each step it would write as `planned`). Either way nothing is published.
 
 Because the `COMMAND SUMMARY` footer is shown only when `-v` / `--verbose` is used, a dry run of one of the stop-early commands prints nothing at all without `-v` - except `source --platform github`, which lists the audience it would store. That silence is expected, not a failure.
 
@@ -79,26 +79,30 @@ and checked against it, so a page says what `--help` says.
 | Command | What it does |
 | --- | --- |
 | [`blowhorn accept`](/docs/reference/cli/accept/) | Accept pending LinkedIn connection invitations other people have sent you, one at a time with a randomized pause between each. |
-| [`blowhorn analytics`](/docs/reference/cli/analytics/) | blowhorn analytics: activity, history, import-exports, operations, pages. |
-| [`blowhorn auth`](/docs/reference/cli/auth/) | blowhorn auth: login, logout, status, switch-organization. |
-| [`blowhorn chrome`](/docs/reference/cli/chrome/) | blowhorn chrome: attach-chrome, confirm, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap. |
+| [`blowhorn analytics`](/docs/reference/cli/analytics/) | blowhorn analytics: activities, activity, history, import-exports, operations, pages. |
+| [`blowhorn auth`](/docs/reference/cli/auth/) | blowhorn auth: anonymous-usage-stats, login, logout, status, switch-organization. |
+| [`blowhorn chrome`](/docs/reference/cli/chrome/) | blowhorn chrome: active-tab, attach-chrome, confirm, create-profile, discover, extension-enable, extension-install, extension-mode, extension-status, map, open-profile, profiles, status, suggest, unmap. |
+| [`blowhorn classify-url`](/docs/reference/cli/classify-url/) | Say what a link is, by the platform rules the engine keeps. |
 | [`blowhorn comment`](/docs/reference/cli/comment/) | Post LinkedIn, Reddit, or Bluesky comments from scheduled activities or ad-hoc target/message flags. |
 | [`blowhorn config`](/docs/reference/cli/config/) | blowhorn config: get, path, set, show. |
 | [`blowhorn content`](/docs/reference/cli/content/) | blowhorn content: approve, delete, get, list, posts, upsert. |
 | [`blowhorn desktop`](/docs/reference/cli/desktop/) | blowhorn desktop: build, install, start, status. |
-| [`blowhorn find`](/docs/reference/cli/find/) | Search Bluesky for posts matching a query with optional date, author, and relevancy filters. |
+| [`blowhorn find`](/docs/reference/cli/find/) | Search Bluesky and GitHub for posts, issues, and pull requests matching a query, with optional date, author, and relevancy filters. |
 | [`blowhorn follow`](/docs/reference/cli/follow/) | Follow accounts on X, Bluesky, or GitHub. |
+| [`blowhorn github`](/docs/reference/cli/github/) | blowhorn github: squatters. |
+| [`blowhorn org`](/docs/reference/cli/org/) | blowhorn org: members. |
 | [`blowhorn post`](/docs/reference/cli/post/) | Publish pending posts or amplify existing content across supported platforms. |
-| [`blowhorn profile`](/docs/reference/cli/profile/) | blowhorn profile: accounts, auth, current, delete, get, list, set, status, switch. |
+| [`blowhorn profile`](/docs/reference/cli/profile/) | blowhorn profile: accounts, auth, create, current, delete, get, list, set, status, switch, update. |
 | [`blowhorn report`](/docs/reference/cli/report/) | Generate a consolidated report summary from the exports already sitting in the repository-root data/analytics/ directory. |
-| [`blowhorn risk`](/docs/reference/cli/risk/) | blowhorn risk: set, show. |
-| [`blowhorn schedule`](/docs/reference/cli/schedule/) | blowhorn schedule: bootstrap, delete, destinations, get, list, pause, resume, status, tick, trigger-now, upsert, validate, why. |
-| [`blowhorn service`](/docs/reference/cli/service/) | blowhorn service: adopt, cancel, install, restart, run, start, status, stop, test, tick-now, uninstall, update. |
+| [`blowhorn risk`](/docs/reference/cli/risk/) | blowhorn risk: grid, set, show. |
+| [`blowhorn schedule`](/docs/reference/cli/schedule/) | blowhorn schedule: bootstrap, delete, destinations, fleet, get, list, pause, resume, status, tick, trigger-now, upsert, validate, why. |
+| [`blowhorn service`](/docs/reference/cli/service/) | blowhorn service: adopt, cancel, install, restart, run, start, status, stop, test, uninstall, update. |
 | [`blowhorn setup`](/docs/reference/cli/setup/) | Set up Blowhorn on this computer, safely and repeatably. |
 | [`blowhorn slack`](/docs/reference/cli/slack/) | blowhorn slack: delete, edit, profiles, react, send, whoami. |
 | [`blowhorn source`](/docs/reference/cli/source/) | GitHub lists one audience of one or more repositories (stargazers unless you name another) and stores one row per login. |
+| [`blowhorn star`](/docs/reference/cli/star/) | Star GitHub repositories. |
 | [`blowhorn stop`](/docs/reference/cli/stop/) | Stop everything, right now: on this machine, or on every machine sharing the store with `--all`. |
-| [`blowhorn store`](/docs/reference/cli/store/) | Report whether this computer can reach the Blowhorn database, and say why not when it cannot. |
+| [`blowhorn store`](/docs/reference/cli/store/) | Report whether this computer can use Blowhorn, and say why not when it cannot: signed in, a client the server still accepts, and a member of the organization. |
 | [`blowhorn unfollow`](/docs/reference/cli/unfollow/) | Unfollow one Bluesky account (`--platform` bluesky `--target` &lt;handle&gt;) through the Bluesky API. |
 | [`blowhorn uninstall`](/docs/reference/cli/uninstall/) | Remove Blowhorn from this machine. |
 | [`blowhorn upgrade`](/docs/reference/cli/upgrade/) | Carry this Mac's local data from an earlier home into this one. |
@@ -119,15 +123,18 @@ an account without Blowhorn straight to Blowhorn to start the beta (`--no-browse
 address instead of opening it, and `--json` opens nothing either, its first line naming the address,
 which is how the desktop app runs it; `BLOWHORN_CLOUD_TOKEN` still wins when set);
 `auth logout` revokes the saved API token on Blowhorn, then forgets it,
-the account in `cloud.yaml` and the local attestation cache;
+the account in `cloud.yaml` and the local attestation cache
+(a `cloud.yaml` written for another macOS user on this Mac is ignored, so you read as signed out until you sign in);
 `auth switch-organization` switches the signed-in account to another of its organizations in place
 ([auth switch-organization](/docs/reference/cli/auth/#blowhorn-auth-switch-organization)).
 
 `blowhorn store` is a single command, not a group: it reports whether this
-machine can reach your account and why not, opens the bastion tunnel
-when nothing is listening, and with `--import` fills the connection once from your account configuration. It exits 3, a code nothing else uses, when your account is unreachable. During early access the connection is set up by your Blowhorn
-administrator. `blowhorn config get
-<key>` reads one option and says which document holds it.
+machine can use your account and why not (signed in, a build the server still
+accepts, a member of the organization), and `--replay-spool` sends the run
+records waiting in the local spool. It exits 3, a code nothing else uses, when
+your account cannot be used; [Fix cannot reach your account](/docs/how-to/troubleshoot/store-unavailable/)
+maps each cause to its fix. There is no local or self-hosted store to connect
+to. `blowhorn config get <key>` reads one option and says which document holds it.
 
 `blowhorn setup` is a single command: it checks that `blowhorn` is on `PATH`,
 reads your Chrome profiles from Chrome's `Local State` file, writes the Chrome
@@ -141,12 +148,12 @@ It exits 1 when a step failed. See
 [Finish setup on this computer](/docs/how-to/set-up/finish-setup/).
 
 `blowhorn uninstall` is a single command: it removes Blowhorn from this
-machine, in order - the background service (`ai.blowhorn.service`, booted out
+machine, in order - the background service (`ai.blowhorn.service`, or `ai.blowhorn.service.dev` for a checkout, booted out
 and its LaunchAgent file removed), the Chrome native host (the
 `com.blowhorn.chrome_extension` manifest, its launcher under
 `~/Library/Application Support/Blowhorn`, and the every-profile install entries
-`chrome extension-install --all-profiles` wrote), the `~/.local/bin/blowhorn`
-and `~/.local/bin/blowhorn-axi` launchers (only when they carry the installer's marker),
+`chrome extension-install --all-profiles` wrote), the `~/.local/bin/blowhorn`,
+`~/.local/bin/blowhorn-axi` and `~/.local/bin/blowhorn-mcp` launchers (only when they carry the installer's marker),
 `/Applications/Blowhorn.app` (the service label it registered is booted out
 with the service, and the bundle first unregisters its own Login Items entries - open at login and the
 background service - by running `--unregister-login-items`; a bundle whose
@@ -163,13 +170,13 @@ not unregistered, and when a real run cannot read an account Keychain item.
 The sign-in on this machine (the Keychain item `ai.blowhorn.cloud-token`, the
 entitlement cache `ai.blowhorn.entitlement.v2`, `cloud.yaml` and the `cloud-token`
 file) is removed on every uninstall. Local data is kept and named (the store
-connection file, the
+connection file an older version wrote, which Blowhorn no longer reads, the
 desktop app's state, Blowhorn's own Chrome trees under `~/.blowhorn`, the app's
-per-user Library state, the checkout's `data/cache/` and each profile's `browser/`
-sessions); `--purge` removes it after you type `purge` at the prompt, or with
+per-user Library state and the checkout's `data/cache/`, which holds each
+profile's runtime state); `--purge` removes it after you type `purge` at the prompt, or with
 `--yes` when there is no terminal (`--json --purge` needs `--yes` outside a dry
-run, and `--yes` without `--purge` or `--discard-unsynced-runs` is refused). The shared store is never touched.
-Dragging the app to the Trash does not run this command. After this version has recorded the bundle once, the next launch of a different copy signs out. An in-app update keeps the sign-in. The first launch of this version keeps it.
+run, and `--yes` without `--purge` or `--discard-unsynced-runs` is refused). Your Blowhorn account is never touched.
+Dragging the app to the Trash does not run this command. After this version has recorded the bundle once, the next launch of a different copy signs out, unless that copy is a genuine Blowhorn signed by Blowhorn's own developer team (another macOS user on this Mac reinstalling Blowhorn does not sign you out). An in-app update keeps the sign-in. The first launch of this version keeps it.
 Nothing under a Chrome profile is read or written. It is refused by name, in a
 dry run too, while a scheduler tick, a service pass, an extension run,
 `Blowhorn.app`, a desktop app started from this checkout or, with `--purge`,
@@ -225,7 +232,7 @@ Chrome Web Store page in each Chrome profile named (repeat the flag for more tha
 directory, writes nothing, and with `--json` reports `ok: false` and exits 1 when Chrome was
 asked in no profile. `chrome extension-status --json` reports each profile's state as
 `profile_states` (`enabled`, `disabled`, `removed` or `absent`).
-All but `chrome unmap`, `chrome extension-install`, `chrome extension-status`, `chrome extension-enable` and `chrome extension-mode` read two files under a Chrome data
+All but `chrome unmap`, `chrome extension-install`, `chrome extension-status`, `chrome active-tab`, `chrome extension-enable` and `chrome extension-mode` read two files under a Chrome data
 directory (`Local State`, `DevToolsActivePort`) and nothing else - `attach-chrome`
 reads the dedicated tree's pair rather than the daily one's, plus its `SingletonLock`; `chrome unmap`
 reads only your account, so a mapping can be removed when those files are gone;
@@ -254,10 +261,8 @@ person: `slack send` sends one message (a thread reply from a
 message link, using the link's `?thread_ts=` parent, or a top-level post from a
 channel link), `slack whoami` asks Slack's `auth.test` who that profile's
 credential is, and `slack profiles` lists every profile's captured workspaces
-from your account without calling Slack (a profile whose `config.yaml` still
-carries Slack keys while your account holds no session reads `refused`, as its
-send would be). `send` sends as one `--profile`, or as each of several
-(`--profile rian,alex`, or `--profile rian --profile alex`) one after another, waiting a random `--pace`-scaled
+from your account without calling Slack. `send` sends as one `--profile`, or as each of several
+(`--profile work,personal`, or `--profile work --profile personal`) one after another, waiting a random `--pace`-scaled
 interval before each confirmed send after the first. Each profile gets its own
 idempotency key, ledger entry and result, and one profile's failure never stops
 the next, except an unavailable store, which ends the walk and reports every
@@ -460,6 +465,11 @@ For `follow --profile all`, if any `--target` handle matches one of your configu
 
 ### `--profile` and `--exclude` {#section-profile-and---exclude}
 
+A profile name resolves against your organization's profile list, read once
+per run: `--profile all` is every profile on it minus the excluded list, and
+a typed name must match exactly one profile, ignoring case. No folder on
+this computer adds a profile ([Profile reference](/docs/reference/profiles/#which-profiles-exist)).
+
 Naming profiles explicitly makes `--exclude` inert: `--profile your-profile` runs `your-profile` even when the
 config excludes it, and only `--profile all` defers to the exclusion list. Commands say which
 way it went - `Excluding profiles: …` when the list is applied, `Ignoring configured exclusions
@@ -480,13 +490,12 @@ blowhorn profile status                       # what each profile is set up for,
 blowhorn profile status --check-sessions      # read-only session probes, recorded per profile
 blowhorn profile status --profile your-profile --check-platform github  # one platform only: your-profile's GH_TOKEN in the store against GitHub, no browser
 blowhorn profile status --chrome              # adds the chrome profile each one is mapped to here
-blowhorn profile get your-profile                     # settings with secrets masked (GH_* from the store)
-blowhorn profile set your-profile EMAIL=you@example.com
-blowhorn profile set your-profile GH_TOKEN=ghp_yourtoken  # stored in the store, never in config.yaml
-blowhorn profile set new-profile --create EMAIL=new@example.com   # its activity in your account's profiles (bound to the account holding the email), then the directory from the template
-blowhorn profile set new-profile --create EMAIL=new@example.com --subject <uuid>  # name the account when the email alone cannot
-blowhorn profile set new-profile --register           # add a profile that exists only under data/profiles/ to the store's profiles
-blowhorn profile delete new-profile --yes      # retires the store row, then moves data/profiles/new-profile to data/profiles/.trash/
+blowhorn org members                          # the people a profile can represent
+echo '{"name": "new-profile", "userId": "<member id>"}' | blowhorn profile create --payload-stdin  # leave userId out for a brand
+echo '{"name": "new-profile", "description": "what it posts"}' | blowhorn profile update new-profile --payload-stdin
+blowhorn profile set your-profile GH_TOKEN=ghp_yourtoken  # stored in your account, never in a file
+blowhorn profile get your-profile             # the profile, its accounts, and which credential fields are set
+blowhorn profile delete new-profile --yes      # deletes it in your organization and unlinks its accounts; nothing local moves
 blowhorn profile switch your-profile
 blowhorn profile auth --platform x            # a sign-in records the session as valid, checked now
 blowhorn profile auth --platform bluesky --profile your-profile  # prompts for handle + app password; saved only if Bluesky accepts the login

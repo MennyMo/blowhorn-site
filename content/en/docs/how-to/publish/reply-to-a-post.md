@@ -10,9 +10,9 @@ and the reply in `Message Text`, approve the activity, and run `blowhorn
 comment`:
 
 ```bash
-blowhorn content upsert --payload '{"Platform":"linkedin","Profile":"kate","Comment on":"https://www.linkedin.com/feed/update/urn:li:activity:123/","Message Text":"Great post!","Approved?":"yes"}'
-blowhorn comment --platform linkedin --profile kate --dry-run
-blowhorn comment --platform linkedin --profile kate
+blowhorn content upsert --payload '{"Platform":"linkedin","Profile":"company","Comment on":"https://www.linkedin.com/feed/update/urn:li:activity:123/","Message Text":"Great post!","Approved?":"yes"}'
+blowhorn comment --platform linkedin --profile company --dry-run
+blowhorn comment --platform linkedin --profile company
 ```
 
 `blowhorn comment` covers LinkedIn, Reddit, and Bluesky. It only ever
@@ -26,7 +26,7 @@ tweet's URL in `Comment on` and the reply in `Message Text`, then run
 `post` for that profile and platform:
 
 ```bash
-blowhorn post --platform x --profile kate
+blowhorn post --platform x --profile company
 ```
 
 ## Reply without an activity
@@ -34,7 +34,7 @@ blowhorn post --platform x --profile kate
 `--target` with `--message` comments once, with no activity read or marked:
 
 ```bash
-blowhorn comment --platform linkedin --profile kate --target "https://www.linkedin.com/feed/update/urn:li:activity:123/" --message "Great post!"
+blowhorn comment --platform linkedin --profile company --target "https://www.linkedin.com/feed/update/urn:li:activity:123/" --message "Great post!"
 ```
 
 Name one profile: ad-hoc mode refuses `--profile all`. For a Slack thread

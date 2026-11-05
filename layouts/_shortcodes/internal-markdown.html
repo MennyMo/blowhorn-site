@@ -1,0 +1,19 @@
+{{- /* Renders a plain Markdown file from the blowhorn repository, mounted under
+  assets/ by config/internal/hugo.toml, as the body of the page that calls it.
+  Params: file (the asset path, such as "internal/core-messaging.md") and
+  repo_dir (the file's folder in the blowhorn repository, such as
+  "marketing/brand"). The file's first line is dropped when it is a "# " title,
+  because the page title already shows it. Relative Markdown links
+  ](x.md), ](x.md#frag) and ](../a/b.md) are rewritten to absolute GitHub
+  links under repo_dir, since the sibling files are not site pages. http(s),
+  root-relative and #fragment links stay as they are. */ -}}
+{{- $file := .Get "file" -}}
+{{- $dir := .Get "repo_dir" -}}
+{{- if not (and $file $dir) }}{{ errorf "internal-markdown: file and repo_dir are required (%s)" .Position }}{{ end -}}
+{{- $res := resources.Get $file -}}
+{{- if not $res }}{{ errorf "internal-markdown: assets/%s is not mounted (run make site-internal; %s)" $file .Position }}{{ end -}}
+{{- $text := $res.Content | replaceRE "\r\n" "\n" -}}
+{{- if hasPrefix $text "# " }}{{ $text = $text | replaceRE `^[^\n]*\n?` "" }}{{ end -}}
+{{- $base := printf "https://github.com/blowhorn-ai/blowhorn/blob/master/%s" $dir -}}
+{{- $text = $text | replaceRE `\]\(((?:\.\./)+)?([A-Za-z0-9_][^)\s:#]*\.md)(#[^)\s]*)?\)` (printf "](%s/$1$2$3)" $base) -}}
+{{- $text | $.Page.RenderString (dict "display" "block") -}}

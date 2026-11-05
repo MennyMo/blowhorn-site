@@ -5,7 +5,7 @@
   "description": "Multilogin is a professional antidetect browser for multi-accounting, ad ops and automation. Blowhorn is a different thing: real people posting as themselves.",
   "layout": "versus",
   "weight": 42,
-  "lastmod": "2026-10-12",
+  "lastmod": "2026-10-26",
   "competitor": "Multilogin",
   "mark": "ML",
   "site_url": "https://multilogin.com/",
@@ -19,7 +19,7 @@
   "us": [
     "You speak as real people, on accounts that are really theirs",
     "You want a social tool (queue, schedule, amplify, outreach), not a browser",
-    "Real Chrome, signed in as you, is what you want"
+    "A real browser, signed in as you, is what you want"
   ],
   "price_them": "Free plan; Pro from $7.08 per month billed annually; Business from $26.67",
   "price_src": "https://multilogin.com/pricing/",
@@ -27,12 +27,17 @@
     {
       "f": "What it is",
       "t": "A multi-profile browser for many separate identities",
-      "b": "A social tool that acts as you, from your own Chrome"
+      "b": "A social tool that acts as you, from your own browser"
     },
     {
       "f": "Browser fingerprints and proxies",
       "t": "Yes, that's the product",
-      "b": "No. Real Chrome, real you"
+      "b": "No. Real browser, real you"
+    },
+    {
+      "f": "IP address each post comes from",
+      "t": "A proxy for each profile",
+      "b": "Each computer's own internet connection, so each teammate posts from their own IP address. No proxy to buy or run"
     },
     {
       "f": "Queue, schedule, amplify",
@@ -47,7 +52,7 @@
     {
       "f": "AI agents",
       "t": "API",
-      "b": "MCP server, REST API, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
+      "b": "MCP server, AI skills and a full CLI with --json and --dry-run on writes. Your agent drives, you hold pause"
     },
     {
       "f": "Bought engagement",
@@ -63,7 +68,7 @@
     },
     {
       "q": "Is Blowhorn an antidetect browser?",
-      "a": "No. Blowhorn uses your real Chrome, signed in as you, and hands CAPTCHAs and 2FA back to you. Curious what sites can see about your browser?",
+      "a": "No. Blowhorn uses your real browser, signed in as you, and hands CAPTCHAs and 2FA back to you. Curious what sites can see about your browser?",
       "link": {
         "href": "https://tells.blowhorn.ai/",
         "label": "Run the free check at Blowhorn Tells"

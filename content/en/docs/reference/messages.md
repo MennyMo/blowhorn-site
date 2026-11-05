@@ -8,7 +8,7 @@ weight: 219
 What a failed run prints, why, and what fixes it. Entries are keyed by
 the sentence's first words. Exits: 0 ran clean; 1 the run failed; 2 the
 invocation was wrong; 3 your account was unreachable. A run cancelled
-between passes exits 75.
+at a safe point (between passes, or by Stop in the side panel) exits 75.
 
 ## Your account
 
@@ -40,12 +40,24 @@ that stops sending its heartbeat is released automatically after
 30 seconds.
 
 `chrome refused the connection (Allow was declined ...)`: the attach
-handshake did not complete. Keep a Chrome window open, approve the
+handshake did not complete. Keep a Google Chrome window open, approve the
 Allow dialog, and run again. In a scheduled pass the Allow window is
 short; prefer the extension default.
 
 `extension_outdated` with two versions: the installed extension is older
 than the run needs. Reload or update the extension and run again.
+
+`error: chrome unavailable (blowhorn-engine-NNNN)`: Chrome was not
+running, Blowhorn opened it for the run, and the start did not get as far
+as the extension. The sentence above the summary says what happened and
+what to do, and the code names the case; the codes are listed under
+[Opening Chrome when it is closed](/docs/reference/chrome/#opening-chrome-when-it-is-closed).
+Exit 1.
+
+`error: page did not load`: Google Chrome was running. LinkedIn did not
+finish loading in the Blowhorn tab, or its received list could not be
+read. The sentence above the summary says which, and nothing was done.
+Run the activity again. Exit 1.
 
 A profile with no Chrome mapping on this computer, a mapped directory
 Chrome no longer has, or an identity that drifted since binding is
@@ -74,6 +86,17 @@ retrying, and never retry to beat the limiter.
 '...'`: the schedule activity's word is not one Blowhorn knows; use `once`,
 `hourly`, `daily`, `weekly`, `monthly`, or `every:N`. See
 [Job options and schedules](/docs/reference/jobs/).
+
+`Could not download the media: ...`: the activity's `Image URL`, `GDrive
+Link`, or `Video URL` could not be fetched, and the sentence says why - the
+host could not be reached after its retries, accepted the connection and sent
+nothing for 30 seconds, took longer than 10 minutes to send the file, broke
+off mid-transfer, answered with an HTTP error, sent a file over Blowhorn's cap
+(25 MiB for an image, 1024 MiB for a video), or sent something that is not a
+PNG, JPEG, GIF, WebP, HEIC, MP4, MOV, or WebM file (often a sign-in page: make
+the link public or download it yourself). The activity fails and stays
+pending; nothing was published, and the run goes on to the next activity. The
+caps are Blowhorn's own, not a platform's limit.
 
 An activity `clicked, outcome not read` is not an error: the sending control
 was clicked and no confirmation was read back. Check the platform,

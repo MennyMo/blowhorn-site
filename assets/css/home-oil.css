@@ -111,7 +111,8 @@
 
 /* Notes (cards as gallery wall labels) */
 .oil .oil-notes { list-style: none; padding: 0; margin: var(--head-gap) 0 0; display: grid; gap: var(--grid-gap); }
-.oil .oil-notes > li { border-top: 1px solid var(--oil-gilt); padding-top: 20px; }
+/* An even gilt hairline frames each label, like a gallery card: never a rule on one edge (DESIGN.md, "Cards"). */
+.oil .oil-notes > li { border: 1px solid var(--oil-gilt); padding: 20px; }
 .oil .oil-notes > li > a { display: block; color: inherit; text-decoration: none; }
 .oil .oil-notes > li > a:hover .oil-h3 { color: var(--oil-accent); }
 .oil .oil-notes p { margin: 10px 0 0; color: var(--oil-muted); }
@@ -141,8 +142,10 @@
 .oil .oil-faq dd { margin: 6px 0 0; color: var(--oil-muted); line-height: 1.6; }
 .oil .oil-term { margin-top: var(--head-gap); min-width: 0; }
 .oil .oil-caption { margin-top: 10px; font-size: 0.95rem; color: var(--oil-muted); }
-.oil .oil-quote { margin: var(--intro-gap) 0; padding-left: 20px; border-left: 3px solid var(--oil-gilt); }
+.oil .oil-quote { margin: var(--intro-gap) 0; padding: var(--space-4) var(--space-6); border-radius: var(--radius-lg); }
 .oil .oil-quote p { font-family: var(--oil-serif); font-style: italic; font-size: 1.45rem; line-height: 1.35; color: var(--oil-ink); margin: 0; }
+/* The quote is paper, which stays light in dark mode, so it keeps the light oil ink. */
+.oil .oil-quote.card-paper { --oil-ink: #2B2118; }
 
 /* A slow, subtle lift on hover; off for reduced motion */
 @media (prefers-reduced-motion: no-preference) {

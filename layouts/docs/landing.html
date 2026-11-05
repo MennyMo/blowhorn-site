@@ -2,6 +2,6 @@
   own h1, cards and platform strip, so the template only wraps it. */ -}}
 {{ define "main" -}}
 <div class="docs-landing">
-  {{ .Content }}
+  {{ partial "docs-content.html" . }}
 </div>
 {{ end -}}

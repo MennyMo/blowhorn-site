@@ -1,0 +1,38 @@
+{{- /* {{< signup-form kind="waitlist" topic="tiktok" >}} or
+  {{< signup-form kind="newsletter" >}}: the signup form for a coming-soon
+  waitlist or the Blowhorn newsletter. The form posts to Blowhorn's own
+  signup service at api.blowhorn.ai (see signup-worker/). With JavaScript,
+  assets/js/signup.js submits it in place and shows an inline success;
+  without JavaScript the Worker redirects to /coming-soon/thanks/.
+  The off-screen field is a honeypot: the Worker answers success for it
+  without storing anything. */ -}}
+{{- $kind := .Get "kind" | default "waitlist" -}}
+{{- $topic := .Get "topic" | default "" -}}
+{{- $endpoint := cond (eq $kind "waitlist") "waitlist" "subscribe" -}}
+{{- $button := cond (eq $kind "waitlist") "Notify me" "Subscribe" -}}
+{{- $note := cond (eq $kind "waitlist")
+  "One email when this feature ships, nothing else. Your address is only used for that, and every email carries an unsubscribe link."
+  "Your address is only used for the Blowhorn newsletter, and every email carries an unsubscribe link." -}}
+{{- $js := resources.Get "js/signup.js" | minify | fingerprint -}}
+<form id="signup-form" class="signup-form" method="post" action="https://api.blowhorn.ai/api/{{ $endpoint }}">
+  <p>
+    <label for="signup-email">Email address</label><br>
+    <input id="signup-email" name="email" type="email" required maxlength="254" autocomplete="email">
+  </p>
+  {{- if eq $kind "waitlist" }}
+  <p>
+    <label for="signup-remark">What do you want from it?</label><br>
+    <textarea id="signup-remark" name="remark" maxlength="500" rows="3"></textarea>
+  </p>
+  <input type="hidden" name="topic" value="{{ $topic }}">
+  {{- end }}
+  <input type="hidden" name="source_page" value="{{ .Page.RelPermalink }}">
+  <p class="signup-honeypot" aria-hidden="true">
+    <label for="signup-website">Website</label>
+    <input id="signup-website" name="website" type="text" tabindex="-1" autocomplete="off">
+  </p>
+  <p class="muted">{{ $note }}</p>
+  <p><button type="submit">{{ $button }}</button></p>
+  <p id="signup-status" role="status"></p>
+</form>
+<script src="{{ $js.RelPermalink }}" defer></script>

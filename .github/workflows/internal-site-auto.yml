@@ -1,0 +1,88 @@
+name: Internal site (auto)
+
+# Redeploys internal.blowhorn.ai through internal-site.yml (workflow_call,
+# secrets: inherit) when something it is built from changes:
+#   - push to master touching this repository's part of the internal build
+#     (internal config, Worker, layouts, assets, toolchain, these workflows);
+#   - schedule, every 15 minutes: polls blowhorn-ai/blowhorn master for
+#     commits in the last 30 minutes on the paths internal-site.yml checks out,
+#     so private product changes ship without spending that repository's
+#     Actions minutes. Needs DMG_SOURCE_TOKEN; fails, not skips, without it.
+#   - workflow_dispatch: run the auto path by hand.
+# The product repository can also start internal-site.yml directly with
+# repository_dispatch (deploy-internal-site). See docs/deploy.md,
+# "Internal site hosting".
+#
+# The decision is make site-internal-poll (.github/scripts/internal-poll.sh),
+# which prints one summary line and nothing from the private repository.
+# The deploy inherits internal-site.yml's own concurrency group, so a
+# deploy started here queues behind a manual one instead of cancelling it.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - config/internal/**
+      - internal-worker/**
+      - static-internal/**
+      - layouts/**
+      - assets/**
+      - .github/workflows/internal-site.yml
+      - .github/workflows/internal-site-auto.yml
+      - .github/scripts/internal*
+      - Makefile
+      - package.json
+      - package-lock.json
+      - .nvmrc
+      - go.mod
+      - go.sum
+      - hugo.toml
+      - postcss.config.js
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      blowhorn_ref:
+        description: blowhorn-ai/blowhorn ref to build (branch, tag or SHA)
+        required: false
+        default: master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: internal-site-auto
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  decide:
+    name: Decide whether to deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      should_deploy: ${{ steps.poll.outputs.should_deploy }}
+      blowhorn_ref: ${{ steps.poll.outputs.blowhorn_ref }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check blowhorn-ai/blowhorn for internal changes
+        id: poll
+        env:
+          EVENT: ${{ github.event_name }}
+          BLOWHORN_REF: ${{ inputs.blowhorn_ref || 'master' }}
+          DMG_SOURCE_TOKEN: ${{ github.event_name == 'schedule' && secrets.DMG_SOURCE_TOKEN || '' }}
+        run: make --no-print-directory site-internal-poll
+
+  deploy:
+    needs: decide
+    if: needs.decide.outputs.should_deploy == 'true'
+    uses: ./.github/workflows/internal-site.yml
+    with:
+      blowhorn_ref: ${{ needs.decide.outputs.blowhorn_ref }}
+    secrets: inherit

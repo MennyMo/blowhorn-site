@@ -28,11 +28,28 @@
     groups.forEach(function (li) { if (li !== except) setOpen(li, false); });
   }
   function isOpen(li) { return trig(li).getAttribute('aria-expanded') === 'true'; }
+  // The sheet fills the screen below the header. Anything above the header
+  // (the announcement bar, until it scrolls away) moves its bottom edge, so
+  // measure it while the sheet is open instead of assuming --header-h.
+  var sheetFrame = 0;
+  function fitSheet() {
+    sheetFrame = 0;
+    header.style.setProperty('--sheet-top', Math.max(0, Math.round(header.getBoundingClientRect().bottom)) + 'px');
+  }
+  function onSheetScroll() {
+    if (!sheetFrame) sheetFrame = window.requestAnimationFrame(fitSheet);
+  }
   function setSheet(open) {
     if (!toggle) return;
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     header.classList.toggle('is-menu-open', open);
-    if (!open) closeAll();
+    if (open) {
+      fitSheet();
+      window.addEventListener('scroll', onSheetScroll, { passive: true });
+    } else {
+      window.removeEventListener('scroll', onSheetScroll);
+      closeAll();
+    }
   }
 
   groups.forEach(function (li) {

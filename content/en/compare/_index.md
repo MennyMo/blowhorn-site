@@ -6,7 +6,7 @@ lead: Plenty of tools will post for you. Blowhorn posts as you, from every compu
 layout: compare
 aliases:
   - /versus/
-lastmod: 2026-10-12
+lastmod: 2026-10-26
 sitemap:
   changefreq: monthly
   priority: 0.5
@@ -41,6 +41,12 @@ rows:
     linkedin: { level: no, text: "One cloud seat per account" }
     advocacy: { level: no, text: "One cloud account" }
     local: { level: no, text: "One computer at a time" }
+  - feature: Each teammate posts from their own IP address, with no proxy to buy
+    blowhorn: { level: yes, text: "Yes" }
+    schedulers: { level: no, text: "Vendor servers" }
+    linkedin: { level: no, text: "Mostly an IP the vendor assigns" }
+    advocacy: { level: no, text: "The vendor's platform" }
+    local: { level: partial, text: "Usually a proxy per profile" }
   - feature: Coordinated so two computers don't send the same post
     blowhorn: { level: yes, text: "Yes" }
     schedulers: { level: no, text: "Not applicable" }
@@ -97,7 +103,7 @@ rows:
     local: { level: partial, text: "Any site, by hand" }
 why:
   - title: It's you, not a bot
-    body: Blowhorn drives the Chrome you already sign in to. No server logs in with your password, session cookie or 2FA secret.
+    body: Blowhorn drives the browser you already sign in to. No server logs in with your password, session cookie or 2FA secret.
     link: /docs/explanation/your-own-chrome/
   - title: One queue, every computer
     body: Add computers for coverage. Each action is claimed by one computer, and whichever computer is awake keeps the schedule.
@@ -118,5 +124,5 @@ fair:
   - Cloud schedulers post with every laptop closed and cover more networks today, with calendars, approvals and inboxes Blowhorn doesn't try to match.
   - LinkedIn growth tools run high-volume outbound sequences. Blowhorn does careful LinkedIn outreach, not a sequencer.
   - Employee advocacy suites bring approvals, content libraries and compliance archiving for large programs.
-  - Local multi-profile browsers run on more operating systems. Blowhorn is macOS 13 or newer.
+  - Local multi-profile browsers run on more operating systems. Blowhorn runs on your computer ([System requirements](/docs/reference/requirements/)).
 ---

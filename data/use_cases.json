@@ -6,7 +6,7 @@
       "name": "Launch day",
       "title": "Blowhorn for launch day",
       "weight": 10,
-      "headline": "The first hour is the launch.",
+      "headline": "Make the first hour count.",
       "lead": "Schedule the announcement and its amplifications ahead of time. Every profile you run joins the same sound wave at the moment you pick.",
       "description": "Plan a product launch so the announcement goes out everywhere at the right moment, and every profile you add amplifies it in the first hour.",
       "art": {
@@ -54,7 +54,7 @@
         },
         {
           "q": "How does it post?",
-          "a": "LinkedIn, X, Reddit and Hacker News: Blowhorn types in your own Chrome, signed in as you. Slack, Bluesky and GitHub go through their APIs. The desktop app and the Python CLI share the same queue."
+          "a": "LinkedIn, X, Reddit and Hacker News: Blowhorn types in your own browser, signed in as you. Slack, Bluesky and GitHub go through their APIs. The desktop app and the Python CLI share the same queue."
         },
         {
           "q": "Will the same post go out twice?",
@@ -121,7 +121,7 @@
         },
         {
           "t": "Human-paced by design",
-          "b": "Types key by key in your own Chrome for LinkedIn, X, Reddit and Hacker News. Caps itself. CAPTCHA and 2FA stay with you."
+          "b": "Types key by key in your own browser for LinkedIn, X, Reddit and Hacker News. Caps itself. CAPTCHA and 2FA stay with you."
         }
       ],
       "prompt": "Draft the release posts from CHANGELOG.md, react on the GitHub issue, submit to Hacker News, then --dry-run the rest.",
@@ -200,7 +200,7 @@
         },
         {
           "t": "Reply without seven tabs",
-          "b": "Send comments and replies from the same queue you posted from. LinkedIn, X, Reddit and Hacker News run in your own Chrome."
+          "b": "Send comments and replies from the same queue you posted from. LinkedIn, X, Reddit and Hacker News run in your own browser."
         }
       ],
       "prompt": "Queue pre-event, day-of and follow-up posts for the talk, then --dry-run.",
@@ -235,6 +235,89 @@
         {
           "label": "How scheduling works",
           "page": "/docs/explanation/scheduling"
+        }
+      ]
+    },
+    {
+      "slug": "linkedin-outreach",
+      "name": "Careful LinkedIn outreach",
+      "title": "Blowhorn for careful LinkedIn outreach",
+      "weight": 40,
+      "headline": "LinkedIn hygiene, at human pace.",
+      "lead": "Invite people to your page, connect mentees, accept invitations and withdraw stale invites, in your own browser, signed in as you. No password handed to a server, and no full outbound sequencer: flagged invitations are never auto-accepted.",
+      "description": "Careful LinkedIn outreach from your own browser: invite to your page, connect mentees, accept invitations and withdraw stale invites, at human pace, with built-in caps.",
+      "art": {
+        "src": "assets/brand/cast/trench-trooper-base.webp",
+        "alt": "Trench Trooper, a muddy pig in a helmet holding a rifle with a teal tab bayonet and a gold periscope"
+      },
+      "pains": [
+        {
+          "t": "Invites pile up",
+          "b": "Stale invitations sit for months, and the safe ones wait in the same pile as the risky ones."
+        },
+        {
+          "t": "Your login on their server",
+          "b": "Growth tools ask for your password, your 2FA secret or your session cookie, then sign in as you from their cloud."
+        },
+        {
+          "t": "A sequencer you don't need",
+          "b": "You want light LinkedIn hygiene, not a high-volume outbound funnel."
+        }
+      ],
+      "gets": [
+        {
+          "t": "Your browser, as you",
+          "b": "Blowhorn does the typing and clicking in your own browser profile. No vendor server logs in as you."
+        },
+        {
+          "t": "Human-paced by design",
+          "b": "Types key by key, pauses between actions and caps itself, with 20 LinkedIn invitations per run. CAPTCHA and 2FA always come to you."
+        },
+        {
+          "t": "Flagged invitations skipped",
+          "b": "Accept the safe ones and withdraw the stale ones. Flagged invitations are never auto-accepted."
+        },
+        {
+          "t": "Light outreach, nothing more",
+          "b": "Invite to your page, connect mentees, accept and withdraw. Not a full outbound sequencer, and we don't pretend to be one."
+        }
+      ],
+      "prompt": "Connect my mentees, withdraw invitations older than a month, then --dry-run invite for our page.",
+      "major": "Steady, soldier. One invite at a time, at human pace.",
+      "faq": [
+        {
+          "q": "Is this for high-volume outbound or SDR teams?",
+          "a": "No. This page is for founders, DevRel and consultants doing light LinkedIn hygiene. High-volume outbound and SDR teams are out of fit: Blowhorn caps itself, moves at human pace, and is not a full outbound sequencer."
+        },
+        {
+          "q": "Will flagged invitations be accepted?",
+          "a": "Never auto-accepted. Flagged invitations are skipped; you accept the safe ones and withdraw the stale ones."
+        },
+        {
+          "q": "Who signs in to LinkedIn?",
+          "a": "You do, in your own browser. Blowhorn types and clicks there, and no password, 2FA secret or session cookie is handed to a vendor's server."
+        },
+        {
+          "q": "Is it an outbound sequencer?",
+          "a": "No, and it doesn't pretend to be one. It covers careful outreach: invite to your page, connect, accept and withdraw."
+        }
+      ],
+      "related": [
+        {
+          "label": "LinkedIn automation",
+          "page": "/solutions/linkedin-automation"
+        },
+        {
+          "label": "Blowhorn for founders",
+          "page": "/for/founders"
+        },
+        {
+          "label": "Blowhorn for DevRel",
+          "page": "/for/devrel"
+        },
+        {
+          "label": "Blowhorn for agencies and consultants",
+          "page": "/for/agencies"
         }
       ]
     }

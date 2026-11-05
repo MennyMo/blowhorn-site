@@ -2,15 +2,22 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://blowhorn.ai/schemas/hero.schema.json",
   "title": "Home page hero variants",
-  "description": "data/hero.json: the headline, subhead and art variants of the blowhorn.ai home page hero, which of them rotate, and how. Every rotating variant is rendered into the static HTML and layouts/_partials/hero-rotation-head.html shows one at page load; the default is what no-JS visitors, crawlers and social previews get. See docs/hero-variants.md.",
+  "description": "data/hero.json: the headline and art variants of the blowhorn.ai home page hero, the one tagline shown under every headline, which of them rotate, and how. Every rotating variant is rendered into the static HTML and layouts/_partials/hero-rotation-head.html shows one at page load; the default is what no-JS visitors, crawlers and social previews get. See docs/hero-variants.md.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["default", "rotation", "variants"],
+  "required": ["default", "tagline", "rotation", "variants"],
   "properties": {
     "$schema": { "type": "string" },
     "default": {
       "description": "Id of the variant no-JS visitors see, and that the meta, Open Graph and JSON-LD descriptions are built from. Must be one of the rotating ids (the build fails otherwise).",
       "$ref": "#/definitions/id"
+    },
+    "tagline": {
+      "description": "The one plain description of Blowhorn shown under the h1 for every variant, in sentence case. It replaces the per-variant subhead in the hero. Plain text, hyphens never em dashes.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "not": { "pattern": "\u2014" }
     },
     "rotation": { "$ref": "#/definitions/rotation" },
     "media": { "$ref": "#/definitions/media" },
@@ -109,21 +116,28 @@
     "variant": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "headline", "subhead", "differentiators"],
+      "required": ["id", "headline", "differentiators"],
       "properties": {
         "id": { "$ref": "#/definitions/id" },
         "headline": {
           "description": "The h1. Plain text, hyphens never em dashes.",
           "type": "string",
           "minLength": 1,
-          "maxLength": 60,
+          "maxLength": 80,
           "not": { "pattern": "\u2014" }
         },
         "subhead": {
-          "description": "The paragraph under the h1. Plain text, hyphens never em dashes.",
+          "description": "A longer plain-words description of this hero. Optional. Not rendered in the hero (the tagline is); the default variant's subhead, when set, feeds the meta, Open Graph, Twitter and JSON-LD descriptions. Plain text, hyphens never em dashes.",
           "type": "string",
           "minLength": 1,
           "maxLength": 220,
+          "not": { "pattern": "\u2014" }
+        },
+        "identification": {
+          "description": "The self-identification line for heroes that carry one, in plain words. Optional. Kept for reference, not rendered. Plain text, hyphens never em dashes.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 180,
           "not": { "pattern": "\u2014" }
         },
         "cta": {
@@ -137,7 +151,7 @@
           }
         },
         "art": {
-          "description": "The illustration beside the copy, a partial in layouts/_partials/hero-art/: stage is Major Blowhorn barking into your own Chrome, fan is one message fanning out to every platform. Defaults to stage.",
+          "description": "The illustration beside the copy, a partial in layouts/_partials/hero-art/: stage is Major Blowhorn barking into your own browser, fan is one message fanning out to every platform. Defaults to stage.",
           "type": "string",
           "enum": ["stage", "fan"]
         },

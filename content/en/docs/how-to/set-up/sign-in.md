@@ -67,13 +67,16 @@ Keychain asks once whether `python` may use the saved sign-in. Choose
 
 ## From the app
 
-Open `blowhorn://signin`, the link the Blowhorn Chrome extension's **Sign in**
-offers. The app opens [Blowhorn](https://cloud.blowhorn.ai) in your browser; sign in there, or create
+Open `blowhorn://signin`, the link offered by **Sign in** in the Blowhorn extension in
+Google Chrome. The app opens [Blowhorn](https://cloud.blowhorn.ai) in your browser; sign in there, or create
 an account, then choose **Allow**. `blowhorn://signup` starts the same sign-in for a new account
 (see [Create a Blowhorn account](/docs/how-to/set-up/create-an-account/)). The sign-in sends its
-answer to the command line on this computer (`127.0.0.1`), and the browser
-tab closes on its own while the app comes forward with the sign-in
-finished. If the tab stays open, close it and return to the app. The token is kept by Blowhorn's command line, never by
+answer to the command line on this computer (`127.0.0.1`), and the app comes
+forward with the sign-in finished. The browser tab says **Authorization complete**.
+If the sign-in ran in Google Chrome with the Blowhorn extension installed, the tab
+closes itself a moment later. Anywhere else, including a first sign-in before you
+have installed the extension, it stays open: close it, or choose **Return to Blowhorn**
+to bring the app forward. The token is kept by Blowhorn's command line, never by
 the app. If the browser stays on an update page, update Blowhorn. If it stays on a Blowhorn error page instead, the sign-in was refused: no answer comes back. If Blowhorn cannot be reached at all, the app says it could not reach cloud.blowhorn.ai: check your connection, then try again. In guided setup, **Cancel** on the
 waiting screen stops the wait at once; left alone, the app tells you
 you're not signed in once the wait runs out. Try again, and if that page
@@ -84,7 +87,22 @@ does not open a second tab once the sign-in answer arrives. If your account has 
 Blowhorn plan yet, open [Blowhorn](https://cloud.blowhorn.ai) yourself, or choose
 **Your account and plan** in the app's account menu, to start the beta there.
 
+## Come back after your sign-in ends
+
+If your sign-in ended without you choosing **Sign out** (it timed out, or its
+saved token is gone), the app still remembers who you were and opens on a
+**Welcome back** screen that greets you by name, instead of the locked Home.
+Choose **Sign in** to sign in again. Choose **Not you?** to
+forget the remembered account and get the first sign-in screen. Major
+Blowhorn's welcome line on this screen, and on the first sign-in screen,
+changes each time it shows. After a **Sign out** the app remembers nobody, so
+you get the first sign-in screen.
+
 ## Sign out
+
+In the app, open the account menu at the bottom of the rail and choose **Sign
+out**. The app takes you to the sign-in screen, where **Sign in with your
+browser** signs you back in, as the same account or another. From Terminal:
 
 ```bash
 blowhorn auth logout
@@ -101,7 +119,7 @@ remove and removes nothing.
 
 ## Related
 
-- [Install the app](/docs/how-to/set-up/install-the-app/) - download and first run.
+- [Install the app](/docs/how-to/set-up/install-the-app/) - download and first muster.
 - [Add a profile](/docs/how-to/set-up/add-a-profile/) - create a profile once you are signed in.
 - [The Blowhorn app, screen by screen](/docs/reference/use-the-desktop-app/) -
   the Setup screen.

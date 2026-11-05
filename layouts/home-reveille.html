@@ -23,4 +23,6 @@
 {{ define "scripts" }}
     {{- $army := resources.Get "js/army.js" | minify | fingerprint }}
     <script src="{{ $army.RelPermalink }}" defer></script>
+    {{- $cycle := resources.Get "js/hero-cycle.js" | minify | fingerprint }}
+    <script src="{{ $cycle.RelPermalink }}" defer></script>
 {{ end }}

@@ -1,0 +1,34 @@
+{{- /* One article (or tip) in a collection grid. data-* attributes feed
+       the client-side search and tag filter in resources.js. */ -}}
+{{- /* Context: dict "page" (the article), "i" (its index in the list) and "deal"
+  (the list's variants from card-deal.html, one per card, also printed on a
+  filtered list as data-card-deal so a filter can hand them out again). */ -}}
+{{- $variant := index .deal .i }}
+{{- with .page }}
+{{- $tags := .Params.tags | default slice }}
+{{- $column := .Params.column | default "" }}
+{{- $columnLabel := partial "column-label.html" $column }}
+<article class="article-card {{ $variant }}" data-card data-tags="{{ delimit $tags " " }}{{ with $column }} column:{{ . }}{{ end }}" data-column="{{ $column }}" data-search="{{ lower (printf "%s %s %s %s" .Title .Params.summary (delimit $tags " ") $columnLabel) }}">
+  <p class="article-card-kicker">
+    {{ if in $tags "tips" }}Tip{{ else }}Article{{ end }}
+    <span aria-hidden="true">·</span>
+    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+    {{- with $columnLabel }}
+    <span aria-hidden="true">·</span>
+    <span class="article-card-column">{{ . }}</span>
+    {{- end }}
+  </p>
+  <h3 class="article-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+  <p class="article-card-summary">{{ .Params.summary }}</p>
+  {{- with .Params.video }}
+  {{- with .duration }}<p class="article-card-video">Video · {{ . }}</p>{{ end }}
+  {{- end }}
+  {{- with .GetTerms "tags" }}
+  <div class="tag-chips-row" role="group" aria-label="Tags">
+    <ul class="tag-chips">
+      {{ range . }}<li><a class="tag-chip" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}
+    </ul>
+  </div>
+  {{- end }}
+</article>
+{{- end }}

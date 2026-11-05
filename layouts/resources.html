@@ -1,0 +1,83 @@
+{{- /* The Resources center hub at /resources/ (content/en/resources/_index.md).
+  One card per resource type on the shared collection platform (issue
+  #253). Types with no content yet render as planned cards, never as
+  dead links. Below the types: the newest videos, so the hub is useful
+  from day one. */ -}}
+{{ define "main" }}
+    {{- $videosSection := site.GetPage "/resources/videos" -}}
+    {{- $videos := $videosSection.RegularPagesRecursive -}}
+    {{- $articlesSection := site.GetPage "/resources/articles" -}}
+    {{- $articles := $articlesSection.RegularPagesRecursive -}}
+    {{- $intel := where $articles "Params.tags" "intersect" (slice "in-product-intelligence") -}}
+    <main id="main" class="page resources-page">
+      <div class="wrap">
+        <header>
+          <p class="label">Learn</p>
+          <h1 class="display">{{ .Title }}</h1>
+          <p class="body-lg muted lede">{{ .Params.lead }}</p>
+        </header>
+
+        <ul class="resource-types">
+          <li>
+            <a class="resource-type-card card-field" href="{{ $videosSection.RelPermalink }}">
+              <p class="label rt-kind">Watch</p>
+              <h2>Videos</h2>
+              <p>Short films and walkthroughs: what Blowhorn does, and how to get the most from it.</p>
+              <p class="rt-meta">{{ len $videos }} video{{ if ne (len $videos) 1 }}s{{ end }}</p>
+            </a>
+          </li>
+          <li>
+            <a class="resource-type-card card-plain" href="{{ $articlesSection.RelPermalink }}">
+              <p class="label rt-kind">Read</p>
+              <h2>Articles</h2>
+              <p>Product intelligence and tips: reading your results, scheduling craft and the changes platforms make that affect your posts.</p>
+              <p class="rt-meta">{{ len $articles }} article{{ if ne (len $articles) 1 }}s{{ end }} and tips</p>
+            </a>
+          </li>
+          <li>
+            <a class="resource-type-card card-stamp" href="{{ (site.GetPage "/field-manual").RelPermalink }}">
+              <p class="label rt-kind">Reference</p>
+              <h2>Field Manual</h2>
+              <p>What each feed rewards and punishes, platform by platform.</p>
+              <p class="rt-meta">Available now</p>
+            </a>
+          </li>
+          <li>
+            <a class="resource-type-card card-dispatch" href="{{ (site.GetPage "/docs").RelPermalink }}">
+              <p class="label rt-kind">Reference</p>
+              <h2>Docs</h2>
+              <p>Set up, how-to guides and the full reference.</p>
+              <p class="rt-meta">Available now</p>
+            </a>
+          </li>
+        </ul>
+
+        <p>Adding a resource? <a href="{{ (site.GetPage "/resources/contributing").RelPermalink }}">Read the contributor guide</a>.</p>
+
+        {{- with $videos }}
+        <h2>Latest videos</h2>
+        {{- $deal := partial "card-deal.html" (dict "n" (len (first 3 .)) "grid" "video-grid") }}
+        <ul class="video-grid" data-collection-grid data-collection-noun="videos" data-card-deal="{{ delimit $deal " " }}">
+          {{- range $i, $v := first 3 (.ByDate.Reverse) }}{{ partial "video-card.html" (dict "page" $v "i" $i "deal" $deal) }}{{ end -}}
+        </ul>
+        <p><a href="{{ $videosSection.RelPermalink }}">All videos</a></p>
+        {{- end }}
+
+        {{- with $intel }}
+        <h2>Latest from Product intelligence</h2>
+        {{- $deal := partial "card-deal.html" (dict "n" (len (first 3 .)) "grid" "stack" "variants" (slice "card-field" "card-plain")) }}
+        <div class="articles-list">
+          {{- range $i, $v := first 3 (.ByDate.Reverse) }}{{ partial "article-card.html" (dict "page" $v "i" $i "deal" $deal) }}{{ end -}}
+        </div>
+        <p><a href="{{ $articlesSection.RelPermalink }}">All articles</a></p>
+        {{- end }}
+
+        <p>Every tip and intelligence piece, with its column: <a href="{{ (site.GetPage "/resources/tips").RelPermalink }}">Tips and intelligence</a>.</p>
+      </div>
+    </main>
+    {{ partial "video-dialog.html" . }}
+{{ end }}
+
+{{ define "scripts" }}
+    {{- partial "filter-script.html" "js/resources.js" }}
+{{ end }}

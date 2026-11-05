@@ -48,14 +48,12 @@ environment variables.
 | `defaults.logs.directory` | `BLOWHORN_LOG_DIR` | `data/logs/` in the checkout | Where daily logs go |
 | `defaults.logs.retention_days` | `BLOWHORN_LOG_RETENTION_DAYS` | 30 | Days of daily logs kept; 0 keeps all |
 | `defaults.diagnostics.enabled` | `BLOWHORN_DIAGNOSTICS_ENABLED` | on | Queue and send anonymous failure reports (see [Failure reports](/docs/explanation/your-data/#failure-reports)); off means nothing is queued or sent, and the desktop Settings row is the same choice |
-| `defaults.chrome.launch_mode` | `BLOWHORN_CHROME_LAUNCH` | `extension` | How a run reaches Chrome |
+| `defaults.chrome.launch_mode` | `BLOWHORN_CHROME_LAUNCH` | `extension` | How a run reaches Google Chrome |
 | `defaults.chrome.automation_data_dir` | `BLOWHORN_CHROME_AUTOMATION_DATA_DIR` | Blowhorn's own directory | Where a launched Chrome keeps its session |
 | `defaults.chrome.data_dir` | `BLOWHORN_CHROME_DATA_DIR` | Your real Chrome directory | Where the installed Chrome is read from |
 | `defaults.slack.auth_mode` | `BLOWHORN_SLACK_AUTH` | your captured session first | Which Slack credential may send: session, user-token, bot-token, or a list tried in order |
 | (flag only) | `BLOWHORN_TEE_STDOUT` | off | Flush the stdout copy per write for a supervising wrapper |
-| `defaults.store.backend` | `BLOWHORN_STORE_BACKEND` | `cloud` | `cloud` or `postgres` (the store database through the bastion tunnel, for maintainers). A `postgres` value in the file or in `BLOWHORN_STORE_BACKEND` opens Cloud unless `BLOWHORN_MAINTAINER=1`. Cloud uses the organization you signed in to. It reads and writes profiles, their social accounts and content, reads destinations, records and lists runs, and reads and writes analytics, activity, ledger entries and LinkedIn analytics pages. A changed ledger value is written. A later analytics or activity reading replaces the stored one. Run lists are the organization's for an organization admin and your own otherwise. Destinations are the ones you own, plus the ones assigned to the environment `BLOWHORN_CLOUD_ENVIRONMENT` (or `environment_id` in `cloud.yaml`) names, and only a destination's owner can change it. Analytics and activity lists are the organization's. Anything else is refused by name |
-| `defaults.store.organization` | `BLOWHORN_STORE_ORGANIZATION` | none; the cloud store uses the organization you signed in to, and the Postgres store runs nothing while it is unset | The organization every activity is scoped to |
-| `defaults.store.config` | `BLOWHORN_STORE_CONFIG` | a private file outside the checkout | The private document holding the connection |
+| `defaults.store.organization` | `BLOWHORN_STORE_ORGANIZATION` | none; Blowhorn uses the organization you signed in to | The organization Blowhorn uses when the sign-in did not choose one |
 
 `headed` and `headless` are one choice with two spellings: the higher
 layer wins, so a `--headless` flag beats a `headed` default from the
@@ -65,16 +63,24 @@ survives.
 
 A version-1 file that still says `persistent` reads as `extension` on
 every run; only a validated `config set` of another key moves the file
-to version 2. The ten `store.*` connection options are private: they
-stay out of `config show`.
+to version 2.
+
+Blowhorn reads and writes everything in your Blowhorn account. A
+`defaults.store.backend` or `defaults.store.config` key left in an older
+file, and `BLOWHORN_STORE_BACKEND` in the environment, are ignored
+(`config show --json` lists the two keys as unknown), and `config set`
+refuses a `store.<name>` key. Data an older version kept in a local store is
+not read and is not brought into your account.
 
 ## Risk Profile presets
 
-| Dial | cautious | standard | brisk |
+The app calls these the rules of engagement and shows each preset by its display name: **Safety on** is `cautious`, **Weapons tight** is `standard` and **Weapons free** is `brisk`. The stored value, the config file, `--risk-profile` and every `--json` payload keep `cautious`, `standard` and `brisk`.
+
+| Dial | cautious (Safety on) | standard (Weapons tight) | brisk (Weapons free) |
 |---|---|---|---|
 | Pace (when `defaults.pace` is unset) | slow | normal | fast |
 | Pointer movement (when `defaults.no_mouse_move` is unset) | on | on | on |
-| Caps (share of each built-in ceiling) | 25% | 100% | 100% |
+| Caps (share of each built-in ceiling) | 25% | 50% | 100% |
 | Spacing between public actions | 15 min plus up to 15 min | none | none |
 | Quiet hours (local) | 22:00 to 07:00 | none | none |
 | Outreach (connect, invite, follow) | off | established platforms only | on |
@@ -90,9 +96,31 @@ Any dial you set yourself beats the preset for that dial: your own `defaults.pac
 
 The concurrency rows are the values the presets carry, and they are enforced, not just reported: `blowhorn risk show` reports them, each with the layer that supplied it, and the run gates fall back to the chosen preset when no explicit value sets a key. An explicit environment or file value still beats the preset per key, and a refusal under a preset cap names the preset (for example, "your Cautious profile"). `blowhorn config show` names `risk_profile` as the source when the preset is the layer that supplied a key.
 
-Scheduled jobs on a new profile or a new computer run cautious until the warmup is done, whatever you chose -- the cautious concurrency values included. A run you start yourself is not held by the warmup, only noted; it still follows the caps, quiet hours and outreach setting of the preset you chose. When a run covers several profiles or platforms, a held one is skipped by name and the rest run. To run once anyway, add `--ignore-risk`, or choose **Do it anyway** next to a held item under Activity › History. Logins are never retried under any preset. Choose a preset in the app with the slider at the top of Settings (the same mode also shows on Home as a pill and as a mini-slider in the menu-bar popover), or with `blowhorn risk set cautious` (add `--profile` to store it on one profile, `--platform` for one platform); `blowhorn risk show` says which preset is in effect and where it comes from. For choosing between the presets in lived terms, see [Choose your Risk Profile](/docs/how-to/settings/choose-your-risk-profile/).
+Scheduled jobs on a new profile or a new computer run cautious until the warmup is done, whatever you chose -- the cautious concurrency values included. A run you start yourself is not held by the warmup, only noted; it still follows the caps, quiet hours and outreach setting of the preset you chose. When a run covers several profiles or platforms, a held one is skipped by name and the rest run. To run once anyway, add `--ignore-risk`, or choose **Do it anyway** next to a held item under Activity › History or in Posture's held back list. Logins are never retried under any preset. Choose a preset in the app on the **Posture** screen - the slider for everyone, and a grid for each platform, each profile, and one profile on one platform (the same mode also shows as a mini-slider in the menu-bar popover, which opens Posture) - or with `blowhorn risk set`; see [Which choice wins](#which-choice-wins). `blowhorn risk show` says which preset is in effect and where it comes from, and `blowhorn risk grid` lists every profile on every platform at once. For choosing between the presets in lived terms, see [Choose your rules of engagement](/docs/how-to/settings/choose-your-rules-of-engagement/).
 
-One activity can run under its own preset: set **Risk profile** in the activity editor, or `risk_profile=cautious` in the activity's params, and that activity runs cautious (pace, caps share, quiet hours, challenge pause) while the same profile × platform runs standard elsewhere. The activity's detail shows the preset and where it came from (`this activity`, or `inherits: LinkedIn × work profile, Cautious`); a run report names `schedule` as the source when the activity's own value held it. A run you start by hand can override everything for that one run with `--risk-profile cautious` (before the command word, between a group word and its subcommand, or after it); an unknown value is refused before anything runs. Activities without the field behave exactly as before, and the field is refused on commands the gate does not act on (analytics, report, withdraw, reconcile) rather than accepted and ignored. The upstream Schedule construct gains a top-level `riskProfile` field in a proposed meshery/schemas change (open, not yet released); until a release carries it, the value travels in the activity's params.
+One activity can run under its own preset: set **rules of engagement** in the activity editor, or `risk_profile=cautious` in the activity's params, and that activity runs cautious (pace, caps share, quiet hours, challenge pause) while the same profile × platform runs standard elsewhere. The activity's detail shows the preset and where it came from (`Safety on · this activity`, or `Safety on · inherits: LinkedIn × work profile`); a run report names `schedule` as the source when the activity's own value held it. A run you start by hand can override everything for that one run with `--risk-profile cautious` (before the command word, between a group word and its subcommand, or after it); an unknown value is refused before anything runs. Activities without the field behave exactly as before, and the field is refused on commands the gate does not act on (analytics, report, withdraw, reconcile) rather than accepted and ignored. The upstream Schedule construct gains a top-level `riskProfile` field in a proposed meshery/schemas change (open, not yet released); until a release carries it, the value travels in the activity's params.
+
+### Which choice wins
+
+A Risk Profile can be chosen at several levels. For one profile on one platform, Blowhorn uses the most specific level that has a choice:
+
+| Level | Set it with | Kept in |
+|---|---|---|
+| One run | `--risk-profile cautious` on a command you start | that run only |
+| One activity | **rules of engagement** in the activity editor, or `risk_profile=` in its params | the activity |
+| One profile on one platform | a cell in the Posture grid, or `blowhorn risk set <preset> --profile company --platform linkedin` | the profile's `Risk Profile By Platform` attribute, then `defaults.risk_profiles.<profile>.<platform>` on this computer |
+| Each platform | the **Each platform** row in Posture, or `blowhorn risk set <preset> --platform linkedin` | your organization, for every computer; on this computer only (`defaults.risk_profile_by_platform`) when your organization cannot keep it |
+| Each profile | the **Every platform** column in Posture, or `blowhorn risk set <preset> --profile company` | the profile's `Risk Profile` attribute, then `defaults.risk_profiles.<profile>` on this computer |
+| Everyone | the slider in Posture, or `blowhorn risk set <preset>` | `BLOWHORN_RISK_PROFILE`, then your account, then `defaults.risk_profile` |
+| Built in | nothing | standard |
+
+**When a platform and a profile both have a choice, the more careful one wins** - cautious before standard before brisk. "LinkedIn cautious for everyone" therefore reaches a profile set to brisk everywhere, and "X brisk for everyone" never loosens a profile set to cautious. A tie is reported as the profile's. To go faster for one profile on one platform, choose that cell.
+
+On top of every level, scheduled activity on a new profile or a new computer runs cautious for its first 14 days ([Warmup](#warmup)).
+
+A platform's choice is shared: it is written to your organization, so every computer you run Blowhorn on reads the same one, and `blowhorn risk show` and `risk grid` say "every computer". When your organization cannot keep it yet, `risk set --platform` writes it to `defaults.risk_profile_by_platform` in this computer's `.blowhorn.yaml` instead, says so (`scope: this_computer`, with the reason), and the Posture screen labels it "this computer only". The organization's choice is read before this computer's file, so when the organization already has a choice for that platform, the command also says that choice still applies on every computer. The organization's choices are written back as a whole map, so a write that cannot be guarded against another admin's change (no `ETag` on the read) or that would drop a platform this version does not know is kept on this computer the same way; a platform this version does not know is left out when the choices are read. Choosing `default` for a platform clears both. When the shared choices cannot be read, the platform level reads cautious until they can, so a run holds toward caution rather than falling through to a looser choice.
+
+The platforms a Risk Profile covers are LinkedIn, X, Bluesky, Reddit, Hacker News, Slack and GitHub.
 
 ### Risk Profile dials
 
@@ -121,7 +149,7 @@ Whether Blowhorn simulates pointer movement before clicks, when `defaults.no_mou
 
 ### Caps
 
-The share of each platform's built-in ceiling the preset allows per day (and per hour, scaled the same way): cautious 25%, standard 100%, brisk 100%. No preset can raise a ceiling. A profile's own daily cap (`defaults.caps`, or its `Daily Caps` store attribute) can only lower the effective cap further, per action. For example, on LinkedIn the built-in ceiling is 10 posts a day, so cautious allows 2 and standard or brisk allow 10, before any user cap or warmup ramp. A cap that cannot be read holds every action for that platform or profile until it is fixed.
+The share of each platform's built-in ceiling the preset allows per day (and per hour, scaled the same way): cautious 25%, standard 50%, brisk 100%. No preset can raise a ceiling. A profile's own daily cap (`defaults.caps`, or its `Daily Caps` store attribute) can only lower the effective cap further, per action. For example, on LinkedIn the built-in ceiling is 10 posts a day, so cautious allows 2, standard 5 and brisk 10, before any user cap or warmup ramp. A cap that cannot be read holds every action for that platform or profile until it is fixed.
 
 ### Spacing between public actions
 
@@ -212,7 +240,9 @@ launches the process - so a caller that can set its own environment can
 claim to be a person, and no ordering of those claims prevents that.
 The one case precedence does settle is the scheduler: a tick is
 unattended, so a scheduler run counts as an agent whatever
-`BLOWHORN_ACTOR` says. `BLOWHORN_ACTOR=human` still lets a
+`BLOWHORN_ACTOR` says. The [MCP server](/docs/reference/mcp-server/) is the same: it
+sets `BLOWHORN_ACTOR=agent` on every command it runs and ignores any
+other value in its environment. `BLOWHORN_ACTOR=human` still lets a
 non-interactive human script count as the person, and is forgeable by
 exactly the caller it lets through; a proof no environment claim gives -
 the app proving itself over a channel only it holds, or a tick proven

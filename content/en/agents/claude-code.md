@@ -16,11 +16,11 @@
   "extra_code": "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(blowhorn schedule list:*)\",\n      \"Bash(blowhorn schedule status:*)\",\n      \"Bash(blowhorn content list:*)\",\n      \"Bash(blowhorn analytics:*)\"\n    ]\n  }\n}",
   "prompts": [
     "Read my pending content queue and tell me which rows are owed to which profiles before Tuesday.",
-    "Add a LinkedIn row for profile alex: announce the v2.4 release, approved, promote on 2026-11-10 09:00:00. Show me the payload first.",
+    "Add a LinkedIn row for your personal profile: announce the v2.4 release, approved, promote on 2026-11-10 09:00:00. Show me the payload first.",
     "Our post just went live at this URL. Dry-run an amplify from every profile on this computer, then wait for my go.",
     "Something is off with LinkedIn. Pause the whole fleet and tell me the reason you recorded."
   ],
-  "commands": "blowhorn content list --pending --json\nblowhorn content upsert --payload '{\"Platform\":\"linkedin\",\"Profile\":\"alex\",\"Message Text\":\"v2.4 is out\",\"Approved?\":\"yes\",\"Promote On\":\"2026-11-10 09:00:00\"}' --json\nblowhorn post --platform linkedin --profile all --amplify \"<post-url>\" --dry-run\nblowhorn schedule pause --all --reason \"LinkedIn challenge\"",
+  "commands": "blowhorn content list --pending --json\nblowhorn content upsert --payload '{\"Platform\":\"linkedin\",\"Profile\":\"personal\",\"Message Text\":\"v2.4 is out\",\"Approved?\":\"yes\",\"Promote On\":\"2026-11-10 09:00:00\"}' --json\nblowhorn post --platform linkedin --profile all --amplify \"<post-url>\" --dry-run\nblowhorn schedule pause --all --reason \"LinkedIn challenge\"",
   "commands_lang": "bash",
   "uses": [
     {
@@ -47,7 +47,7 @@
     },
     {
       "q": "Does my agent see my social passwords?",
-      "a": "No. Blowhorn posts through your own signed-in Chrome; the agent only runs commands and reads their output. Review what you allow it to run, as with any tool that acts on your accounts."
+      "a": "No. Blowhorn posts through your own signed-in browser; the agent only runs commands and reads their output. Review what you allow it to run, as with any tool that acts on your accounts."
     }
   ],
   "major": "Your agent wrote 4,000 lines before lunch and the launch post is still a sticky note. Unacceptable. Hand it the horn.",

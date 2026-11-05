@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/docs_events.schema.json",
+  "title": "Docs attribution events",
+  "description": "data/docs_events.json: which MCP guides send consent-gated GA4 events, how a code card or link maps to a client, and the event names and parameters. layouts/_partials/docs-attribution.html emits it as JSON for assets/js/docs-attribution.js; the payload shapes live in schemas/defs/docs-event.schema.json. Hosts are bare host names, never URLs, so no new origin appears in the build (see docs/docs-attribution.md).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pages", "consent_key", "consent_event", "storage_key", "default_client", "clients", "snippet_kinds", "outbound", "internal_hosts", "utm_params", "attribution_params", "events"],
+  "definitions": {
+    "host": { "type": "string", "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$" },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "params"],
+      "properties": {
+        "description": { "type": "string", "minLength": 1, "not": { "pattern": "[\u2013\u2014]" } },
+        "params": { "type": "array", "uniqueItems": true, "minItems": 1, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "maxLength": 40 } }
+      }
+    }
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "pages": {
+      "description": "Path prefixes (the site's pretty URLs, with leading and trailing slash) where events run. Every other analytics page only captures first-touch attribution.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^/([a-z0-9-]+/)+$" }
+    },
+    "consent_key": { "description": "The localStorage key assets/js/consent.js writes; events run only while it is granted.", "const": "blowhorn-consent" },
+    "consent_event": { "description": "The document event consent.js dispatches when the reader grants consent.", "type": "string", "pattern": "^blowhorn:[a-z-]+$" },
+    "storage_key": { "description": "The sessionStorage key for the session's first-touch attribution, written only after consent.", "type": "string", "pattern": "^blowhorn-[a-z-]+$" },
+    "default_client": { "description": "The client value when no client heading, hash or mcp_client front matter applies.", "$ref": "https://blowhorn.ai/schemas/defs/docs-event.schema.json#/definitions/client_id" },
+    "clients": {
+      "description": "Heading id (render-heading.html, from the heading text) to client name. The nearest enclosing h2 or h3 decides a code card's or link's client.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "https://blowhorn.ai/schemas/defs/docs-event.schema.json#/definitions/client_id" },
+      "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 100, "not": { "pattern": "[\u2013\u2014]" } }
+    },
+    "snippet_kinds": {
+      "description": "A code card's data-lang (code-card.html) to snippet_kind; any other language is other.",
+      "type": "object",
+      "propertyNames": { "type": "string", "pattern": "^[a-z0-9+-]+$" },
+      "additionalProperties": { "$ref": "https://blowhorn.ai/schemas/defs/docs-event.schema.json#/definitions/snippet_kind" }
+    },
+    "outbound": {
+      "description": "Link rules in order; the first match names the link_kind. A rule matches a host in hosts (exact); paths are regexes over the URL path, any path when absent.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "hosts"],
+        "properties": {
+          "kind": { "$ref": "https://blowhorn.ai/schemas/defs/docs-event.schema.json#/definitions/link_kind" },
+          "hosts": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/definitions/host" } },
+          "paths": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^\\^/" } }
+        }
+      }
+    },
+    "internal_hosts": {
+      "description": "Referrer hosts that are this site; with the page's own host they never count as first_referrer_host.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/host" }
+    },
+    "utm_params": {
+      "description": "Landing-URL parameters copied into first_source, first_medium, first_campaign, first_content and first_term, in that order.",
+      "const": ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
+    },
+    "attribution_params": {
+      "description": "Sent on every event, captured once per session after consent on whichever analytics page comes first. landing_guide is the first tracked guide seen in the session, landing_page the first page path.",
+      "const": ["first_source", "first_medium", "first_campaign", "first_content", "first_term", "first_referrer_host", "landing_guide", "landing_page"]
+    },
+    "events": {
+      "description": "GA4 event names (snake_case) and their own parameters; attribution_params are added to each. Payload schemas: schemas/defs/docs-event.schema.json.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["docs_guide_view", "docs_snippet_copy", "docs_outbound_click"],
+      "properties": {
+        "docs_guide_view": {
+          "allOf": [{ "$ref": "#/definitions/event" }, { "properties": { "params": { "const": ["page_path", "guide", "client"] } } }]
+        },
+        "docs_snippet_copy": {
+          "allOf": [{ "$ref": "#/definitions/event" }, { "properties": { "params": { "const": ["page_path", "client", "snippet_kind", "snippet_title"] } } }]
+        },
+        "docs_outbound_click": {
+          "allOf": [{ "$ref": "#/definitions/event" }, { "properties": { "params": { "const": ["page_path", "client", "link_kind", "link_url"] } } }]
+        }
+      }
+    }
+  }
+}

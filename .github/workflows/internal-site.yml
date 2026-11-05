@@ -1,14 +1,21 @@
 name: Internal site
 
 # Builds the internal Blowhorn site (make site-internal-build, the /internal/
-# section mounted from the private leecalcote/blowhorn repository) and deploys
+# section mounted from the private blowhorn-ai/blowhorn repository) and deploys
 # it to the blowhorn-internal Worker at internal.blowhorn.ai, behind a
-# Cloudflare Access application that admits only the named emails in
-# internal-worker/access.json. See docs/deploy.md, "Internal site hosting".
+# Cloudflare Access application that admits layer5.io and the named team
+# members in internal-worker/access.json, plus the extra addresses in the
+# INTERNAL_ACCESS_EXTRA_EMAILS secret. See docs/deploy.md, "Internal site hosting".
 #
-# Started by `make site-internal-deploy` (in this repository or in
-# leecalcote/blowhorn) through workflow_dispatch, or called from another
-# workflow in this repository (workflow_call, secrets: inherit).
+# Triggers:
+#   - workflow_dispatch: `make site-internal-deploy` (in this repository or in
+#     blowhorn-ai/blowhorn), input blowhorn_ref.
+#   - workflow_call (secrets: inherit): internal-site-auto.yml calls this on
+#     pushes to master that touch the site side of the internal build, and on
+#     its 15-minute poll of blowhorn-ai/blowhorn for product-content changes.
+#   - repository_dispatch (event type "deploy-internal-site") from the product
+#     repository, with optional client_payload: {"blowhorn_ref"}.
+# There is no push trigger here; internal-site-auto.yml owns the automatic ones.
 #
 # THIS REPOSITORY IS PUBLIC. Its logs and artifacts are world-readable, so:
 #   - no artifact is uploaded, and nothing from the private checkout is cached;
@@ -19,24 +26,28 @@ name: Internal site
 #
 # Credentials:
 #   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID  repository secrets.
+#   INTERNAL_ACCESS_EXTRA_EMAILS  repository secret: extra addresses allowed to
+#     sign in, one per line or comma-separated. Masked in logs; never printed.
 #   BLOWHORN_INTERNAL_READ_KEY  secret of the `internal-site` environment
 #     (deployments from master only): the private half of a read-only deploy
-#     key on leecalcote/blowhorn. It reads that one repository and nothing else.
+#     key on blowhorn-ai/blowhorn. It reads that one repository and nothing else.
 
 on:
   workflow_dispatch:
     inputs:
       blowhorn_ref:
-        description: leecalcote/blowhorn ref to build (branch, tag or SHA)
+        description: blowhorn-ai/blowhorn ref to build (branch, tag or SHA)
         required: false
         default: master
   workflow_call:
     inputs:
       blowhorn_ref:
-        description: leecalcote/blowhorn ref to build (branch, tag or SHA)
+        description: blowhorn-ai/blowhorn ref to build (branch, tag or SHA)
         required: false
         type: string
         default: master
+  repository_dispatch:
+    types: [deploy-internal-site]
 
 permissions:
   contents: read
@@ -60,8 +71,9 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      INTERNAL_ACCESS_EXTRA_EMAILS: ${{ secrets.INTERNAL_ACCESS_EXTRA_EMAILS }}
       HAS_READ_KEY: ${{ secrets.BLOWHORN_INTERNAL_READ_KEY != '' }}
-      BLOWHORN_REF: ${{ inputs.blowhorn_ref || 'master' }}
+      BLOWHORN_REF: ${{ inputs.blowhorn_ref || github.event.client_payload.blowhorn_ref || 'master' }}
       WRANGLER_SEND_METRICS: 'false'
     steps:
       - name: Check credentials are configured
@@ -69,9 +81,10 @@ jobs:
           missing=()
           [ -n "$CLOUDFLARE_API_TOKEN" ] || missing+=(CLOUDFLARE_API_TOKEN)
           [ -n "$CLOUDFLARE_ACCOUNT_ID" ] || missing+=(CLOUDFLARE_ACCOUNT_ID)
+          [ -n "$INTERNAL_ACCESS_EXTRA_EMAILS" ] || missing+=(INTERNAL_ACCESS_EXTRA_EMAILS)
           [ "$HAS_READ_KEY" = true ] || missing+=("BLOWHORN_INTERNAL_READ_KEY (internal-site environment)")
           if [ "${#missing[@]}" -gt 0 ]; then
-            echo "::error::Not configured on layer5io/blowhorn-site: ${missing[*]}. Nothing was built or deployed."
+            echo "::error::Not configured on blowhorn-ai/blowhorn-site: ${missing[*]}. Nothing was built or deployed."
             exit 1
           fi
 
@@ -82,7 +95,7 @@ jobs:
           persist-credentials: false
 
       # Access first: if the token cannot manage Access, or the application is
-      # not default-deny with exactly the managed allow policy, stop here,
+      # not default-deny with exactly the managed policies, stop here,
       # before any private content reaches this runner.
       - name: Check Cloudflare API token permissions
         run: make site-internal-access-check
@@ -90,10 +103,10 @@ jobs:
       - name: Create or update the Cloudflare Access application
         run: make site-internal-access
 
-      - name: Check out leecalcote/blowhorn (read-only deploy key)
+      - name: Check out blowhorn-ai/blowhorn (read-only deploy key)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: leecalcote/blowhorn
+          repository: blowhorn-ai/blowhorn
           ref: ${{ env.BLOWHORN_REF }}
           ssh-key: ${{ secrets.BLOWHORN_INTERNAL_READ_KEY }}
           persist-credentials: false
@@ -101,6 +114,15 @@ jobs:
           sparse-checkout: |
             marketing/strategy
             marketing/capability-comparison
+            marketing/brand
+            marketing/cast
+            marketing/assets.manifest.json
+            internal/engineering
+            internal/design
+            internal/specs
+            internal/plans
+            internal/research
+            internal/features
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
@@ -124,9 +146,13 @@ jobs:
           fi
           test -f public-internal/internal/index.html || { echo "::error::The internal build produced no /internal/ index."; exit 1; }
           test -f public-internal/internal/finance/report/index.html || { echo "::error::The internal build produced no finance report."; exit 1; }
+          test -f public-internal/internal/engineering/index.html || { echo "::error::The internal build produced no engineering index."; exit 1; }
           pages="$(find public-internal -name '*.html' | wc -l | tr -d ' ')"
           echo "Built $pages HTML pages."
           rm -rf .internal-src
+
+      - name: Point the internal worker at its D1 databases (signups, fleet stats)
+        run: bash .github/scripts/resolve-d1.sh internal-worker
 
       - name: Deploy to the blowhorn-internal Worker
         run: make site-internal-worker-deploy
@@ -157,7 +183,7 @@ jobs:
         run: |
           {
             echo "### Internal site"
-            echo "- Host: https://internal.blowhorn.ai/ (Cloudflare Access, named emails only)"
+            echo "- Host: https://internal.blowhorn.ai/ (Cloudflare Access: layer5.io and named team members)"
             echo "- blowhorn ref: \`$BLOWHORN_REF\`"
             echo "- Result: ${{ job.status }}"
           } >> "$GITHUB_STEP_SUMMARY"

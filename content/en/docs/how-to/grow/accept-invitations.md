@@ -11,9 +11,9 @@ Answer the LinkedIn invitations other people sent you with
 a time, with a pause between each.
 
 ```bash
-blowhorn accept --profile marcus --dry-run     # preview: accepts nobody
-blowhorn accept --profile marcus               # accept up to 20
-blowhorn accept --profile marcus --limit 5     # cap a single run
+blowhorn accept --profile personal --dry-run     # preview: accepts nobody
+blowhorn accept --profile personal               # accept up to 20
+blowhorn accept --profile personal --limit 5     # cap a single run
 blowhorn accept --profile all --headless       # every eligible profile, unattended
 ```
 
@@ -22,7 +22,12 @@ blowhorn accept --profile all --headless       # every eligible profile, unatten
 Confirmed acceptances: only an invitation confirmed gone from the
 received list counts. A click is not an acceptance, and an invitation
 skipped because LinkedIn warned about it never consumes the budget.
-`--limit 0` means accept nobody.
+`--limit 0` means no limit: the run stops at the examination ceiling.
+A real run that accepts nobody is recorded as `noop`, never `ok`, and a
+scheduled activity that did so shows why in its Last Error. If the list
+reads empty after a session check that only reads the page address,
+cookies and page, the run reports an error saying the profile may need to
+sign in to LinkedIn again.
 
 ## Flagged invitations are skipped, never accepted
 
