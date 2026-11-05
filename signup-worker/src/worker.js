@@ -238,6 +238,8 @@ export function createHandler(db) {
       } catch {
         return pageResponse(request, 500, 'Something went wrong', 'Something went wrong. Try again shortly.');
       }
+
+      // Safety: direct interpolation of token into HTML is safe because it is strictly validated by TOKEN_RE above.
       return pageResponse(
         request,
         200,
