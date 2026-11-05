@@ -9,6 +9,10 @@
 // this check: it reads the SIGNUPS_DB database the public signup worker
 // writes, and is served only to a verified Access identity.
 //
+// The fleet stats page (/internal/fleet/, data.json, disk.csv, workload.csv)
+// shares it too: it reads the FLEET_DB database that the zero-token cron on
+// Bastion fills (koopverse/firstmate fleet/fleet-stats, issue #72).
+//
 // Deploy-time vars (set by .github/scripts/internal-deploy.sh):
 //   TEAM_DOMAIN     <team>.cloudflareaccess.com (the Access auth domain)
 //   POLICY_AUD      the Access application's audience tag
@@ -148,6 +152,9 @@ export async function handle(request, env, fetchImpl = fetch) {
   if (url.pathname === '/internal/signups/' || url.pathname === '/internal/signups/export') {
     return handleSignupsAdmin(url, env);
   }
+  if (FLEET_PATHS.has(url.pathname)) {
+    return handleFleet(url, env);
+  }
   // The root serves the generated table of contents (/internal/), not the
   // build's local-preview redirect page.
   const assetRequest = url.pathname === '/' || url.pathname === '/index.html'
@@ -226,6 +233,172 @@ async function handleSignupsAdmin(url, env) {
     `<!DOCTYPE html>\n<html lang="en">\n<head><meta charset="utf-8"><title>Signups</title></head>\n<body>\n<main>\n<h1>Signups</h1>\n<ul>${countList}</ul>\n<p><a href="/internal/signups/export">Download CSV</a></p>\n<table>\n<thead><tr><th>Email</th><th>Kind</th><th>Topic</th><th>Remark</th><th>Signed up</th><th>Status</th><th>Page</th></tr></thead>\n<tbody>${tableRows}</tbody>\n</table>\n</main>\n</body>\n</html>\n`,
     { headers: { 'content-type': 'text/html; charset=utf-8', ...ADMIN_HEADERS } },
   );
+}
+
+// Fleet stats: teammate workload (hourly) and machine disk free (every 6 h),
+// written by the cron on Bastion as JSON snapshots in FLEET_DB's snapshots
+// table (id, kind, collected_at, body). Rendering happens here, per request,
+// so publishing a snapshot needs no build, no commit and no AI.
+const FLEET_PATHS = new Set([
+  '/internal/fleet/',
+  '/internal/fleet/data.json',
+  '/internal/fleet/disk.csv',
+  '/internal/fleet/workload.csv',
+]);
+const FLEET_TZ = 'America/Chicago';
+// A snapshot older than this is flagged stale: two missed runs.
+const FLEET_STALE_MS = { workload: 2.5 * 3600e3, disk: 12.5 * 3600e3 };
+const DISK_FIELDS = ['collected_at', 'name', 'reachable', 'os', 'mount', 'size_bytes', 'used_bytes', 'free_bytes', 'used_pct', 'error'];
+const WORKLOAD_FIELDS = [
+  'collected_at', 'persona', 'login', 'kind', 'paused', 'idle', 'router_load', 'router_open_reviews',
+  'router_open_issues', 'handed_24h', 'done_24h', 'gh_open_prs', 'gh_review_requests', 'gh_assigned_issues', 'last_seen',
+];
+
+export function fmtCentral(iso) {
+  const d = new Date(iso);
+  if (!iso || Number.isNaN(d.getTime())) return '';
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: FLEET_TZ, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
+  }).format(d);
+}
+
+function fmtGB(bytes) {
+  return typeof bytes === 'number' ? `${(bytes / 1e9).toFixed(1)} GB` : '';
+}
+
+function num(v) {
+  return v === null || v === undefined ? '' : String(v);
+}
+
+function parseBody(row) {
+  try {
+    return JSON.parse(row.body);
+  } catch {
+    return null;
+  }
+}
+
+async function fleetSnapshots(db, kind, sinceIso) {
+  const res = await db
+    .prepare('SELECT collected_at, body FROM snapshots WHERE kind = ?1 AND collected_at >= ?2 ORDER BY collected_at DESC')
+    .bind(kind, sinceIso)
+    .all();
+  return (res.results || []).map(parseBody).filter(Boolean);
+}
+
+function csvOf(fields, rows) {
+  return `${[fields.join(','), ...rows.map((r) => fields.map((f) => csvCell(r[f])).join(','))].join('\n')}\n`;
+}
+
+function staleNote(snap, kind, nowMs) {
+  if (!snap) return `<p class="stale">No ${kind} snapshot yet.</p>`;
+  const age = nowMs - new Date(snap.collected_at).getTime();
+  const when = `Collected ${escHtml(fmtCentral(snap.collected_at))} on ${escHtml(snap.collector_host || '')}`;
+  if (age > FLEET_STALE_MS[kind]) return `<p class="stale">${when}. Stale: the cron has missed at least two runs.</p>`;
+  return `<p>${when}.</p>`;
+}
+
+function diskTable(snap) {
+  if (!snap) return '';
+  const rows = (snap.machines || [])
+    .map((m) =>
+      m.reachable
+        ? `<tr><td>${escHtml(m.name)}</td><td>${escHtml(m.os)}</td><td class="n${m.used_pct >= 90 ? ' hot' : ''}">${escHtml(num(m.used_pct))}%</td>` +
+          `<td class="n">${fmtGB(m.free_bytes)}</td><td class="n">${fmtGB(m.size_bytes)}</td><td>${escHtml(m.mount)}</td></tr>`
+        : `<tr><td>${escHtml(m.name)}</td><td colspan="5" class="stale">Unreachable: ${escHtml(m.error || 'no answer')}</td></tr>`,
+    )
+    .join('');
+  return `<table>\n<thead><tr><th>Machine</th><th>OS</th><th>Used</th><th>Free</th><th>Size</th><th>Volume</th></tr></thead>\n<tbody>${rows}</tbody>\n</table>`;
+}
+
+function diskTrend(history) {
+  // Used percent per machine across the window, oldest first.
+  const snaps = [...history].reverse();
+  if (snaps.length < 2) return '';
+  const names = [...new Set(snaps.flatMap((s) => (s.machines || []).map((m) => m.name)))];
+  const head = snaps.map((s) => `<th>${escHtml(fmtCentral(s.collected_at))}</th>`).join('');
+  const body = names
+    .map((n) => {
+      const cells = snaps
+        .map((s) => {
+          const m = (s.machines || []).find((x) => x.name === n);
+          return `<td class="n">${m && m.reachable ? `${escHtml(num(m.used_pct))}%` : '-'}</td>`;
+        })
+        .join('');
+      return `<tr><td>${escHtml(n)}</td>${cells}</tr>`;
+    })
+    .join('');
+  return `<h3>Disk used, last 7 days</h3>\n<div class="wide"><table>\n<thead><tr><th>Machine</th>${head}</tr></thead>\n<tbody>${body}</tbody>\n</table></div>`;
+}
+
+function workloadTable(snap) {
+  if (!snap) return '';
+  const rows = (snap.teammates || [])
+    .map((t) => {
+      const state = t.kind === 'human' ? 'human' : t.paused ? 'paused' : t.idle ? 'idle' : 'working';
+      return (
+        `<tr><td>${escHtml(t.persona || t.login)}</td><td>${escHtml(t.login)}</td><td>${state}</td>` +
+        `<td class="n">${escHtml(num(t.router_load))}</td><td class="n">${escHtml(num(t.router_open_reviews))}</td>` +
+        `<td class="n">${escHtml(num(t.router_open_issues))}</td><td class="n">${escHtml(num(t.handed_24h))}</td>` +
+        `<td class="n">${escHtml(num(t.done_24h))}</td><td class="n">${escHtml(num(t.gh_open_prs))}</td>` +
+        `<td class="n">${escHtml(num(t.gh_review_requests))}</td><td class="n">${escHtml(num(t.gh_assigned_issues))}</td>` +
+        `<td>${escHtml(fmtCentral(t.last_seen))}</td></tr>`
+      );
+    })
+    .join('');
+  const r = snap.router || {};
+  const tasks = r.tasks && typeof r.tasks === 'object'
+    ? Object.entries(r.tasks).map(([k, v]) => `${escHtml(k)} ${escHtml(num(v))}`).join(', ')
+    : '';
+  return (
+    `<p>Router tasks: ${tasks || 'n/a'}. Orgs: ${escHtml((snap.orgs || []).join(', '))}.</p>\n` +
+    `<table>\n<thead><tr><th>Teammate</th><th>Login</th><th>State</th><th>Router load</th><th>Reviews</th><th>Issues</th>` +
+    `<th>Handed 24h</th><th>Done 24h</th><th>Open PRs</th><th>Review requests</th><th>Assigned issues</th><th>Last seen</th></tr></thead>\n` +
+    `<tbody>${rows}</tbody>\n</table>`
+  );
+}
+
+const FLEET_CSS =
+  'body{font:14px/1.4 system-ui,sans-serif;margin:2rem;color:#111}table{border-collapse:collapse;margin:.5rem 0 1.5rem}' +
+  'th,td{border:1px solid #ccc;padding:.25rem .5rem;text-align:left;white-space:nowrap}td.n{text-align:right}' +
+  '.hot{color:#b00;font-weight:600}.stale{color:#b00}.wide{overflow-x:auto}';
+
+async function handleFleet(url, env, nowMs = Date.now()) {
+  const db = env.FLEET_DB;
+  if (!db) return deny(503);
+  const days = Math.min(Math.max(parseInt(url.searchParams.get('days') || '7', 10) || 7, 1), 90);
+  const since = new Date(nowMs - days * 86400e3).toISOString();
+  let disk = [];
+  let workload = [];
+  try {
+    [disk, workload] = await Promise.all([fleetSnapshots(db, 'disk', since), fleetSnapshots(db, 'workload', since)]);
+  } catch {
+    return deny(503);
+  }
+  if (url.pathname === '/internal/fleet/data.json') {
+    const body = { days, latest: { disk: disk[0] || null, workload: workload[0] || null }, history: { disk, workload } };
+    return new Response(`${JSON.stringify(body)}\n`, { headers: { 'content-type': 'application/json; charset=utf-8', ...ADMIN_HEADERS } });
+  }
+  if (url.pathname === '/internal/fleet/disk.csv' || url.pathname === '/internal/fleet/workload.csv') {
+    const isDisk = url.pathname.endsWith('disk.csv');
+    const rows = isDisk
+      ? disk.flatMap((s) => (s.machines || []).map((m) => ({ ...m, collected_at: s.collected_at })))
+      : workload.flatMap((s) => (s.teammates || []).map((t) => ({ ...t, collected_at: s.collected_at })));
+    const name = isDisk ? 'fleet-disk.csv' : 'fleet-workload.csv';
+    return new Response(csvOf(isDisk ? DISK_FIELDS : WORKLOAD_FIELDS, rows), {
+      headers: { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': `attachment; filename="${name}"`, ...ADMIN_HEADERS },
+    });
+  }
+  const html =
+    `<!DOCTYPE html>\n<html lang="en">\n<head><meta charset="utf-8"><title>Fleet stats</title><style>${FLEET_CSS}</style></head>\n<body>\n<main>\n` +
+    `<h1>Fleet stats</h1>\n<p>Collected by cron on Bastion with no AI: workload every hour, disk every 6 hours. ` +
+    `Times are US Central. Data: <a href="/internal/fleet/data.json">data.json</a>, ` +
+    `<a href="/internal/fleet/workload.csv">workload.csv</a>, <a href="/internal/fleet/disk.csv">disk.csv</a> ` +
+    `(add <code>?days=30</code> for a longer window, up to 90).</p>\n` +
+    `<h2>Teammate workload</h2>\n${staleNote(workload[0], 'workload', nowMs)}\n${workloadTable(workload[0])}\n` +
+    `<h2>Disk free</h2>\n${staleNote(disk[0], 'disk', nowMs)}\n${diskTable(disk[0])}\n${diskTrend(disk.slice(0, 28))}\n` +
+    `</main>\n</body>\n</html>\n`;
+  return new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8', ...ADMIN_HEADERS } });
 }
 
 export default {

@@ -151,7 +151,7 @@ jobs:
           echo "Built $pages HTML pages."
           rm -rf .internal-src
 
-      - name: Point the internal worker at the signups database
+      - name: Point the internal worker at its D1 databases (signups, fleet stats)
         run: bash .github/scripts/resolve-d1.sh internal-worker
 
       - name: Deploy to the blowhorn-internal Worker

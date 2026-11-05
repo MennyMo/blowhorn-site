@@ -8,6 +8,11 @@
       "binding": "SIGNUPS_DB",
       "database_name": "blowhorn-signups",
       "database_id": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "binding": "FLEET_DB",
+      "database_name": "blowhorn-fleet-stats",
+      "database_id": "00000000-0000-0000-0000-000000000000"
     }
   ],
   "routes": [

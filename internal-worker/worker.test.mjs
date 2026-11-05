@@ -136,3 +136,80 @@ test('signups export is CSV with quoted commas', async () => {
 });
 test('signups admin without a database fails closed', async () =>
   assert.equal((await handle(authed('/internal/signups/'), env, certsFetch)).status, 503));
+
+// Fleet stats page: snapshots the Bastion cron writes to FLEET_DB.
+const diskSnap = {
+  kind: 'disk', collected_at: '2026-11-05T02:47:20Z', collector_host: 'bastion',
+  machines: [
+    { name: 'office-imac', os: 'Darwin', mount: '/System/Volumes/Data', reachable: true, size_bytes: 5e11, free_bytes: 4.5e10, used_bytes: 4.55e11, used_pct: 91.0 },
+    { name: 'grok-bot-box', reachable: false, error: 'ssh: <timeout>' },
+  ],
+};
+const workloadSnap = {
+  kind: 'workload', collected_at: '2026-11-05T02:47:40Z', collector_host: 'bastion', orgs: ['layer5io'],
+  router: { tasks: { assigned: 42, done: 60 } },
+  teammates: [
+    { persona: 'yi', login: 'yi-bot', kind: 'muse-bot', paused: false, idle: false, router_load: 4, router_open_reviews: 1, router_open_issues: 3, handed_24h: 8, done_24h: 4, gh_open_prs: 25, gh_review_requests: 19, gh_assigned_issues: 7, last_seen: '2026-11-05T02:40:00Z' },
+    { persona: null, login: 'leecalcote', kind: 'human', paused: false, router_load: 0, gh_open_prs: null },
+  ],
+};
+const fleetDb = (byKind, seen = []) => ({
+  prepare: (sql) => ({
+    bind: (kind, since) => {
+      seen.push({ sql, kind, since });
+      return { all: async () => ({ results: (byKind[kind] || []).map((b) => ({ collected_at: b.collected_at, body: JSON.stringify(b) })) }) };
+    },
+  }),
+});
+const fleetEnv = (byKind, seen) => ({ ...env, FLEET_DB: fleetDb(byKind, seen) });
+
+test('fleet page without a token is denied', async () =>
+  assert.equal(await status(adminReq('/internal/fleet/'), fleetEnv({ disk: [diskSnap] })), 403));
+test('fleet page without a database fails closed', async () =>
+  assert.equal((await handle(authed('/internal/fleet/'), env, certsFetch)).status, 503));
+test('fleet page renders the latest snapshots in Central time', async () => {
+  const res = await handle(authed('/internal/fleet/'), fleetEnv({ disk: [diskSnap], workload: [workloadSnap] }), certsFetch);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('cache-control'), 'no-store');
+  const html = await res.text();
+  assert.match(html, /office-imac/);
+  assert.match(html, /class="n hot">91%/);
+  assert.match(html, /45\.0 GB/);
+  assert.match(html, /grok-bot-box<\/td><td colspan="5" class="stale">Unreachable: ssh: &lt;timeout&gt;/);
+  assert.match(html, /Nov 4, 8:47 PM CST/);
+  assert.match(html, /<td>yi<\/td><td>yi-bot<\/td><td>working<\/td>/);
+  assert.match(html, /<td>leecalcote<\/td><td>leecalcote<\/td><td>human<\/td>/);
+  assert.match(html, /assigned 42, done 60/);
+});
+test('fleet page flags a snapshot older than two runs as stale', async () => {
+  const old = { ...diskSnap, collected_at: '2020-01-01T00:00:00Z' };
+  const html = await (await handle(authed('/internal/fleet/'), fleetEnv({ disk: [old] }), certsFetch)).text();
+  assert.match(html, /Stale: the cron has missed at least two runs/);
+});
+test('fleet page says so when there is no data yet', async () => {
+  const html = await (await handle(authed('/internal/fleet/'), fleetEnv({}), certsFetch)).text();
+  assert.match(html, /No workload snapshot yet/);
+  assert.match(html, /No disk snapshot yet/);
+});
+test('fleet data.json returns latest and history, window clamped to 90 days', async () => {
+  const seen = [];
+  const res = await handle(authed('/internal/fleet/data.json?days=999'), fleetEnv({ disk: [diskSnap], workload: [workloadSnap] }, seen), certsFetch);
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.equal(body.days, 90);
+  assert.equal(body.latest.disk.machines[0].name, 'office-imac');
+  assert.equal(body.history.workload.length, 1);
+  assert.deepEqual(seen.map((s) => s.kind).sort(), ['disk', 'workload']);
+});
+test('fleet CSVs flatten one row per machine or teammate', async () => {
+  const e = fleetEnv({ disk: [diskSnap], workload: [workloadSnap] });
+  const disk = await (await handle(authed('/internal/fleet/disk.csv'), e, certsFetch)).text();
+  assert.match(disk, /^collected_at,name,reachable,/);
+  assert.equal(disk.trim().split('\n').length, 3);
+  const wl = await (await handle(authed('/internal/fleet/workload.csv'), e, certsFetch)).text();
+  assert.match(wl, /2026-11-05T02:47:40Z,yi,yi-bot,muse-bot/);
+});
+test('fleet database errors fail closed', async () => {
+  const e = { ...env, FLEET_DB: { prepare: () => ({ bind: () => ({ all: async () => { throw new Error('d1'); } }) }) } };
+  assert.equal((await handle(authed('/internal/fleet/'), e, certsFetch)).status, 503);
+});
