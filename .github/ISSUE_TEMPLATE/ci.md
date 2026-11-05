@@ -2,7 +2,12 @@
 name: 🛠 Continuous Integration / DevOps
 about: Improve or update workflows or other automation
 title: '[CI]'
-labels: 'area/ci'
+labels: 
+- area/ci
+- help wanted
+- good first issue
+- github-actions
+- devops
 assignees: ''
 ---
 ### Current Behavior
