@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/activity_feed.schema.json",
+  "title": "Public activity feed",
+  "description": "Public activity feed for the blowhorn.ai hero social proof card. No PII - no emails, user ids or post content. Served by Layer5 Cloud at GET /api/public/activity-feed; this file is the single contract. Hyphens never em dashes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "sample", "generatedAt", "items"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": 1 },
+    "sample": {
+      "description": "True when the payload is example data, not a live feed.",
+      "type": "boolean"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 50,
+      "items": { "$ref": "#/definitions/item" }
+    }
+  },
+  "definitions": {
+    "plainText": {
+      "type": "string",
+      "not": { "pattern": "\u2014" }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "platform", "role", "line", "completedAt", "visibility"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "platform": {
+          "description": "Integration id. Supported platforms only, matching data/integrations.json.",
+          "type": "string",
+          "enum": ["linkedin", "x", "reddit", "hacker-news", "slack", "bluesky", "github"]
+        },
+        "role": {
+          "allOf": [{ "$ref": "#/definitions/plainText" }],
+          "minLength": 3,
+          "maxLength": 40
+        },
+        "line": {
+          "allOf": [{ "$ref": "#/definitions/plainText" }],
+          "minLength": 10,
+          "maxLength": 120
+        },
+        "networks": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "allOf": [{ "$ref": "#/definitions/plainText" }],
+            "minLength": 1
+          }
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "publicProfileUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "visibility": { "const": "public" }
+      }
+    }
+  }
+}

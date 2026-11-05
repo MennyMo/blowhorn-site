@@ -1,0 +1,44 @@
+{
+  "$schema": "../schemas/activity_feed.schema.json",
+  "version": 1,
+  "sample": true,
+  "generatedAt": "2026-11-04T18:00:00Z",
+  "items": [
+    {
+      "id": "sample-launch-amplify",
+      "platform": "linkedin",
+      "role": "Solo founder",
+      "line": "A solo founder just amplified a launch post on 3 networks",
+      "networks": ["LinkedIn", "X", "Bluesky"],
+      "completedAt": "2026-11-04T17:42:00Z",
+      "visibility": "public"
+    },
+    {
+      "id": "sample-thread-reply",
+      "platform": "hacker-news",
+      "role": "Open source maintainer",
+      "line": "A maintainer just replied to a thread from their own browser",
+      "networks": ["Hacker News"],
+      "completedAt": "2026-11-04T17:18:00Z",
+      "visibility": "public"
+    },
+    {
+      "id": "sample-slack-share",
+      "platform": "slack",
+      "role": "Community lead",
+      "line": "A community lead just shared a release note in Slack",
+      "completedAt": "2026-11-04T16:55:00Z",
+      "publicProfileUrl": "https://blowhorn.ai/for/community/",
+      "visibility": "public"
+    },
+    {
+      "id": "sample-github-rally",
+      "platform": "github",
+      "role": "Staff engineer",
+      "line": "An engineer just rallied reactions on a GitHub issue",
+      "networks": ["GitHub"],
+      "completedAt": "2026-11-04T16:11:00Z",
+      "visibility": "public"
+    }
+  ]
+}
