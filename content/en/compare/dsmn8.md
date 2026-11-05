@@ -32,13 +32,13 @@
     "slack"
   ],
   "wins": [
-    "Developer networks: Hacker News, Reddit and GitHub, plus Slack messages via API, which DSMN8 does not evidence as publishing surfaces",
+    "Developer networks: Hacker News, Reddit and GitHub, plus Slack messages via API; DSMN8's Slack surface is internal distribution and notification only, not public publishing",
     "Your own computers and signed-in browser, plus API where noted, not a vendor cloud in the middle",
     "Start free during early access, with no demo, quote or annual contract in the way"
   ],
   "loses": [
     "DSMN8 governs a program: approvals, SAML SSO, role controls, audit trails and gamification. Blowhorn does not claim those here",
-    "DSMN8 reports UTM attribution and earned media value. Blowhorn analytics cover LinkedIn, X and Bluesky",
+    "DSMN8 reports UTM attribution, earned media value and CRM attribution. Blowhorn analytics cover LinkedIn, X and Bluesky",
     "DSMN8 keeps running while your computers are closed. Blowhorn needs a computer awake"
   ],
   "price_them": "Custom quote only, annual contract",
@@ -86,7 +86,7 @@
     },
     {
       "f": "Price",
-      "t": "Custom quote only",
+      "t": "Custom quote only, annual contract",
       "b": "Free during early access"
     }
   ],
