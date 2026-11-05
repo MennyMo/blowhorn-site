@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {{- partial "theme-head.html" . }}
     {{- partial "tells-bar-head.html" . }}
+    {{- $docTitle := .Params.seo_title | default (printf "%s: %s" .Title site.Title) -}}
+    {{- $docDesc := .Description | default .Summary | default site.Params.description -}}
     <title>{{ if .Params.seo_title }}{{ .Params.seo_title }}{{ else }}{{ .Title }}: {{ site.Title }}{{ end }}</title>
     {{- if eq (getenv "HUGO_PREVIEW") "true" }}
     <meta name="robots" content="noindex, nofollow">
@@ -15,6 +17,20 @@
     <meta name="description" content="{{ . }}">
     {{- end }}
     <link rel="canonical" href="{{ partial "canonical.html" . }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Blowhorn">
+    <meta property="og:title" content="{{ $docTitle }}">
+    <meta property="og:description" content="{{ $docDesc }}">
+    <meta property="og:url" content="{{ partial "canonical.html" . }}">
+    <meta property="og:image" content="{{ "assets/brand/marketing/blowhorn-social-banner-16x9.png" | absURL }}">
+    <meta property="og:image:width" content="1600">
+    <meta property="og:image:height" content="900">
+    <meta property="og:image:alt" content="Major Blowhorn, a rooster drill sergeant, crows through a megaphone beside the Blowhorn wordmark and the tagline One message. Many ears.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $docTitle }}">
+    <meta name="twitter:description" content="{{ $docDesc }}">
+    <meta name="twitter:image" content="{{ "assets/brand/marketing/blowhorn-social-banner-16x9.png" | absURL }}">
+    <meta name="twitter:image:alt" content="Major Blowhorn, a rooster drill sergeant, crows through a megaphone beside the Blowhorn wordmark and the tagline One message. Many ears.">
     {{- $theme := partial "theme.html" . -}}
     {{- if eq $theme.colorScheme "dark" }}
     <meta name="theme-color" content="#070B0A">
