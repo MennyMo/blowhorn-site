@@ -536,8 +536,10 @@ A change to the secret takes effect on the next deploy. To apply it now, run
 
 `bypass_ip_ranges` in `internal-worker/access.json` lists the networks that
 reach the site without signing in, as CIDRs with no host bits set (a single
-address is `/32` for IPv4 or `/128` for IPv6). It is the one place to edit
-them. From it:
+address is `/32` for IPv4 or `/128` for IPv6). Client operating systems often
+rotate temporary IPv6 addresses inside the same `/64` (privacy extensions),
+so a home network should be listed as that `/64` rather than one `/128`.
+It is the one place to edit them. From it:
 
 - `internal_access.py ensure` creates or updates the reusable `bypass` policy
   named `bypass_policy_name`, whose only rules are those IP ranges, and
