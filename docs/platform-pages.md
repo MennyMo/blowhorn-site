@@ -121,10 +121,10 @@ scripts are outside this page's scope.
   with a rule between the facts. Their source text and links are unchanged. The setups
   rail and Activities are unchanged.
 
-### Scroll continuity and the gauge (#501, intentional delta)
+### Rules of engagement colour and readable actions (#501)
 
-Approved by the product owner for this preview. It deliberately goes past the site's
-restraint (`DESIGN.md`) for the X page only:
+Approved by the product owner for this preview (bands and scroll-continuity washes
+were tried and then dropped on Lee's Nov 6 direction - keep colour on the gauge only):
 
 - **Gauge.** The three rules-of-engagement levels are three horizontal bars, one per
   level: 01 blue, 02 green, 03 coral. Each row has a level dot and a bar filled in its
@@ -136,25 +136,11 @@ restraint (`DESIGN.md`) for the X page only:
   the section action links (`.pp-more`), the setup source links (`.pp-use-src`) and the
   "Keep reading" links in the matrix header (`.pp-related`). Captions (counts, type
   chips, the gauge's numbers) stay small.
-- **Section order and bands.** Hero, then the near-black local stage, the action matrix
-  (teal relief band), Rules of engagement (surface), Field Manual (soft blue wash),
-  setups (surface), Activities (soft green wash).
-- **Gridlines and bridges.** One faint vertical gridline layer (5% ink) is drawn on the
-  full-width page, so transparent sections and the breadcrumb row share one origin at
-  the left edge. The opaque Field Manual and Activities washes repeat it from their own
-  left edges. The near-black stage and the teal matrix stay clean.
-  Four seams carry one diagonal blue, green and coral bridge, drawn in the section's
-  padding and never over text: hero into the stage, stage into the matrix, Rules of
-  engagement into Field Manual, and the setups into Activities. Light seams between
-  sections (matrix into Rules of engagement, Field Manual, setups, Activities) also get
-  a neutral hairline, so they still read under more contrast. The stage's dark edge
-  needs none. All of it is CSS pseudo-elements and background layers, with no markup
-  change and no script change.
+- **No section bands.** Alternating blue/green washes, aligned gridlines, and diagonal
+  color ribbons are not used. Sections keep the ordinary hairline separators.
 - **The local stage stays near-black.** It is the deliberate dark beat in the page.
-- **Accessibility.** Under `prefers-reduced-transparency` the gridlines go. Under
-  `prefers-contrast: more` the gridlines and bridges go and the washes turn to the
-  plain surface, leaving the hairlines. Forced colours get CanvasText and Highlight.
-  Intent: section text meets 4.5:1 or better on every wash, in both themes.
+- **Accessibility.** Under `prefers-contrast: more` the gauge track uses a solid edge.
+  Forced colours get CanvasText and Highlight for the gauge fill and level dot.
 - **Scope.** The usage rail (#500 carousel) is unchanged apart from the larger
   source-link type. No composer, form, network or storage call was added.
 - **Checks.** No check in `check_platform_pages.py` covers these visual rules. The

@@ -2,30 +2,17 @@
    Figma 902:114 (X) on the shared contract 902:111. Most colours, radii and shadows
    are tokens from site.css (static/assets/brand/tokens.json), and spacing reads the
    rhythm tokens (DESIGN.md, "Whitespace and rhythm"). Card looks come from cards.css.
-   This file also styles the page's own look: a page-scoped palette (the .pp block
-   below) and the section bands, gridlines and bridges of the #501 scroll continuity.
-   Those are deliberate exceptions to the site's restraint (docs/platform-pages.md,
-   "Scroll continuity and the gauge"). Motion is finite and off under
+   This file also holds a page-scoped palette for the rules-of-engagement gauge
+   (#501): blue, green, then Blowhorn coral. Motion is finite and off under
    prefers-reduced-motion. */
 
 /* Page-scoped colour (#501). The brand tokens have no blue or green step, so the
-   rules of engagement gauge and the section washes take two page values from here.
-   Coral is the brand's own token. Dark values lift each step for a dark ground. */
+   rules of engagement gauge takes two page values from here. Coral is the brand's
+   own token. Dark values lift each step for a dark ground. */
 .pp {
   --pp-blue: #2563EB;
   --pp-green: #15803D;
   --pp-coral: var(--coral);
-  --pp-wash-blue: #EEF4FF;
-  --pp-wash-green: #EDF8F1;
-  --pp-grid: color-mix(in srgb, var(--ink) 5%, transparent);
-  /* The one gridline layer for transparent sections and the breadcrumb row. It is
-     drawn on the full-width <main>, so its origin is the viewport's left edge, not
-     the centred wrap. Opaque washes repeat it from their own left edge. */
-  background-image: repeating-linear-gradient(90deg, var(--pp-grid) 0 1px, transparent 1px 96px);
-  /* Ribbons bleed past the wrap on both sides. Clip them here so the page never
-     scrolls sideways. overflow-x: clip does not make <main> a scroll container. */
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 .pp [hidden] { display: none !important; }
@@ -66,8 +53,6 @@
   .pp {
     --pp-blue: #7CAEFF;
     --pp-green: #4ADE80;
-    --pp-wash-blue: #1A2440;
-    --pp-wash-green: #15281F;
   }
 }
 
@@ -209,55 +194,14 @@
   text-align: center;
 }
 
-/* ---------- Sections: bands, gridlines and bridges (#501) ----------
-   Section order: hero, the local stage (near-black), the action matrix (teal relief
-   band), Rules of engagement, Field Manual (blue wash), setups, Activities (green
-   wash). Gridlines come from the one layer on <main> (.pp), which transparent sections
-   and the breadcrumb row show; the opaque washes repeat it from their own left edge,
-   and the near-black stage and teal matrix stay clean. Each seam between two light
-   sections or a light section and the matrix gets a neutral hairline, so the boundary
-   still reads under more contrast. The stage's dark edges need none. Each seam into a
-   band or out of the usage rail gets one blue, green and coral bridge, drawn in the
-   section's padding (about 28 px above the seam, inside the 64 px phone padding),
-   never over text. Decoration only: pseudo-elements and background layers, no
-   markup. Under reduced transparency the gridlines go; under more contrast the
-   gridlines and bridges go and the washes turn to the plain surface. */
-.pp-section { position: relative; padding-block: var(--section-y); }
+/* ---------- Sections ---------- */
+.pp-section { padding-block: var(--section-y); }
 .pp-section + .pp-section,
-.pp-band + .pp-section {
+.pp-hero + .pp-section {
   background-image: linear-gradient(90deg, transparent, var(--line) 18%, var(--line) 82%, transparent);
   background-size: min(100%, var(--measure)) 1px;
   background-repeat: no-repeat;
   background-position: top center;
-}
-.pp-section[data-pp-field-manual],
-.pp-section.pp-continuity {
-  background-image:
-    linear-gradient(90deg, transparent, var(--line) 18%, var(--line) 82%, transparent),
-    repeating-linear-gradient(90deg, var(--pp-grid) 0 1px, transparent 1px 96px);
-  background-size: min(100%, var(--measure)) 1px, auto;
-  background-repeat: no-repeat, repeat;
-  background-position: top center, top left;
-}
-.pp-section[data-pp-field-manual] { background-color: var(--pp-wash-blue); }
-.pp-section.pp-continuity { background-color: var(--pp-wash-green); }
-
-/* The four bridges: hero into the stage (.pp-local::before), stage into the matrix
-   (.pp-band::before), Rules of engagement into Field Manual, and the setups into
-   Activities. */
-.pp-local::before,
-.pp-band::before,
-.pp-section[data-pp-field-manual]::before,
-.pp-section.pp-continuity::before {
-  content: "";
-  position: absolute;
-  left: -8%;
-  right: -8%;
-  top: -28px;
-  height: 56px;
-  background: linear-gradient(90deg, var(--pp-blue) 0%, var(--pp-green) 50%, var(--pp-coral) 100%);
-  transform: skewY(-2deg);
-  pointer-events: none;
 }
 
 /* ---------- Only on your computer: the local-action stage ----------
@@ -271,11 +215,11 @@
    ledger straightens; nothing loops. Off under reduced motion; solid edges under
    high contrast. Transparent cutouts only (static/assets/brand/cast/icons/). */
 .pp-local {
-  position: relative;
   margin-top: var(--section-y);
   padding-block: var(--section-y);
   background: var(--near-black);
   color: var(--cream);
+  overflow: hidden;
 }
 .pp-local .label,
 .pp-local .caption { color: var(--yellow); }
@@ -586,7 +530,6 @@
    (a focusable, labelled region), so the page itself never overflows. The row
    bound to the picked type gets a full-row tint, never an edge stripe. */
 .pp-band {
-  position: relative;
   padding-block: var(--section-y);
   background: var(--surface-tint);
 }
@@ -898,20 +841,12 @@
 .pp-now::after { content: ""; flex: 1; height: 2px; border-radius: var(--radius-pill); background: var(--link); }
 .pp-activities-cap { margin-top: var(--space-4); color: var(--ink-muted); text-align: center; }
 
-/* Gridlines are a transparent ink; a reader who asks for less transparency or more
-   contrast gets none. More contrast also drops the colour washes to the plain
-   surface, so each boundary is the hairline or the bridge, never a faint tint. */
-@media (prefers-reduced-transparency: reduce) {
-  .pp { --pp-grid: transparent; }
-}
 @media (prefers-contrast: more) {
-  .pp { --pp-grid: transparent; --pp-wash-blue: var(--surface); --pp-wash-green: var(--surface); }
   .pp-local { background: var(--near-black); }
   .pp-theatre::before, .pp-theatre::after { display: none; }
   .pp-route { stroke-width: 4; }
   .pp-slip, .pp-out, .pp-relay { box-shadow: 0 0 0 2px var(--cream); }
   .pp-gauge-bar { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); }
-  .pp-local::before, .pp-band::before, .pp-section[data-pp-field-manual]::before, .pp-section.pp-continuity::before { display: none; }
 }
 
 @media (forced-colors: active) {
