@@ -21,6 +21,7 @@ import check_platform_pages as check
 ROOT = Path(__file__).resolve().parents[2]
 HUGO = ROOT / "node_modules" / ".bin" / "hugo"
 PAGE = "content/en/preview-platform-x.md"
+CAST = "static/assets/brand/cast"
 ROUTE = "/preview/platforms/x/"
 SOURCES = (
     "content/en/docs/how-to/settings/choose-your-rules-of-engagement.md",
@@ -28,6 +29,9 @@ SOURCES = (
     "content/en/docs/how-to/set-up/connect-mcp-client.md",
     "content/en/docs/reference/cli/risk.md",
     "content/en/agents/claude-code.md",
+    "content/en/docs/explanation/your-own-chrome.md",
+    "content/en/docs/how-to/publish/amplify-a-post.md",
+    "content/en/docs/reference/use-the-desktop-app.md",
 )
 
 
@@ -49,6 +53,9 @@ class Fixture:
             (self.root / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(ROOT / rel, self.root / rel)
         shutil.copy(ROOT / "hugo.toml", self.root / "hugo.toml")
+        shutil.copytree(ROOT / CAST, self.root / CAST)
+        (self.root / "assets/css").mkdir(parents=True)
+        shutil.copy(ROOT / "assets/css/platform-page.css", self.root / "assets/css/platform-page.css")
         (self.root / check.SCRIPT).parent.mkdir(parents=True)
         shutil.copy(ROOT / check.SCRIPT, self.root / check.SCRIPT)
 
@@ -86,6 +93,22 @@ class SourceTest(unittest.TestCase):
         joined = "\n".join(problems)
         for fragment in fragments:
             self.assertIn(fragment, joined)
+
+    def test_the_dry_fire_scene_is_the_desktop_app(self):
+        def label(rec):
+            rec["local"]["scenes"][2]["label"] = "Dry fire"
+        self.assertNamed(self.mutate(label), "must say desktop")
+        def relay(rec):
+            del rec["local"]["scenes"][2]["relay"]
+        self.assertNamed(self.mutate(relay), "relay is None, want 'Desktop app'")
+        def mark(rec):
+            rec["local"]["scenes"][2]["planned"]["mark"] = "Planned"
+        self.assertNamed(self.mutate(mark), "must say the extension flow is planned")
+
+    def test_the_boundary_text_keeps_its_quote_scope(self):
+        def fn(rec):
+            rec["local"]["boundary"]["text"] = "The extension acts as you, in your own signed-in browser: the tabs you have open, with the sessions you made by hand."
+        self.assertNamed(self.mutate(fn), "drops the scope of its quote")
 
     def test_the_repository_data_passes(self):
         self.assertEqual(check.check_source(ROOT), [])
@@ -140,24 +163,8 @@ class SourceTest(unittest.TestCase):
 
     def test_no_em_dash_in_the_data(self):
         def fn(rec):
-            rec["playground"]["intro"] = "Write a post — and preview it here."
+            rec["local"]["intro"] = "Pick a scene — and see how."
         self.assertNamed(self.mutate(fn), "carries an em dash")
-
-    def test_a_starter_must_use_a_declared_activity(self):
-        def fn(rec):
-            rec["playground"]["starters"]["items"][0]["activity"] = "follow"
-        self.assertNamed(self.mutate(fn), "starter 'launch-update' uses undeclared activity 'follow'")
-
-    def test_starter_ids_are_unique(self):
-        def fn(rec):
-            items = rec["playground"]["starters"]["items"]
-            items[1]["id"] = items[0]["id"]
-        self.assertNamed(self.mutate(fn), "starter id 'launch-update' repeats")
-
-    def test_the_thread_length_is_the_yaml_one(self):
-        def fn(rec):
-            rec["playground"]["thread"]["at"] = 280
-        self.assertNamed(self.mutate(fn), "thread.at is 280", "'longer than 280 characters'")
 
     def test_every_action_needs_a_cli_example(self):
         path = self.fx.root / "data/action_examples.json"
@@ -201,8 +208,74 @@ class SourceTest(unittest.TestCase):
             with self.subTest(call=call):
                 fx = Fixture()
                 self.addCleanup(fx.close)
-                fx.edit(str(check.SCRIPT), "    render();\n    controls.hidden = false;", f"    render();\n    {call};\n    controls.hidden = false;")
-                self.assertIn("the playground is local only", "\n".join(check.check_source(fx.root)))
+                fx.edit(str(check.SCRIPT), '    root.classList.add("is-enhanced");', f'    root.classList.add("is-enhanced");\n    {call};')
+                self.assertIn("the local stage is local only", "\n".join(check.check_source(fx.root)))
+
+    def test_a_local_scene_names_an_action_the_yaml_lists(self):
+        def fn(rec):
+            rec["local"]["scenes"][0]["action"] = "comment"
+        self.assertNamed(self.mutate(fn), "local scene 'amplify' names 'comment', which data/platforms/x.yaml does not list")
+
+    def test_a_local_scene_joins_a_real_yaml_text(self):
+        def fn(rec):
+            rec["local"]["scenes"][1]["join"] = "behavior"
+        self.assertNamed(self.mutate(fn), "local scene 'follow' joins 'behavior' from 'follow'")
+
+    def test_the_stage_has_three_scenes_in_order(self):
+        def fn(rec):
+            rec["local"]["scenes"].reverse()
+        self.assertNamed(self.mutate(fn), "local scenes are ['dry-fire', 'follow', 'amplify']")
+
+    def test_dry_fire_quotes_the_public_page_and_marks_the_plan(self):
+        def fn(rec):
+            del rec["local"]["scenes"][2]["sourced"]
+        self.assertNamed(self.mutate(fn), "must quote the public dry-fire page")
+        def plan(rec):
+            del rec["local"]["scenes"][2]["planned"]
+        self.assertNamed(self.mutate(plan), "must mark what is planned, not shipped")
+
+    def test_a_sourced_stage_quote_must_be_on_its_page(self):
+        def fn(rec):
+            rec["local"]["scenes"][2]["sourced"]["quote"] = "checks the sign-in and then posts"
+        self.assertNamed(self.mutate(fn), "does not say 'checks the sign-in and then posts'")
+
+    def test_the_boundary_quote_must_be_on_its_page(self):
+        def fn(rec):
+            rec["local"]["boundary"]["quote"] = "a rented cloud browser that never sleeps"
+        self.assertNamed(self.mutate(fn), "local boundary", "a rented cloud browser")
+
+    def test_a_cutout_is_a_transparent_file_under_the_cast(self):
+        def fn(rec):
+            rec["local"]["crew"][2]["src"] = "assets/brand/cast/icons/nobody.webp"
+        self.assertNamed(self.mutate(fn), "local crew assets/brand/cast/icons/nobody.webp is not under static/")
+        def opaque(rec):
+            rec["local"]["crew"][2]["src"] = "assets/brand/cast/mouse-marine-base.webp"
+        self.assertNamed(self.mutate(opaque), "has no alpha channel")
+
+    def test_the_stage_sits_on_the_near_black_token(self):
+        fx = Fixture()
+        self.addCleanup(fx.close)
+        fx.edit("assets/css/platform-page.css", "  background: var(--near-black);\n  color: var(--cream);", "  background: var(--charcoal);\n  color: var(--cream);")
+        self.assertIn("near-black token", "\n".join(check.check_source(fx.root)))
+
+    def test_the_fan_fills_its_theatre(self):
+        """A zero-size fan puts every spoke at the stage's origin (the geometry red)."""
+        self.assertEqual(check.check_stage_geometry((self.fx.root / "assets/css/platform-page.css").read_text(encoding="utf-8")), [])
+        self.assertIn(".pp-fan must fill the theatre", "\n".join(check.check_stage_geometry(".pp-fan { position: absolute; left: 0; top: 0; }")))
+
+    def test_no_positioned_part_is_animated_on_transform(self):
+        """pp-rise ends on transform: none, so an animated relay or slip loses its centring."""
+        path = self.fx.root / "assets/css/platform-page.css"
+        css = path.read_text(encoding="utf-8")
+        self.assertEqual(check.check_stage_geometry(css), [])
+        bad = css + ("\n@keyframes pp-rise { from { opacity: 0; } to { opacity: 1; transform: none; } }\n"
+                     ".pp-local.is-playing .pp-relay { animation: pp-rise 480ms ease-out 1 both; }\n")
+        self.assertIn("pp-rise", "\n".join(check.check_stage_geometry(bad)))
+
+    def test_the_stage_stylesheet_has_no_loop(self):
+        path = self.fx.root / "assets/css/platform-page.css"
+        path.write_text(path.read_text(encoding="utf-8") + "\n.pp-x { animation: pp-draw 1s infinite; }\n", encoding="utf-8")
+        self.assertNamed(self.problems(), "an infinite animation")
 
 
 class LinkGuardTest(unittest.TestCase):
@@ -283,7 +356,20 @@ class BuiltTest(unittest.TestCase):
         for state, want in zip(states[1:], types):
             self.assertEqual(state["checked"], [want])
             self.assertEqual(set(state["shown"]), {want})
-            self.assertGreaterEqual(state["shown"][want], 4)  # scene, intent, playground title, Activities chip
+            self.assertGreaterEqual(state["shown"][want], 4)  # intent, Activities chip and the stage panels
+
+    def test_only_on_your_computer_follows_the_hero(self):
+        """The local-action stage is the first section after the hero, and the page
+        has no draft composer: no textarea, no form, no draft or try-on region."""
+        main = check.parse(check.built_file(self.build, ROUTE)).main
+        blocks = [c for c in main["children"] if isinstance(c, dict)]
+        labels = [b["attrs"].get("aria-labelledby", "") for b in blocks]
+        hero = labels.index("pp-title")
+        self.assertEqual(labels[hero + 1], "pp-local-title")
+        self.assertEqual(check.find(main, "data-pp-try"), [])
+        self.assertEqual(check.find(main, "data-pp-try-text"), [])
+        self.assertFalse([e for e in check.walk(main) if e["tag"] in ("textarea", "form")])
+        self.assertNotIn("try on a draft", " ".join(check.text(main).split()).lower())
 
     def test_the_page_must_stay_noindex_and_unlinked(self):
         build = self.copy()
@@ -297,7 +383,7 @@ class BuiltTest(unittest.TestCase):
 
     def test_one_primary_call_to_action(self):
         build = self.copy()
-        self.edit_page(build, 'class="pp-starter ui"', 'class="pp-starter ui button-primary"')
+        self.edit_page(build, 'class="pp-replay ui"', 'class="pp-replay ui button-primary"')
         self.assertIn("exactly one primary button", self.problems(build))
 
     def test_the_call_to_action_installs_the_extension(self):
@@ -313,32 +399,132 @@ class BuiltTest(unittest.TestCase):
 
     def test_nothing_sits_under_the_call_to_action(self):
         build = self.copy()
-        self.edit_page(build, "</a>\n        </div>\n\n        <figure", '</a>\n          <p class="caption">Opens the download page.</p>\n        </div>\n\n        <figure')
+        label = json.loads((ROOT / "data/platform_pages.json").read_text(encoding="utf-8"))["pages"][0]["start"]["label"]
+        self.edit_page(build, f"data-pp-start>{label}</a>", f'data-pp-start>{label}</a><p class="caption">Opens the download page.</p>')
         self.assertIn("something sits beside or under the call to action", self.problems(build))
+
+    def test_the_local_stage_follows_the_call_to_action(self):
+        """A phone stacks in source order: the call to action must not sit below the stage."""
+        build = self.copy()
+        path = check.built_file(build, ROUTE)
+        html = path.read_text(encoding="utf-8")
+        go_start = html.index('<div class="pp-go">')
+        go_end = html.index("</div>", go_start) + len("</div>")
+        local_start = html.index('<section class="pp-local"')
+        local_end = html.index("</section>", local_start) + len("</section>")
+        moved = html[:go_start] + html[go_end:local_end] + html[go_start:go_end] + html[local_end:]
+        path.write_text(moved, encoding="utf-8")
+        self.assertIn("source order must be selector, call to action, then the local stage", self.problems(build))
 
     def test_a_reviewer_note_is_never_a_caption(self):
         build = self.copy()
         self.edit_page(build, 'class="pp-annot ui" data-pp-annotation', 'class="caption" data-pp-annotation')
         self.assertIn("reviewer annotation must be drawn as one", self.problems(build))
 
-    def test_the_call_to_action_comes_before_the_illustration(self):
-        """A phone stacks in source order: the call to action must not sit below the storyboard."""
-        build = self.copy()
-        path = check.built_file(build, ROUTE)
-        html = path.read_text(encoding="utf-8")
-        go_start = html.index('<div class="pp-go">')
-        go_end = html.index("</div>", go_start) + len("</div>")
-        stage_end = html.index("</figure>", html.index('data-pp-stage')) + len("</figure>")
-        self.assertLess(go_start, html.index("<figure"))
-        moved = html[:go_start] + html[html.index("<figure", go_start):stage_end] + html[go_start:go_end] + html[stage_end:]
-        path.write_text(moved, encoding="utf-8")
-        self.assertIn("source order must be selector, call to action, illustration", self.problems(build))
-
     def test_the_matrix_is_never_collapsed(self):
         build = self.copy()
         self.edit_page(build, '<table class="pp-matrix" data-pp-matrix>', '<details><summary>Actions</summary><table class="pp-matrix" data-pp-matrix>')
         self.edit_page(build, "</table>", "</table></details>")
         self.assertIn("a <details> on the page", self.problems(build))
+
+    def test_the_page_has_no_composer(self):
+        build = self.copy()
+        self.edit_page(build, '<div class="pp-matrix-head">', '<textarea name="draft"></textarea><div class="pp-matrix-head">')
+        found = self.problems(build)
+        self.assertIn("a named textarea", found)
+        self.assertIn("a textarea (text) in the page", found)
+        build = self.copy()
+        self.edit_page(build, '<div class="pp-matrix-head">', '<form action="/x"><div class="pp-matrix-head">')
+        self.assertIn("a <form> in the page", self.problems(build))
+        build = self.copy()
+        self.edit_page(build, '<div class="pp-matrix-head">', '<input type="file" accept="image/*"><div class="pp-matrix-head">')
+        self.assertIn("a input (file) in the page", self.problems(build))
+
+    def test_the_hero_orbit_follows_the_call_to_action(self):
+        build = self.copy()
+        path = check.built_file(build, ROUTE)
+        html = path.read_text(encoding="utf-8")
+        start = html.index('data-pp-orbit')
+        begin = html.rindex("<div", 0, start)
+        # The orbit is the block that opens at data-pp-orbit: cut it out by its own close.
+        depth, i = 0, begin
+        while True:
+            nxt_open = html.find("<div", i + 1)
+            nxt_close = html.find("</div>", i + 1)
+            if nxt_open != -1 and nxt_open < nxt_close:
+                depth += 1
+                i = nxt_open
+            else:
+                if depth == 0:
+                    end = nxt_close + len("</div>")
+                    break
+                depth -= 1
+                i = nxt_close
+        orbit = html[begin:end]
+        moved = html[:begin] + html[end:]
+        go = moved.index('<div class="pp-go">')
+        moved = moved[:go] + orbit + moved[go:]
+        path.write_text(moved, encoding="utf-8")
+        self.assertIn("the hero orbit must follow the call to action", self.problems(build))
+
+    def test_the_replay_button_names_no_hidden_element(self):
+        build = self.copy()
+        self.edit_page(build, 'data-pp-replay>', 'data-pp-replay aria-controls="pp-rig">')
+        self.assertIn("points at the decorative diagram", self.problems(build))
+        self.assertNotIn("points at the decorative diagram", self.problems(self.build))
+
+    def test_the_dry_fire_diagram_is_marked_planned_beside_it(self):
+        build = self.copy()
+        self.edit_page(build, 'data-scene-planned="dry-fire">Extension flow planned', 'data-scene-planned="dry-fire">Shipped')
+        self.assertIn("not marked as planned beside the diagram", self.problems(build))
+
+    def test_the_hero_orbit_carries_no_caption(self):
+        build = self.copy()
+        self.edit_page(build, 'class="pp-orbit-tile"', 'class="pp-orbit-tile caption"')
+        self.assertIn("the hero orbit carries a caption", self.problems(build))
+
+    def test_the_field_manual_briefing_links_every_fact(self):
+        build = self.copy()
+        self.edit_page(build, 'class="pp-fm-item" href="', 'class="pp-fm-item" data-x="1" href="/gone/" data-y="', count=1)
+        self.assertIn("the Field Manual briefing does not link each fact", self.problems(build))
+
+    def test_the_stage_shows_every_scene_without_script(self):
+        build = self.copy()
+        self.edit_page(build, 'data-pp-scene-panel="follow" aria-labelledby="pp-panel-follow"', 'data-pp-scene-panel="follow" aria-labelledby="pp-panel-follow" hidden')
+        self.assertIn("carries hidden in the HTML", self.problems(build))
+
+    def test_the_stage_reads_the_platform_yaml(self):
+        build = self.copy()
+        self.edit_page(build, "At most 400 follows per profile a day", "At most 500 follows per profile a day")
+        self.assertIn("does not show the YAML's limits for 'follow'", self.problems(build))
+
+    def test_a_stage_cutout_that_is_opaque_is_caught(self):
+        build = self.copy()
+        src = next(p for p in (build / "assets/brand/cast/icons").glob("mouse-marine.webp"))
+        shutil.copy(build / "assets/brand/cast/mouse-marine-base.webp", src)
+        self.assertIn("is opaque; a cutout must carry alpha", self.problems(build))
+
+    def test_the_private_issue_never_reaches_a_page(self):
+        build = self.copy()
+        self.edit_page(build, "Every profile, still you.", "Every profile, still you. blowhorn-ai/blowhorn/issues/2178")
+        self.assertIn("names 'blowhorn-ai/blowhorn/issues/2178'", self.problems(build))
+
+    def test_a_scene_plays_once_per_change(self):
+        fx = Fixture()
+        self.addCleanup(fx.close)
+        fx.edit(check.SCRIPT, "      runs += 1;\n", "")
+        self.assertIn("plays", self.problems(self.build, fx.root))
+
+    def test_a_scene_announces_once_and_replay_stays_quiet(self):
+        fx = Fixture()
+        self.addCleanup(fx.close)
+        fx.edit(check.SCRIPT, 'if (announce) announce.textContent = (input.getAttribute("data-title") || "") + " is showing.";', "")
+        self.assertIn("announces", self.problems(self.build, fx.root))
+        fx = Fixture()
+        self.addCleanup(fx.close)
+        fx.edit(check.SCRIPT, 'replay.addEventListener("click", function () { play(); });',
+                'replay.addEventListener("click", function () { play(); if (announce) announce.textContent = "Replaying."; });')
+        self.assertIn("replay announces", self.problems(self.build, fx.root))
 
     def test_a_matrix_cell_that_drifts_is_caught(self):
         build = self.copy()
@@ -362,46 +548,6 @@ class BuiltTest(unittest.TestCase):
         page.write_text(page.read_text(encoding="utf-8").replace('id="what-xs-ranking-rewards"', 'id="gone"'), encoding="utf-8")
         self.assertIn("cites #what-xs-ranking-rewards", self.problems(build))
 
-    def test_the_playground_submits_nothing(self):
-        build = self.copy()
-        self.edit_page(build, '<textarea id="pp-try-text"', '<textarea name="draft" id="pp-try-text"')
-        self.assertIn("a named textarea", self.problems(build))
-        build = self.copy()
-        self.edit_page(build, '<div class="pp-try-grid">', '<form action="/x"><div class="pp-try-grid">')
-        self.assertIn("a <form> in the page", self.problems(build))
-
-    def test_the_preview_mirrors_text_never_markup(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, "out.textContent = value;", "out.textContent = value.replace(/<[^>]*>/g, '');")
-        self.assertIn("does not mirror the draft as text", self.problems(self.build, fx.root))
-
-    def test_the_thread_flag_is_announced_once(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, "if (now && thread) say(thread.textContent);", "")
-        self.assertIn("crossing 274 characters announced", self.problems(self.build, fx.root))
-
-    def test_a_removed_image_is_released(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, "if (url && window.URL && URL.revokeObjectURL) URL.revokeObjectURL(url);", "")
-        found = self.problems(self.build, fx.root)
-        self.assertIn("replacing the image keeps", found)
-        self.assertIn("removing the image leaves", found)
-
-    def test_a_non_image_is_refused(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, 'if (!/^image\\//.test(picked.type || "")) {', "if (false) {")
-        self.assertIn("a non-image file is not refused", self.problems(self.build, fx.root))
-
-    def test_a_starter_fills_the_draft(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, 'text.value = button.getAttribute("data-sample") || "";', "")
-        self.assertIn("starter 'weekly-recap' shows", self.problems(self.build, fx.root))
-
     def test_clicking_the_checked_radio_changes_nothing(self):
         tree = check.parse(check.built_file(self.build, ROUTE)).main
         rec = json.loads((ROOT / "data/platform_pages.json").read_text(encoding="utf-8"))["pages"][0]
@@ -413,47 +559,6 @@ class BuiltTest(unittest.TestCase):
         idle = check.run_harness(tree, {"steps": [{"choose": rec["activities"][0]["id"]}]}, ROOT)
         self.assertEqual(idle[1]["announceWrites"], idle[0]["announceWrites"])
 
-    def test_an_undecodable_image_is_dropped_and_announced(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, 'img.addEventListener("error", function () {', 'img.addEventListener("load", function () {')
-        self.assertIn("cannot decode", self.problems(self.build, fx.root))
-
-    def test_a_refused_file_is_announced(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, 'say(announce ? announce.getAttribute("data-not-image") || "" : "");', "")
-        self.assertIn("a non-image file announces", self.problems(self.build, fx.root))
-
-    def test_a_kept_page_keeps_its_image(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, "if (!event.persisted) release();", "release();")
-        self.assertIn("persisted=True revoked", self.problems(self.build, fx.root))
-
-    def test_the_thread_flag_belongs_to_the_post_type(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, "var now = postActive() && max > 0 && n > max;", "var now = max > 0 && n > max;")
-        self.assertIn("a long draft under", self.problems(self.build, fx.root))
-
-    def test_the_counter_is_described_only_for_the_post_type(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, 'else text.removeAttribute("aria-describedby");', "")
-        self.assertIn("describes", self.problems(self.build, fx.root))
-
-    def test_a_type_change_refreshes_the_playground(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, 'input.addEventListener("change", render);', "")
-        self.assertIn("back on", self.problems(self.build, fx.root))
-
-    def test_a_starter_button_needs_no_description(self):
-        build = self.copy()
-        self.edit_page(build, 'data-pp-try-starter="launch-update"', 'data-pp-try-starter="launch-update" aria-describedby="pp-try-title"')
-        self.assertIn("a starter button carries aria-describedby", self.problems(build))
-
     def test_the_matrix_is_a_native_table_in_a_scroll_region(self):
         build = self.copy()
         self.edit_page(build, '<th scope="row"', '<th scope="row" role="rowheader"')
@@ -461,12 +566,6 @@ class BuiltTest(unittest.TestCase):
         build = self.copy()
         self.edit_page(build, 'class="pp-matrix-scroll" role="group"', 'class="pp-matrix-scroll" role="presentation"')
         self.assertIn("focusable, labelled group", self.problems(build))
-
-    def test_a_stale_thread_message_is_cleared_off_post(self):
-        fx = Fixture()
-        self.addCleanup(fx.close)
-        fx.edit(check.SCRIPT, 'announce.textContent === thread.textContent) say("");', "false) say(\"\");")
-        self.assertIn("stale live message", self.problems(self.build, fx.root))
 
     def test_the_field_manual_claims_stay_in_the_quote(self):
         data = json.loads((ROOT / "data/platform_pages.json").read_text(encoding="utf-8"))

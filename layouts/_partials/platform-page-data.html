@@ -10,16 +10,16 @@
   - the record's route must be this page's URL
   - every activity type's action id must be in the vocabulary AND listed by the YAML
   - activity ids are unique, and each is bound to a different action
-  - every starter draft's activity id must be declared on the page, starter ids
-    are unique
+  - every local scene that names an action names one the YAML lists, its scene ids
+    are unique, and its join ("description" or "limits") is the YAML's text for it
   - every action the YAML lists has an entry in data/action_examples.json
-  - the playground's thread length is the one the YAML's post behavior states
 
   Name, logo, docs link, reach, and every action's name, behavior, limits and CLI
-  line come from the canonical files. The record holds only page copy and sourced
-  facts, whose quotes check_platform_pages.py --source checks against their public
-  pages (Hugo cannot read a page's Markdown before it renders). The same script
-  checks the built page. Input: the content page (.). Returns the resolved dict. */ -}}
+  line come from the canonical files. The local stage's facts (what an amplify
+  does, the follow limits) are joined from the YAML, never retyped; every other
+  sourced fact is held by the record and checked verbatim by
+  check_platform_pages.py --source. Input: the content page (.). Returns the
+  resolved dict. */ -}}
 {{- $page := . -}}
 {{- $id := $page.Params.platform -}}
 {{- if not $id }}{{ errorf "platform-page: %s sets no `platform:` front matter" $page.File.Path }}{{ end -}}
@@ -63,15 +63,26 @@
   {{- $activities = $activities | append (merge . (dict "resolved" $act)) -}}
 {{- end -}}
 
-{{- /* Starter drafts: a declared activity and a unique id. */ -}}
-{{- $starters := slice -}}
-{{- $starterIds := dict -}}
-{{- range $rec.playground.starters.items -}}
-  {{- if not (index $labelOf .activity) }}{{ errorf "platform-page: starter %q of %q uses activity %q, which the page does not declare" .id $id .activity }}{{ end -}}
-  {{- if index $starterIds .id }}{{ errorf "platform-page: %q repeats starter id %q" $id .id }}{{ end -}}
-  {{- $starterIds = merge $starterIds (dict .id true) -}}
-  {{- $starters = $starters | append (merge . (dict "typeLabel" (index $labelOf .activity))) -}}
+{{- /* Local stage scenes: unique ids; an action names one the YAML lists, and the
+  join reads that action's YAML text. A scene with no action (dry fire) joins nothing. */ -}}
+{{- $scenes := slice -}}
+{{- $sceneIds := dict -}}
+{{- range $rec.local.scenes -}}
+  {{- if index $sceneIds .id }}{{ errorf "platform-page: %q repeats local scene id %q" $id .id }}{{ end -}}
+  {{- $sceneIds = merge $sceneIds (dict .id true) -}}
+  {{- $sid := .id -}}
+  {{- $join := .join | default "description" -}}
+  {{- $fact := "" -}}
+  {{- with .action -}}
+    {{- $act := index $byId . -}}
+    {{- if not $act }}{{ errorf "platform-page: local scene %q of %q names action %q, which data/platforms/%s.yaml does not list" $sid $id . $id }}{{ end -}}
+    {{- $fact = index $act $join -}}
+    {{- if not $fact }}{{ errorf "platform-page: local scene %q of %q joins an empty %q from action %q" $sid $id $join . }}{{ end -}}
+  {{- end -}}
+  {{- $scenes = $scenes | append (merge . (dict "fact" $fact)) -}}
 {{- end -}}
+{{- if lt (len $scenes) 2 }}{{ errorf "platform-page: %q needs at least two local scenes" $id }}{{ end -}}
+{{- $local := merge $rec.local (dict "scenes" $scenes) -}}
 
 {{- /* Each action's CLI line, from the same examples the docs page shows. */ -}}
 {{- $cliOf := dict -}}
@@ -85,15 +96,6 @@
   {{- $cli := index $cliOf .id -}}
   {{- if not $cli }}{{ errorf "platform-page: data/action_examples.json has no %s example for action %q" $id .id }}{{ end -}}
   {{- $actions = $actions | append (merge . (dict "type" (index $typeOf .id | default "") "activity" (index $activityOf .id | default "") "cli" $cli)) -}}
-{{- end -}}
-
-{{- /* The image and the thread counter belong to the activity bound to the post
-  action: the YAML's post behavior is what says a post takes an image and goes out
-  as a thread past a length, and the record's length must be that one. */ -}}
-{{- $postActivity := index $activityOf "post" | default "" -}}
-{{- $threadAt := $rec.playground.thread.at -}}
-{{- with index $byId "post" -}}
-  {{- if not (strings.Contains .description (printf "longer than %d characters" (int $threadAt))) }}{{ errorf "platform-page: %q playground.thread.at is %d, but data/platforms/%s.yaml's post behavior does not say \"longer than %d characters\"" $id (int $threadAt) $id (int $threadAt) }}{{ end -}}
 {{- end -}}
 
 {{- /* The one primary call to action installs the browser extension from its
@@ -112,10 +114,8 @@
   "docs" ($yaml.docs | default $row.docs)
   "reach" $yaml.reach
   "activities" $activities
-  "starters" $starters
+  "local" $local
   "actions" $actions
-  "postActivity" $postActivity
-  "threadAt" (int $threadAt)
   "startHref" $extensionHref
   "catalogPath" hugo.Data.integrations.catalogPath
 -}}

@@ -1,13 +1,27 @@
 # Platform pages
 
-A platform product page (blowhorn-site#466) shows what you can do on one platform:
-pick an activity type, see it illustrated, try on a draft, scan every action and its
-limits, see the rules of engagement, and copy a real setup. X is the first, at the
-noindex preview route **`/preview/platforms/x/`**. Design: Figma
-`mM9B4Zv9ON3pIyh3IvB4Il`, node `902:114` (the X frame) on `902:111` (the shared
-contract). The matrix, playground, rules of engagement, Field Manual and setups
-sections (PR #491) were built to the site's design rules (`DESIGN.md`) and have no
-X-specific Figma frame yet: they need a Figma review before the page leaves preview.
+A platform product page (blowhorn-site#466) shows what Blowhorn does on one
+platform, from your own computer: an activity selector and one call to action in the
+hero, then **Only on your computer**, a local-action stage that explains how the
+extension acts as you in your own signed-in browser. X is the first page, at the
+noindex preview route **`/preview/platforms/x/`**.
+
+## Figma delta (intentional)
+
+The X frame in Figma (`mM9B4Zv9ON3pIyh3IvB4Il`, node `902:114`, on the shared contract
+`902:111`) is the original draft-centred layout: a draft storyboard in the hero and a
+try-on playground as section two. This preview deliberately supersedes it with a
+local-action direction, requested by the product owner:
+
+| Figma 902:114 (draft-centred) | This preview (local-action) |
+|---|---|
+| Hero storyboard of a draft, with write, review, track steps | Hero is copy, activity selector, the extension call to action and a decorative orbit (no draft) |
+| Section two: a try-on playground (draft, starters, image picker) | Section two: **Only on your computer**, a stage of three scenes (amplify, follow with a local log, dry fire) |
+| No account of what runs on the computer | Reach line from the platform YAML, a diagram of this computer, the extension and the signed-in sessions |
+
+Figma was not edited, and this page does not claim parity with it. The matrix, rules
+of engagement, Field Manual, setups and Activities sections are unchanged in content.
+Reconcile the frame with this direction before the page leaves preview.
 
 ## Files
 
@@ -18,128 +32,94 @@ X-specific Figma frame yet: they need a Figma review before the page leaves prev
 | Joins and build-time guards | `layouts/_partials/platform-page-data.html` |
 | Template | `layouts/platform-page.html` |
 | Styles, script | `assets/css/platform-page.css`, `assets/js/platform-page.js` |
+| Cutouts (alpha channel only) | `static/assets/brand/cast/icons/` |
+| Checks and DOM harness | `.github/scripts/check_platform_pages.py`, `platform_page_harness.js`, `test_platform_pages.py` |
 | Page file | `content/en/preview-platform-<id>.md` |
-| Checks | `.github/scripts/check_platform_pages.py` (`--source` in `check-schemas`; `make check-platform-pages` on the build), `platform_page_harness.js`, `test_platform_pages.py` |
 
-## Reusable versus X-specific
+## What is joined, and what is quoted
 
-Reusable, and never written per platform:
+Facts that exist in the platform YAML are joined, never retyped:
 
-- **The contract** (`contract` in the data file): the reviewer note, the three
-  stages (Write, Review, Track), the illustration label and the closing Activities
-  illustration. Once and recurring activities share one Activities model in which
-  the platform is a filter, not a separate Upcoming or History destination, so
-  that visual is the same on every page.
-- **Facts.** Name, logo, docs link and reach come from `data/platforms/<id>.yaml`;
-  each action's name from `data/actions.json`, its behavior and limits from that
-  YAML, its CLI line from `data/action_examples.json`. The matrix is computed from
-  them, so it cannot drift from the docs.
-- **Layout and behavior**: the template, CSS, script and checks.
+- the reach line (`reach` in `data/platforms/x.yaml`);
+- the amplify scene's line (the YAML's `behavior` for amplify);
+- the follow scene's line (the YAML's `limits` for follow: 400 a day, 15 in 15
+  minutes, counted from that profile's follow log on this computer).
 
-X-specific, in its record: the headline and lede, the activity types (Post,
-Respond, Amplify, each bound to one action the YAML lists: `post`, `reply`,
-`amplify`), each type's illustrated scene, the playground's starter drafts, and the
-sourced facts and setups below.
-
-### Sourced facts and setups
-
-The rules-of-engagement presets and notes, the Field Manual facts and the setups
-rail are page copy that restates a public page, so each carries its `source` (a
-site path with an anchor) and a verbatim `quote`; a setup's `code` is its own
-quote. `check_platform_pages.py --source` reads the source's Markdown under
-`content/en/` (and the JSON front matter of agent pages) and fails a quote or
-snippet that page does not carry, or a number the page shows that its quote does
-not hold. The built check fails a source anchor that no longer exists. Never cite
-the product repository: it is private.
-
-For X today:
-
-| Section | Facts | Source |
-|---|---|---|
-| Rules of engagement | 12, 25 and 50 posts a day on X under Safety on, Weapons tight (the default) and Weapons free; nothing goes past a limit X publishes; a new profile or computer runs Safety on for its first 14 days | `/docs/how-to/settings/choose-your-rules-of-engagement/` |
-| Matrix limits (YAML) | 50 original posts and 200 replies a day for an account without a checkmark (X's published limits); 400 follows per profile a day and 15 in any 15 minutes; analytics read-only | `data/platforms/x.yaml` |
-| Field Manual | 2023 weights: an engaged reply 75, a like 0.5; each post after an author's first decays to a floor | `/field-manual/x/` |
-| Setups | the `npx -y blowhorn-mcp` MCP entry; `blowhorn risk show --profile personal --platform x --json`; the Claude Code skill `.claude/skills/blowhorn/SKILL.md` | `/docs/how-to/set-up/connect-mcp-client/`, `/docs/reference/cli/risk/`, `/agents/claude-code/` |
+Every other sourced fact quotes a public page verbatim, and the checker fails a
+quote the page does not carry: the session boundary sentence
+(`/docs/explanation/your-own-chrome/`), the amplify retweet-or-quote line
+(`/docs/how-to/publish/amplify-a-post/`), the dry-fire line
+(`/docs/reference/use-the-desktop-app/`, "checks the sign-in and stops before
+composing"), the rules of engagement and the Field Manual.
 
 ## Behavior
 
-- **Selector.** A native radio group. Picking a type swaps every `[data-pp-for]`
-  element (the illustration, the intent line, the playground's preview title and
-  post-only controls, the Activities chips) and tints the matrix rows bound to it.
-  No row or fact is ever hidden. The change is announced in a polite live region.
-  Arrow keys move between types natively.
-- **Source order is copy, selector, call to action, illustration** (Figma 902:111:
-  a narrow screen stacks the visual below the intent and keeps the call to action
-  in the first screen). The desktop grid puts it under the selector beside the
-  illustration. The build check fails an illustration placed before it.
-- **One primary call to action: Get the browser extension.** It links to the
-  extension's Chrome Web Store listing, the same link the download page's
-  extension card uses (the check fails the build when the two differ). The link is
-  built in the data partial (`extensionHref`), never in the record, and the schema
-  allows only that label. Nothing sits under it: no note and no caption (the check
-  fails anything beside it in `.pp-go` or an `aria-describedby` on it).
-- **Annotations, not captions.** Reviewer-facing text is removed rather than
-  explained in captions. The one that remains, `contract.reviewerNote` ("Preview:
-  not final, and not linked from the site"), is drawn as an annotation: the
-  alternate (coral) colour, mono type, a dashed edge on every side and the
-  explicit mark "Reviewer note". It is never a standard caption (the check fails
-  one). Remove it with the preview. True illustration labels stay as captions:
-  "Interactive preview", "Illustration, not a recording", "Local preview" and the
-  Activities illustration caption. Roadmap text uses the same mark pattern:
-  "Planned" in the playground.
-- **Illustration, not footage.** The hero is a switchable storyboard with no play
-  button, scrubber or timestamp. No recording exists; when one does, extend
-  `media` in the schema, template and checks together.
-- **Playground ("Try on a draft")**, local only. The visitor types a draft, or
-  picks a starter (which selects its type and fills the draft), and may choose an
-  image from their own computer. The preview mirrors the draft as text, never
-  markup. For the type bound to `post`, a counter shows the length against
-  `playground.thread.at` (274, which must match the YAML's "longer than 274
-  characters" or the build fails) and flags "Goes out as a thread" past it,
-  announced once each way (and cleared when the type moves off Post, so it is never read as a reply's state). The counter, its `aria-describedby` on the draft, the
-  flag and its announcement apply only while the post type is selected, and
-  refresh on a type change. The image is shown through an object URL and released
-  when removed or replaced (and on `pagehide` only when the page is not kept in
-  the back/forward cache). A non-image is refused with a short announced message
-  (`playground.fields.notImage`), and an image the browser cannot decode (for
-  instance HEIC) is dropped, the picker cleared and `fields.unreadable` announced.
-  A starter replaces the draft, with no undo. There is no form and no named
-  field, and `platform-page.js` makes no request and touches no storage, cookie,
-  credential or extension API (`--source` fails one). Nothing is published or
-  submitted. The length is counted in code points, which can differ slightly from
-  Blowhorn's own count; the preview is an illustration.
-- **Action matrix**, visible at load (never in a `<details>`): one row per YAML
-  action, in YAML order. Columns: Action (linked to its `#action-<id>` on the docs
-  page, with the type label when it differs, Respond for Reply), What it does,
-  Limits and notes ("None listed" when the YAML gives none), In the CLI (the
-  example command with its inline copy button, or the example's placeholder note).
-  A command wraps only between whole tokens. It is a real, native two-axis table at
-  every width (no `display` change, no ARIA roles, no stacked cell labels), inside a
-  focusable group (`role="group"`, `tabindex="0"`, `aria-labelledby` the section
-  heading; a `region` would duplicate the section's own landmark name) that scrolls sideways on a narrow screen, so the page never overflows.
-- **Rules of engagement.** One Stamp card holds the three presets as one stat row
-  split by neutral rules (no two cards in a row share a variant), each linked to
-  its section of the rules-of-engagement docs, then the sourced notes.
-- **Field Manual teaser.** Two linked cards (paper, then field), each to the
-  section it quotes, and a link to the whole briefing.
-- **Setups rail** ("Run it from your tools"). Terminal code cards
-  (`code-card.html`, copied by `code-card.js`) on a native scroll area with snap
-  points: one card and a peek on a phone, two on a wide screen, so every stop is a
-  card's own edge. The script adds previous and next buttons that page it by hand
-  (no autoplay) and a plain-text count; only a button press is announced. The
-  buttons use `aria-disabled`, so a focused button keeps focus at either end.
-- **Cards** are picked by content (`DESIGN.md`, Cards). Glass is used for the
-  storyboard only; it goes solid under `prefers-contrast: more`. Type uses the
-  site's styles (`.h3`, `.ui`, `.body`, `.label`), no literal sizes.
-- **Motion** is CSS transform and opacity: a swapped scene and a picked image
-  settle in. Under `prefers-reduced-motion: reduce` nothing animates and nothing
-  scrolls smoothly.
-- **Without script** every type's intent is listed, the first type's illustration
-  shows, the playground shows the first starter as a static preview with its
-  controls hidden, the matrix is a plain table and the rail scrolls natively.
+### The hero
 
-No library is loaded. Embla Carousel and Motion were considered: a native scroller
-already gives touch, trackpad and keyboard scrolling, and CSS covers the motion.
+An activity selector (Post, Respond, Amplify) swaps the intent line and marks the
+matrix rows bound to the type. One primary call to action installs the browser
+extension from the download page's Web Store link, with nothing under it.
+
+### Only on your computer
+
+- A reach line, then three native radios (Amplify, Follow, Dry fire (desktop)). The first is
+  checked at load.
+- Each scene shows one text panel. The script hides the others and sets `data-scene`
+  on the section, which the CSS reads to draw that scene's diagram (profiles lit,
+  per-profile logs, the dry-fire gate).
+- Each change plays the diagram once and announces the scene once, from the visitor's
+  choice only. Choosing the scene already shown plays nothing. The replay button plays
+  the diagram again and announces nothing. `data-pp-run` counts the plays.
+- The diagram is decorative (`aria-hidden`), its nodes are HTML so names wrap, and its
+  signal lines are one SVG path each (`pathLength`). It appears only once the script
+  runs; without script the three panels show as stacked text.
+- Motion (the local stage's CSS only): one finite draw of the signal and one fade-in of
+  the relay, slips and outcome per play, under `prefers-reduced-motion: no-preference`
+  only. The fade is opacity only, because those parts are positioned by their own
+  transforms. The stage has no infinite animation (the checker fails one), so there is
+  nothing to pause.
+- Cutouts are the alpha-channel `icons/` set. The originals under
+  `static/assets/brand/cast/` are opaque VP8 and would sit in a black box, so the
+  checker fails any cutout without an alpha channel.
+
+### No composer
+
+The local stage has no text-entry field, no file input and no submission form in
+`<main>`. Its radios (activity and scene) are native and named. The checker fails a
+form, a text field or a file input anywhere in `<main>`. `assets/js/platform-page.js`
+(the stage, the activity selector and the setups rail) makes no request and touches no
+storage, cookie or extension API, and the checker fails a script that does. This promise
+covers that script only: the site's own consent banner, newsletter form and other global
+scripts are outside this page's scope.
+
+### Visual direction (the "break free" pass)
+
+- **Hero:** copy, the activity selector and Start stay in one column on a phone. On a
+  desktop the copy sits left and a decorative orbit sits right: the laptop cutout on two
+  rings with the platform logo on a white tile. The orbit is `aria-hidden`, carries no
+  caption and follows Start in source order. It is never a draft or a composer.
+- **Stage:** a near-black theatre (`--near-black`, checked by the build) with a radial
+  relay glow and faint contour rings. The extension is the focal medallion; the computer
+  sits left, the signed-in profiles fan out right from the relay, and the outcome lands at
+  the bottom. Cutouts float on the route with no box behind them and no caption; the
+  route names are the only labels.
+- **Amplify:** four profile slips fan out at fixed per-child angles and lengths (CSS
+  custom properties, never inline). **Follow:** the same slips straighten into a ledger
+  with a log stroke each, and the mouse-marine cutout guards below. **Dry fire (desktop):**
+  the shipped dry fire is the desktop app's, so this scene names the desktop app on the
+  relay, drops the extension cutout, and shows an "Extension flow planned" tag beside the
+  diagram. The fan dims and the route to the outcome breaks in coral at the stop. The
+  panel repeats that the extension flow is planned, not shipped.
+- **Phone:** a 480 px theatre with the relay and fan moved left and in, two narrow route
+  nodes and no full-length stack of boxes; no page overflow at 320 px.
+- **Motion:** finite only in the local stage (routes draw, spokes grow, the relay, slips
+  and outcome fade in once per play; the ledger eases once on a scene change). Reduced
+  motion removes all of it; high contrast solidifies the edges. The stage has no infinite
+  animation (the checker fails one).
+- **Rules of engagement** are an open numbered gauge (each row a source link and a bar
+  for its daily figure), not a stamp card. **Field Manual** is one two-column briefing
+  with a rule between the facts. Their source text and links are unchanged. The setups
+  rail and Activities are unchanged.
 
 ## Preview route rules
 
@@ -147,59 +127,45 @@ The page file sets `layout: platform-page`, `platform: <id>`,
 `url: /preview/platforms/<id>/`, `noindex: true`, `exclude_search: true`,
 `sitemap: {disable: true}` and `build: {list: never}`; `hugo.toml` excludes
 `/preview/**` from llms.txt. Nothing in the navigation links to it.
-`make check-platform-pages` fails if the built page is indexed, listed in the
-sitemap, llms.txt, llms-full.txt or the search index, or linked from another page
-(absolute, base-prefixed, relative, with or without the trailing slash).
+`make check-platform-pages` fails if the built page is indexed, listed in the sitemap,
+llms.txt, llms-full.txt or the search index, or linked from another page. It also fails
+if any built page names the private product repository or its issue.
 
 ## Add the next platform
 
 1. Confirm the platform is `supported` in `data/integrations.json`, its
-   `data/platforms/<id>.yaml` lists the actions you want as types, and each has a
-   `data/action_examples.json` entry.
-2. Add a record to `pages` in `data/platform_pages.json`: route
-   `/preview/platforms/<id>/`, two to four activity types bound to listed actions,
-   their scenes, starter drafts, the matrix copy, and sourced rules of engagement,
-   Field Manual facts and setups, each quoting its public page. Leave the contract
-   alone.
+   `data/platforms/<id>.yaml` lists the actions you want as types and as local scenes,
+   and each has a `data/action_examples.json` entry.
+2. Add a record to `pages` in `data/platform_pages.json`: route, two to four activity
+   types bound to listed actions, the local stage (three scenes in the order amplify,
+   follow, dry fire; joins from the YAML; sourced lines quoting public pages), the
+   matrix copy, and sourced rules of engagement, Field Manual facts and setups.
+   Leave the contract alone.
 3. Add `content/en/preview-platform-<id>.md` with the front matter above.
-4. Run `make check-schemas`, `make check-platform-pages` and `make test-scripts`,
-   then check 1280 and 390 px in light and dark, and 320 px for overflow
-   (`DESIGN.md`, `docs/deploy.md`).
+4. Run `make check-schemas`, `make check-platform-pages` and `make test-scripts`, then
+   check 1280 and 390 px in light and dark, and 320 px for overflow (`DESIGN.md`,
+   `docs/deploy.md`).
 
-Promoting a page out of preview is a deliberate change, not a data edit: the
-schema's `route` pattern is preview-only, and a promoted page needs a new route, a
-navigation entry, sitemap and search inclusion, removal of the reviewer note, and
-an update to these rules.
+Promoting a page out of preview is a deliberate change: the schema's `route` pattern
+is preview-only, and a promoted page needs a new route, a navigation entry, sitemap and
+search inclusion, removal of the reviewer note, and an update to these rules.
 
 ## Known limits and planned work
 
+- **Planned, not shipped: a dry run from the extension.** Today the desktop app's dry
+  fire checks the sign-in and stops before composing, and posts nothing
+  (`/docs/reference/use-the-desktop-app/`). The stage marks the extension version as
+  planned. Product tracking is the private product issue
+  `blowhorn-ai/blowhorn#2178` (planned anonymous extension flow). That issue appears in
+  this document only. It must never appear on a rendered page, and the built-page check
+  enforces that.
 - **The call to action installs the extension only.** The extension works with the
-  Blowhorn desktop app; its side panel offers "Download the Blowhorn app" when the
-  app is missing (`/docs/how-to/set-up/install-the-chrome-extension/`). No link
-  installs both, or carries the picked platform and type: the app's only web link,
-  `blowhorn://content/new`, takes a URL, title and text. When one exists, change
-  the label, `extensionHref` and the check together.
+  Blowhorn desktop app; no link installs both or carries the picked platform and type.
+  When one exists, change the label, `extensionHref` and the check together.
 - **The Web Store link is written in several templates** (`layouts/download.html`,
-  `download-thanks.html`, `_partials/header.html`, `footer.html`,
-  `home/ways-in.html`, this page's data partial, and `content/en/legal/terms.md`).
-  The platform page check ties this page to the download page's copy; the fix is
-  one `data/extension.json` (not `data/download.json`, which the release pin job
-  rewrites) read by every template, done as its own change.
-- **Planned, not shipped: a dry run from the extension.** Today Dry fire lives in
-  the desktop app's New order: it rehearses a post per platform and desk, signs in,
-  stops before composing, and saves nothing
-  (`/docs/reference/use-the-desktop-app/`). The planned flow is New order from the
-  extension, then an anonymous dry fire of the visitor's draft after the extension
-  is installed. The playground says so only under its "Planned" mark. Product
-  tracking: the private product repository's issue
-  https://github.com/blowhorn-ai/blowhorn/issues/2178 ("Anonymous dry-fire free
-  tier: try New Order in the extension without deploy"). This doc only; never link
-  it from a rendered page. When it ships, replace the Planned line with the real
-  flow and its docs link.
-- **The Activities illustration shows the contract's model.** Today the app's
-  Activity place switches between Upcoming, Routines and History views; the
-  closing illustration draws the shared model of `902:111`, and its caption says it
-  is an illustration. Recheck it when the app's Activity place changes.
-- **No recording exists yet**, so the hero is an illustration (see Behavior).
-- **The starter drafts and scenes are invented** sample text.
+  `download-thanks.html`, `_partials/header.html`, `footer.html`, `home/ways-in.html`,
+  this page's data partial, `content/en/legal/terms.md`). The check ties this page to
+  the download page's copy; the fix is one `data/extension.json`, as its own change.
+- **No recording exists**, so the stage is an illustration. It says so in the
+  reviewer note and never presents itself as footage.
 - **One platform so far.** The schema allows more records; only X has one.

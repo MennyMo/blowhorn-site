@@ -11,42 +11,53 @@ JSON Schema cannot express:
 - each record's platform is a supported row of data/integrations.json with a
   data/platforms/<id>.yaml, and its route is /preview/platforms/<id>/;
 - each activity type names an action that YAML lists, ids are unique and no two
-  types share an action; starter drafts use a declared type and unique ids;
-  every action the YAML lists has a data/action_examples.json entry; the
-  playground's thread length is the one the YAML's post behavior states;
-- every sourced fact (rules of engagement, Field Manual) quotes its public source
-  page verbatim (whitespace aside), every number it shows is in that quote, and
-  every usage snippet appears verbatim on its source page; no source is the
-  private product repository;
+  types share an action; every action the YAML lists has a
+  data/action_examples.json entry;
+- the local-action stage has its three scenes in order (amplify, follow, dry
+  fire); a scene that names an action joins a YAML text that is not empty; the dry
+  fire scene quotes a public dry-fire page and carries its planned line;
+- its cutouts are transparent WebP files (alpha channel set) under
+  static/assets/brand/cast/icons/, never the black-background originals;
+- every sourced fact (the boundary sentence, the stage's quotes, rules of
+  engagement, Field Manual) quotes its public source page verbatim (whitespace
+  aside), every number it shows is in that quote, and every usage snippet appears
+  verbatim on its source page; no source is the private product repository;
 - each record has exactly one content page (content/en/preview-platform-<id>.md)
   with layout platform-page, the same platform and url, noindex, exclude_search,
   sitemap disabled and build list never, and no other page uses the layout;
 - hugo.toml keeps /preview/** out of llms.txt; no em dash anywhere in the data;
 - assets/js/platform-page.js makes no request and touches no storage, cookie or
-  credential API (the playground is local only).
+  credential API (the local stage is local only), and the page CSS has no
+  infinite animation (a loop would need a pause control this page does not have).
 
 With a build directory it also checks each built page and runs its script:
 
 - the page exists, is noindex, and its route is in no sitemap, llms.txt,
-  llms-full.txt or search index, and no other built page links to it;
+  llms-full.txt or search index, and no other built page links to it, and no
+  built page names the private product issue or repository;
 - <main> holds exactly one primary button, the call to action, labelled as the
   record says and linking to the extension listing the download page's own
   extension card uses, with nothing under it (no note, no caption); the
   reviewer annotation carries its mark and annotation style, never a caption;
-- one radio per activity type in order, the first checked; one illustration and
-  intent per type; the action matrix is a visible table (no <details> on the
-  page) whose rows are the YAML's actions in order and whose cells are the
-  vocabulary name, the YAML's behavior and limits and the examples' CLI line; the
-  presets, Field Manual cards and usage cards match the record, every code card
-  can be copied, and every source anchor exists; the playground has no form and
-  no named field; no em dash and no browser brand in the page;
+- the source order is activity selector, call to action, then the local stage;
+  the local stage is one labelled section with three scene radios (the first
+  checked), three text panels with no hidden attribute in the HTML (the script
+  owns the hiding), a replay button, a polite announcement region, a decorative
+  diagram, the reach line and each joined YAML text, the boundary sentence and
+  the cutouts, each present in the built output and transparent;
+- one radio per activity type in order, the first checked; one intent per type;
+  the action matrix is a visible table (no <details> on the page) whose rows are
+  the YAML's actions in order and whose cells are the vocabulary name, the YAML's
+  behavior and limits and the examples' CLI line; the presets, Field Manual cards
+  and usage cards match the record, every code card can be copied, and every
+  source anchor exists; there is no form and no text field anywhere in <main>;
+  no em dash and no browser brand in the page;
 - assets/js/platform-page.js, run through platform_page_harness.js against the
-  built <main>: picking each type swaps every [data-pp-for] element and marks
-  the bound rows; a starter selects its type and fills the draft; typing mirrors
-  into the preview as text and flags a thread past the length once; an image is
-  shown through an object URL and released when removed or replaced, and a
-  non-image is refused; the rail pages by hand with aria-disabled ends, and
-  under reduced motion nothing scrolls smoothly.
+  built <main>: picking each type swaps every [data-pp-for] element and marks the
+  bound rows; picking each scene shows only its panel, plays the diagram once and
+  announces it once; the same radio again plays nothing; replay plays again and
+  announces nothing; the rail pages by hand with aria-disabled ends, and under
+  reduced motion nothing scrolls smoothly.
 
 Usage: check_platform_pages.py --source
        check_platform_pages.py [BUILD_DIR]
@@ -72,7 +83,7 @@ BRAND_RE = re.compile(r"Chrome|Safari|Firefox|\bMac\b|macOS|Outbox")
 # The Chrome Web Store listing of the Blowhorn extension: the call to action's
 # target, and the link layouts/download.html's extension card uses.
 EXTENSION_HREF = "https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf"
-# The playground is local only: the page script never makes a request, reads
+# The local stage is local only: the page script never makes a request, reads
 # storage or cookies, or touches credentials.
 FORBIDDEN_JS = re.compile(
     r"\b(fetch|XMLHttpRequest|sendBeacon|WebSocket|EventSource|localStorage|sessionStorage|indexedDB"
@@ -165,6 +176,14 @@ def check_quote(root: Path, where: str, quote: str, href: str, shown: str = "") 
 def sourced_items(rec: dict) -> list[tuple[str, str, str, str]]:
     """(where, quote, source, shown text) for every sourced fact on a record."""
     items = []
+    local = rec.get("local", {})
+    if local.get("boundary"):
+        b = local["boundary"]
+        items.append(("local boundary", b["quote"], b["source"], b["text"]))
+    for s in local.get("scenes", []):
+        if s.get("sourced"):
+            q = s["sourced"]
+            items.append((f"local scene {s['id']!r}", q["quote"], q["source"], q["text"]))
     for p in rec.get("roe", {}).get("presets", []):
         items.append((f"rules of engagement {p['label']!r}", p["quote"], p["source"], p["stat"]))
         items.append((f"rules of engagement {p['label']!r} meaning", p["means"], p["source"], ""))
@@ -175,6 +194,21 @@ def sourced_items(rec: dict) -> list[tuple[str, str, str, str]]:
     for u in rec.get("usage", {}).get("items", []):
         items.append((f"usage {u['id']!r}", u["code"], u["source"], ""))
     return items
+
+
+def webp_has_alpha(path: Path) -> bool:
+    """Whether a WebP file carries an alpha channel. An extended (VP8X) file says so
+    in its flags; a lossless (VP8L) file in its header; a plain lossy (VP8) file
+    never does, so a cutout saved that way would sit in a black box."""
+    head = path.read_bytes()[:32]
+    if head[:4] != b"RIFF" or head[8:12] != b"WEBP" or len(head) < 25:
+        return False
+    chunk = head[12:16]
+    if chunk == b"VP8X":
+        return bool(head[20] & 0x10)
+    if chunk == b"VP8L":
+        return bool((head[24] >> 4) & 1)
+    return False
 
 
 def links_to(html: str, route: str) -> bool:
@@ -212,6 +246,33 @@ def platform_pages(root: Path) -> list[Path]:
         p for p in (root / "content" / "en").rglob("*.md")
         if front_matter(p).get("layout") == "platform-page"
     )
+
+
+# A stage part whose own transform positions it (the relay's centring, a slip's
+# counter-rotation, the outcome's centring). An animation that ends on transform
+# would overwrite that positioning once it finishes, so these may only fade.
+POSITIONED_PARTS = (".pp-relay", ".pp-slip", ".pp-out", ".pp-spoke")
+
+
+def check_stage_geometry(css: str) -> list[str]:
+    """Two CSS facts the stage's layout depends on, read from the stylesheet:
+    the fan's containing block fills the theatre (a zero-size fan puts every spoke
+    at the stage's origin), and no animation on a positioned part ends on transform."""
+    problems: list[str] = []
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    fan = next((body for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css) if sel.strip() == ".pp-fan"), None)
+    fills = fan is not None and (re.search(r"inset:\s*0\b", fan) or (re.search(r"width:\s*100%", fan) and re.search(r"height:\s*100%", fan)))
+    if not fills:
+        problems.append("assets/css/platform-page.css: .pp-fan must fill the theatre (inset: 0, or width and height 100%); a zero-size fan puts the profiles at the stage origin")
+    for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
+        name = re.search(r"animation:\s*([a-z-]+)", body)
+        # A pseudo-element (the spoke's line) is placed by left and top, not by its transform.
+        if not name or "::" in sel or not any(p in sel for p in POSITIONED_PARTS):
+            continue
+        frames = re.search(rf"@keyframes {name.group(1)}\s*\{{(.*?)\}}\s*\}}", css, re.S)
+        if frames and "transform" in frames.group(1):
+            problems.append(f"assets/css/platform-page.css: {sel.strip()} animates {name.group(1)}, which ends on transform and clobbers the part's positioning; fade it instead")
+    return problems
 
 
 def check_source(root: Path) -> list[str]:
@@ -258,18 +319,46 @@ def check_source(root: Path) -> list[str]:
                 problems.append(f"{where}: two activities bind action {act['action']!r}")
             bound.append(act["action"])
 
-        play = rec.get("playground", {})
-        starter_ids: list[str] = []
-        for s in play.get("starters", {}).get("items", []):
-            if s["activity"] not in type_ids:
-                problems.append(f"{where}: starter {s['id']!r} uses undeclared activity {s['activity']!r}")
-            if s["id"] in starter_ids:
-                problems.append(f"{where}: starter id {s['id']!r} repeats")
-            starter_ids.append(s["id"])
-        post = next((a for a in actions if a["id"] == "post"), None)
-        at = play.get("thread", {}).get("at")
-        if post is not None and at is not None and f"longer than {at} characters" not in post["behavior"]:
-            problems.append(f"{where}: playground thread.at is {at}, but data/platforms/{pid}.yaml's post behavior does not say 'longer than {at} characters'")
+        local = rec.get("local", {})
+        scene_ids = [sc.get("id") for sc in local.get("scenes", [])]
+        if scene_ids != ["amplify", "follow", "dry-fire"]:
+            problems.append(f"{where}: local scenes are {scene_ids}, want amplify, follow, dry-fire in that order")
+        for sc in local.get("scenes", []):
+            act = sc.get("action")
+            if act is not None:
+                row = next((a for a in actions if a["id"] == act), None)
+                if row is None:
+                    problems.append(f"{where}: local scene {sc['id']!r} names {act!r}, which data/platforms/{pid}.yaml does not list")
+                else:
+                    joined = {"description": row["behavior"], "limits": row["limits"]}.get(sc.get("join"), "")
+                    if not joined:
+                        problems.append(f"{where}: local scene {sc['id']!r} joins {sc.get('join')!r} from {act!r}, which the YAML leaves empty")
+            elif sc["id"] == "dry-fire" and not sc.get("sourced"):
+                problems.append(f"{where}: local scene 'dry-fire' must quote the public dry-fire page it describes")
+            if sc.get("link") and (not sc["link"]["href"].startswith("/") or "blowhorn-ai/blowhorn" in sc["link"]["href"]):
+                problems.append(f"{where}: local scene {sc['id']!r} links {sc['link']['href']!r}; link a public page on this site")
+        dry = next((sc for sc in local.get("scenes", []) if sc.get("id") == "dry-fire"), None)
+        if dry is not None and not dry.get("planned"):
+            problems.append(f"{where}: local scene 'dry-fire' must mark what is planned, not shipped")
+        if dry is not None:
+            # Shipped dry fire is the desktop app; the extension flow is only planned.
+            if "desktop" not in dry.get("label", "").lower():
+                problems.append(f"{where}: local scene 'dry-fire' label {dry.get('label')!r} must say desktop; the shipped dry fire is the desktop app")
+            if "desktop app" not in dry.get("lede", "").lower():
+                problems.append(f"{where}: local scene 'dry-fire' lede must name the desktop app")
+            if dry.get("relay") != "Desktop app":
+                problems.append(f"{where}: local scene 'dry-fire' relay is {dry.get('relay')!r}, want 'Desktop app' (the diagram must not advertise an extension dry fire)")
+            if dry.get("planned") and "extension" not in dry["planned"].get("mark", "").lower():
+                problems.append(f"{where}: local scene 'dry-fire' planned mark {dry['planned'].get('mark')!r} must say the extension flow is planned")
+        boundary = local.get("boundary")
+        if boundary and squash(boundary["quote"]) not in squash(boundary["text"]):
+            problems.append(f"{where}: local boundary text {boundary['text']!r} drops the scope of its quote {boundary['quote']!r}")
+        for c in local.get("crew", []):
+            cut_path = root / "static" / c["src"]
+            if not cut_path.is_file():
+                problems.append(f"{where}: local crew {c['src']} is not under static/")
+            elif not webp_has_alpha(cut_path):
+                problems.append(f"{where}: local crew {c['src']} has no alpha channel; a cutout must sit on no box")
 
         examples = {(e["platform"], e["action"]) for e in load_json(root, "data/action_examples.json")["examples"]}
         for a in listed:
@@ -313,7 +402,16 @@ def check_source(root: Path) -> list[str]:
     if script.is_file():
         hit = FORBIDDEN_JS.search(script.read_text(encoding="utf-8"))
         if hit:
-            problems.append(f"{SCRIPT}: uses {hit.group(0)!r}; the playground is local only and makes no request or storage call")
+            problems.append(f"{SCRIPT}: uses {hit.group(0)!r}; the local stage is local only and makes no request or storage call")
+    css = root / "assets" / "css" / "platform-page.css"
+    if css.is_file() and "infinite" in css.read_text(encoding="utf-8"):
+        problems.append("assets/css/platform-page.css: an infinite animation; a loop would need a pause control this page does not have")
+    if css.is_file():
+        problems.extend(check_stage_geometry(css.read_text(encoding="utf-8")))
+    if css.is_file():
+        block = re.search(r"\.pp-local \{[^}]*\}", css.read_text(encoding="utf-8"))
+        if block is None or "var(--near-black)" not in block.group(0):
+            problems.append("assets/css/platform-page.css: .pp-local must sit on the near-black token, not a flat grey field")
     return problems
 
 
@@ -450,83 +548,34 @@ def check_behaviour(label: str, main: dict, rec: dict, actions: list[dict], root
     if idle[-1]["announceWrites"] != idle[0]["announceWrites"] or idle[-1]["type"] != types[0]:
         problems.append(f"{label}: clicking the checked radio announced or changed the page")
 
-    # The playground: local, enhanced in place.
-    play = rec["playground"]
-    starters = play["starters"]["items"]
-    at = play["thread"]["at"]
-    if first["tryControls"] is not True:
-        problems.append(f"{label}: the playground controls stay hidden after the script runs")
-    if first["out"] != starters[0]["sample"] or first["draft"] != starters[0]["sample"]:
-        problems.append(f"{label}: the playground starts with {first['draft']!r} / {first['out']!r}, want the first starter's sample")
-    want_count = f"{len(starters[0]['sample'])} / {at}"
-    if first["tryCount"] != want_count:
-        problems.append(f"{label}: the playground counter reads {first['tryCount']!r}, want {want_count!r}")
-    for s in starters:
-        st = run_harness(main, {"rail": rail, "steps": [{"input": ""}, {"starter": s["id"]}]}, root)[-1]
-        if st["type"] != s["activity"] or st["draft"] != s["sample"] or st["out"] != s["sample"]:
-            problems.append(f"{label}: starter {s['id']!r} shows type {st['type']!r}, draft {st['draft']!r}, preview {st['out']!r}")
-        if st["tryAnnounce"] != f"{s['title']} is in your draft.":
-            problems.append(f"{label}: starter {s['id']!r} announces {st['tryAnnounce']!r}")
-    markup = "<b>bold</b> & <img src=x onerror=alert(1)>"
-    long = "a" * (at + 1)
-    typed = run_harness(main, {"rail": rail, "steps": [
-        {"input": markup}, {"input": long}, {"input": long + "b"}, {"input": "short"}]}, root)
-    if typed[1]["out"] != markup:
-        problems.append(f"{label}: the preview does not mirror the draft as text: {typed[1]['out']!r}")
-    if typed[1]["threadShown"] or not typed[2]["threadShown"] or not typed[3]["threadShown"] or typed[4]["threadShown"]:
-        problems.append(f"{label}: the thread flag over {at} characters reads {[s['threadShown'] for s in typed[1:]]}")
-    writes = [s["tryAnnounceWrites"] for s in typed]
-    if writes[2] - writes[1] != 1 or writes[3] != writes[2] or typed[2]["tryAnnounce"] != play["thread"]["label"]:
-        problems.append(f"{label}: crossing {at} characters announced {[w - writes[0] for w in writes]}; want once, {play['thread']['label']!r}")
-    if typed[2]["tryCount"] != f"{at + 1} / {at}":
-        problems.append(f"{label}: the counter over the limit reads {typed[2]['tryCount']!r}")
-    img = run_harness(main, {"rail": rail, "steps": [
-        {"file": {"type": "image/png"}}, {"file": {"type": "image/jpeg"}}, {"clearImage": True},
-        {"file": {"type": "text/html"}}]}, root)
-    one, two, gone, refused = img[1], img[2], img[3], img[4]
-    if not one["mediaShown"] or one["mediaImages"] != one["created"][-1:] or not one["clearShown"]:
-        problems.append(f"{label}: a picked image is not shown through its object URL: {one['mediaImages']}, created {one['created']}")
-    if two["mediaImages"] != two["created"][-1:] or one["created"][0] not in two["revoked"]:
-        problems.append(f"{label}: replacing the image keeps {two['mediaImages']} and revokes {two['revoked']}")
-    if gone["mediaShown"] or gone["mediaImages"] or gone["clearShown"] or gone["fileValue"] != "" or two["created"][-1] not in gone["revoked"]:
-        problems.append(f"{label}: removing the image leaves shown={gone['mediaShown']}, images={gone['mediaImages']}, revoked {gone['revoked']}")
-    if "data-pp-try-file" not in gone["focus"].split():
-        problems.append(f"{label}: removing the image leaves focus on {gone['focus']!r}, not the picker")
-    if refused["mediaShown"] or refused["mediaImages"] or len(refused["created"]) != len(gone["created"]) or refused["fileValue"] != "":
-        problems.append(f"{label}: a non-image file is not refused: {refused['mediaImages']}")
-
-    # Feedback for a file that is not shown, and a bfcache-safe release.
-    play_fields = play["fields"]
-    bad = run_harness(main, {"rail": rail, "steps": [{"file": {"type": "image/png"}}, {"file": {"type": "text/html"}}]}, root)
-    if bad[2]["tryAnnounce"] != play_fields["notImage"] or bad[2]["mediaShown"] or bad[2]["fileValue"] != "":
-        problems.append(f"{label}: a non-image file announces {bad[2]['tryAnnounce']!r} (want {play_fields['notImage']!r}) and leaves the picker at {bad[2]['fileValue']!r}")
-    broken = run_harness(main, {"rail": rail, "steps": [{"file": {"type": "image/heic"}}, {"imageError": True}]}, root)
-    one_, two_ = broken[1], broken[2]
-    if not one_["mediaShown"] or two_["mediaShown"] or two_["mediaImages"] or two_["clearShown"] or two_["fileValue"] != "" or one_["created"][0] not in two_["revoked"]:
-        problems.append(f"{label}: an image the browser cannot decode leaves shown={two_['mediaShown']}, remove={two_['clearShown']}, picker {two_['fileValue']!r}, revoked {two_['revoked']}")
-    if two_["tryAnnounce"] != play_fields["unreadable"]:
-        problems.append(f"{label}: an undecodable image announces {two_['tryAnnounce']!r}, want {play_fields['unreadable']!r}")
-    for persisted, released in ((True, False), (False, True)):
-        gone_ = run_harness(main, {"rail": rail, "steps": [{"file": {"type": "image/png"}}, {"pagehide": {"persisted": persisted}}]}, root)[-1]
-        if bool(gone_["revoked"]) != released:
-            problems.append(f"{label}: pagehide with persisted={persisted} revoked {gone_['revoked']}; the object URL is released only when the page is not kept")
-
-    # The counter, its description and the thread announcement belong to the post type.
-    post_type = next((a["id"] for a in rec["activities"] if a["action"] == "post"), None)
-    other_type = next((a["id"] for a in rec["activities"] if a["action"] != "post"), None)
-    if post_type and other_type:
-        long_ = "a" * (at + 5)
-        run_ = run_harness(main, {"rail": rail, "steps": [
-            {"choose": other_type}, {"input": long_}, {"choose": post_type}, {"choose": other_type}]}, root)
-        in_other, back_to_post, away = run_[2], run_[3], run_[4]
-        if in_other["describedBy"] is not None or in_other["threadShown"] or in_other["tryAnnounceWrites"] != run_[1]["tryAnnounceWrites"]:
-            problems.append(f"{label}: a long draft under {other_type!r} describes {in_other['describedBy']!r}, shows the thread flag={in_other['threadShown']} or announces it")
-        if back_to_post["describedBy"] != "pp-try-count" or not back_to_post["threadShown"] or back_to_post["tryAnnounce"] != play["thread"]["label"]:
-            problems.append(f"{label}: back on {post_type!r} the draft is described by {back_to_post['describedBy']!r}, flag={back_to_post['threadShown']}, announces {back_to_post['tryAnnounce']!r}")
-        if away["tryAnnounce"] != "":
-            problems.append(f"{label}: leaving {post_type!r} leaves the stale live message {away['tryAnnounce']!r}")
-        if away["describedBy"] is not None or away["threadShown"]:
-            problems.append(f"{label}: leaving {post_type!r} keeps the counter described ({away['describedBy']!r}) or the flag shown")
+    # The local stage: one scene at a time, a play per change, announced once.
+    scenes = [sc["id"] for sc in rec["local"]["scenes"]]
+    titles = {sc["id"]: sc["title"] for sc in rec["local"]["scenes"]}
+    stage = run_harness(main, {"rail": rail, "steps": [
+        {"scene": scenes[1]}, {"scene": scenes[2]}, {"scene": scenes[0]}, {"scene": scenes[0]}, {"replay": True}]}, root)
+    load = stage[0]
+    if not load["sceneEnhanced"] or load["scene"] != scenes[0] or load["scenePanels"] != [scenes[0]] or load["sceneChecked"] != [scenes[0]]:
+        problems.append(f"{label}: the stage loads on {load['scene']!r} with panels {load['scenePanels']} and radios {load['sceneChecked']}")
+    if load["run"] != "1" or load["sceneAnnounceWrites"] != 0:
+        problems.append(f"{label}: the stage plays at load {load['run']!r} times and announces {load['sceneAnnounceWrites']}; want one quiet play")
+    prev = load
+    for st, want, title in zip(stage[1:4], scenes[1:] + [scenes[0]], [titles[s] for s in scenes[1:]] + [titles[scenes[0]]]):
+        if st["scene"] != want or st["scenePanels"] != [want] or st["sceneChecked"] != [want]:
+            problems.append(f"{label}: choosing {want!r} shows {st['scene']!r}, panels {st['scenePanels']}, radios {st['sceneChecked']}")
+        if int(st["run"]) != int(prev["run"]) + 1 or not st["playing"]:
+            problems.append(f"{label}: choosing {want!r} plays {prev['run']!r} -> {st['run']!r}, playing={st['playing']}; want one play")
+        if st["sceneAnnounce"] != f"{title} is showing." or st["sceneAnnounceWrites"] != prev["sceneAnnounceWrites"] + 1:
+            problems.append(f"{label}: choosing {want!r} announces {st['sceneAnnounce']!r} ({st['sceneAnnounceWrites']} writes); want one announcement of {title!r}")
+        prev = st
+    same, replayed = stage[4], stage[5]
+    if same["run"] != stage[3]["run"] or same["sceneAnnounceWrites"] != stage[3]["sceneAnnounceWrites"]:
+        problems.append(f"{label}: choosing the scene already shown plays or announces again")
+    if int(replayed["run"]) != int(same["run"]) + 1 or replayed["scene"] != scenes[0]:
+        problems.append(f"{label}: replay reads {same['run']!r} -> {replayed['run']!r}; want one more play of {scenes[0]!r}")
+    if replayed["sceneAnnounceWrites"] != same["sceneAnnounceWrites"]:
+        problems.append(f"{label}: replay announces; it must stay quiet")
+    if [sc for sc in stage if sc["scene"] not in scenes]:
+        problems.append(f"{label}: the stage shows a scene the record does not name")
 
     # The rail, paged by hand.
     n = len(items)
@@ -567,6 +616,98 @@ def check_behaviour(label: str, main: dict, rec: dict, actions: list[dict], root
 
 def built_file(build_dir: Path, route: str) -> Path:
     return build_dir / route.strip("/") / "index.html"
+
+
+PRIVATE_ISSUE = "blowhorn-ai/blowhorn/issues/2178"
+
+
+def check_local_built(main: dict, rec: dict, root: Path, build_dir: Path, page: Path) -> list[str]:
+    """The local stage as built: its structure, its joined and quoted text, its
+    cutouts and the diagram's decorative role."""
+    problems: list[str] = []
+    local = rec["local"]
+    ids = [sc["id"] for sc in local["scenes"]]
+    stages = find(main, "data-pp-local")
+    if len(stages) != 1 or stages[0]["tag"] != "section":
+        return ["the local stage must be one <section data-pp-local>"]
+    stage = stages[0]
+    if stage["attrs"].get("aria-labelledby") != "pp-local-title" or not any(e["attrs"].get("id") == "pp-local-title" for e in walk(stage)):
+        problems.append("the local stage needs its heading (aria-labelledby pp-local-title)")
+    radios = find(stage, "data-pp-scene-choice")
+    if [r["attrs"].get("value") for r in radios] != ids:
+        problems.append(f"the scene radios are {[r['attrs'].get('value') for r in radios]}, want {ids}")
+    if [("checked" in r["attrs"]) for r in radios] != [i == 0 for i in range(len(ids))]:
+        problems.append("only the first scene is checked at load")
+    if any(r["attrs"].get("type") != "radio" for r in radios):
+        problems.append("a scene choice is not a native radio")
+    panels = find(stage, "data-pp-scene-panel")
+    if [p["attrs"].get("data-pp-scene-panel") for p in panels] != ids:
+        problems.append(f"the scene panels are {[p['attrs'].get('data-pp-scene-panel') for p in panels]}, want {ids}")
+    if any("hidden" in p["attrs"] for p in panels):
+        problems.append("a scene panel carries hidden in the HTML; without script every scene must show, so the script alone hides them")
+    for sc, panel in zip(local["scenes"], panels):
+        body = " ".join(text(panel).split())
+        if sc["title"] not in body or sc["lede"] not in body:
+            problems.append(f"scene {sc['id']!r} panel does not carry its title and lede")
+    replay = find(stage, "data-pp-replay")
+    if replay and "aria-controls" in replay[0]["attrs"]:
+        problems.append("the replay button points at the decorative diagram (aria-controls); the diagram is aria-hidden")
+    for sc in local["scenes"]:
+        names = [" ".join(text(e).split()) for e in find(stage, "data-scene-relay", sc["id"])]
+        want = sc.get("relay") or local["diagram"]["extension"]
+        if names != [want]:
+            problems.append(f"the relay for scene {sc['id']!r} reads {names}, want {[want]}")
+    dry_tags = find(stage, "data-scene-planned", "dry-fire")
+    dry_scene = next((sc for sc in local["scenes"] if sc["id"] == "dry-fire"), None)
+    if dry_scene and dry_scene.get("planned"):
+        if [" ".join(text(e).split()) for e in dry_tags] != [dry_scene["planned"]["mark"]]:
+            problems.append("the dry-fire diagram is not marked as planned beside the diagram")
+    if len(replay) != 1 or replay[0]["tag"] != "button" or replay[0]["attrs"].get("type") != "button" or "button-primary" in classes(replay[0]):
+        problems.append("the stage needs one plain replay button (type=button, not a primary button)")
+    announce = find(stage, "data-pp-stage-announce")
+    if len(announce) != 1 or announce[0]["attrs"].get("aria-live") != "polite":
+        problems.append("the stage needs one polite announcement region")
+    rig = find(stage, "data-pp-rig")
+    if len(rig) != 1 or rig[0]["attrs"].get("aria-hidden") != "true":
+        problems.append("the diagram must be decorative (aria-hidden) and present once")
+    full = " ".join(text(stage).split())
+    yaml = {a["id"]: a for a in yaml_actions(root, rec["platform"]) or []}
+    if rec.get("local") and yaml_reach(root, rec["platform"]) not in full:
+        problems.append(f"the reach line does not read the platform YAML's reach {yaml_reach(root, rec['platform'])!r}")
+    for sc in local["scenes"]:
+        if sc.get("action") is not None:
+            want = {"description": yaml[sc["action"]]["behavior"], "limits": yaml[sc["action"]]["limits"]}[sc["join"]]
+            if want not in full:
+                problems.append(f"scene {sc['id']!r} does not show the YAML's {sc['join']} for {sc['action']!r}: {want!r}")
+    if local["boundary"]["text"] not in full or not any(e["attrs"].get("href", "").endswith(local["boundary"]["source"].lstrip("/")) or e["attrs"].get("href", "").endswith(local["boundary"]["source"]) for e in walk(stage)):
+        problems.append("the session boundary sentence is missing or does not link its source")
+    dry = next((sc for sc in local["scenes"] if sc["id"] == "dry-fire"), None)
+    if dry is not None and dry.get("planned") and dry["planned"]["text"] not in full:
+        problems.append("the dry-fire planned line is missing from the stage")
+    for img in (e for e in walk(stage) if e["tag"] == "img"):
+        src = img["attrs"].get("src", "")
+        rel = src.split("/assets/", 1)
+        if len(rel) != 2:
+            problems.append(f"a stage image {src!r} is not a site asset")
+            continue
+        cutout = build_dir / "assets" / rel[1]
+        if not cutout.is_file():
+            problems.append(f"the stage image {src!r} was not built")
+        elif not webp_has_alpha(cutout):
+            problems.append(f"the stage image {src!r} is opaque; a cutout must carry alpha")
+        if img["attrs"].get("alt") not in ("", None):
+            problems.append(f"the decorative image {src!r} has alt text")
+    if any(e["tag"] == "details" for e in walk(stage)):
+        problems.append("a <details> in the local stage")
+    return problems
+
+
+def yaml_reach(root: Path, platform_id: str) -> str:
+    """The reach line of data/platforms/<id>.yaml."""
+    for line in (root / "data" / "platforms" / f"{platform_id}.yaml").read_text(encoding="utf-8").splitlines():
+        if line.startswith("reach:"):
+            return line.split(":", 1)[1].strip()
+    return ""
 
 
 def check_built(build_dir: Path, root: Path) -> list[str]:
@@ -637,9 +778,18 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
                     problems.append(f"{label}: a reviewer annotation must be drawn as one (pp-annot, its mark), never a caption")
 
         order = [e["attrs"] for e in walk(main)]
-        where = {k: next((i for i, a in enumerate(order) if k in a), -1) for k in ("data-pp-choice", "data-pp-start", "data-pp-stage")}
-        if not 0 <= where["data-pp-choice"] < where["data-pp-start"] < where["data-pp-stage"]:
-            problems.append(f"{label}: source order must be selector, call to action, illustration so it is in a phone's first screen; got {where}")
+        where = {k: next((i for i, a in enumerate(order) if k in a), -1) for k in ("data-pp-choice", "data-pp-start", "data-pp-orbit", "data-pp-local")}
+        orbits = find(main, "data-pp-orbit")
+        if len(orbits) != 1 or orbits[0]["attrs"].get("aria-hidden") != "true" or any(i.get("attrs", {}).get("alt") for i in walk(orbits[0]) if i["tag"] == "img"):
+            problems.append(f"{label}: the hero orbit must be one decorative (aria-hidden, empty alt) block")
+        if any(e["tag"] == "figcaption" or "caption" in classes(e) for e in walk(orbits[0])) if orbits else False:
+            problems.append(f"{label}: the hero orbit carries a caption; it is an illustration with no label")
+        if orbits and not (where["data-pp-start"] < where["data-pp-orbit"] < where["data-pp-local"]):
+            problems.append(f"{label}: the hero orbit must follow the call to action in source order")
+        if orbits and any("loading" in e["attrs"] for e in walk(orbits[0]) if e["tag"] == "img"):
+            problems.append(f"{label}: the hero orbit is above the fold; its images must load eagerly (no loading=lazy)")
+        if not 0 <= where["data-pp-choice"] < where["data-pp-start"] < where["data-pp-local"]:
+            problems.append(f"{label}: source order must be selector, call to action, then the local stage so the call to action is in a phone's first screen; got {where}")
 
         types = [a["id"] for a in rec["activities"]]
         radios = find(main, "data-pp-choice")
@@ -648,12 +798,12 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
         if [("checked" in r["attrs"]) for r in radios] != [i == 0 for i in range(len(types))]:
             problems.append(f"{label}: only the first activity type is checked at load")
         for t_id in types:
-            scenes = [e for e in find(main, "data-pp-for", t_id) if "pp-scene" in classes(e)]
             intents = [e for e in find(main, "data-pp-for", t_id) if "data-pp-intent" in e["attrs"]]
-            if len(scenes) != 1 or len(intents) != 1:
-                problems.append(f"{label}: type {t_id!r} has {len(scenes)} illustrations and {len(intents)} intents, want one each")
-        if not find(main, "data-pp-stage") or not find(main, "data-pp-announce"):
-            problems.append(f"{label}: the illustration or the announcement region is missing")
+            if len(intents) != 1:
+                problems.append(f"{label}: type {t_id!r} has {len(intents)} intents, want one")
+        if not find(main, "data-pp-announce"):
+            problems.append(f"{label}: the announcement region is missing")
+        problems.extend(f"{label}: {m}" for m in check_local_built(main, rec, root, build_dir, path))
 
         # The matrix: visible, every action, every cell from the canonical data.
         if any(e["tag"] == "details" for e in walk(main)):
@@ -707,13 +857,12 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
             link = next((x for x in walk(el) if x["tag"] == "a"), None)
             if stat is None or text(stat).strip() != want["stat"] or link is None or not link["attrs"].get("href", "").endswith(want["source"]):
                 problems.append(f"{label}: preset {want['label']!r} shows {text(stat) if stat else None!r}, not {want['stat']!r} linked to its source")
-        fm = [e for e in walk(main) if "pp-fm-card" in classes(e)]
-        if [e["attrs"].get("href", "") for e in fm] != [f["source"] for f in rec["fieldManual"]["facts"]] and \
-           not all(e["attrs"].get("href", "").endswith(f["source"]) for e, f in zip(fm, rec["fieldManual"]["facts"])):
-            problems.append(f"{label}: Field Manual cards do not link to their sources")
-        variants = [next((k for k in classes(e) if k.startswith("card-")), "") for e in fm]
-        if len(set(variants)) != len(variants):
-            problems.append(f"{label}: Field Manual cards in one row share a variant: {variants}")
+        fm = [e for e in walk(main) if "pp-fm-item" in classes(e)]
+        facts = rec["fieldManual"]["facts"]
+        if len(fm) != len(facts) or any(not e["attrs"].get("href", "").endswith(f["source"]) for e, f in zip(fm, facts)):
+            problems.append(f"{label}: the Field Manual briefing does not link each fact to its source")
+        if [" ".join(text(e).split()) for e in find(main, "data-pp-field-manual")] and len(find(main, "data-pp-field-manual")) != 1:
+            problems.append(f"{label}: the Field Manual section must appear once")
         uses = find(main, "data-pp-use")
         if [u["attrs"]["data-pp-use"] for u in uses] != [i["id"] for i in rec["usage"]["items"]]:
             problems.append(f"{label}: usage cards {[u['attrs']['data-pp-use'] for u in uses]} do not match the record")
@@ -743,19 +892,7 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
             elif frag and f'id="{frag}"' not in target.read_text(encoding="utf-8"):
                 problems.append(f"{label}: {where_} cites #{frag}, which {page_path} does not have")
 
-        # The playground is local only: no form, no named field, an image-only picker.
-        if any(e["tag"] == "form" for e in walk(main)):
-            problems.append(f"{label}: a <form> in the page; the playground submits nothing")
-        for e in walk(main):
-            if e["tag"] in ("input", "textarea", "select") and "name" in e["attrs"] and e["attrs"].get("type") != "radio":
-                problems.append(f"{label}: a named {e['tag']} ({e['attrs']['name']!r}); the playground fields are never submitted")
-        for b in find(main, "data-pp-try-starter"):
-            if "aria-describedby" in b["attrs"]:
-                problems.append(f"{label}: a starter button carries aria-describedby; its name is enough")
-        notes = find(main, "data-pp-try-announce")
-        pf = rec["playground"]["fields"]
-        if len(notes) != 1 or notes[0]["attrs"].get("data-not-image") != pf["notImage"] or notes[0]["attrs"].get("data-unreadable") != pf["unreadable"]:
-            problems.append(f"{label}: the playground announcer lacks its not-an-image and unreadable-image messages")
+        # The matrix is a native table in a focusable, labelled scroll group.
         mt = find(main, "data-pp-matrix")
         if mt:
             if any("role" in e["attrs"] for e in walk(mt[0])) or any("pp-col-label" in classes(e) for e in walk(mt[0])):
@@ -765,16 +902,20 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
             title = [e for e in walk(main) if e["attrs"].get("id") == (wrap["attrs"].get("aria-labelledby") if wrap else None)]
             if wrap is None or kids != [mt[0]] or wrap["attrs"].get("role") != "group" or wrap["attrs"].get("tabindex") != "0" or not title:
                 problems.append(f"{label}: the matrix table must sit alone in a focusable, labelled group (role=group, tabindex=0, aria-labelledby a heading) that scrolls sideways")
-        files = find(main, "data-pp-try-file")
-        if any(f["attrs"].get("accept") != "image/*" for f in files):
-            problems.append(f"{label}: the playground's picker must accept images only")
-        controls = find(main, "data-pp-try-controls")
-        if len(controls) != 1 or "hidden" not in controls[0]["attrs"]:
-            problems.append(f"{label}: the playground controls must be hidden until the script runs")
-        outs = find(main, "data-pp-try-out")
-        first_sample = rec["playground"]["starters"]["items"][0]["sample"]
-        if len(outs) != 1 or text(outs[0]) != first_sample:
-            problems.append(f"{label}: without script the playground preview must show the first starter's sample")
+
+        # No composer: the page has no form and no text field, and nothing in <main>
+        # submits anything. The site's own search form lives outside <main>.
+        if any(e["tag"] == "form" for e in walk(main)):
+            problems.append(f"{label}: a <form> in the page; the local stage submits nothing")
+        for e in walk(main):
+            if e["tag"] in ("input", "textarea", "select") and e["attrs"].get("type") not in ("radio", "button"):
+                problems.append(f"{label}: a {e['tag']} ({e['attrs'].get('type') or 'text'}) in the page; the page has no field")
+            if "name" in e["attrs"] and e["tag"] in ("input", "textarea", "select") and e["attrs"].get("type") != "radio":
+                problems.append(f"{label}: a named {e['tag']} ({e['attrs']['name']!r}); nothing on the page is submitted")
+        page_html = path.read_text(encoding="utf-8")
+        for needle in (PRIVATE_ISSUE, "blowhorn-ai/blowhorn/", "blowhorn-ai/blowhorn#"):
+            if needle in page_html:
+                problems.append(f"{label}: names {needle!r}; the private repository and its issues never appear on a public page")
 
         try:
             problems.extend(check_behaviour(label, main, rec, actions, root))

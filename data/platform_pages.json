@@ -5,12 +5,6 @@
       "mark": "Reviewer note",
       "text": "Preview: not final, and not linked from the site."
     },
-    "stageLabel": "Interactive preview",
-    "stages": {
-      "write": "Write",
-      "review": "Review",
-      "track": "Track"
-    },
     "continuity": {
       "heading": "One place for every activity",
       "intro": "Start in the app, then follow it there with everything else: once or recurring, past and upcoming.",
@@ -34,10 +28,30 @@
       },
       "now": "Now",
       "rows": [
-        { "when": "Last week", "time": "past", "recurrence": "Once", "status": "Sent" },
-        { "when": "Yesterday", "time": "past", "recurrence": "Weekly", "status": "Sent" },
-        { "when": "Tomorrow", "time": "upcoming", "recurrence": "Weekly", "status": "Scheduled" },
-        { "when": "Next week", "time": "upcoming", "recurrence": "Once", "status": "Scheduled" }
+        {
+          "when": "Last week",
+          "time": "past",
+          "recurrence": "Once",
+          "status": "Sent"
+        },
+        {
+          "when": "Yesterday",
+          "time": "past",
+          "recurrence": "Weekly",
+          "status": "Sent"
+        },
+        {
+          "when": "Tomorrow",
+          "time": "upcoming",
+          "recurrence": "Weekly",
+          "status": "Scheduled"
+        },
+        {
+          "when": "Next week",
+          "time": "upcoming",
+          "recurrence": "Once",
+          "status": "Scheduled"
+        }
       ]
     }
   },
@@ -59,109 +73,117 @@
           "id": "post",
           "action": "post",
           "label": "Post",
-          "intent": "Share an update in your voice.",
-          "scene": {
-            "title": "Post preview",
-            "state": "Draft",
-            "text": [
-              "A useful idea starts a better conversation.",
-              "Here's what we learned building our latest release."
-            ],
-            "steps": {
-              "write": "Shape a useful update",
-              "review": "Check the final post",
-              "track": "Follow it in one list"
-            }
-          }
+          "intent": "Share an update in your voice."
         },
         {
           "id": "respond",
           "action": "reply",
           "label": "Respond",
-          "intent": "Add something useful to a conversation.",
-          "scene": {
-            "title": "Reply preview",
-            "state": "Draft",
-            "text": [
-              "That trade-off is familiar. We tried a smaller first step, and here's what we learned."
-            ],
-            "steps": {
-              "write": "Address the conversation",
-              "review": "Check the reply first",
-              "track": "Follow it in one list"
-            }
-          }
+          "intent": "Add something useful to a conversation."
         },
         {
           "id": "amplify",
           "action": "amplify",
           "label": "Amplify",
-          "intent": "Pass along a post you believe in.",
-          "scene": {
-            "title": "Amplify preview",
-            "state": "Draft",
-            "text": [
-              "Worth reading: a practical approach to making the next iteration easier."
-            ],
-            "steps": {
-              "write": "Repost it, or quote it",
-              "review": "Check which profiles take part",
-              "track": "See each profile's result"
-            }
-          }
+          "intent": "Pass along a post you believe in."
         }
       ],
-      "media": {
-        "label": "Illustration, not a recording"
-      },
-      "playground": {
-        "heading": "Try on a draft",
-        "intro": "Write a post and preview it here. Nothing leaves this page.",
-        "label": "Local preview",
-        "fields": {
-          "text": "Your draft",
-          "image": "Add an image",
-          "clear": "Remove image",
-          "notImage": "That file is not an image.",
-          "unreadable": "That image can't be shown."
+      "local": {
+        "heading": "Only on your computer",
+        "intro": "Your computer. Your browser. Every profile, still you.",
+        "choose": "Choose a scene",
+        "replay": "Replay",
+        "reach": "Reach",
+        "boundary": {
+          "text": "The extension acts as you, in your own signed-in browser: the tabs you have open, on the sites Blowhorn acts on, with the sessions you made by hand.",
+          "quote": "the tabs you have open, on the sites Blowhorn acts on, with the sessions you made by hand",
+          "source": "/docs/explanation/your-own-chrome/"
         },
-        "starters": {
-          "label": "Start from",
-          "items": [
-            {
-              "id": "launch-update",
-              "activity": "post",
-              "title": "Launch update",
-              "sample": "We shipped a simpler way to turn an idea into an activity. Here's what changed."
+        "diagram": {
+          "computer": "This computer",
+          "extension": "Blowhorn extension",
+          "sessions": "Your signed-in sessions",
+          "profiles": [
+            "Profile 1",
+            "Profile 2",
+            "Profile 3",
+            "Profile 4"
+          ],
+          "out": "On X"
+        },
+        "crew": [
+          {
+            "src": "assets/brand/cast/icons/recruit-chick-laptop-lap.webp"
+          },
+          {
+            "src": "assets/brand/cast/icons/trench-trooper.webp"
+          },
+          {
+            "src": "assets/brand/cast/icons/mouse-marine.webp"
+          }
+        ],
+        "scenes": [
+          {
+            "id": "amplify",
+            "action": "amplify",
+            "join": "description",
+            "label": "Amplify",
+            "title": "Amplify as every you",
+            "lede": "One post, and each of your profiles acts on it in its own signed-in session.",
+            "out": "A retweet or a quote",
+            "beats": [],
+            "sourced": {
+              "text": "Add your words and it goes out as a quote; leave them empty and it is a retweet.",
+              "quote": "X | post URL | your words | quote",
+              "source": "/docs/how-to/publish/amplify-a-post/"
             },
-            {
-              "id": "reply-with-context",
-              "activity": "respond",
-              "title": "Reply with context",
-              "sample": "That trade-off is familiar. We tried a smaller first step, and here's what we learned."
-            },
-            {
-              "id": "pass-along-an-idea",
-              "activity": "amplify",
-              "title": "Pass along an idea",
-              "sample": "Worth reading: a practical approach to making the next iteration easier."
-            },
-            {
-              "id": "weekly-recap",
-              "activity": "post",
-              "title": "Weekly recap",
-              "sample": "Three things we learned this week, and what we're trying next."
+            "link": {
+              "label": "Amplify an existing post",
+              "href": "/docs/how-to/publish/amplify-a-post/"
             }
-          ]
-        },
-        "thread": {
-          "at": 274,
-          "label": "Goes out as a thread"
-        },
-        "planned": {
-          "mark": "Planned",
-          "text": "Rehearse a draft like this as a dry run from the extension."
-        }
+          },
+          {
+            "id": "follow",
+            "action": "follow",
+            "join": "limits",
+            "label": "Follow",
+            "title": "Follow with a local memory",
+            "lede": "Every follow is written to a log on this computer, one log for each profile.",
+            "out": "A follow, logged here",
+            "beats": [
+              "Name a target account, or pick its followers."
+            ],
+            "link": {
+              "label": "The X limits, in the docs",
+              "href": "/docs/reference/platforms/x/"
+            }
+          },
+          {
+            "id": "dry-fire",
+            "action": null,
+            "label": "Dry fire (desktop)",
+            "title": "Dry fire before deploy",
+            "lede": "Rehearse an order in the Blowhorn desktop app before it goes out. Nothing is posted.",
+            "out": "Stops before composing",
+            "relay": "Desktop app",
+            "beats": [
+              "Each platform is walked in turn. Nothing was posted."
+            ],
+            "sourced": {
+              "text": "Today, the desktop app opens the profile's browser, checks the sign-in and stops before composing.",
+              "quote": "checks the sign-in and stops before composing",
+              "source": "/docs/reference/use-the-desktop-app/"
+            },
+            "planned": {
+              "mark": "Extension flow planned",
+              "text": "Planned, not shipped yet: the same kind of dry run from the browser extension itself."
+            },
+            "link": {
+              "label": "Dry fire in the desktop app",
+              "href": "/docs/reference/use-the-desktop-app/"
+            }
+          }
+        ]
       },
       "matrix": {
         "heading": "Everything Blowhorn does on X",
@@ -280,7 +302,10 @@
         ]
       },
       "related": [
-        { "label": "Every action on every platform", "href": "/integrations/actions/" }
+        {
+          "label": "Every action on every platform",
+          "href": "/integrations/actions/"
+        }
       ]
     }
   ]
