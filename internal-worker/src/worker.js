@@ -240,7 +240,7 @@ function escHtml(s) {
  */
 export function csvCell(v) {
   let s = String(v ?? '');
-  if (/^[=+@\t\r-]/.test(s)) {
+  if (/^\s*[=+@\t\r-]/.test(s)) {
     s = `'${s}`;
   }
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;

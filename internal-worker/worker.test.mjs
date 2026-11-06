@@ -247,6 +247,7 @@ test('old fleet path redirects permanently to /engineering/fleet/', async () => 
   assert.equal(new URL(res.headers.get('location')).pathname + new URL(res.headers.get('location')).search, '/engineering/fleet/disk.csv?days=3');
 });
 
+
 test('sortWorkloadTeammates orders Done 24h numerically descending (10 before 2)', () => {
   const ordered = sortWorkloadTeammates([
     { login: 'low', done_24h: 2 },
@@ -294,10 +295,22 @@ test('csvCell neutralizes formula injection triggers with a leading single quote
   assert.equal(csvCell('@SUM(1,2)'), '"\'@SUM(1,2)"');
   assert.equal(csvCell('\tTabbedValue'), "'\tTabbedValue");
   assert.equal(csvCell('\rCarriageReturnStart'), '"\'\rCarriageReturnStart"');
+  assert.equal(csvCell('  =cmd'), "'  =cmd");
+  assert.equal(csvCell('   @calc'), "'   @calc");
+});
+
+test('csvCell neutralizes formula triggers that follow leading whitespace', () => {
+  assert.equal(csvCell(' =cmd'), "' =cmd");
+  assert.equal(csvCell('  +1+1'), "'  +1+1");
+  assert.equal(csvCell('   -5+2'), "'   -5+2");
+  assert.equal(csvCell(' \t=cmd'), "' \t=cmd");
+  assert.equal(csvCell(' @SUM(1,2)'), '"\' @SUM(1,2)"');
+  assert.equal(csvCell('\n=cmd'), '"\'\n=cmd"');
 });
 
 test('csvCell preserves normal values and quotes cells containing bare carriage returns', () => {
   assert.equal(csvCell('hello world'), 'hello world');
+  assert.equal(csvCell('   leading space'), '   leading space');
   assert.equal(csvCell('test@blowhorn.ai'), 'test@blowhorn.ai');
   assert.equal(csvCell('line1\rline2'), '"line1\rline2"');
   assert.equal(csvCell('comma,value'), '"comma,value"');
