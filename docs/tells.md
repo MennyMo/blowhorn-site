@@ -31,8 +31,8 @@ Build a link with the partial; never hard-code a Tells URL in a template:
 
 | Placement | Where | Template |
 | --- | --- | --- |
-| `bar` | Slim, dismissible bar above the header on every public page, with the Free pill inline | `tells-bar.html`, `tells-bar-head.html`, `assets/js/tells-bar.js` |
-| `nav` | Resources menu entry (label); the Free pill now sits in the announcement bar | `header.html`, `tells-bar.html` |
+| `bar` | Slim, dismissible bar above the header: message on the left; Am I a Bot? + Free pill as one CTA on the right | `tells-bar.html`, `tells-bar-head.html`, `assets/js/tells-bar.js` |
+| `nav` | Resources menu entry (label); Free pill text for the announcement-bar CTA | `header.html`, `tells-bar.html` |
 | `home` | Band after Trust on the Signal home page (Sleeper Cell art) | `home/tells.html` |
 | `footer` | Free tools column | `footer.html` |
 | `compare` | Callout before the FAQ on every `/compare/<slug>/` page, and the FAQ links that point at Tells | `tells-callout.html` in `versus.html` |
@@ -55,6 +55,12 @@ solution FAQs stay untagged on purpose; `check_tells.py` ignores links without
 UTM parameters.
 
 ## The announcement bar
+
+The bar lays out as message text on the left and one CTA on the right: the
+"Am I a Bot?" label and the green Free pill share a single link to Tells
+(`utm_content=bar`). Free appears only in the pill. On narrow screens the
+message ellipsizes so the CTA stays visible; the dismiss control stays at the
+far right edge.
 
 Dismissing the bar stores `dismissed` under `bar.storage_key`
 (`bh-tells-bar-v1`) in localStorage. An inline script in the head

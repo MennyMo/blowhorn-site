@@ -55,7 +55,7 @@
       "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
     },
     "bar": {
-      "description": "The site-wide announcement bar above the header (layouts/_partials/tells-bar.html). storage_key remembers a dismissal in localStorage; change it to show the bar again to everyone who closed it.",
+      "description": "The site-wide announcement bar above the header (layouts/_partials/tells-bar.html): message text on the left, Am I a Bot? + Free pill as one CTA on the right. storage_key remembers a dismissal in localStorage; change it to show the bar again to everyone who closed it.",
       "type": "object",
       "additionalProperties": false,
       "required": ["storage_key", "text", "link"],
