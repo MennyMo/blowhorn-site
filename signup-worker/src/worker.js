@@ -107,8 +107,23 @@ function pageResponse(request, status, title, body) {
   );
 }
 
-function safeBackLink(sourcePage) {
-  if (typeof sourcePage === 'string' && sourcePage.startsWith('/') && !sourcePage.startsWith('//')) {
+export function escHtml(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export function safeBackLink(sourcePage) {
+  if (
+    typeof sourcePage === 'string'
+    && sourcePage.startsWith('/')
+    && !sourcePage.startsWith('//')
+    && !sourcePage.startsWith('/\\')
+    && !/[\s"'<>\\]/.test(sourcePage)
+  ) {
     return `${SITE_ORIGIN}${sourcePage}`;
   }
   return SITE_ORIGIN;
@@ -147,11 +162,13 @@ function isFormPost(request) {
 
 function fail(request, status, message, sourcePage) {
   if (isFormPost(request)) {
+    const link = escHtml(safeBackLink(sourcePage));
+    const safeMsg = escHtml(message);
     return pageResponse(
       request,
       status,
       'Something went wrong',
-      `${message} <a href="${safeBackLink(sourcePage)}">Go back</a> and try again.`,
+      `${safeMsg} <a href="${link}">Go back</a> and try again.`,
     );
   }
   return jsonResponse(request, status, { ok: false, error: message });
