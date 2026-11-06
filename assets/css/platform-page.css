@@ -1,9 +1,19 @@
 /* Platform product pages (layouts/platform-page.html, docs/platform-pages.md).
-   Figma 902:114 (X) on the shared contract 902:111. Every colour, radius and
-   shadow is a token from site.css (static/assets/brand/tokens.json); spacing reads
-   the rhythm tokens (DESIGN.md, "Whitespace and rhythm"). Card looks come from
-   cards.css; this file only lays them out. Motion is transform and opacity only,
-   and none of it runs under prefers-reduced-motion. */
+   Figma 902:114 (X) on the shared contract 902:111. Most colours, radii and shadows
+   are tokens from site.css (static/assets/brand/tokens.json), and spacing reads the
+   rhythm tokens (DESIGN.md, "Whitespace and rhythm"). Card looks come from cards.css.
+   This file also holds a page-scoped palette for the rules-of-engagement gauge
+   (#501): blue, green, then Blowhorn coral. Motion is finite and off under
+   prefers-reduced-motion. */
+
+/* Page-scoped colour (#501). The brand tokens have no blue or green step, so the
+   rules of engagement gauge takes two page values from here. Coral is the brand's
+   own token. Dark values lift each step for a dark ground. */
+.pp {
+  --pp-blue: #2563EB;
+  --pp-green: #15803D;
+  --pp-coral: var(--coral);
+}
 
 .pp [hidden] { display: none !important; }
 
@@ -40,6 +50,10 @@
 .pp-annot-mark { padding: 0 var(--space-1); border: var(--stroke-hairline) solid var(--annot); border-radius: 2px; }
 @media (prefers-color-scheme: dark) {
   .pp-annot { --annot: var(--coral); }
+  .pp {
+    --pp-blue: #7CAEFF;
+    --pp-green: #4ADE80;
+  }
 }
 
 /* ---------- Hero ----------
@@ -168,7 +182,17 @@
   position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 
-.pp-go .button { min-width: 7.5rem; }
+/* Start is the page's one real action, so it reads at body-UI size (20px), not the
+   14px button size. It may wrap onto two lines at 320 px rather than overflow. */
+.pp-go .button {
+  min-width: 9.5rem;
+  min-height: 56px;
+  padding: var(--space-3) var(--space-6);
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  white-space: normal;
+  text-align: center;
+}
 
 /* ---------- Sections ---------- */
 .pp-section { padding-block: var(--section-y); }
@@ -517,7 +541,6 @@
   gap: var(--space-4) var(--space-8);
 }
 .pp-related { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin: 0; padding: 0; list-style: none; }
-.pp-related a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
 .pp-matrix-scroll {
   margin-top: var(--head-gap);
   overflow-x: auto;
@@ -574,9 +597,14 @@
 .pp-matrix thead th:nth-child(3) { width: 25%; }
 
 /* ---------- Rules of engagement: an open numbered gauge, no frame ---------- */
-.pp-roe { margin-top: var(--head-gap); }
-.pp-gauge { margin: 0; padding: 0; list-style: none; border-top: var(--stroke-hairline) solid var(--line-strong); }
+/* The gauge is three horizontal bars, one per level, as Lee asked: 01 blue, 02 green,
+   03 coral (--lvl). Each row has a level dot and a bar whose fill is the level
+   colour, longer at each level. No vertical rule. */
+.pp-gauge { margin: var(--head-gap) 0 0; padding: 0; list-style: none; border-top: var(--stroke-hairline) solid var(--line-strong); }
 .pp-gauge li + li { border-top: var(--stroke-hairline) solid var(--line); }
+.pp-gauge li { --lvl: var(--pp-blue); }
+.pp-gauge li:nth-child(2) { --lvl: var(--pp-green); }
+.pp-gauge li:nth-child(3) { --lvl: var(--pp-coral); }
 .pp-preset-link {
   position: relative;
   display: grid;
@@ -589,7 +617,21 @@
 }
 .pp-preset-link:hover .pp-stat-n { color: var(--link); }
 .pp-preset-link:focus-visible { outline-offset: 2px; border-radius: var(--radius-sm); }
-.pp-gauge-no { color: var(--ink-muted); font-family: var(--font-mono); }
+.pp-gauge-no {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+.pp-gauge-no::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--lvl);
+}
 .pp-stat-n { color: var(--ink); font-variant-numeric: tabular-nums; }
 .pp-preset-body { display: grid; gap: var(--space-1); min-width: 0; }
 .pp-preset-top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
@@ -609,7 +651,7 @@
   inset: 0 auto 0 0;
   width: var(--w);
   border-radius: inherit;
-  background: var(--link);
+  background: var(--lvl);
 }
 .pp-gauge li:nth-child(1) { --w: 24%; }
 .pp-gauge li:nth-child(2) { --w: 50%; }
@@ -619,7 +661,12 @@
 .pp-roe-notes a { color: var(--ink); text-decoration-color: var(--line-strong); }
 .pp-roe-notes a:hover { color: var(--link); }
 .pp-more { margin-top: var(--space-6); }
-.pp-more a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+/* Real action links (section actions such as "Choose your rules of engagement",
+   setup source links, and the matrix's "Keep reading" links): body-UI size (18px),
+   never the 14px caption size. Hero Start has its own rule (.pp-go .button). */
+.pp-more a,
+.pp-use-src a,
+.pp-related a { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
 
 /* ---------- Field Manual: one editorial two-column briefing ---------- */
 .pp-brief { display: grid; gap: var(--space-8); margin: var(--head-gap) 0 0; }
@@ -708,7 +755,6 @@
 .pp-use .h3 { margin-top: var(--eyebrow-gap); }
 .pp-use .term { margin-top: var(--space-4); }
 .pp-use-src { margin-top: var(--space-3); }
-.pp-use-src a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
 
 /* ---------- Activities continuity: an illustration, not the app's screen ---------- */
 .pp-activities { margin: var(--head-gap) 0 0; }
@@ -800,10 +846,11 @@
   .pp-theatre::before, .pp-theatre::after { display: none; }
   .pp-route { stroke-width: 4; }
   .pp-slip, .pp-out, .pp-relay { box-shadow: 0 0 0 2px var(--cream); }
+  .pp-gauge-bar { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); }
 }
 
 @media (forced-colors: active) {
-  .pp-choice::after, .pp-now::after { background: CanvasText; }
+  .pp-choice::after, .pp-now::after, .pp-gauge-bar::after, .pp-gauge-no::before { background: CanvasText; }
   .pp-filters, .pp-list, .pp-activities-art, .pp-slip, .pp-out, .pp-scene-choice { border: 1px solid CanvasText; }
   .pp-route, .pp-spoke::before { stroke: CanvasText; background: CanvasText; }
   .pp-scene-choice:has(input:checked) { background: Highlight; color: HighlightText; }

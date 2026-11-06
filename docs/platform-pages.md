@@ -121,6 +121,32 @@ scripts are outside this page's scope.
   with a rule between the facts. Their source text and links are unchanged. The setups
   rail and Activities are unchanged.
 
+### Rules of engagement colour and readable actions (#501)
+
+Approved by the product owner for this preview (bands and scroll-continuity washes
+were tried and then dropped on Lee's Nov 6 direction - keep colour on the gauge only):
+
+- **Gauge.** The three rules-of-engagement levels are three horizontal bars, one per
+  level: 01 blue, 02 green, 03 coral. Each row has a level dot and a bar filled in its
+  level colour, longer at each level. There is no vertical rule. The colours are
+  page values (`--pp-blue`, `--pp-green`, `--pp-coral`, scoped to `.pp`, with
+  dark-ground lifts). The brand tokens have no blue or green step; coral is the
+  brand's own.
+- **Real actions at body-UI size.** Hero Start is 20px. The other actions are 18px:
+  the section action links (`.pp-more`), the setup source links (`.pp-use-src`) and the
+  "Keep reading" links in the matrix header (`.pp-related`). Captions (counts, type
+  chips, the gauge's numbers) stay small.
+- **No section bands.** Alternating blue/green washes, aligned gridlines, and diagonal
+  color ribbons are not used. Sections keep the ordinary hairline separators.
+- **The local stage stays near-black.** It is the deliberate dark beat in the page.
+- **Accessibility.** Under `prefers-contrast: more` the gauge track uses a solid edge.
+  Forced colours get CanvasText and Highlight for the gauge fill and level dot.
+- **Scope.** The usage rail (#500 carousel) is unchanged apart from the larger
+  source-link type. No composer, form, network or storage call was added.
+- **Checks.** No check in `check_platform_pages.py` covers these visual rules. The
+  rules are verified in a browser (computed font sizes, bar colours and widths,
+  overflow at each width).
+
 ## Stage geometry checks
 
 Check the stage in a real browser at 320, 390, 640, 820, 1039, 1040, 1280 and 1440 px,
