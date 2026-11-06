@@ -18,6 +18,23 @@ account, every post, like, repost, reply and follow counted together.
 Blowhorn counts them together too and never goes past it
 ([the one hard stop](/docs/how-to/settings/choose-your-rules-of-engagement/#a-limit-the-platform-publishes-is-the-one-hard-stop)).
 
+<!-- BEGIN generated limits: release/scripts/capabilities_docs/build.py; do not edit -->
+
+## Limits
+
+The limits Blowhorn knows for Bluesky.
+
+| Limit | Value |
+|---|---|
+| Post | 300 (graphemes) |
+| Reply | 300 (graphemes) |
+| Comment | 300 (graphemes) |
+| Image | 1000000 bytes |
+| Posts, Reactions, Comments, Shares, Outreach per hour | 1666 |
+| Posts, Reactions, Comments, Shares, Outreach per day | 11666 |
+
+<!-- END generated limits -->
+
 ## Supported actions
 
 {{< supported-actions "bluesky" >}}

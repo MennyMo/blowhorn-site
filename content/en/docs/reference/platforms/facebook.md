@@ -9,6 +9,19 @@ weight: 244
 will work on Facebook in your own signed-in Google Chrome, and this page will list what
 it can do there.
 
+<!-- BEGIN generated limits: release/scripts/capabilities_docs/build.py; do not edit -->
+
+## Limits
+
+The limits Blowhorn knows for Facebook.
+
+| Limit | Value |
+|---|---|
+| Post | 63206 |
+| Comment | 8000 |
+
+<!-- END generated limits -->
+
 ## Supported actions
 
 {{< supported-actions "facebook" >}}

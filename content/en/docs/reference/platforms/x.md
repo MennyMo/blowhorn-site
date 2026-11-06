@@ -23,6 +23,24 @@ publishes 50 original posts and 200 replies a day for an account without
 a checkmark, and no setting in Blowhorn goes past any of the three
 ([the one hard stop](/docs/how-to/settings/choose-your-rules-of-engagement/#a-limit-the-platform-publishes-is-the-one-hard-stop)).
 
+<!-- BEGIN generated limits: release/scripts/capabilities_docs/build.py; do not edit -->
+
+## Limits
+
+The limits Blowhorn knows for X.
+
+| Limit | Value |
+|---|---|
+| Post | 274 (x-weighted) |
+| Reply | 274 (x-weighted) |
+| Image | 5000000 bytes |
+| Video | 512000000 bytes |
+| Outreach per day | 400 |
+| Posts per day | 50 |
+| Comments per day | 200 |
+
+<!-- END generated limits -->
+
 ## Supported actions
 
 {{< supported-actions "x" >}}

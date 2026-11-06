@@ -31,6 +31,14 @@ or unauthenticated is a hard error, never a silent fallback.
 A dry run is the default: without `--apply` nothing is
 written. See [Sweep stalled GitHub assignments](/docs/how-to/grow/squatter-sweep/).
 
+<!-- BEGIN generated limits: release/scripts/capabilities_docs/build.py; do not edit -->
+
+## Limits
+
+No limits are recorded for GitHub.
+
+<!-- END generated limits -->
+
 ## Supported actions
 
 {{< supported-actions "github" >}}

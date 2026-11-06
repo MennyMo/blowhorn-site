@@ -93,7 +93,12 @@ Run one pass by hand, or force one activity now:
 ```bash
 blowhorn schedule tick --profile all
 blowhorn schedule trigger-now 4
+blowhorn schedule trigger-now 4 --ignore-risk
 ```
+
+`trigger-now` names a Risk Profile hold, including while the profile is warming
+up, and does not run until you confirm or pass `--ignore-risk`. A limit the
+platform publishes still applies.
 
 Read or write a single activity. Activity numbers are stable: they are assigned when a
 activity is created and never reused, so a number you noted keeps meaning the same

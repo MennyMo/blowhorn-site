@@ -19,8 +19,9 @@ you sign in to Blowhorn on follows it.
 ## In the app
 
 1. Open **Settings** from the account menu.
-2. In the **privacy** card, switch **share anonymous usage data for product
-   improvement** off (or back on).
+2. In the Privacy card, switch **Usage sharing** off (or back on).
+
+The line under the switch says your choice is saved and that no usage data is collected yet. The info button beside Usage sharing explains the choice, and that failure reports stay a separate setting in Posture.
 
 The switch saves to your account straight away. While your account cannot
 be read (you are signed out or offline) the switch is disabled and shows the

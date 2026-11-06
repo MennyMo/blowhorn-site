@@ -13,6 +13,22 @@ it can do there.
 
 {{< signup-form kind="waitlist" topic="tiktok" >}}
 
+<!-- BEGIN generated limits: release/scripts/capabilities_docs/build.py; do not edit -->
+
+## Limits
+
+The limits Blowhorn knows for TikTok.
+
+| Limit | Value |
+|---|---|
+| Post | 4000 |
+| Video | 2147483648 bytes |
+| Video length | 600.0 s |
+| Video shortest | 3.0 s |
+| Video shortest side | 360 px |
+
+<!-- END generated limits -->
+
 ## Supported actions
 
 {{< supported-actions "tiktok" >}}

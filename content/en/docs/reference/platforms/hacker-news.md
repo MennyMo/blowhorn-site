@@ -14,6 +14,19 @@ submissions per profile per UTC day count; only link submissions are
 recorded, so only they count toward the cap. Blowhorn never votes:
 there is nothing to configure and no way to turn it on.
 
+<!-- BEGIN generated limits: release/scripts/capabilities_docs/build.py; do not edit -->
+
+## Limits
+
+The limits Blowhorn knows for Hacker News.
+
+| Limit | Value |
+|---|---|
+| Title | 80 |
+| Tags per post | 0 |
+
+<!-- END generated limits -->
+
 ## Supported actions
 
 {{< supported-actions "hacker-news" >}}

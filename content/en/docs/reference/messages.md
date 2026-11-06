@@ -54,6 +54,15 @@ what to do, and the code names the case; the codes are listed under
 [Opening Chrome when it is closed](/docs/reference/chrome/#opening-chrome-when-it-is-closed).
 Exit 1.
 
+`Chrome didn't respond. Make sure Chrome is open with the Blowhorn extension, then try again.`:
+a scheduled run's Chrome extension did not answer in time. Last Error shows
+this sentence. The log keeps the raw timeout line. Open Chrome with the
+Blowhorn extension and try the activity again.
+
+`The Chrome profile for <profile> isn't connected to Blowhorn.`: the activity's
+Chrome profile has no connected Blowhorn extension. Connect that profile, then
+run again. This is separate from a timeout.
+
 `error: page did not load`: Google Chrome was running. LinkedIn did not
 finish loading in the Blowhorn tab, or its received list could not be
 read. The sentence above the summary says which, and nothing was done.

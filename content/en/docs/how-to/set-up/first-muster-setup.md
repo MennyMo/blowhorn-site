@@ -87,18 +87,17 @@ when a new version of Blowhorn needs something your earlier setup did not do.
   its saved sign-in stays too. Nothing is created or
   installed until you confirm. See
   [Map Chrome profiles](/docs/how-to/set-up/map-chrome-profiles/).
-- **Getting ready:** Blowhorn finds your Chrome profiles and adds its
-  extension only to the ones you marked in use on Confirm troops. If that
-  is all of them, it uses Chrome's policy route: macOS asks for your
-  administrator password once, and Chrome turns the extension on in every
-  profile and shows it as **Managed by your organization**. If you left
-  some profiles out, there is no administrator prompt; each profile you
-  chose gets an **Enable in** button instead: one click there, then
-  **Enable now** (or **Add to Chrome**) in Chrome. Each step shows as it
+- **Getting ready:** Blowhorn finds your Chrome profiles, then says what it
+  installs - the Chrome extension in the profiles you marked in use, plus a
+  helper, the `blowhorn` command and the `blowhorn-mcp` server for the whole
+  computer - and waits for your **Continue** before writing anything. It
+  adds its extension only to the profiles you marked in use on Confirm
+  troops, one at a time: Chrome opens Blowhorn's page in each, and you click
+  **Enable now** (or **Add to Chrome**) there. There is no administrator
+  prompt and no profile you left out is touched. Each step shows as it
   runs, with the time left, and **Start again** appears if it takes
-  longer than usual. A computer that already has the extension from an
-  earlier setup keeps that setup's route; there, each profile you chose
-  gets an **Enable in** button the same way. One ready profile you chose
+  longer than usual. A profile that already has the extension on
+  needs nothing. One ready profile you chose
   is enough to go on. If Google Chrome is on this computer but has never
   been opened, setup stops on its own screen (before Blowhorn's window
   screen, and again here if that changed) and asks you to open Google
@@ -125,10 +124,8 @@ Blowhorn profile and no mapping.
 
 If you run guided setup again and leave out a profile that an earlier
 setup already put the extension in, this setup cannot take the extension
-out of that one profile. Both routes Chrome gives Blowhorn for adding an
-extension - the policy file and the external-extensions file - are one
-file for all your Chrome profiles, never one per Chrome profile, so neither can
-be removed for a single profile. The extension stays in that profile
+out of that one profile, and it never removes an extension on its own.
+The extension stays in that profile
 until you remove it there yourself (in that profile, open
 `chrome://extensions` and remove Blowhorn). This setup never adds it
 again, never maps that profile, and its being ready there counts for

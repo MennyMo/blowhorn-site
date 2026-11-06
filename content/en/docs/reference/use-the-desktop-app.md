@@ -13,6 +13,7 @@ describes; the steps live in the how-to guides linked under Related.
 Blowhorn lives in the menu bar. Opening it shows the popover, top to bottom:
 
 - **The header:** the Blowhorn mark and wordmark (not a link), a `?` that says what the popover is for, **Settings** and **Quit**.
+- **The scheduler line**, under the header when a check has been recorded: **Working now** and what it is checking, while a check is running, or **Last check** and when that one finished, when it is idle. Home's Today shows the same line. It stays in the ordinary text colour. It never shows a process id, a file path or the raw status.
 - **Three stats:** how many items need you (gold above zero), runs done in the last seven days, and the success share over the same week. A dash means no runs or no reading.
 - **The create button:** **New order**, or **New activity** when Major Blowhorn is off. Under it, one line says you can drop a link, image or video anywhere on the popover.
 - **NEXT UP:** the next three due items. **open ›** opens one in Activity. When nothing is due, the popover says so.
@@ -37,7 +38,9 @@ Drop anything on the popover, with no prompt. What you drop decides the sheet:
 
 Respond or Amplify writes an approved item, due now, for each profile you select. For 10 seconds afterwards the sheet offers **Undo**, which removes what it wrote. After that the order is final.
 
-**New order** looks at the Chrome tab in front of you first. An open post opens the engage sheet, and an open page starts a new order from that page. The first time you press New order while Chrome is running, macOS asks whether Blowhorn may control Google Chrome. Blowhorn asks only then, when you start a post from a page, never at launch.
+**New order** asks the Blowhorn extension in Google Chrome for the page in front. It retries briefly and never uses Apple Events, so it never raises a macOS Automation prompt. An open post opens the engage sheet, and an open page starts a new order from that page. If the live read misses but the extension answers, New order can use the last remembered normal-window page and shows **From your last Chrome tab: _title_** with **Change**. Change opens the message field containing the page details.
+
+If the extension does not answer, New order still opens without a page. Every kind stays selectable and drafts can be saved. When a kind needs the extension, the kind and final step say **This order needs the Blowhorn extension in Google Chrome before it can run.** The kind step also says **Some orders need the Blowhorn extension in Google Chrome.** Choose **Install the extension** to install it, or **Try again** to check whether it is available. API-backed kinds do not show this prerequisite.
 
 When an update is ready, the update card at the bottom of the popover offers **Update**. The update downloads the new version, installs it
 and relaunches the app; when it cannot, it says why and offers the release
@@ -46,11 +49,11 @@ until Blowhorn reopens. An installed Blowhorn that finds such a release when it 
 asks in the console window, before the download, with **Update now**, **Later**
 and a **?** help icon;
 what each does is under [Update](/docs/how-to/set-up/install-the-app/#update).
-With **UI sounds** on in Settings, a new version gets a short announcement when the prompt
+With **Sounds** on in Settings, a new version gets a short announcement when the prompt
 first shows, the update plays quiet music while it downloads and installs, and a finished
 update plays a short chime: on the new version's first launch when Blowhorn relaunched to
-finish. Turning UI sounds off silences all three. The update dialog itself carries a
-speaker toggle at the top right beside its title; it is the same **UI sounds** setting
+finish. Turning Sounds off silences all three. The update dialog itself carries a
+speaker toggle at the top right beside its title; it is the same **Sounds** setting
 as in Settings, so switching it off mid-update silences the update music at once, and
 switching it on again restores it.
 
@@ -126,7 +129,11 @@ check; one you passed empty, such as a skipped landing zone, takes a dashed
 4. **Landing zone** - drop one or more images or videos, or paste a link to
    one. Anything else is turned away with "Wrong intel - image or video only",
    and each landed file has its own **Remove** button. Blowhorn posts
-   media from a link, so a dropped file needs its link pasted too. **LZ clear**
+   media from a link, so a dropped file needs its link pasted too. The zone
+   takes no more drops than the strictest platform you picked allows: with
+   Reddit picked, one drop only, and a dropped folder lands its first file and
+   says so. Removing a landed file frees its place, so swapping stays possible.
+   **LZ clear**
    moves on with no media. A rally or an action carries no media.
 5. **When to march** - **On my mark** (goes out now), or a date and a
    start time from the pickers. Time is read the military way ("1430 HRS"),
@@ -143,7 +150,7 @@ check; one you passed empty, such as a skipped landing zone, takes a dashed
 On a wide enough window a narrow **manifest** slides out beside the order
 the first time there is something to show: the platforms and desks stacked
 like cards, the message's length (never its words), what landed, and when it
-goes: a field watch shows a set time, and a jump light stands for **On my mark**. On a narrow window the folded summaries say the same. The line above the
+goes: a field watch shows a set time, and a jump light stands for **On my mark**. When a picked platform has a character limit on record, the message's length carries a meter with a tick at the tightest such limit, and says by how much it runs over. On a narrow window the folded summaries say the same. The line above the
 buttons says what is still missing, or when the order goes out.
 
 **Deploy** (it names the count, for example **Deploy 4**; a single post is just
@@ -186,7 +193,7 @@ Dry fire is offered for posts only: an action has no post to rehearse.
 unapproved instead, so nothing goes out until someone approves them in
 Upcoming (an action is saved turned off on Routines, and runs only once
 someone turns it on); **Cancel** closes the order without saving. The speaker button
-in the header beside the title starts in your **UI sounds** setting; turning it off
+in the header beside the title starts in your **Sounds** setting; turning it off
 mutes this order's sounds, and those of every post it saves. An activity already saved for a
 blog still shows and runs. Activity is
 one place with three views, switched at the top of the screen: **Upcoming**
@@ -254,7 +261,7 @@ activity, is locked. Once you are signed in, the account button stays usable. Se
 | Performance | Followers, growth, and activity per profile; collection freshness in the header. Under the filters, three tabs that all read them: **Activity** (runs by platform, activity per profile), **History** (the figures, followers over time, new versus unfollowed per month) and **Report** (your LinkedIn pages and the health of each profile and page) | Collect now; open the HTML report |
 | Posture (three tabs: **Rules**, **Limits**, **Protection**; the fleet's Take leave and stop sit on the tabs' line) | Rules: the rules of engagement for everyone (the slider: Safety on, Weapons tight or Weapons free), which choice wins, one grid of every profile on every platform with where each cell's choice comes from. Limits, one row per section: by platform (pace and daily caps), speed and amount (spacing, outreach, how much runs at once), when and who says yes (quiet hours, approval, dry fire), typing, and pointer timing; each row opens its settings in a window. Protection, one row per section: what happens when a platform pushes back, what the last check held back, where your sign-ins live and what Blowhorn will never do | Move the slider; choose a preset for one platform for every profile, one profile on every platform, or one cell, or reset any of them to inherit; reset them to the preset; each limit saves as you change it; take leave or stop every computer; run a held activity once with **Do it anyway**; turn the sign-in check, the needs-you note, dry fire by default and failure reports on or off (while dry fire is on, Approve and every duty switch, a routine's own included, each say so in one line, because nothing was approved or changed) |
 | This computer (from Home's computer row, or the rail's reason line) | Whether this computer is on duty and, when it is not, the one sentence on what is wrong, the owner of the background service once something holds it, the last pass, the fleet's leave | Its one fix under the banner: "register the service" when the service is not registered or runs from another copy of Blowhorn, "start the service" when it is registered but not running, "open Login Items" when it is turned off in System Settings (only those states offer one); "check now" (with "dry fire" to rehearse up to the final click, posting nothing); "take leave for the fleet", and the fleet's switch while the fleet holds |
-| Settings (from the account menu; its pages are listed in the left rail under the places while it is open) | **General**: appearance (theme, material, spacing), notifications and usage data. **Background & updates**: startup, keeping this computer on duty after quit, the pause shortcut, the update channel, uninstall. **Setup**: setup and the guided setup, the extension card. **Advanced**: app paths and the engine defaults Posture does not hold, rendered from the CLI's own option list | Change defaults, check the extension, choose its mode; run setup again or quit or uninstall; **open Posture ›** for the rules of engagement and limits. Your account is not in Settings: the account menu holds **Your account and plan**, **Switch organization** and **Sign out** |
+| Settings (from the account menu; its pages are listed in the left rail under the places while it is open) | **General**: appearance (theme, material, spacing), notifications (system notifications, Major Blowhorn, Sounds) and usage sharing. **Background & updates**: startup, keeping this computer on duty after quit, the pause shortcut, the update channel, uninstall. **Setup**: setup and the guided setup, the extension card. **Advanced**: app paths and the engine defaults Posture does not hold, rendered from the CLI's own option list | Change defaults, check the extension, choose its mode; run setup again or quit or uninstall; **Posture** for pace, limits, and approval. Your account is not in Settings: the account menu holds **Your account and plan**, **Switch organization** and **Sign out** |
 
 The routines list keeps every value on one line, and it has the whole width of
 the screen: an item's details open in a dialog, not beside it. When the window is
@@ -344,7 +351,7 @@ empty areas on one screen merge into one. Where the next step is a button on
 that screen, the button is there, and an info button beside it links the docs
 page for it. Where the next step is the **+** button or a button in the
 header, such as **collect now** on Performance, the note names it rather than
-repeating it. With **Cast characters** off in Settings, the same note and
+repeating it. With **Major Blowhorn** off in Settings, the same note and
 action show without the art, and Major's line goes with them. A tab with nothing on it says what goes there and offers one
 button: Upcoming's points at the tab where your posts are, with its count
 (**show drafts (1)**), and History's at today or all, or at the **+** button
@@ -360,9 +367,9 @@ On the guided setup's steps, Major Blowhorn's portrait in the left rail is
 alive. His eyes and head follow your pointer, and now and then he looks
 around, pulls a face, polishes his bugle or gives a thumbs up. Click him and
 he sounds his bugle, double-click him and he lets Old Thunderlung rip; he only
-makes a sound when you click him, and only with **UI sounds** on. Leave him
+makes a sound when you click him, and only with **Sounds** on. Leave him
 alone and he points at the step's button, then turns into one of his oil
-paintings until you come back. With **Cast characters** off in Settings the
+paintings until you come back. With **Major Blowhorn** off in Settings the
 rail shows no portrait, and with **Reduce motion** on in your Mac's
 accessibility settings he holds still. The same setting hides the periscope
 picture on the Chrome side panel's idle screen; the line under it stays. The
@@ -441,7 +448,7 @@ beside them; the rail names the screen, so it has no visible title.
   caps, each cap showing the built-in ceiling until you set a lower one. Below it,
   one row per section (by platform, speed and amount, when and who says yes, typing,
   pointer timing). Each row opens its settings in a window: a choice saves as you
-  make it, a typed value saves when you leave the field or close the window, and
+  make it, a typed value or a safety range saves when you leave the field or close the window, and
   **Reset to preset** puts the dials back.
 - **When a platform pushes back.** Each row opens a window holding the pause after a challenge, any sign-in that
   needs you (with **open Profiles ›**), how often sign-ins are checked, and the

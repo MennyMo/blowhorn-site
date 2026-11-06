@@ -11,6 +11,18 @@ Posts to the subreddit the activity's "Destination" names as `r/<name>`; with
 no subreddit the activity is skipped, never guessed. Comments when "Comment
 on" holds a Reddit post or comment address. Amplifies with an upvote.
 
+<!-- BEGIN generated limits: release/scripts/capabilities_docs/build.py; do not edit -->
+
+## Limits
+
+The limits Blowhorn knows for Reddit.
+
+| Limit | Value |
+|---|---|
+| Title | 300 |
+
+<!-- END generated limits -->
+
 ## Supported actions
 
 {{< supported-actions "reddit" >}}

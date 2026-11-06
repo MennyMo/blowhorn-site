@@ -37,7 +37,9 @@ and last error are kept. Raising `Max Retries` alone does not (see
 removes an activity by number. `blowhorn schedule validate` checks every activity
 against the schema. `blowhorn schedule bootstrap` previews or writes a
 starter set. `blowhorn schedule trigger-now` forces one activity to run
-immediately instead of waiting for the pass.
+immediately instead of waiting for the pass. A Risk Profile hold, including
+while a profile is warming up, keeps that run from starting until you confirm
+or pass `--ignore-risk`. A limit the platform publishes still applies.
 
 ## Recurrence
 
@@ -90,8 +92,9 @@ action (count, window, the platform's page and the day it was read), and
 that would go past one is cut to it, and the tick prints
 `Activity N: the brisk setting would allow … so this stops at …`. An
 activity whose published window is already full is held as
-`held by X's published limit (…)`, a `trigger-now` included: it skips the
-Posture checks, never the platform's own limit. The limits themselves
+`held by X's published limit (…)`, a `trigger-now` included. `--ignore-risk`
+passes the other Posture checks for that one run and still stops at the
+platform's own limit. The limits themselves
 are listed under
 [A limit the platform publishes is the one hard stop](/docs/how-to/settings/choose-your-rules-of-engagement/#a-limit-the-platform-publishes-is-the-one-hard-stop).
 

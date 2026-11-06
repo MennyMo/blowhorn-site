@@ -18,37 +18,36 @@ from.
 
 The guided setup does this for you. On **Confirm troops** you mark each
 Chrome profile in use or not in use, and **Getting ready**, the step
-after, adds the extension only to the ones you marked. If that is every
-Chrome profile on this computer, it uses Chrome's policy route: macOS
-asks for your administrator password once. When more than one profile is
-chosen, that one prompt covers every profile you chose. With one profile,
-it is one prompt for that profile. The password request is named
-**Blowhorn**: it is this install, and it writes Chrome's policy file once
-so Chrome installs the extension, turned on, in every profile you chose.
-Cancelling it writes nothing, and setup stops there and says why.
-Before it asks, Getting ready tells you the request is coming and waits
-for your Continue, so the prompt never appears over a screen that has
-not warned you about it yet. Chrome
-shows **Managed by your organization**; that is the install working, not
-a problem. There is nothing to click in each profile.
+after, adds the extension only to the ones you marked.
 
-If you left a profile out, no computer-wide file is written for the
-others: both files above reach every profile, so either would put the
-extension in the profile you left out. Each profile you chose instead
-gets it one at a time, with the **Enable in** steps below - Chrome opens
-Blowhorn's store page in that one profile, and your click there installs
-it only there. A profile you leave out is never given the extension by
-guided setup; if an earlier setup already put it there, setup cannot
+Before anything is written, Getting ready tells you what Blowhorn installs
+and waits for your **Continue**:
+
+- **On this computer:** a small helper in Chrome's `NativeMessagingHosts`
+  folder so Chrome can talk to Blowhorn, and three commands in
+  `~/.local/bin`: `blowhorn` (the CLI), `blowhorn-axi` and `blowhorn-mcp`.
+  `blowhorn-mcp` starts the MCP server that comes inside the app when an AI
+  assistant asks for it; nothing runs in the background. These belong to the
+  whole computer, not to a Chrome profile. The app writes none of them
+  before you choose Continue; once they exist it keeps them current on each
+  launch.
+- **In Google Chrome:** the Blowhorn extension, only in the profiles you
+  chose. Chrome opens Blowhorn's page in each one, and you choose **Enable
+  now** (or **Add to Chrome**) there.
+- **Everything else:** every other Chrome profile is left alone, and
+  nothing already installed is removed.
+
+Setup never asks for an administrator password and never installs for every
+profile at once. A profile you leave out is not touched, even when it
+already has the extension; if an earlier setup put it there, setup cannot
 remove it from that one profile - see
 [Leaving a Chrome profile out](/docs/how-to/set-up/first-muster-setup/#leaving-a-chrome-profile-out).
-
-A computer that already has the extension from an earlier setup - put
-there by Chrome's external-extensions file - stays on that route
-when you marked only some profiles in use. Chrome adds it turned off
-there, so each profile you marked in use needs one click:
+A profile that has the extension turned off is asked to turn it on; one
+that has none is asked to add it. A different version number is never
+treated as a break. Each chosen profile shows its own result:
 
 1. Next to a profile that says **Turned off** or **Not added yet**, press
-   **Enable in** and the profile's name.
+   **Enable in** and the profile's name if its page did not open.
 2. Chrome opens Blowhorn's store page in that profile. Click
    **Enable now** (or **Add to Chrome** if Chrome was already open).
 3. The profile reads **Ready** in the app within a few seconds. A
@@ -56,15 +55,19 @@ there, so each profile you marked in use needs one click:
    of opening the Blowhorn welcome page; outside guided setup, the
    welcome page is what opens.
 
-When every profile is marked in use, guided setup writes the policy
-file instead of staying on the external route, so Chrome turns the
-extension on everywhere with nothing to click in each profile.
+A Chrome profile you choose later - in **Profiles**, on its browser tab -
+goes through the same check and the same one-profile step as soon as you
+turn it on, and its result shows right there. **New order** does the same
+for the profile its desk is mapped to when it says the extension is
+missing. Chrome cannot be forced to update an extension from here: if a
+profile is on an older version, update it in that profile from
+`chrome://extensions`.
 
 If Getting ready says **This is taking longer than usual**, press
 **Start again**: Blowhorn stops the attempt still running and begins a new
 one.
 
-One ready profile is enough to carry on. On the external route, if a
+One ready profile is enough to carry on. If a
 profile still says **Not on yet** after a minute and a half, press
 **Open** and the profile's name **again**. You can turn it on in more
 profiles any time later.

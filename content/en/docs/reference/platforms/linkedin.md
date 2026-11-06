@@ -10,6 +10,14 @@ Blowhorn works on LinkedIn in your own signed-in Google Chrome, through the Blow
 Posts to the feed from an activity; comments on a post when the activity's "Comment on"
 holds its address; amplifies by reposting.
 
+<!-- BEGIN generated limits: release/scripts/capabilities_docs/build.py; do not edit -->
+
+## Limits
+
+No limits are recorded for LinkedIn.
+
+<!-- END generated limits -->
+
 ## Supported actions
 
 {{< supported-actions "linkedin" >}}

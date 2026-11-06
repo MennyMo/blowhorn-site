@@ -29,7 +29,7 @@ The `blowhorn chrome` commands. Each one's `--help` prints the same text.
 
 ## blowhorn chrome active-tab
 
-Ask the Chrome extension for the front tab's address and title, through the bridge, and print it. The popover's New order asks here first (#2007): a tab the extension answers needs no Apple Event, so macOS never prompts for Chrome. This command navigates nowhere, probes no tab's page, and contacts no platform: it reads only the front tab's own address and title, from the Chrome profile whose bridge answers first. No Chrome with the extension, a held bridge, or a Chrome with no front tab answers with no tab, and `--json` carries connected and a detail saying why. That read writes nothing but the bridge lock, the same lock `chrome extension-status` writes. `--json` emits the answer as one object, for a script or the desktop app.
+Ask the Chrome extension for the front tab's address and title, through the bridge, and print it. The popover's New order asks here first: it retries briefly and never uses Apple Events, so macOS never prompts for Chrome. If the live read has no tab, a reachable extension may return its last remembered normal-window HTTP(S) tab with stale and age fields. This command navigates nowhere, probes no tab's page, and contacts no platform: it reads only the front tab's own address and title, from the Chrome profile whose bridge answers first. No reachable extension or no live or remembered tab answers with no tab, and `--json` carries connected and a detail saying why. That read writes nothing but the bridge lock, the same lock `chrome extension-status` writes. `--json` emits the answer as one object, for a script or the desktop app.
 
 ```text
 blowhorn chrome active-tab [OPTIONS]

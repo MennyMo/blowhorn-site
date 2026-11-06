@@ -11,6 +11,14 @@ Sends a message as you to a channel, a person, or a thread. One
 profile sends. `blowhorn post --platform slack --message` sends one
 ad-hoc message with no queue activity.
 
+<!-- BEGIN generated limits: release/scripts/capabilities_docs/build.py; do not edit -->
+
+## Limits
+
+No limits are recorded for Slack.
+
+<!-- END generated limits -->
+
 ## Supported actions
 
 {{< supported-actions "slack" >}}

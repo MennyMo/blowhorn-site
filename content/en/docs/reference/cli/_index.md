@@ -91,6 +91,7 @@ and checked against it, so a page says what `--help` says.
 | [`blowhorn follow`](/docs/reference/cli/follow/) | Follow accounts on X, Bluesky, or GitHub. |
 | [`blowhorn github`](/docs/reference/cli/github/) | blowhorn github: squatters. |
 | [`blowhorn org`](/docs/reference/cli/org/) | blowhorn org: members. |
+| [`blowhorn platforms`](/docs/reference/cli/platforms/) | blowhorn platforms: capabilities. |
 | [`blowhorn post`](/docs/reference/cli/post/) | Publish pending posts or amplify existing content across supported platforms. |
 | [`blowhorn profile`](/docs/reference/cli/profile/) | blowhorn profile: accounts, auth, create, current, delete, get, list, set, status, switch, update. |
 | [`blowhorn report`](/docs/reference/cli/report/) | Generate a consolidated report summary from the exports already sitting in the repository-root data/analytics/ directory. |
