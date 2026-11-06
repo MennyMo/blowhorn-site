@@ -1,0 +1,26 @@
+{{- /* One line for an operation's security requirement, from the exporter's
+  materialised "security" list: "No authentication", or the scheme names
+  joined by "or" (an HTTP bearer scheme reads "Bearer token"), with scopes in
+  brackets. Returns "" when the operation has no security key. Context: dict
+  operation, schemes. */ -}}
+{{- $schemes := .schemes | default dict -}}
+{{- $summary := "" -}}
+{{- if isset .operation "security" -}}
+  {{- $security := index .operation "security" -}}
+  {{- if not $security -}}
+    {{- $summary = "No authentication" -}}
+  {{- else -}}
+    {{- $items := slice -}}
+    {{- range $security -}}
+      {{- range $name, $scopes := . -}}
+        {{- $item := replace $name "_" " " | title -}}
+        {{- $scheme := index $schemes $name -}}
+        {{- if and $scheme (eq (lower (index $scheme "type")) "http") (eq (lower (index $scheme "scheme" | default "")) "bearer") }}{{ $item = "Bearer token" }}{{ end -}}
+        {{- if gt (len $scopes) 0 }}{{ $item = printf "%s (%s)" $item (delimit $scopes ", ") }}{{ end -}}
+        {{- if not (in $items $item) }}{{ $items = $items | append $item }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $summary = delimit $items " or " -}}
+  {{- end -}}
+{{- end -}}
+{{- return $summary -}}

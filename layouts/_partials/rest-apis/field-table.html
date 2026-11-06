@@ -1,0 +1,31 @@
+{{- /* A table of fields: name (with a required marker), type, and description
+  with allowed values and default. Narrow screens stack each row (CSS). Rows
+  come from schema-fields.html, or are parameters mapped to the same shape.
+  Context: dict rows, schemas, caption. */ -}}
+{{- $schemas := .schemas | default dict -}}
+<table class="api-table">
+  <caption class="visually-hidden">{{ .caption }}</caption>
+  <thead>
+    <tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Description</th></tr>
+  </thead>
+  <tbody>
+    {{- range .rows }}
+    {{- $schema := .schema -}}
+    {{- $resolved := .resolved | default $schema -}}
+    {{- $desc := "" -}}
+    {{- if reflect.IsMap $schema }}{{ $desc = index $schema "description" | default (index $resolved "description") | default "" }}{{ end }}
+    {{- if .description }}{{ $desc = .description }}{{ end }}
+    <tr>
+      <th scope="row" class="api-field"><code>{{ .name }}</code>{{ if .required }} <span class="api-chip">required</span>{{ end }}{{ if and (reflect.IsMap $resolved) (index $resolved "deprecated") }} <span class="api-chip">deprecated</span>{{ end }}</th>
+      <td class="api-type">{{ partial "rest-apis/schema-type.html" (dict "schema" $schema "schemas" $schemas) }}</td>
+      <td class="api-desc">
+        {{- with $desc }}<div class="api-prose">{{ partial "rest-apis/prose.html" . }}</div>{{ end }}
+        {{- if reflect.IsMap $resolved }}
+        {{- with index $resolved "enum" }}<p class="api-hint">Values: {{ range $i, $v := . }}{{ if $i }}, {{ end }}<code>{{ $v }}</code>{{ end }}</p>{{ end }}
+        {{- if isset $resolved "default" }}<p class="api-hint">Default: <code>{{ index $resolved "default" | jsonify (dict "noHTMLEscape" true) }}</code></p>{{ end }}
+        {{- end }}
+      </td>
+    </tr>
+    {{- end }}
+  </tbody>
+</table>

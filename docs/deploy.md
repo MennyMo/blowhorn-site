@@ -205,6 +205,10 @@ make check         # production build, html-validate, link, third-party and cont
 make site          # http://localhost:1313 with live reload
 ```
 
+## API reference
+
+The reference page for the product's operations (`/docs/reference/api/`) is built but not enabled; see [api-reference.md](api-reference.md). `make check-api-reference` runs in `site-check` and does nothing while `params.apiReference.spec` is empty.
+
 ## Product docs sync
 
 The user docs under `/docs/` live in the private product repository

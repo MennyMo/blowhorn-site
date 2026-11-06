@@ -81,3 +81,25 @@ Copyright (c) 2014 - 2022 Knut Sveidqvist
 are unchanged; the attribution comment no longer names a blog URL (same
 reason as above) and results render in an inline box instead of a Bootstrap
 popover, because Bootstrap's JavaScript is not shipped.
+
+## REST API reference viewer (Layer5, Inc., Apache-2.0)
+
+The API reference viewer is adapted from the `rest-apis` layout of
+[layer5io/docs](https://github.com/layer5io/docs) at commit
+`fe5e2f3c2199e28788302ef1f8e96ce011887a76` (its `LICENSE` is the Apache License,
+Version 2.0, the same license as this repository's `LICENSE`; that commit has
+no `NOTICE` file). Adapted, with the changes stated:
+
+| Here | Source in layer5io/docs | Changes |
+|---|---|---|
+| `layouts/docs/rest-apis.html` | `layouts/docs/rest-apis.html` | Blowhorn's docs shell and partials, no Docsy extras (related reading, discussions, comments) |
+| `layouts/_partials/rest-apis/viewer.html` | `layouts/partials/rest-apis/viewer.html` | operations collected and tags ordered the same way; two-pane viewer replaced by one native `<details>` per operation; servers and "Try this endpoint" removed; one media/table partial instead of four copies; Layer5 wording removed; script moved to `assets/js/api-reference.js` and rewritten |
+| `.../spec.html` | `.../spec.html` | spec path from the `params.apiReference.spec` site param, build fails when it is unusable |
+| `.../is-public.html` | `.../is-operation-included.html` | audience is `public` (upstream: `cloud`) |
+| `.../schema-resolve.html`, `schema-type.html`, `schema-fields.html`, `example.html`, `auth-summary.html` | `schema-source.html`, `schema-type.html`, `schema-properties.html`, `content-example.html`, `auth-summary.html` | depth-capped `$ref`, OpenAPI 3.1+ type lists, nested field rows, `anyOf`; examples pretty-printed |
+
+The upstream `tag-meta.html`, `tag-subsection-meta.html` and
+`assets/scss/_rest-api-reference.scss` are not copied: tag labels are
+`x-displayName` or the humanised tag name, and `assets/css/api-reference.css` is
+written against Blowhorn's tokens. Nothing is loaded from layer5io/docs at build
+or run time. Layer5's `head`, navbar, footer and tracking are not used.

@@ -1,0 +1,26 @@
+{{- /* The API reference page: /docs/ shell, the page's own Markdown first (the
+  intro and anything the owner adds), then the operations from
+  rest-apis/viewer.html. Used by a page whose front matter says
+  `layout: rest-apis`; the spec path is the site param params.apiReference.spec
+  (docs/api-reference.md). No page uses it until the spec is exported, so a
+  site without one builds exactly as before. The stylesheet and script load
+  only here. */ -}}
+{{ define "head" -}}
+{{- $css := resources.Get "css/api-reference.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{- end }}
+
+{{ define "main" -}}
+<div class="prose docs-page api-page">
+  <h1 class="h1">{{ .Title }}</h1>
+  {{ with .Description -}}
+  <p class="body-lg docs-lead">{{ . | markdownify }}</p>
+  {{ end -}}
+  {{ partial "docs-content.html" . }}
+  {{ partial "rest-apis/viewer.html" . }}
+  {{ partial "page-meta-lastmod.html" . -}}
+</div>
+{{- $js := resources.Get "js/api-reference.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+{{- partial "docs-sibling-pager.html" . -}}
+{{ end -}}

@@ -1,0 +1,36 @@
+{{- /* The body of a request or a response: for each content type, its fields
+  as a table (or each variant of a oneOf/anyOf), else the type name, and the
+  example in a code card. Context: dict content, schemas, example (the code
+  card's label), id (a unique prefix for captions). */ -}}
+{{- $schemas := .schemas | default dict -}}
+{{- $multi := gt (len .content) 1 -}}
+{{- range $ctype, $media := .content }}
+{{- $schema := index $media "schema" | default dict -}}
+{{- $resolved := partial "rest-apis/schema-resolve.html" (dict "schema" $schema "schemas" $schemas) -}}
+{{- $rows := partial "rest-apis/schema-fields.html" (dict "schema" $schema "schemas" $schemas) -}}
+<div class="api-media">
+  {{- if $multi }}<p class="api-media-type"><code>{{ $ctype }}</code></p>{{ end }}
+  {{- with and (reflect.IsMap $resolved) (index $resolved "description") }}<div class="api-prose">{{ partial "rest-apis/prose.html" . }}</div>{{ end }}
+  {{- if gt (len $rows) 0 }}
+  {{ partial "rest-apis/field-table.html" (dict "rows" $rows "schemas" $schemas "caption" (printf "%s fields" $.id)) }}
+  {{- else if and (reflect.IsMap $resolved) (or (index $resolved "oneOf") (index $resolved "anyOf")) }}
+  <div class="api-variants">
+    {{- range (or (index $resolved "oneOf") (index $resolved "anyOf")) }}
+    {{- $vrows := partial "rest-apis/schema-fields.html" (dict "schema" . "schemas" $schemas) }}
+    <div class="api-variant">
+      <p class="api-variant-title">{{ index . "title" | default (partial "rest-apis/schema-type.html" (dict "schema" . "schemas" $schemas)) }}</p>
+      {{- if gt (len $vrows) 0 }}
+      {{ partial "rest-apis/field-table.html" (dict "rows" $vrows "schemas" $schemas "caption" "Variant fields") }}
+      {{- end }}
+    </div>
+    {{- end }}
+  </div>
+  {{- else }}
+  <p class="api-muted">Schema: <code>{{ partial "rest-apis/schema-type.html" (dict "schema" $schema "schemas" $schemas) }}</code></p>
+  {{- end }}
+  {{- $example := partial "rest-apis/example.html" $media }}
+  {{- if $example }}
+  {{ partial "code-card.html" (dict "code" $example "title" $.example "lang" (cond (strings.Contains $ctype "json") "json" "text") "copy" true) }}
+  {{- end }}
+</div>
+{{- end }}

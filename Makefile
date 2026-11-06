@@ -53,6 +53,13 @@ include .github/build/Makefile.show-help.mk
 #                      (/integrations/actions/) or the docs all-actions table
 #                      drifts from data/actions.json plus data/platforms/, or
 #                      links to a dead page or anchor.
+#   check-api-reference Production build, then (once params.apiReference.spec is set)
+#                      fail if the API reference page drifts from its spec, loses
+#                      its "Not an HTTP API" notice or names the private repository.
+#   api-reference-export
+#                      Write the public API spec from a local OpenAPI file:
+#                      make api-reference-export API_SPEC_SRC=path/to/openapi.yaml
+#                      (docs/api-reference.md).
 #   site-internal-build
 #                      Internal build (hugo --environment internal, mounting
 #                      BLOWHORN_DIR, default ../blowhorn) into public-internal/.
@@ -113,6 +120,9 @@ BLOWHORN_DIR ?= ../blowhorn
 BLOWHORN_ABS = $(abspath $(BLOWHORN_DIR))
 BLOWHORN_MODULE := github.com/blowhorn-ai/blowhorn
 DOCS_DIR ?= content/en/docs
+# Where `make api-reference-export` writes the public API spec (the value of
+# params.apiReference.spec in hugo.toml once the reference page is enabled).
+API_SPEC_OUT ?= api/openapi.public.json
 # Branch the sync-docs.yml workflow pushes and opens its pull request from.
 SYNC_BRANCH ?= docs-sync
 # The internal site's hosting workflow (site-internal-deploy) and its blowhorn ref.
@@ -311,7 +321,7 @@ check-action-matrix: site-build
 	python3 .github/scripts/check_action_matrix.py $(BUILD_DIR)
 
 ## Build for production once, then validate-html, check-links, check-third-party and check-urls, plus check-schemas (what site.yml runs).
-site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-download-links check-feeds check-brand-kits check-tells check-tips
+site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-download-links check-feeds check-brand-kits check-tells check-tips check-api-reference
 
 ## Production build, then fail if any built page or script links to /releases/latest/download (an axi release can hold Latest; build download URLs from data/download.json).
 check-download-links: site-build
@@ -332,6 +342,15 @@ check-tips:
 ## Production build, then fail if a Blowhorn Tells placement (data/tells.json) left its page or a Tells link lost its UTM tags.
 check-tells: site-build
 	python3 .github/scripts/check_tells.py $(BUILD_DIR)
+
+## Production build, then, once params.apiReference.spec is set, fail if the API reference page drifts from its spec, drops the "Not an HTTP API" notice or mentions the private repository. Passes (and checks nothing) while the param is empty.
+check-api-reference: site-build
+	python3 .github/scripts/check_api_reference.py $(BUILD_DIR)
+
+## Write the public API spec the reference page renders from a LOCAL OpenAPI file: make api-reference-export API_SPEC_SRC=path/to/openapi.yaml [API_SPEC_OUT=api/openapi.public.json]. Fetching the product schema is not wired here (docs/api-reference.md).
+api-reference-export:
+	@test -n "$(API_SPEC_SRC)" || { echo "Error: pass API_SPEC_SRC=path/to/openapi.yaml (a local file; nothing is fetched)."; exit 1; }
+	python3 .github/scripts/openapi_export.py "$(API_SPEC_SRC)" "$(API_SPEC_OUT)"
 
 ## Production build, then fail if a page says Layer5 Cloud or Blowhorn Cloud, or names Layer5 outside the footer and the legal pages (users see Blowhorn).
 check-naming: site-build
@@ -487,6 +506,8 @@ clean:
 	check-feeds \
 	check-tips \
 	check-tells \
+	check-api-reference \
+	api-reference-export \
 	check-theme \
 	check-platform-docs \
 	check-action-matrix \

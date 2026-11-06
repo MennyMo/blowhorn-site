@@ -1,0 +1,10 @@
+{{- /* Spec text as plain text paragraphs (blank-line separated), never Markdown.
+  Deliberate: the site renders goldmark with unsafe on, so Markdown here would
+  let a schema inject raw HTML, and escaping first breaks code spans, fences
+  and quotes (`blowhorn <command>` would show &lt;). Plain text is escaped once,
+  by html/template, and shows exactly what the spec says. Markdown syntax in a
+  description appears as written. docs/api-reference.md, "Descriptions".
+  Context: a string. */ -}}
+{{- range split (replace (printf "%v" .) "\r\n" "\n") "\n\n" -}}
+  {{- with strings.TrimSpace . }}<p>{{ . }}</p>{{ end -}}
+{{- end -}}

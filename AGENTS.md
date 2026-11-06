@@ -122,6 +122,15 @@ regenerate them. Claims on every page come from the product repository's
   and pass for current output. Hugo has no config-level default for this; the flag
   rides on the command line, so keep it on any new invocation.
 
+## API reference
+
+The public API reference (layout `rest-apis`, `layouts/_partials/rest-apis/`) renders only a spec exported by
+`.github/scripts/openapi_export.py` and named by `params.apiReference.spec`; it is off while that is empty.
+Only operations whose `x-internal` lists `public` ship, it never shows a server URL (the product has no HTTP
+listener), and its page must be a site-only `_index.md` so the docs sync keeps it. Read
+[docs/api-reference.md](docs/api-reference.md) before touching it. The fixture under `tests/openapi/` is
+synthetic: never copy it into `content/` or `data/`.
+
 ## CI runs through make
 
 Every CI step that runs repository logic is a Makefile target and the workflow calls it

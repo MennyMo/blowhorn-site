@@ -1,0 +1,46 @@
+{{- /* A short type label for a schema: string, integer (int64), array of Widget,
+  one of A, B, Widget | null. Names a $ref by its component name and does not
+  follow it, so it always terminates. Handles OpenAPI 3.0 (nullable) and
+  3.1+ (type lists with "null"). Context: dict schema, schemas. */ -}}
+{{- $schema := .schema -}}
+{{- $label := "any" -}}
+{{- if reflect.IsMap $schema -}}
+  {{- $nullable := index $schema "nullable" | default false -}}
+  {{- $type := index $schema "type" -}}
+  {{- if reflect.IsSlice $type -}}
+    {{- $names := slice -}}
+    {{- range $type }}{{ if eq . "null" }}{{ $nullable = true }}{{ else }}{{ $names = $names | append . }}{{ end }}{{ end -}}
+    {{- $type = delimit $names " or " -}}
+  {{- end -}}
+  {{- if index $schema "$ref" -}}
+    {{- $label = path.Base (index $schema "$ref") -}}
+  {{- else if eq $type "array" -}}
+    {{- $item := "" -}}
+    {{- with index $schema "items" }}{{ $item = partial "rest-apis/schema-type.html" (dict "schema" . "schemas" $.schemas) }}{{ end -}}
+    {{- $label = cond (ne $item "") (printf "array of %s" $item) "array" -}}
+  {{- else if $type -}}
+    {{- $label = $type -}}
+    {{- with index $schema "format" }}{{ $label = printf "%s (%s)" $label . }}{{ end -}}
+  {{- else if index $schema "oneOf" -}}
+    {{- $parts := slice -}}
+    {{- range index $schema "oneOf" }}{{ $parts = $parts | append (index . "title" | default (partial "rest-apis/schema-type.html" (dict "schema" . "schemas" $.schemas))) }}{{ end -}}
+    {{- $label = printf "one of %s" (delimit $parts ", ") -}}
+  {{- else if index $schema "anyOf" -}}
+    {{- $parts := slice -}}
+    {{- range index $schema "anyOf" }}{{ $parts = $parts | append (index . "title" | default (partial "rest-apis/schema-type.html" (dict "schema" . "schemas" $.schemas))) }}{{ end -}}
+    {{- $label = printf "any of %s" (delimit $parts ", ") -}}
+  {{- else if index $schema "allOf" -}}
+    {{- $all := index $schema "allOf" -}}
+    {{- if and (eq (len $all) 1) (index (index $all 0) "$ref") -}}
+      {{- $label = path.Base (index (index $all 0) "$ref") -}}
+    {{- else -}}
+      {{- $label = "object" -}}
+    {{- end -}}
+  {{- else if index $schema "properties" -}}
+    {{- $label = "object" -}}
+  {{- else if index $schema "enum" -}}
+    {{- $label = "enum" -}}
+  {{- end -}}
+  {{- if and $nullable (ne $label "any") }}{{ $label = printf "%s | null" $label }}{{ end -}}
+{{- end -}}
+{{- return $label -}}

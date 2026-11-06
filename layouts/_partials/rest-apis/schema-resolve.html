@@ -1,0 +1,37 @@
+{{- /* A schema with its $ref followed and its allOf merged, so a caller can
+  read type, properties and required directly. A resolved $ref carries
+  "x-ref" (the component name). Depth-capped: a self-referencing schema
+  (a tree node) stops instead of looping. Only #/components/schemas/<name>
+  refs exist in the exporter's output. Context: dict schema, schemas, depth. */ -}}
+{{- $schema := .schema -}}
+{{- $schemas := .schemas | default dict -}}
+{{- $depth := .depth | default 0 -}}
+{{- $out := $schema -}}
+{{- if and (reflect.IsMap $schema) (lt $depth 8) -}}
+  {{- with index $schema "$ref" -}}
+    {{- $name := path.Base . -}}
+    {{- with index $schemas $name -}}
+      {{- $out = partial "rest-apis/schema-resolve.html" (dict "schema" . "schemas" $schemas "depth" (add $depth 1)) -}}
+      {{- $out = merge $out (dict "x-ref" $name) -}}
+      {{- with index $schema "description" }}{{ $out = merge $out (dict "description" .) }}{{ end -}}
+    {{- end -}}
+  {{- else -}}
+    {{- with index $schema "allOf" -}}
+      {{- $properties := dict -}}
+      {{- $required := slice -}}
+      {{- $type := index $schema "type" | default "object" -}}
+      {{- $description := index $schema "description" | default "" -}}
+      {{- range . -}}
+        {{- $part := partial "rest-apis/schema-resolve.html" (dict "schema" . "schemas" $schemas "depth" (add $depth 1)) -}}
+        {{- with index $part "properties" }}{{ $properties = merge $properties . }}{{ end -}}
+        {{- range (index $part "required" | default slice) }}{{ if not (in $required .) }}{{ $required = $required | append . }}{{ end }}{{ end -}}
+        {{- if and (not $description) (index $part "description") }}{{ $description = index $part "description" }}{{ end -}}
+      {{- end -}}
+      {{- with index $schema "properties" }}{{ $properties = merge $properties . }}{{ end -}}
+      {{- range (index $schema "required" | default slice) }}{{ if not (in $required .) }}{{ $required = $required | append . }}{{ end }}{{ end -}}
+      {{- $out = dict "type" $type "properties" $properties "required" $required -}}
+      {{- if $description }}{{ $out = merge $out (dict "description" $description) }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

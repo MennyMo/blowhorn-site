@@ -173,6 +173,16 @@ renderSegments = ["public"]
   offlineSearch = true
   offlineSearchMaxResults = 10
 
+# The API reference (layout rest-apis, docs/api-reference.md). `spec` is the
+# path, inside this project, of the public OpenAPI JSON that
+# .github/scripts/openapi_export.py writes. Empty is the shipped state: no page
+# uses the layout, so nothing renders and no check needs the file. HUGO_PARAMS_APIREFERENCE_SPEC
+# overrides it for a single build (the viewer's tests do).
+[params.apiReference]
+  # Public OpenAPI export from blowhorn schemas/dist/openapi.yaml (104 ops).
+  # Regenerate: make api-reference-export API_SPEC_SRC=path/to/openapi.yaml
+  spec = "api/openapi.public.json"
+
 [params.llms]
   generate_llms_txt = true
   generate_llms_full_txt = true

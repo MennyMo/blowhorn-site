@@ -1,0 +1,43 @@
+{{- /* The rows of a field table for a schema: one per property, ordered by
+  x-order then name, with the fields of a nested object listed right after it
+  as "parent.child" (an array of objects as "parent[].child"), two levels
+  down at most. A schema already being listed (a recursive $ref) is not
+  expanded again. An array-of-objects body lists the item fields. Returns a
+  slice of dicts: name, schema (the property as written), resolved, required.
+  Context: dict schema, schemas, prefix, depth, seen. */ -}}
+{{- $schemas := .schemas | default dict -}}
+{{- $prefix := .prefix | default "" -}}
+{{- $depth := .depth | default 0 -}}
+{{- $seen := .seen | default slice -}}
+{{- $resolved := partial "rest-apis/schema-resolve.html" (dict "schema" .schema "schemas" $schemas) -}}
+{{- if and (reflect.IsMap $resolved) (eq (index $resolved "type") "array") (index $resolved "items") -}}
+  {{- $prefix = printf "%s[]." (strings.TrimSuffix "." $prefix) -}}
+  {{- $resolved = partial "rest-apis/schema-resolve.html" (dict "schema" (index $resolved "items") "schemas" $schemas) -}}
+{{- end -}}
+{{- $rows := slice -}}
+{{- if reflect.IsMap $resolved -}}
+  {{- with index $resolved "x-ref" }}{{ $seen = $seen | append . }}{{ end -}}
+  {{- $required := index $resolved "required" | default slice -}}
+  {{- $level := slice -}}
+  {{- range $name, $property := (index $resolved "properties" | default dict) -}}
+    {{- $order := 9999 -}}
+    {{- if reflect.IsMap $property }}{{ with index $property "x-order" }}{{ $order = . }}{{ end }}{{ end -}}
+    {{- $level = $level | append (dict "name" $name "order" $order "schema" $property) -}}
+  {{- end -}}
+  {{- $level = sort (sort $level "name") "order" -}}
+  {{- range $level -}}
+    {{- $property := .schema -}}
+    {{- $child := partial "rest-apis/schema-resolve.html" (dict "schema" $property "schemas" $schemas) -}}
+    {{- $rows = $rows | append (dict "name" (printf "%s%s" $prefix .name) "schema" $property "resolved" $child "required" (in $required .name)) -}}
+    {{- if and (lt $depth 2) (reflect.IsMap $child) -}}
+      {{- $isArray := and (eq (index $child "type") "array") (index $child "items") -}}
+      {{- $target := cond $isArray (partial "rest-apis/schema-resolve.html" (dict "schema" (index $child "items") "schemas" $schemas)) $child -}}
+      {{- $ref := index $target "x-ref" | default "" -}}
+      {{- if and (reflect.IsMap $target) (index $target "properties") (not (and $ref (in $seen $ref))) -}}
+        {{- $sub := partial "rest-apis/schema-fields.html" (dict "schema" $target "schemas" $schemas "prefix" (printf "%s%s%s." $prefix .name (cond $isArray "[]" "")) "depth" (add $depth 1) "seen" $seen) -}}
+        {{- $rows = $rows | append $sub -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $rows -}}

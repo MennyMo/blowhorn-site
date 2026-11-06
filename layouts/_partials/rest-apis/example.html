@@ -1,0 +1,32 @@
+{{- /* The example for a media type object, as the text to show: the media
+  type's example, else its first named example's value, else the schema's own
+  example. JSON content is pretty-printed; anything else is shown as written.
+  Returns "" when there is none. Context: the media type map. */ -}}
+{{- $media := . -}}
+{{- $value := "" -}}
+{{- $found := false -}}
+{{- if isset $media "example" -}}
+  {{- $value = index $media "example" -}}{{- $found = true -}}
+{{- else -}}
+  {{- range $name, $item := (index $media "examples" | default dict) -}}
+    {{- if and (not $found) (reflect.IsMap $item) (isset $item "value") -}}
+      {{- $value = index $item "value" -}}{{- $found = true -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if not $found -}}
+    {{- with index $media "schema" -}}
+      {{- if and (reflect.IsMap .) (isset . "example") }}{{ $value = index . "example" }}{{ $found = true }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $text := "" -}}
+{{- if $found -}}
+  {{- if or (reflect.IsMap $value) (reflect.IsSlice $value) -}}
+    {{- $text = $value | jsonify (dict "indent" "  " "noHTMLEscape" true) -}}
+  {{- else if eq (printf "%T" $value) "string" -}}
+    {{- $text = $value -}}
+  {{- else -}}
+    {{- $text = $value | jsonify (dict "noHTMLEscape" true) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $text -}}

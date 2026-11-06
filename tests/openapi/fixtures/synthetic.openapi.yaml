@@ -1,0 +1,221 @@
+# SYNTHETIC TEST FIXTURE. This is NOT the Blowhorn API and describes no real
+# operation. It exists only to exercise .github/scripts/openapi_export.py and
+# the API reference viewer. Never copy it into content/, data/ or a page.
+openapi: 3.2.1
+info:
+  title: SYNTHETIC FIXTURE - not the Blowhorn API
+  version: 0.0.0-synthetic
+  description: >-
+    Synthetic fixture for tests only. Contains no real operation.
+  contact:
+    url: https://contact.synthetic-fixture.invalid/
+  license:
+    name: Synthetic
+    url: https://license.synthetic-fixture.invalid/
+servers:
+  - url: https://api.synthetic-fixture.invalid
+    description: A listener the product does not ship
+externalDocs:
+  url: https://docs.synthetic-fixture.invalid/
+security:
+  - synthetic_bearer: []
+tags:
+  - name: Synthetic_Widgets
+    x-displayName: Synthetic widgets
+    description: Operations on made-up widgets.
+    externalDocs:
+      url: https://docs.synthetic-fixture.invalid/widgets
+  - name: Synthetic_Gadgets
+    x-displayName: Synthetic gadgets
+  - name: Synthetic_CloudOnly
+    description: Only cloud-audience operations; must vanish.
+x-tagGroups:
+  - name: Synthetic group
+    tags: [Synthetic_Widgets, Synthetic_Gadgets]
+  - name: Cloud only group
+    tags: [Synthetic_CloudOnly]
+webhooks:
+  syntheticHook:
+    post:
+      x-internal: [public]
+      responses:
+        "200": {description: never exported}
+paths:
+  /synthetic-fixture/widgets/{widgetId}:
+    parameters:
+      - name: widgetId
+        in: path
+        required: true
+        description: Path-level parameter, replaced by the operation's own.
+        schema: {type: string}
+      - $ref: "#/components/parameters/Verbose"
+    servers:
+      - url: https://path.synthetic-fixture.invalid
+    post:
+      operationId: syntheticUpdateWidget
+      summary: SYNTHETIC update a widget
+      description: >-
+        Synthetic. Raw HTML must stay text: <b>bold</b> <script>window.pwned = 1</script>
+        and `code` stays code.
+      tags: [Synthetic_Widgets]
+      x-internal: [public, cloud]
+      x-vendor-secret: dropped
+      externalDocs:
+        url: https://docs.synthetic-fixture.invalid/update
+      servers:
+        - url: https://op.synthetic-fixture.invalid
+      callbacks:
+        onDone: {}
+      parameters:
+        - name: widgetId
+          in: path
+          required: true
+          description: Operation-level parameter that replaces the path-level one.
+          schema: {type: integer, format: int64}
+        - name: mode
+          in: query
+          schema: {type: string, enum: [on, off, no, yes]}
+      requestBody:
+        $ref: "#/components/requestBodies/WidgetBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/WidgetOk"
+        "404":
+          description: Not found
+  /synthetic-fixture/widgets:
+    post:
+      operationId: syntheticListWidgets
+      summary: SYNTHETIC list widgets
+      tags: [Synthetic_Widgets]
+      x-internal: public
+      security: []
+      responses:
+        "200":
+          description: A list of synthetic widgets
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: "#/components/schemas/Widget"}
+              examples:
+                first:
+                  summary: One widget
+                  value: [{id: 1, label: SYNTHETIC, released: 2026-01-01}]
+                remote:
+                  externalValue: https://example.synthetic-fixture.invalid/x.json
+  /synthetic-fixture/gadgets:
+    post:
+      operationId: syntheticGadget
+      summary: SYNTHETIC gadget with a recursive schema
+      tags: [Synthetic_Gadgets]
+      x-internal: [public]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/Node"}
+            example: {value: root, children: []}
+      responses:
+        "204": {description: No content}
+  /synthetic-fixture/cloud-only:
+    post:
+      operationId: syntheticCloudOnly
+      summary: SYNTHETIC cloud-only operation
+      tags: [Synthetic_CloudOnly]
+      x-internal: [cloud]
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CloudOnlySchema"}
+      responses:
+        "200": {description: Must never be exported}
+  /synthetic-fixture/unmarked:
+    post:
+      operationId: syntheticUnmarked
+      summary: SYNTHETIC operation with no x-internal
+      tags: [Synthetic_Widgets]
+      responses:
+        "200": {description: Missing audience fails closed}
+  /synthetic-fixture/shouting:
+    post:
+      operationId: syntheticShouting
+      summary: SYNTHETIC wrong-case audience
+      x-internal: [Public]
+      responses:
+        "200": {description: Public is not public}
+  /synthetic-fixture/boolean:
+    post:
+      operationId: syntheticBoolean
+      summary: SYNTHETIC boolean audience
+      x-internal: true
+      responses:
+        "200": {description: A boolean is not an audience}
+components:
+  securitySchemes:
+    synthetic_bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Synthetic bearer token.
+    synthetic_oauth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.synthetic-fixture.invalid/authorize
+          tokenUrl: https://auth.synthetic-fixture.invalid/token
+          scopes: {read: Read}
+  parameters:
+    Verbose:
+      name: verbose
+      in: query
+      description: Synthetic shared parameter.
+      schema: {type: boolean}
+  requestBodies:
+    WidgetBody:
+      required: true
+      description: Synthetic request body.
+      content:
+        application/json:
+          schema: {$ref: "#/components/schemas/WidgetInput"}
+  responses:
+    WidgetOk:
+      description: The updated synthetic widget
+      headers:
+        X-Synthetic: {schema: {type: string}}
+      content:
+        application/json:
+          schema: {$ref: "#/components/schemas/Widget"}
+  schemas:
+    Widget:
+      type: object
+      required: [id]
+      x-go-type: dropped
+      properties:
+        id: {type: integer, x-order: 1}
+        label: {type: [string, "null"], description: A synthetic label., x-order: 2}
+        x-weird: {type: string, description: A property literally named x-weird.}
+        externalDocs: {type: string, description: A property literally named externalDocs.}
+        owner: {$ref: "#/components/schemas/Owner"}
+    WidgetInput:
+      allOf:
+        - $ref: "#/components/schemas/Widget"
+        - type: object
+          properties:
+            note: {type: string}
+    Owner:
+      type: object
+      properties:
+        name: {type: string}
+    Node:
+      type: object
+      properties:
+        value: {type: string}
+        children:
+          type: array
+          items: {$ref: "#/components/schemas/Node"}
+    CloudOnlySchema:
+      type: object
+      properties:
+        secret: {type: string}
+    UnusedSchema:
+      type: object

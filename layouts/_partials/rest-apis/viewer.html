@@ -1,0 +1,165 @@
+{{- /* The API reference: operations grouped by resource (OpenAPI tag), each a
+  native <details> disclosure, closed until opened. Everything works without
+  JavaScript; assets/js/api-reference.js adds a filter, expand all and
+  opening the operation a #fragment names.
+
+  Adapted from layer5io/docs layouts/partials/rest-apis/viewer.html (Apache-2.0;
+  THIRD-PARTY-NOTICES.md): the operation collection, tag ordering and
+  request/response sections follow it, with the two-pane layout, per-theme
+  skin and Layer5 wording replaced. Not rendered on purpose: servers (the
+  product ships no HTTP listener), "try it" URLs, external docs.
+
+  Context: the page. The spec comes from rest-apis/spec.html. */ -}}
+{{- $spec := partial "rest-apis/spec.html" . -}}
+{{- $components := index $spec "components" | default dict -}}
+{{- $schemas := index $components "schemas" | default dict -}}
+{{- $schemes := index $components "securitySchemes" | default dict -}}
+
+{{- /* Tag display names and the order resources appear in: x-tagGroups, then
+  the tags list, then any tag only an operation names. */ -}}
+{{- $tagLabels := dict -}}
+{{- $tagText := dict -}}
+{{- $order := slice -}}
+{{- range (index $spec "x-tagGroups" | default slice) }}{{ range .tags }}{{ if not (in $order .) }}{{ $order = $order | append . }}{{ end }}{{ end }}{{ end -}}
+{{- range (index $spec "tags" | default slice) -}}
+  {{- $name := .name -}}
+  {{- if not (in $order $name) }}{{ $order = $order | append $name }}{{ end -}}
+  {{- $label := index . "x-displayName" | default (replace $name "_" " " | title) -}}
+  {{- $tagLabels = merge $tagLabels (dict $name $label) -}}
+  {{- with index . "description" }}{{ $tagText = merge $tagText (dict $name .) }}{{ end -}}
+{{- end -}}
+
+{{- $methods := slice "get" "post" "put" "patch" "delete" "options" "head" "trace" "query" -}}
+{{- $ops := slice -}}
+{{- $ids := slice -}}
+{{- range $path, $item := (index $spec "paths" | default dict) -}}
+  {{- range $methods -}}
+    {{- $method := . -}}
+    {{- with index $item $method -}}
+      {{- if partial "rest-apis/is-public.html" . -}}
+        {{- $tag := "Ungrouped" -}}
+        {{- with index . "tags" }}{{ with index . 0 }}{{ $tag = . }}{{ end }}{{ end -}}
+        {{- $slug := strings.Trim (lower (replaceRE "[^a-zA-Z0-9]+" "-" $path)) "-" | default "root" -}}
+        {{- $id := printf "%s-%s" $method $slug -}}
+        {{- range seq 2 99 }}{{ if in $ids $id }}{{ $id = printf "%s-%s-%d" $method $slug . }}{{ end }}{{ end -}}
+        {{- $ids = $ids | append $id -}}
+        {{- if not (in $order $tag) }}{{ $order = $order | append $tag }}{{ end -}}
+        {{- $ops = $ops | append (dict "id" $id "path" $path "method" $method "tag" $tag "data" .) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $ops -}}
+  {{- errorf "%s: the API spec has no public operation (x-internal must list \"public\"); nothing to publish" .File.Path -}}
+{{- end -}}
+
+{{- /* Groups, in order, that have operations. */ -}}
+{{- $groups := slice -}}
+{{- range $order -}}
+  {{- $tag := . -}}
+  {{- $list := where $ops "tag" $tag -}}
+  {{- if $list -}}
+    {{- $label := index $tagLabels $tag | default (replace $tag "_" " " | title) -}}
+    {{- $groups = $groups | append (dict "tag" $tag "label" $label "slug" (printf "resource-%s" (urlize $tag)) "text" (index $tagText $tag | default "") "ops" $list) -}}
+  {{- end -}}
+{{- end -}}
+
+<div class="api-ref" data-api-ref>
+  <div class="card card-stamp api-notice">
+    <p class="label">Not an HTTP API</p>
+    <p>Blowhorn ships a command-line interface and an MCP server today. It does not run an HTTP REST listener, so there is no server URL to send these requests to.</p>
+  </div>
+
+  <p class="api-count"><strong>{{ len $ops }}</strong> operation{{ if ne (len $ops) 1 }}s{{ end }} in <strong>{{ len $groups }}</strong> resource{{ if ne (len $groups) 1 }}s{{ end }}</p>
+
+  <nav class="api-resources" aria-label="Resources">
+    <ul>
+      {{- range $groups }}
+      <li data-api-resource-link="{{ .slug }}"><a href="#{{ .slug }}">{{ .label }} <span class="api-count-chip">{{ len .ops }}</span></a></li>
+      {{- end }}
+    </ul>
+  </nav>
+
+  <div class="api-controls" data-api-controls hidden>
+    <div class="api-filter">
+      <label for="api-filter">Filter operations</label>
+      <input id="api-filter" type="search" autocomplete="off" placeholder="Path, summary or resource" data-api-filter>
+    </div>
+    <button type="button" class="button button-secondary" data-api-toggle aria-pressed="false">Expand all</button>
+    <p class="api-status" role="status" data-api-status></p>
+  </div>
+
+  {{- range $groups }}
+  <section class="api-group" id="{{ .slug }}" aria-labelledby="{{ .slug }}-title" data-api-group>
+    <h2 class="h2" id="{{ .slug }}-title">{{ .label }}</h2>
+    {{- with .text }}<div class="api-prose">{{ partial "rest-apis/prose.html" . }}</div>{{ end }}
+    {{- $label := .label }}
+    <div class="api-ops">
+    {{- range .ops }}
+    {{- $op := .data }}
+    {{- $id := .id }}
+    {{- $summary := index $op "summary" | default .path }}
+    <details class="api-op" id="{{ $id }}" data-api-op data-search="{{ lower (printf "%s %s %s %s %s" .method .path $summary $label (index $op "operationId" | default "")) }}">
+      <summary>
+        <span class="api-method api-method--{{ .method }}">{{ upper .method }}</span>
+        <code class="api-path">{{ .path }}</code>
+        <span class="api-op-title">{{ $summary }}</span>
+      </summary>
+      <div class="api-op-body">
+        {{- if index $op "deprecated" }}<p><span class="api-chip">deprecated</span></p>{{ end }}
+        {{- with index $op "description" }}<div class="api-prose">{{ partial "rest-apis/prose.html" . }}</div>{{ end }}
+        {{- $auth := partial "rest-apis/auth-summary.html" (dict "operation" $op "schemes" $schemes) }}
+        {{- with $auth }}
+        <p class="label api-label">Authentication</p>
+        <p>{{ . }}</p>
+        {{- end }}
+
+        {{- with index $op "parameters" }}
+        {{- $locations := slice (dict "key" "path" "label" "Path parameters") (dict "key" "query" "label" "Query parameters") (dict "key" "header" "label" "Header parameters") (dict "key" "cookie" "label" "Cookie parameters") }}
+        {{- $params := . }}
+        {{- range $locations }}
+        {{- $here := where $params "in" .key }}
+        {{- if $here }}
+        <p class="label api-label">{{ .label }}</p>
+        {{- $rows := slice }}
+        {{- range $here }}
+          {{- $p := . }}
+          {{- $ps := index $p "schema" | default dict }}
+          {{- $rows = $rows | append (dict "name" $p.name "schema" $ps "resolved" (partial "rest-apis/schema-resolve.html" (dict "schema" $ps "schemas" $schemas)) "required" (index $p "required" | default false) "description" (index $p "description" | default "")) }}
+        {{- end }}
+        {{ partial "rest-apis/field-table.html" (dict "rows" $rows "schemas" $schemas "caption" (printf "%s of %s" .label $summary)) }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+
+        {{- with index $op "requestBody" }}
+        <p class="label api-label">Request body{{ if index . "required" }} <span class="api-chip">required</span>{{ end }}</p>
+        {{- with index . "description" }}<div class="api-prose">{{ partial "rest-apis/prose.html" . }}</div>{{ end }}
+        {{- with index . "content" }}
+        {{ partial "rest-apis/media.html" (dict "content" . "schemas" $schemas "example" "Example request" "id" (printf "Request body of %s" $summary)) }}
+        {{- end }}
+        {{- end }}
+
+        {{- with index $op "responses" }}
+        <p class="label api-label">Responses</p>
+        {{- range $code, $response := . }}
+        {{- $tone := cond (strings.HasPrefix (string $code) "2") "ok" (cond (strings.HasPrefix (string $code) "3") "info" "error") }}
+        <div class="api-response">
+          <p class="api-response-head"><span class="api-status-code api-status-code--{{ $tone }}">{{ $code }}</span></p>
+          <div class="api-prose api-response-desc">{{ partial "rest-apis/prose.html" (index $response "description" | default "") }}</div>
+          {{- with index $response "content" }}
+          {{ partial "rest-apis/media.html" (dict "content" . "schemas" $schemas "example" "Example response" "id" (printf "Response %v of %s" $code $summary)) }}
+          {{- end }}
+        </div>
+        {{- end }}
+        {{- end }}
+
+        <p class="api-permalink"><a href="#{{ $id }}">Link to this operation</a></p>
+      </div>
+    </details>
+    {{- end }}
+    </div>
+  </section>
+  {{- end }}
+  <p class="api-empty" data-api-empty hidden>No operation matches the filter.</p>
+</div>

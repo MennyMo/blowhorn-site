@@ -1,0 +1,25 @@
+{{- /* Loads the public API spec for the layout "rest-apis" and returns it as a
+  map. The path is the Hugo site param params.apiReference.spec (relative to
+  the project root), never a hard-coded file: a build can point it at another
+  file with HUGO_PARAMS_APIREFERENCE_SPEC, which is how the viewer is tested.
+  The file is the JSON that .github/scripts/openapi_export.py writes from the
+  product schema (docs/api-reference.md); nothing here fetches anything.
+  A page that uses the layout without a usable spec fails the build on purpose:
+  there is no empty reference to publish. A site with no such page never runs
+  this partial. Context: the page. */ -}}
+{{- $cfg := site.Params.apiReference | default dict -}}
+{{- $path := index $cfg "spec" | default "" -}}
+{{- if not $path -}}
+  {{- errorf "%s uses layout rest-apis, but params.apiReference.spec is not set. Export the public spec with .github/scripts/openapi_export.py and set the param (docs/api-reference.md)." .File.Path -}}
+{{- end -}}
+{{- if or (strings.HasPrefix $path "/") (strings.Contains $path "..") -}}
+  {{- errorf "params.apiReference.spec %q must be a path inside this project, with no leading slash and no .." $path -}}
+{{- end -}}
+{{- if not (os.FileExists $path) -}}
+  {{- errorf "params.apiReference.spec %q does not exist (run .github/scripts/openapi_export.py; docs/api-reference.md)" $path -}}
+{{- end -}}
+{{- $spec := os.ReadFile $path | transform.Unmarshal (dict "format" "json") -}}
+{{- if not (reflect.IsMap $spec) -}}
+  {{- errorf "params.apiReference.spec %q is not an OpenAPI JSON object" $path -}}
+{{- end -}}
+{{- return $spec -}}
