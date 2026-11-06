@@ -233,6 +233,11 @@ function escHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+/**
+ * Sanitizes and quotes cell values for CSV export (RFC 4180).
+ * Neutralizes spreadsheet formula injection (OWASP CWE-1236)
+ * by prepending a single quote to cells starting with =, +, -, @, \t, or \r.
+ */
 export function csvCell(v) {
   let s = String(v ?? '');
   if (/^[=+@\t\r-]/.test(s)) {
