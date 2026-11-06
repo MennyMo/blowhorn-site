@@ -18,6 +18,10 @@
   --pp-wash-blue: #EEF4FF;
   --pp-wash-green: #EDF8F1;
   --pp-grid: color-mix(in srgb, var(--ink) 5%, transparent);
+  /* The one gridline layer for transparent sections and the breadcrumb row. It is
+     drawn on the full-width <main>, so its origin is the viewport's left edge, not
+     the centred wrap. Opaque washes repeat it from their own left edge. */
+  background-image: repeating-linear-gradient(90deg, var(--pp-grid) 0 1px, transparent 1px 96px);
   /* Ribbons bleed past the wrap on both sides. Clip them here so the page never
      scrolls sideways. overflow-x: clip does not make <main> a scroll container. */
   overflow-x: hidden;
@@ -208,21 +212,26 @@
 /* ---------- Sections: bands, gridlines and bridges (#501) ----------
    Section order: hero, the local stage (near-black), the action matrix (teal relief
    band), Rules of engagement, Field Manual (blue wash), setups, Activities (green
-   wash). Surface sections carry faint vertical gridlines. Each seam between two light
-   sections or a light section and the matrix gets a hairline, so the boundary still
-   reads under more contrast. The stage's dark edges need none. Each seam into a band
-   or out of the usage rail gets one blue, green and coral bridge, drawn in the
+   wash). Gridlines come from the one layer on <main> (.pp), which transparent sections
+   and the breadcrumb row show; the opaque washes repeat it from their own left edge,
+   and the near-black stage and teal matrix stay clean. Each seam between two light
+   sections or a light section and the matrix gets a neutral hairline, so the boundary
+   still reads under more contrast. The stage's dark edges need none. Each seam into a
+   band or out of the usage rail gets one blue, green and coral bridge, drawn in the
    section's padding (about 28 px above the seam, inside the 64 px phone padding),
    never over text. Decoration only: pseudo-elements and background layers, no
    markup. Under reduced transparency the gridlines go; under more contrast the
    gridlines and bridges go and the washes turn to the plain surface. */
-.pp-hero,
-.pp-section {
-  background-image: repeating-linear-gradient(90deg, var(--pp-grid) 0 1px, transparent 1px 96px);
-}
 .pp-section { position: relative; padding-block: var(--section-y); }
 .pp-section + .pp-section,
 .pp-band + .pp-section {
+  background-image: linear-gradient(90deg, transparent, var(--line) 18%, var(--line) 82%, transparent);
+  background-size: min(100%, var(--measure)) 1px;
+  background-repeat: no-repeat;
+  background-position: top center;
+}
+.pp-section[data-pp-field-manual],
+.pp-section.pp-continuity {
   background-image:
     linear-gradient(90deg, transparent, var(--line) 18%, var(--line) 82%, transparent),
     repeating-linear-gradient(90deg, var(--pp-grid) 0 1px, transparent 1px 96px);
@@ -589,7 +598,6 @@
   gap: var(--space-4) var(--space-8);
 }
 .pp-related { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin: 0; padding: 0; list-style: none; }
-.pp-related a { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
 .pp-matrix-scroll {
   margin-top: var(--head-gap);
   overflow-x: auto;
@@ -710,9 +718,12 @@
 .pp-roe-notes a { color: var(--ink); text-decoration-color: var(--line-strong); }
 .pp-roe-notes a:hover { color: var(--link); }
 .pp-more { margin-top: var(--space-6); }
-/* Section actions ("Choose your rules of engagement", "Read the X field manual"):
-   real actions, so body-UI size (18px), not the 14px caption-sized link. */
-.pp-more a { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
+/* Real action links (section actions such as "Choose your rules of engagement",
+   setup source links, and the matrix's "Keep reading" links): body-UI size (18px),
+   never the 14px caption size. Hero Start has its own rule (.pp-go .button). */
+.pp-more a,
+.pp-use-src a,
+.pp-related a { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
 
 /* ---------- Field Manual: one editorial two-column briefing ---------- */
 .pp-brief { display: grid; gap: var(--space-8); margin: var(--head-gap) 0 0; }
@@ -801,7 +812,6 @@
 .pp-use .h3 { margin-top: var(--eyebrow-gap); }
 .pp-use .term { margin-top: var(--space-4); }
 .pp-use-src { margin-top: var(--space-3); }
-.pp-use-src a { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
 
 /* ---------- Activities continuity: an illustration, not the app's screen ---------- */
 .pp-activities { margin: var(--head-gap) 0 0; }
@@ -900,7 +910,7 @@
   .pp-theatre::before, .pp-theatre::after { display: none; }
   .pp-route { stroke-width: 4; }
   .pp-slip, .pp-out, .pp-relay { box-shadow: 0 0 0 2px var(--cream); }
-  .pp-gauge-bar { background: var(--line-strong); }
+  .pp-gauge-bar { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); }
   .pp-local::before, .pp-band::before, .pp-section[data-pp-field-manual]::before, .pp-section.pp-continuity::before { display: none; }
 }
 

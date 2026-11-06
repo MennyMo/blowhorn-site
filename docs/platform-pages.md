@@ -139,7 +139,10 @@ restraint (`DESIGN.md`) for the X page only:
 - **Section order and bands.** Hero, then the near-black local stage, the action matrix
   (teal relief band), Rules of engagement (surface), Field Manual (soft blue wash),
   setups (surface), Activities (soft green wash).
-- **Gridlines and bridges.** Surface sections carry faint vertical gridlines (5% ink).
+- **Gridlines and bridges.** One faint vertical gridline layer (5% ink) is drawn on the
+  full-width page, so transparent sections and the breadcrumb row share one origin at
+  the left edge. The opaque Field Manual and Activities washes repeat it from their own
+  left edges. The near-black stage and the teal matrix stay clean.
   Four seams carry one diagonal blue, green and coral bridge, drawn in the section's
   padding and never over text: hero into the stage, stage into the matrix, Rules of
   engagement into Field Manual, and the setups into Activities. Light seams between
