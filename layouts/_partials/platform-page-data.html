@@ -1,23 +1,25 @@
 {{- /* Resolve one platform page (layout platform-page, content front matter
   `platform: <id>`). Joins the page record in data/platform_pages.json with the
   shared contract in the same file, the platform's canonical identity
-  (data/integrations.json + data/platforms/<id>.yaml) and the action vocabulary
-  (data/actions.json), and FAILS THE BUILD when they disagree, so a mismatched
-  platform or action id can never render:
+  (data/integrations.json + data/platforms/<id>.yaml), the action vocabulary
+  (data/actions.json) and each action's CLI line (data/action_examples.json), and
+  FAILS THE BUILD when they disagree, so a mismatched platform or action id can
+  never render:
 
   - the platform must be a supported row in data/integrations.json with a YAML file
   - the record's route must be this page's URL
   - every activity type's action id must be in the vocabulary AND listed by the YAML
   - activity ids are unique, and each is bound to a different action
-  - every example's activity id must be declared on the page, example ids are
-    unique, no four neighbouring examples share a card variant (the rail shows up
-    to four) and paper, the featured variant, is used at most once
-  - breakdown kinds are unique, and a limits item needs an action with limits
+  - every starter draft's activity id must be declared on the page, starter ids
+    are unique
+  - every action the YAML lists has an entry in data/action_examples.json
+  - the playground's thread length is the one the YAML's post behavior states
 
-  Name, logo, docs link, reach, and every action's name, behavior and limits come
-  from the canonical files. The record holds only page copy.
-  check_platform_pages.py makes the same checks on the source files and checks
-  the built page. Input: the content page (.). Returns the resolved dict. */ -}}
+  Name, logo, docs link, reach, and every action's name, behavior, limits and CLI
+  line come from the canonical files. The record holds only page copy and sourced
+  facts, whose quotes check_platform_pages.py --source checks against their public
+  pages (Hugo cannot read a page's Markdown before it renders). The same script
+  checks the built page. Input: the content page (.). Returns the resolved dict. */ -}}
 {{- $page := . -}}
 {{- $id := $page.Params.platform -}}
 {{- if not $id }}{{ errorf "platform-page: %s sets no `platform:` front matter" $page.File.Path }}{{ end -}}
@@ -61,42 +63,44 @@
   {{- $activities = $activities | append (merge . (dict "resolved" $act)) -}}
 {{- end -}}
 
-{{- /* Examples: declared activity, unique id, a card variant no neighbour in a
-  four-wide window shares, and at most one featured (paper) example. */ -}}
-{{- $examples := slice -}}
-{{- $exampleIds := dict -}}
-{{- $papers := 0 -}}
-{{- $items := $rec.examples.items -}}
-{{- range $i, $e := $items -}}
-  {{- if not (index $labelOf $e.activity) }}{{ errorf "platform-page: example %q of %q uses activity %q, which the page does not declare" $e.id $id $e.activity }}{{ end -}}
-  {{- if index $exampleIds $e.id }}{{ errorf "platform-page: %q repeats example id %q" $id $e.id }}{{ end -}}
-  {{- $exampleIds = merge $exampleIds (dict $e.id true) -}}
-  {{- if eq $e.variant "paper" }}{{ $papers = add $papers 1 }}{{ end -}}
-  {{- range $j, $f := $items -}}
-    {{- if and (gt $j $i) (lt (sub $j $i) 4) (eq $e.variant $f.variant) }}{{ errorf "platform-page: examples %q and %q of %q are within four of each other and share the %q card variant" $e.id $f.id $id $e.variant }}{{ end -}}
-  {{- end -}}
-  {{- $examples = $examples | append (merge $e (dict "typeLabel" (index $labelOf $e.activity))) -}}
+{{- /* Starter drafts: a declared activity and a unique id. */ -}}
+{{- $starters := slice -}}
+{{- $starterIds := dict -}}
+{{- range $rec.playground.starters.items -}}
+  {{- if not (index $labelOf .activity) }}{{ errorf "platform-page: starter %q of %q uses activity %q, which the page does not declare" .id $id .activity }}{{ end -}}
+  {{- if index $starterIds .id }}{{ errorf "platform-page: %q repeats starter id %q" $id .id }}{{ end -}}
+  {{- $starterIds = merge $starterIds (dict .id true) -}}
+  {{- $starters = $starters | append (merge . (dict "typeLabel" (index $labelOf .activity))) -}}
 {{- end -}}
-{{- if gt $papers 1 }}{{ errorf "platform-page: %q features %d paper examples; paper is the one featured example" $id $papers }}{{ end -}}
+
+{{- /* Each action's CLI line, from the same examples the docs page shows. */ -}}
+{{- $cliOf := dict -}}
+{{- range hugo.Data.action_examples.examples -}}
+  {{- if eq .platform $id }}{{ $cliOf = merge $cliOf (dict .action .surfaces.cli) }}{{ end -}}
+{{- end -}}
 
 {{- /* Actions in the platform's own order, each tagged with the type it belongs to. */ -}}
 {{- $actions := slice -}}
-{{- $limited := slice -}}
 {{- range $resolved -}}
-  {{- $a := merge . (dict "type" (index $typeOf .id | default "") "activity" (index $activityOf .id | default "")) -}}
-  {{- $actions = $actions | append $a -}}
-  {{- if $a.limits }}{{ $limited = $limited | append $a }}{{ end -}}
+  {{- $cli := index $cliOf .id -}}
+  {{- if not $cli }}{{ errorf "platform-page: data/action_examples.json has no %s example for action %q" $id .id }}{{ end -}}
+  {{- $actions = $actions | append (merge . (dict "type" (index $typeOf .id | default "") "activity" (index $activityOf .id | default "") "cli" $cli)) -}}
 {{- end -}}
 
-{{- $kinds := dict -}}
-{{- range $rec.breakdown.items -}}
-  {{- if index $kinds .kind }}{{ errorf "platform-page: %q repeats breakdown kind %q" $id .kind }}{{ end -}}
-  {{- $kinds = merge $kinds (dict .kind true) -}}
-  {{- if and (eq .kind "limits") (not $limited) }}{{ errorf "platform-page: %q has a limits breakdown but data/platforms/%s.yaml lists no limits" $id $id }}{{ end -}}
+{{- /* The image and the thread counter belong to the activity bound to the post
+  action: the YAML's post behavior is what says a post takes an image and goes out
+  as a thread past a length, and the record's length must be that one. */ -}}
+{{- $postActivity := index $activityOf "post" | default "" -}}
+{{- $threadAt := $rec.playground.thread.at -}}
+{{- with index $byId "post" -}}
+  {{- if not (strings.Contains .description (printf "longer than %d characters" (int $threadAt))) }}{{ errorf "platform-page: %q playground.thread.at is %d, but data/platforms/%s.yaml's post behavior does not say \"longer than %d characters\"" $id (int $threadAt) $id (int $threadAt) }}{{ end -}}
 {{- end -}}
 
-{{- /* Start goes to the download page, an existing entrypoint, never a deep link made up here. */ -}}
-{{- $startHref := "download/" | relURL -}}
+{{- /* The one primary call to action installs the browser extension from its
+  Chrome Web Store listing, the same link layouts/download.html's extension card
+  uses (check_platform_pages.py fails the build if the two differ). It is built
+  here, never in the record, so a deep link cannot be invented. */ -}}
+{{- $extensionHref := "https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf" -}}
 
 {{- return dict
   "id" $id
@@ -108,9 +112,10 @@
   "docs" ($yaml.docs | default $row.docs)
   "reach" $yaml.reach
   "activities" $activities
-  "examples" $examples
+  "starters" $starters
   "actions" $actions
-  "limited" $limited
-  "startHref" $startHref
+  "postActivity" $postActivity
+  "threadAt" (int $threadAt)
+  "startHref" $extensionHref
   "catalogPath" hugo.Data.integrations.catalogPath
 -}}

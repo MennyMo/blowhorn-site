@@ -326,7 +326,7 @@ check-platform-docs: site-build
 check-action-matrix: site-build
 	python3 .github/scripts/check_action_matrix.py $(BUILD_DIR)
 
-## Production build, then fail if a platform page (/preview/platforms/<id>/) drifts from data/platform_pages.json, loses noindex, appears in the sitemap, llms.txt or search, is linked from another page, or its script stops swapping the activity type, paging the examples by hand or honouring reduced motion (docs/platform-pages.md).
+## Production build, then fail if a platform page (/preview/platforms/<id>/) drifts from data/platform_pages.json, loses noindex, appears in the sitemap, llms.txt or search, is linked from another page, its call to action stops installing the extension, or its script stops swapping the activity type, running the local playground, paging the setups by hand or honouring reduced motion (docs/platform-pages.md).
 check-platform-pages: site-build
 	python3 .github/scripts/check_platform_pages.py $(BUILD_DIR)
 

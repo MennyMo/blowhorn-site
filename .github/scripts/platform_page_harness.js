@@ -7,11 +7,14 @@
 
    Usage: node platform_page_harness.js SCRIPT  < {"tree": <element>, "scenario": {...}}
    Element: {"tag": "div", "attrs": {...}, "children": [<element> | "text"]}
-   Scenario: {"reduce": false, "rail": {"width": 1000, "slide": 300, "gap": 32},
-              "steps": [{"choose": "respond"}, {"key": "respond"}, {"try": "weekly-recap"},
+   Scenario: {"reduce": false, "rail": {"width": 1000, "slide": 484, "gap": 32},
+              "steps": [{"choose": "respond"}, {"key": "respond"}, {"starter": "weekly-recap"},
+                        {"input": "a draft"}, {"file": {"type": "image/png"}}, {"clearImage": true},
                         {"click": "next"}, {"click": "prev"}, {"scroll": 120}]}
    "choose" clicks a radio and "key" arrows onto it; both fire change only when the
-   checked radio changes, as a browser does.
+   checked radio changes, as a browser does. "input" types into the playground's
+   draft, "file" picks a file in its image picker and "clearImage" removes it.
+   window.URL hands out fake object URLs and records the ones revoked.
    Prints one state object per step (the first is the state after load). */
 "use strict";
 const fs = require("fs");
@@ -44,6 +47,8 @@ class El {
     this.classList = new ClassList(this);
     this._checked = "checked" in this.attrs;
     this._scrollLeft = 0;
+    this._value = null;
+    this.files = null;
   }
   getAttribute(n) { return n in this.attrs ? this.attrs[n] : null; }
   setAttribute(n, v) { this.attrs[n] = String(v); }
@@ -53,7 +58,16 @@ class El {
   set hidden(v) { if (v) this.attrs.hidden = ""; else delete this.attrs.hidden; }
   get checked() { return this._checked; }
   set checked(v) { this._checked = !!v; }
-  get value() { return this.attrs.value || ""; }
+  /* A textarea's value starts as its text; an input's as its value attribute. */
+  get value() {
+    if (this._value !== null) return this._value;
+    return this.tag === "textarea" ? this.textContent : (this.attrs.value || "");
+  }
+  set value(v) {
+    this._value = String(v);
+    if (this.attrs.type === "file" && this._value === "") this.files = null;
+  }
+  appendChild(child) { child.parent = this; this.children.push(child); return child; }
   get textContent() {
     return this.children.map((c) => (typeof c === "string" ? c : c.textContent)).join("");
   }
@@ -130,15 +144,6 @@ function state(env, root) {
     const bucket = el.hidden ? hidden : shown;
     bucket[id] = (bucket[id] || 0) + 1;
   });
-  const samples = {};
-  root.querySelectorAll("[data-pp-scene-text]").forEach((box) => {
-    const slot = box.querySelector("[data-pp-sample]");
-    samples[box.getAttribute("data-pp-scene-text")] = {
-      sampleShown: !!slot && !slot.hidden,
-      sampleText: slot ? slot.textContent : "",
-      originalsShown: box.querySelectorAll("[data-pp-original]").filter((p) => !p.hidden).length,
-    };
-  });
   const q = (sel) => root.querySelector(sel);
   const rail = q("[data-pp-rail]");
   return {
@@ -150,8 +155,20 @@ function state(env, root) {
     picked: root.querySelectorAll("[data-pp-row]").filter((r) => r.classList.contains("is-picked")).map((r) => r.getAttribute("data-action")),
     announce: q("[data-pp-announce]") ? q("[data-pp-announce]").textContent : null,
     announceWrites: q("[data-pp-announce]") ? (q("[data-pp-announce]").writes || 0) : null,
-    tryShown: root.querySelectorAll("[data-pp-try]").filter((b) => !b.hidden).length,
-    samples,
+    tryControls: q("[data-pp-try-controls]") ? !q("[data-pp-try-controls]").hidden : null,
+    draft: q("[data-pp-try-text]") ? q("[data-pp-try-text]").value : null,
+    out: q("[data-pp-try-out]") ? q("[data-pp-try-out]").textContent : null,
+    tryCount: q("[data-pp-try-count]") ? q("[data-pp-try-count]").textContent : null,
+    threadShown: q("[data-pp-try-thread]") ? !q("[data-pp-try-thread]").hidden : null,
+    tryAnnounce: q("[data-pp-try-announce]") ? q("[data-pp-try-announce]").textContent : null,
+    describedBy: q("[data-pp-try-text]") ? q("[data-pp-try-text]").getAttribute("aria-describedby") : null,
+    tryAnnounceWrites: q("[data-pp-try-announce]") ? (q("[data-pp-try-announce]").writes || 0) : null,
+    mediaShown: q("[data-pp-try-img]") ? !q("[data-pp-try-img]").hidden : null,
+    mediaImages: q("[data-pp-try-img]") ? q("[data-pp-try-img]").children.filter((c) => typeof c !== "string").map((c) => c.getAttribute("src")) : null,
+    clearShown: q("[data-pp-try-clear]") ? !q("[data-pp-try-clear]").hidden : null,
+    fileValue: q("[data-pp-try-file]") ? q("[data-pp-try-file]").value : null,
+    created: env.created.slice(),
+    revoked: env.revoked.slice(),
     controlsShown: q("[data-pp-rail-controls]") ? !q("[data-pp-rail-controls]").hidden : false,
     count: q("[data-pp-rail-count]") ? q("[data-pp-rail-count]").textContent : null,
     railAnnounce: q("[data-pp-rail-announce]") ? q("[data-pp-rail-announce]").textContent : null,
@@ -183,12 +200,16 @@ function main() {
   const input = JSON.parse(fs.readFileSync(0, "utf8"));
   const sc = input.scenario || {};
   const env = {
-    rail: sc.rail || { width: 1000, slide: 300, gap: 32 },
+    rail: sc.rail || { width: 1000, slide: 484, gap: 32 },
     scrolls: [],
+    created: [],
+    revoked: [],
+    winListeners: {},
     intoView: [],
     active: null,
     slideIndex(el) { return env.slides.indexOf(el); },
   };
+  let urls = 0;
   const root = build(input.tree, env, null);
   env.slides = root.querySelectorAll("[data-pp-slide]");
   const doc = new El("#document", {}, env);
@@ -196,12 +217,18 @@ function main() {
   root.parent = doc;
   doc.readyState = "complete";
   Object.defineProperty(doc, "activeElement", { get: () => env.active });
+  doc.createElement = (tag) => new El(tag, {}, env);
+  const URLMock = {
+    createObjectURL() { urls += 1; const u = "blob:harness/" + urls; env.created.push(u); return u; },
+    revokeObjectURL(u) { env.revoked.push(u); },
+  };
   const win = {
     matchMedia: (query) => ({ matches: !!sc.reduce && query.indexOf("reduce") >= 0 }),
     requestAnimationFrame: (fn) => fn(),
-    addEventListener() {},
+    addEventListener(type, fn) { (env.winListeners[type] = env.winListeners[type] || []).push(fn); },
+    URL: URLMock,
   };
-  const ctx = { window: win, document: doc, console };
+  const ctx = { window: win, document: doc, URL: URLMock, Array, console };
   vm.createContext(ctx);
   vm.runInContext(fs.readFileSync(script, "utf8"), ctx, { filename: script });
 
@@ -220,9 +247,34 @@ function main() {
       if (!radio) throw new Error("harness: no radio for " + step.key);
       radio.focus();
       selectRadio(radios, radio);
-    } else if (step.try) {
-      const button = root.querySelectorAll("[data-pp-try]").find((b) => b.getAttribute("data-pp-try") === step.try);
-      if (!button) throw new Error("harness: no example button for " + step.try);
+    } else if (step.starter) {
+      const button = root.querySelectorAll("[data-pp-try-starter]").find((b) => b.getAttribute("data-pp-try-starter") === step.starter);
+      if (!button) throw new Error("harness: no starter " + step.starter);
+      button.focus();
+      button.dispatch("click");
+    } else if (step.input !== undefined) {
+      const text = root.querySelector("[data-pp-try-text]");
+      if (!text) throw new Error("harness: no playground draft");
+      text.focus();
+      text.value = step.input;
+      text.dispatch("input");
+    } else if (step.file) {
+      const input = root.querySelector("[data-pp-try-file]");
+      if (!input) throw new Error("harness: no image picker");
+      input.focus();
+      input.files = [Object.assign({ name: "picked" }, step.file)];
+      input._value = "C:\\fakepath\\picked";
+      input.dispatch("change");
+    } else if (step.imageError) {
+      const media = root.querySelector("[data-pp-try-img]");
+      const img = media && media.children.find((c) => typeof c !== "string");
+      if (!img) throw new Error("harness: no image to fail");
+      img.dispatch("error");
+    } else if (step.pagehide !== undefined) {
+      (env.winListeners.pagehide || []).forEach((fn) => fn({ type: "pagehide", persisted: !!step.pagehide.persisted }));
+    } else if (step.clearImage) {
+      const button = root.querySelector("[data-pp-try-clear]");
+      if (!button) throw new Error("harness: no remove-image button");
       button.focus();
       button.dispatch("click");
     } else if (step.scroll !== undefined) {

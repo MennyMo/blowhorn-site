@@ -1,31 +1,41 @@
 {{- /* A platform product page, rendered from one record in data/platform_pages.json
   (schemas/platform_page.schema.json) and that file's shared contract, joined with
-  the platform's canonical identity and actions by
+  the platform's canonical identity, actions and CLI lines by
   layouts/_partials/platform-page-data.html, which fails the build on a mismatched
   platform or action id. The page file is content/en/preview-platform-<id>.md
   (front matter `platform: <id>`, a /preview/platforms/<id>/ url, noindex, out of the
   sitemap, llms.txt and search, not linked from navigation). Docs: docs/platform-pages.md.
 
   Anatomy (Figma 902:114, contract 902:111, blowhorn-site#466): a hero with the
-  activity type selector, one Start button and a switchable illustrated storyboard
-  (labelled an illustration, no player controls). Source order is copy, selector,
-  Start, illustration: on a phone the illustration stacks below the intent and Start
-  stays in the first screen; on desktop the grid puts Start under the selector in the
-  left column beside the illustration (platform-page.css, .pp-hero). An optional
-  examples rail; a tinted band of collapsed breakdowns; the Activities continuity illustration.
+  activity type selector, one primary call to action (install the browser
+  extension) and a switchable illustrated storyboard (labelled an illustration, no
+  player controls); a local-only playground to try on a draft; the action matrix,
+  visible at load; the rules of engagement; a Field Manual teaser; a rail of real
+  setups to copy; the Activities continuity illustration. Source order in the hero
+  is copy, selector, call to action, illustration, so a phone keeps the call to
+  action in its first screen. Nothing sits under the call to action: no note, no
+  caption. The one reviewer annotation (the contract's reviewerNote) is drawn as an
+  annotation: alternate colour, mono type and its explicit mark.
+
+  The matrix is a native table at every width, inside a focusable, labelled
+  group that scrolls sideways on a narrow screen (no display change, so no ARIA
+  roles are needed).
 
   Works without script: the selector is replaced by a static list of every type's
-  intent, the first type's illustration shows, the rail is a native scroll area and
-  the breakdowns are native <details>. assets/js/platform-page.js enhances in place
-  (.is-enhanced): a radio group swaps every [data-pp-for] element, the rail gets
-  previous and next buttons, and an example can be shown in the hero. No third-party
-  script; motion is CSS transform and opacity only, off under reduced motion.
+  intent, the first type's illustration shows, the playground shows its first
+  starter as a static preview with its controls hidden, the rail is a native scroll
+  area and the matrix is a plain table. assets/js/platform-page.js enhances in place
+  (.is-enhanced). No third-party script; motion is CSS transform and opacity only,
+  off under reduced motion. The playground has no form and sends nothing.
 
   Hooks the script and .github/scripts/check_platform_pages.py read:
-  data-pp-choice (radios), data-pp-for (shown for one type), data-pp-row (a breakdown
-  row bound to a type), data-pp-announce, data-pp-stage, data-pp-scene-text,
-  data-pp-original, data-pp-sample, data-pp-rail, data-pp-slide, data-pp-prev,
-  data-pp-next, data-pp-rail-count, data-pp-rail-announce, data-pp-try. */ -}}
+  data-pp-choice (radios), data-pp-for (shown for one type), data-pp-row (a matrix
+  row bound to a type), data-pp-announce, data-pp-stage, data-pp-matrix,
+  data-pp-try (the playground), data-pp-try-controls, data-pp-try-text,
+  data-pp-try-file, data-pp-try-clear, data-pp-try-starter, data-pp-try-out,
+  data-pp-try-img, data-pp-try-count, data-pp-try-thread, data-pp-try-announce,
+  data-pp-rail, data-pp-slide, data-pp-prev, data-pp-next, data-pp-rail-count,
+  data-pp-rail-announce, data-pp-rail-controls. */ -}}
 {{ define "head" }}
     {{- $d := partialCached "platform-page-data.html" . .RelPermalink }}
     {{- $css := resources.Get "css/platform-page.css" | minify | fingerprint }}
@@ -41,7 +51,6 @@
     {{- $c := $d.contract }}
     {{- $first := index $d.activities 0 }}
     {{- $logo := $d.logo | relURL }}
-    {{- $variant := dict "paper" "card-paper" "field" "card-field" "plain" "card-plain" "stamp" "card-stamp" }}
     <main id="main" class="pp" data-platform-page="{{ $d.id }}" data-pp-type="{{ $first.id }}">
       <div class="wrap pp-top">
         <nav class="pp-crumbs ui" aria-label="Breadcrumb">
@@ -50,7 +59,9 @@
             <li aria-current="page">{{ $d.short }}</li>
           </ol>
         </nav>
-        <p class="pp-preview caption">{{ $c.previewNotice }}</p>
+        {{- with $c.reviewerNote }}
+        <p class="pp-annot ui" data-pp-annotation><span class="pp-annot-mark label">{{ .mark }}</span> {{ .text }}</p>
+        {{- end }}
       </div>
 
       <section class="wrap pp-hero" aria-labelledby="pp-title">
@@ -79,11 +90,7 @@
         </div>
 
         <div class="pp-go">
-          <p class="pp-start">
-            <a class="button button-primary" href="{{ $d.startHref }}" data-pp-start aria-describedby="pp-start-note">{{ $rec.start.label }}</a>
-            <span class="pp-start-for caption">{{ $d.short }}<span class="pp-start-type">{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}> &middot; {{ $a.label }}</span>{{ end }}</span></span>
-          </p>
-          <p id="pp-start-note" class="pp-note caption">{{ $rec.start.note }}</p>
+          <a class="button button-primary" href="{{ $d.startHref }}" data-pp-start>{{ $rec.start.label }}</a>
         </div>
 
         <figure class="pp-stage glass" data-pp-stage tabindex="-1" aria-labelledby="pp-stage-cap">
@@ -99,13 +106,11 @@
                 <span class="pp-draft-state caption">{{ $a.scene.state }}</span>
               </p>
               <p class="pp-draft-who caption">Your {{ $d.short }} profile</p>
-              <div class="pp-draft-text" data-pp-scene-text="{{ $a.id }}">
+              <div class="pp-draft-text">
                 {{- range $a.scene.text }}
-                <p data-pp-original>{{ . }}</p>
+                <p>{{ . }}</p>
                 {{- end }}
-                <p data-pp-sample hidden></p>
               </div>
-              <p class="pp-draft-foot caption">Illustrative text, not a real post</p>
             </div>
             <div class="pp-steps">
               <p class="label">{{ $a.label }} activity</p>
@@ -125,55 +130,74 @@
         </figure>
       </section>
 
-      <section class="pp-section" aria-labelledby="pp-examples-title" data-pp-examples>
-        <div class="wrap">
-          <div class="pp-examples-head">
-            <div class="section-head">
-              <h2 id="pp-examples-title" class="h2">{{ $rec.examples.heading }}</h2>
-              <p class="muted">{{ $rec.examples.intro }}</p>
-            </div>
-            <div class="pp-rail-controls" data-pp-rail-controls hidden>
-              <p class="pp-rail-count caption" data-pp-rail-count></p>
-              <p class="visually-hidden" data-pp-rail-announce aria-live="polite"></p>
-              <button type="button" class="pp-icon-button" data-pp-prev aria-controls="pp-rail" aria-label="Previous examples">
-                <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M12.5 15L7.5 10L12.5 5"/></svg>
-              </button>
-              <button type="button" class="pp-icon-button" data-pp-next aria-controls="pp-rail" aria-label="Next examples">
-                <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M7.5 15L12.5 10L7.5 5"/></svg>
-              </button>
-            </div>
+      {{- /* The playground: local only. No form, no name attributes, no request;
+        an image is shown through an object URL the script releases. */}}
+      {{- $p := $rec.playground }}
+      {{- $s0 := index $d.starters 0 }}
+      <section class="pp-section" aria-labelledby="pp-try-title" data-pp-try>
+        <div class="wrap pp-try">
+          <div class="section-head">
+            <h2 id="pp-try-title" class="h2">{{ $p.heading }}</h2>
+            <p class="muted">{{ $p.intro }}</p>
           </div>
-          <div class="pp-rail" id="pp-rail" data-pp-rail tabindex="0" role="group" aria-label="Examples, scroll sideways">
-            <ul class="pp-rail-track">
-              {{- range $i, $e := $d.examples }}
-              <li class="pp-slide" data-pp-slide>
-                <article class="card {{ index $variant $e.variant }} pp-example" data-pp-example="{{ $e.id }}" data-activity="{{ $e.activity }}" aria-labelledby="pp-ex-{{ $e.id }}">
-                  <p class="pp-example-top">
-                    <span class="logo-tile pp-tile-sm"><img src="{{ $logo }}" alt="" width="14" height="14"></span>
-                    <span class="label">{{ $e.typeLabel }}</span>
-                  </p>
-                  <p class="pp-sample body" data-pp-sample-text>{{ $e.sample }}</p>
-                  <h3 id="pp-ex-{{ $e.id }}" class="h3" data-pp-example-title>{{ $e.title }}</h3>
-                  <p>{{ $e.blurb }}</p>
-                  <p class="pp-example-foot">
-                    <span class="caption">{{ $rec.examples.label }}</span>
-                    <button type="button" class="pp-try ui" data-pp-try="{{ $e.id }}" aria-describedby="pp-ex-{{ $e.id }}" hidden>Preview above</button>
-                  </p>
-                </article>
-              </li>
+          <div class="pp-try-grid">
+            <figure class="pp-mock" aria-labelledby="pp-mock-cap">
+              <div class="pp-mock-post">
+                <p class="pp-draft-head">
+                  <span class="logo-tile pp-tile-sm"><img src="{{ $logo }}" alt="" width="14" height="14"></span>
+                  <span class="pp-draft-title ui">{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}>{{ $a.scene.title }}</span>{{ end }}</span>
+                  <span class="pp-draft-state caption">{{ $first.scene.state }}</span>
+                </p>
+                <p class="pp-draft-who caption">Your {{ $d.short }} profile</p>
+                <p class="pp-mock-text body" data-pp-try-out>{{ $s0.sample }}</p>
+                {{- with $d.postActivity }}
+                <div class="pp-mock-slot" data-pp-for="{{ . }}"{{ if ne . $first.id }} hidden{{ end }}><div class="pp-mock-media" data-pp-try-img hidden></div></div>
+                {{- end }}
+              </div>
+              <figcaption id="pp-mock-cap" class="pp-stage-cap caption">{{ $p.label }}</figcaption>
+            </figure>
+            <div class="pp-try-controls" data-pp-try-controls hidden>
+              <div class="pp-starters" role="group" aria-labelledby="pp-starters-label">
+                <p id="pp-starters-label" class="label">{{ $p.starters.label }}</p>
+                <p class="pp-starter-row">
+                  {{- range $d.starters }}
+                  <button type="button" class="pp-starter ui" data-pp-try-starter="{{ .id }}" data-activity="{{ .activity }}" data-sample="{{ .sample }}">{{ .title }}</button>
+                  {{- end }}
+                </p>
+              </div>
+              <p class="pp-field">
+                <label class="ui" for="pp-try-text">{{ $p.fields.text }}</label>
+                <textarea id="pp-try-text" class="pp-textarea body" rows="5" maxlength="2000" spellcheck="true" data-pp-try-text{{ with $d.postActivity }} aria-describedby="pp-try-count"{{ end }}>{{ $s0.sample }}</textarea>
+              </p>
+              {{- with $d.postActivity }}
+              <div class="pp-try-post" data-pp-try-post data-pp-for="{{ . }}"{{ if ne . $first.id }} hidden{{ end }}>
+                <p class="pp-try-meta">
+                  <span id="pp-try-count" class="pp-count ui" data-pp-try-count data-max="{{ $d.threadAt }}"></span>
+                  <span class="pp-thread ui" data-pp-try-thread hidden>{{ $p.thread.label }}</span>
+                </p>
+                <p class="pp-file">
+                  <label class="pp-file-label ui">
+                    <input type="file" accept="image/*" class="pp-file-input" data-pp-try-file>
+                    <span>{{ $p.fields.image }}</span>
+                  </label>
+                  <button type="button" class="pp-try-clear ui" data-pp-try-clear hidden>{{ $p.fields.clear }}</button>
+                </p>
+              </div>
               {{- end }}
-            </ul>
+              <p class="pp-planned body"><span class="pp-planned-mark label">{{ $p.planned.mark }}</span> {{ $p.planned.text }}</p>
+              <p class="visually-hidden" data-pp-try-announce data-not-image="{{ $p.fields.notImage }}" data-unreadable="{{ $p.fields.unreadable }}" aria-live="polite"></p>
+            </div>
           </div>
-          <p class="pp-footnote caption">{{ $rec.examples.footnote }}</p>
         </div>
       </section>
 
-      <section class="pp-band" aria-labelledby="pp-breakdown-title">
-        <div class="wrap pp-breakdown">
-          <div class="pp-breakdown-head">
+      {{- $m := $rec.matrix }}
+      <section class="pp-band" aria-labelledby="pp-matrix-title">
+        <div class="wrap">
+          <div class="pp-matrix-head">
             <div class="section-head">
-              <h2 id="pp-breakdown-title" class="h2">{{ $rec.breakdown.heading }}</h2>
-              <p class="muted">{{ $rec.breakdown.intro }}</p>
+              <h2 id="pp-matrix-title" class="h2">{{ $m.heading }}</h2>
+              <p class="muted">{{ $m.intro }}</p>
             </div>
             <nav aria-label="Keep reading">
               <ul class="pp-related ui">
@@ -184,67 +208,127 @@
               </ul>
             </nav>
           </div>
-          <div class="pp-disclosures glass">
-            {{- range $i, $b := $rec.breakdown.items }}
-            <details class="pp-disclosure" data-pp-kind="{{ $b.kind }}">
-              <summary>
-                <span class="pp-d-num caption" aria-hidden="true">{{ printf "%02d" (add $i 1) }}</span>
-                <span class="pp-d-title">
-                  <span class="pp-d-name h3">{{ $b.title }}</span>
-                  {{- if eq $b.kind "supported" }}
-                  <span class="pp-d-hint caption">{{ $b.hint }}. {{ len $d.actions }} actions</span>
-                  {{- else if eq $b.kind "limits" }}
-                  <span class="pp-d-hint caption">{{ $b.hint }}. {{ len $d.limited }} of {{ len $d.actions }} actions</span>
-                  {{- else }}
-                  <span class="pp-d-hint caption">{{ $b.hint }}</span>
-                  {{- end }}
-                </span>
-                <svg class="pp-d-chev" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M5 7.5L10 12.5L15 7.5"/></svg>
-              </summary>
-              <div class="pp-d-body">
-                {{- if eq $b.kind "supported" }}
-                <ul class="pp-facts" data-pp-actions>
-                  {{- range $d.actions }}
-                  <li class="pp-fact{{ if eq .activity $first.id }} is-picked{{ end }}" data-action="{{ .id }}" data-pp-row="{{ .activity }}">
-                    <span class="pp-fact-name">{{ .name }}</span>
-                    {{- with .type }}<span class="pp-fact-type caption">{{ . }}</span>{{ end }}
-                    {{- with .activity }}<span class="pp-fact-pick caption" data-pp-for="{{ . }}"{{ if ne . $first.id }} hidden{{ end }}>Your pick</span>{{ end }}
-                  </li>
-                  {{- end }}
-                </ul>
-                {{- else if eq $b.kind "limits" }}
-                <div class="card card-dispatch pp-limits">
-                  <p class="label">Limits and notes on {{ $d.short }}</p>
-                  <dl data-pp-limits>
-                    {{- range $d.limited }}
-                    <div data-action="{{ .id }}">
-                      <dt class="ui">{{ .name }}</dt>
-                      <dd>{{ .limits }}</dd>
-                    </div>
-                    {{- end }}
-                  </dl>
-                </div>
-                <p class="pp-d-more caption">Actions with no entry here still follow {{ $d.short }}'s own limits. <a href="{{ $d.docs | relURL }}">The {{ $d.short }} docs</a> list them.</p>
-                {{- else }}
-                <p class="pp-reach">{{ $d.reach }}.</p>
-                <dl class="pp-behavior" data-pp-behavior>
-                  {{- range $d.actions }}
-                  <div class="pp-fact{{ if eq .activity $first.id }} is-picked{{ end }}" data-action="{{ .id }}" data-pp-row="{{ .activity }}">
-                    <dt>{{ .name }}</dt>
-                    <dd>{{ .description }}</dd>
-                  </div>
-                  {{- end }}
-                </dl>
-                {{- end }}
-              </div>
-            </details>
+          <div class="pp-matrix-scroll" role="group" aria-labelledby="pp-matrix-title" tabindex="0">
+          <table class="pp-matrix" data-pp-matrix>
+            <caption class="visually-hidden">{{ $m.heading }}</caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ $m.columns.action }}</th>
+                <th scope="col">{{ $m.columns.does }}</th>
+                <th scope="col">{{ $m.columns.limits }}</th>
+                <th scope="col">{{ $m.columns.cli }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{- range $d.actions }}
+              <tr class="pp-row{{ if and .activity (eq .activity $first.id) }} is-picked{{ end }}" data-action="{{ .id }}"{{ with .activity }} data-pp-row="{{ . }}"{{ end }}>
+                <th scope="row" class="pp-cell-action">
+                  <a class="pp-action-name" href="{{ printf "%s#%s" ($d.docs | relURL) .slug }}">{{ .name }}</a>
+                  {{- if and .type (ne .type .name) }}<span class="pp-type caption">{{ .type }}</span>{{ end }}
+                </th>
+                <td data-pp-col="does">{{ .description }}</td>
+                <td data-pp-col="limits">{{ with .limits }}{{ . }}{{ else }}<span class="muted">{{ $m.none }}</span>{{ end }}</td>
+                <td data-pp-col="cli">{{ if eq .cli.status "available" }}<code class="pp-cli">{{ range $i, $w := split .cli.command " " }}{{ if $i }} {{ end }}<span class="pp-tok">{{ $w }}</span>{{ end }}</code>{{ else }}<span class="muted">{{ .cli.notes }}</span>{{ end }}</td>
+              </tr>
+              {{- end }}
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </section>
+
+      {{- $r := $rec.roe }}
+      <section class="pp-section" aria-labelledby="pp-roe-title" data-pp-roe>
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="pp-roe-title" class="h2">{{ $r.heading }}</h2>
+            <p class="muted">{{ $r.intro }}</p>
+          </div>
+          {{- /* One Stamp card (facts and stats, DESIGN.md Cards) holds the three
+            presets as one stat row, split by neutral column rules. */}}
+          <div class="card card-stamp pp-roe">
+            <ul class="pp-presets">
+              {{- range $r.presets }}
+              <li class="pp-preset" data-pp-preset="{{ .label }}">
+                <a class="pp-preset-link" href="{{ .source | relURL }}">
+                  <span class="pp-preset-top"><span class="label">{{ .label }}</span>{{ if .default }}<span class="pp-default caption">{{ $r.defaultMark }}</span>{{ end }}</span>
+                  <span class="pp-stat"><span class="pp-stat-n display">{{ .stat }}</span> <span class="pp-stat-u ui">{{ $r.unit }}</span></span>
+                  <span class="pp-means">{{ .means | strings.FirstUpper }}.</span>
+                </a>
+              </li>
+              {{- end }}
+            </ul>
+          </div>
+          <ul class="pp-roe-notes">
+            {{- range $r.notes }}
+            <li><a href="{{ .source | relURL }}">{{ .text }}</a></li>
             {{- end }}
+          </ul>
+          <p class="pp-more ui"><a href="{{ $r.link.href | relURL }}">{{ $r.link.label }}</a></p>
+        </div>
+      </section>
+
+      {{- $f := $rec.fieldManual }}
+      {{- $fmVariants := slice "card-paper" "card-field" }}
+      <section class="pp-section" aria-labelledby="pp-fm-title" data-pp-field-manual>
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="pp-fm-title" class="h2">{{ $f.heading }}</h2>
+            <p class="muted">{{ $f.intro }}</p>
+          </div>
+          <ul class="pp-fm">
+            {{- range $i, $x := $f.facts }}
+            <li>
+              <a class="card {{ index $fmVariants $i }} pp-fm-card" href="{{ $x.source | relURL }}">
+                <span class="label">{{ $f.label }}</span>
+                <span class="h3">{{ $x.title }}</span>
+                <span class="pp-fm-text">{{ $x.text }}</span>
+              </a>
+            </li>
+            {{- end }}
+          </ul>
+          <p class="pp-more ui"><a href="{{ $f.link.href | relURL }}">{{ $f.link.label }}</a></p>
+        </div>
+      </section>
+
+      {{- $u := $rec.usage }}
+      <section class="pp-section" aria-labelledby="pp-use-title" data-pp-usage>
+        <div class="wrap">
+          <div class="pp-rail-head">
+            <div class="section-head">
+              <h2 id="pp-use-title" class="h2">{{ $u.heading }}</h2>
+              <p class="muted">{{ $u.intro }}</p>
+            </div>
+            <div class="pp-rail-controls" data-pp-rail-controls hidden>
+              <p class="pp-rail-count caption" data-pp-rail-count></p>
+              <p class="visually-hidden" data-pp-rail-announce aria-live="polite"></p>
+              <button type="button" class="pp-icon-button" data-pp-prev aria-controls="pp-rail" aria-label="Previous setups">
+                <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M12.5 15L7.5 10L12.5 5"/></svg>
+              </button>
+              <button type="button" class="pp-icon-button" data-pp-next aria-controls="pp-rail" aria-label="Next setups">
+                <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M7.5 15L12.5 10L7.5 5"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="pp-rail" id="pp-rail" data-pp-rail tabindex="0" role="group" aria-label="Setups, scroll sideways">
+            <ul class="pp-rail-track">
+              {{- range $u.items }}
+              <li class="pp-slide" data-pp-slide>
+                <article class="pp-use" data-pp-use="{{ .id }}" aria-labelledby="pp-use-{{ .id }}">
+                  <p class="label">{{ .label }}</p>
+                  <h3 id="pp-use-{{ .id }}" class="h3">{{ .title }}</h3>
+                  {{ partial "code-card.html" (dict "code" .code "title" .file "lang" .lang "prompt" (eq .lang "bash")) }}
+                  <p class="pp-use-src ui"><a href="{{ .source | relURL }}">{{ .sourceLabel }}</a></p>
+                </article>
+              </li>
+              {{- end }}
+            </ul>
           </div>
         </div>
       </section>
 
       {{- $k := $c.continuity }}
-      {{- $f := $k.filters }}
+      {{- $kf := $k.filters }}
       <section class="pp-section pp-continuity" aria-labelledby="pp-activities-title">
         <div class="wrap">
           <div class="section-head">
@@ -254,18 +338,18 @@
           <figure class="pp-activities" aria-labelledby="pp-activities-cap">
             <div class="pp-activities-art" aria-hidden="true">
               <div class="pp-filters">
-                <p class="pp-filters-title ui">{{ $f.title }}</p>
-                <p class="caption muted">{{ $f.applied }}</p>
+                <p class="pp-filters-title ui">{{ $kf.title }}</p>
+                <p class="caption muted">{{ $kf.applied }}</p>
                 <p class="pp-chips">
                   <span class="pp-chip caption">{{ $d.short }}<svg viewBox="0 0 12 12" width="10" height="10" focusable="false"><path d="M3 3l6 6M9 3l-6 6"/></svg></span>
                   <span class="pp-chip caption">{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}>{{ $a.label }}</span>{{ end }}<svg viewBox="0 0 12 12" width="10" height="10" focusable="false"><path d="M3 3l6 6M9 3l-6 6"/></svg></span>
                 </p>
-                <p class="pp-filter-group caption">{{ $f.time }}</p>
-                <p class="pp-check caption"><span class="pp-box"><svg viewBox="0 0 12 12" width="10" height="10" focusable="false"><path d="M2.5 6.2l2.4 2.4 4.6-5"/></svg></span>{{ $f.past }}</p>
-                <p class="pp-check caption"><span class="pp-box"><svg viewBox="0 0 12 12" width="10" height="10" focusable="false"><path d="M2.5 6.2l2.4 2.4 4.6-5"/></svg></span>{{ $f.upcoming }}</p>
-                <p class="pp-filter-row caption"><span>{{ $f.recurrence }}</span><span class="muted">{{ $f.any }}</span></p>
-                <p class="pp-filter-row caption"><span>{{ $f.platform }}</span><span class="muted">{{ $d.short }}</span></p>
-                <p class="pp-filter-row caption"><span>{{ $f.type }}</span><span class="muted">{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}>{{ $a.label }}</span>{{ end }}</span></p>
+                <p class="pp-filter-group caption">{{ $kf.time }}</p>
+                <p class="pp-check caption"><span class="pp-box"><svg viewBox="0 0 12 12" width="10" height="10" focusable="false"><path d="M2.5 6.2l2.4 2.4 4.6-5"/></svg></span>{{ $kf.past }}</p>
+                <p class="pp-check caption"><span class="pp-box"><svg viewBox="0 0 12 12" width="10" height="10" focusable="false"><path d="M2.5 6.2l2.4 2.4 4.6-5"/></svg></span>{{ $kf.upcoming }}</p>
+                <p class="pp-filter-row caption"><span>{{ $kf.recurrence }}</span><span class="muted">{{ $kf.any }}</span></p>
+                <p class="pp-filter-row caption"><span>{{ $kf.platform }}</span><span class="muted">{{ $d.short }}</span></p>
+                <p class="pp-filter-row caption"><span>{{ $kf.type }}</span><span class="muted">{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}>{{ $a.label }}</span>{{ end }}</span></p>
               </div>
               <div class="pp-list">
                 <p class="pp-list-row pp-list-headrow caption">

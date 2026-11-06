@@ -1,7 +1,10 @@
 {
   "$schema": "../schemas/platform_page.schema.json",
   "contract": {
-    "previewNotice": "Preview: not final, and not linked from the site",
+    "reviewerNote": {
+      "mark": "Reviewer note",
+      "text": "Preview: not final, and not linked from the site."
+    },
     "stageLabel": "Interactive preview",
     "stages": {
       "write": "Write",
@@ -11,7 +14,7 @@
     "continuity": {
       "heading": "One place for every activity",
       "intro": "Start in the app, then follow it there with everything else: once or recurring, past and upcoming.",
-      "caption": "Illustration of the Activities model. The platform and the activity type are filters on one list, not separate places.",
+      "caption": "Illustration of the Activities model: the platform and the type are filters on one list.",
       "filters": {
         "title": "Filters",
         "applied": "Applied",
@@ -49,8 +52,7 @@
         "description": "Post, respond or amplify on X from your own browser with Blowhorn. A preview of the X platform page."
       },
       "start": {
-        "label": "Start",
-        "note": "Start opens the download page. Pick the activity again in the app, then run it once or on a schedule."
+        "label": "Get the browser extension"
       },
       "activities": [
         {
@@ -112,64 +114,168 @@
       "media": {
         "label": "Illustration, not a recording"
       },
-      "examples": {
-        "heading": "A few ways to start",
-        "intro": "Shapes an activity can take. Preview one above, then make it yours.",
-        "label": "Illustrative example",
-        "footnote": "Examples are optional and made up. Post, Respond and Amplify stay available above.",
-        "items": [
-          {
-            "id": "launch-update",
-            "activity": "post",
-            "variant": "paper",
-            "title": "Launch update",
-            "blurb": "A clear update for your next release.",
-            "sample": "We shipped a simpler way to turn an idea into an activity. Here's what changed."
-          },
-          {
-            "id": "reply-with-context",
-            "activity": "respond",
-            "variant": "field",
-            "title": "Reply with context",
-            "blurb": "Add what you learned, not just agreement.",
-            "sample": "That trade-off is familiar. We tried a smaller first step, and here's what we learned."
-          },
-          {
-            "id": "pass-along-an-idea",
-            "activity": "amplify",
-            "variant": "plain",
-            "title": "Pass along an idea",
-            "blurb": "Share the signal with your audience.",
-            "sample": "Worth reading: a practical approach to making the next iteration easier."
-          },
-          {
-            "id": "weekly-recap",
-            "activity": "post",
-            "variant": "stamp",
-            "title": "Weekly recap",
-            "blurb": "Three facts, once a week.",
-            "sample": "Three things we learned this week, and what we're trying next."
-          }
-        ]
+      "playground": {
+        "heading": "Try on a draft",
+        "intro": "Write a post and preview it here. Nothing leaves this page.",
+        "label": "Local preview",
+        "fields": {
+          "text": "Your draft",
+          "image": "Add an image",
+          "clear": "Remove image",
+          "notImage": "That file is not an image.",
+          "unreadable": "That image can't be shown."
+        },
+        "starters": {
+          "label": "Start from",
+          "items": [
+            {
+              "id": "launch-update",
+              "activity": "post",
+              "title": "Launch update",
+              "sample": "We shipped a simpler way to turn an idea into an activity. Here's what changed."
+            },
+            {
+              "id": "reply-with-context",
+              "activity": "respond",
+              "title": "Reply with context",
+              "sample": "That trade-off is familiar. We tried a smaller first step, and here's what we learned."
+            },
+            {
+              "id": "pass-along-an-idea",
+              "activity": "amplify",
+              "title": "Pass along an idea",
+              "sample": "Worth reading: a practical approach to making the next iteration easier."
+            },
+            {
+              "id": "weekly-recap",
+              "activity": "post",
+              "title": "Weekly recap",
+              "sample": "Three things we learned this week, and what we're trying next."
+            }
+          ]
+        },
+        "thread": {
+          "at": 274,
+          "label": "Goes out as a thread"
+        },
+        "planned": {
+          "mark": "Planned",
+          "text": "Rehearse a draft like this as a dry run from the extension."
+        }
       },
-      "breakdown": {
-        "heading": "No mystery between Start and done",
-        "intro": "Open only what you need. It is the same list the X docs show.",
+      "matrix": {
+        "heading": "Everything Blowhorn does on X",
+        "intro": "The same list the X docs show.",
+        "columns": {
+          "action": "Action",
+          "does": "What it does",
+          "limits": "Limits and notes",
+          "cli": "In the CLI"
+        },
+        "none": "None listed"
+      },
+      "roe": {
+        "heading": "Rules of engagement",
+        "intro": "One choice sets your pace and daily caps on X.",
+        "defaultMark": "Default",
+        "unit": "posts a day on X",
+        "presets": [
+          {
+            "label": "Safety on",
+            "means": "slow and careful",
+            "stat": "12",
+            "quote": "on X it is 12 posts a day",
+            "source": "/docs/how-to/settings/choose-your-rules-of-engagement/#safety-on-cautious-one-thing-at-a-time-nights-off"
+          },
+          {
+            "label": "Weapons tight",
+            "means": "normal pace, within the platform's own limits",
+            "stat": "25",
+            "default": true,
+            "quote": "on X it is 25 posts a day",
+            "source": "/docs/how-to/settings/choose-your-rules-of-engagement/#weapons-tight-standard-half-the-ceiling-with-the-guardrails-on"
+          },
+          {
+            "label": "Weapons free",
+            "means": "fast, and more noticeable to the platform",
+            "stat": "50",
+            "quote": "on X it is 50 posts a day",
+            "source": "/docs/how-to/settings/choose-your-rules-of-engagement/#weapons-free-brisk-fast-while-you-watch"
+          }
+        ],
+        "notes": [
+          {
+            "text": "Nothing goes past a limit X publishes.",
+            "quote": "Where a platform publishes its own limit for an account, nothing in Blowhorn goes past it",
+            "source": "/docs/how-to/settings/choose-your-rules-of-engagement/#a-limit-the-platform-publishes-is-the-one-hard-stop"
+          },
+          {
+            "text": "A new profile or computer runs Safety on for its first 14 days.",
+            "quote": "A new profile or computer still runs under Safety on for its first 14 days.",
+            "source": "/docs/how-to/settings/choose-your-rules-of-engagement/#which-choice-wins"
+          }
+        ],
+        "link": {
+          "label": "Choose your rules of engagement",
+          "href": "/docs/how-to/settings/choose-your-rules-of-engagement/"
+        }
+      },
+      "fieldManual": {
+        "heading": "From the Field Manual",
+        "intro": "What X's own ranking code rewards, with a source for every claim.",
+        "label": "Field Manual",
+        "facts": [
+          {
+            "title": "Replies outrank likes",
+            "text": "In X's 2023 published weights, a reply the author engages with scored 75. A like scored 0.5.",
+            "quote": "In the 2023 weights, a predicted reply scored 13.5, a reply the author then engages with scored 75, opening the conversation and replying or liking scored 11, and a like scored 0.5",
+            "source": "/field-manual/x/#what-xs-ranking-rewards"
+          },
+          {
+            "title": "Your posts compete with each other",
+            "text": "Each post after your first is scored down, to a floor.",
+            "quote": "Each post after an author's first is multiplied by a decaying factor, down to a floor",
+            "source": "/field-manual/x/#what-sinks-a-post-on-x"
+          }
+        ],
+        "link": {
+          "label": "Read the X field manual",
+          "href": "/field-manual/x/"
+        }
+      },
+      "usage": {
+        "heading": "Run it from your tools",
+        "intro": "Real setups from the docs. Copy one.",
         "items": [
           {
-            "kind": "supported",
-            "title": "What Blowhorn can do on X",
-            "hint": "Every action, and the type it belongs to"
+            "id": "mcp",
+            "label": "MCP",
+            "title": "Connect an assistant",
+            "file": "MCP entry",
+            "lang": "json",
+            "code": "{\n  \"mcpServers\": {\n    \"blowhorn\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"blowhorn-mcp\"]\n    }\n  }\n}",
+            "source": "/docs/how-to/set-up/connect-mcp-client/#start-it-with-npx",
+            "sourceLabel": "Connect an AI assistant over MCP"
           },
           {
-            "kind": "limits",
-            "title": "Limits and notes",
-            "hint": "What Blowhorn lists for each action"
+            "id": "cli",
+            "label": "CLI",
+            "title": "See your rules on X",
+            "file": "terminal",
+            "lang": "bash",
+            "code": "blowhorn risk show --profile personal --platform x --json",
+            "source": "/docs/reference/cli/risk/#blowhorn-risk-show",
+            "sourceLabel": "blowhorn risk reference"
           },
           {
-            "kind": "behavior",
-            "title": "How each action runs",
-            "hint": "What happens on X, as you"
+            "id": "skill",
+            "label": "Agent skill",
+            "title": "Teach an agent once",
+            "file": ".claude/skills/blowhorn/SKILL.md",
+            "lang": "markdown",
+            "code": "---\nname: blowhorn\ndescription: Schedule, queue and amplify social posts with the blowhorn CLI\n---\n\nRead before you write:\n- blowhorn schedule list --json\n- blowhorn content list --pending --json\n- blowhorn schedule status --json\n\nWrite with the fingerprint you just read:\n- blowhorn content upsert --payload '<json>' --row N --expected-fingerprint <fp> --json\n\nPreview anything that publishes with --dry-run first.\nIf anything looks wrong: blowhorn schedule pause --all --reason \"<why>\"",
+            "source": "/agents/claude-code/",
+            "sourceLabel": "Blowhorn for Claude Code"
           }
         ]
       },

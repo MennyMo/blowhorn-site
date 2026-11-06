@@ -2,25 +2,17 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://blowhorn.ai/schemas/platform_page.schema.json",
   "title": "Platform pages",
-  "description": "data/platform_pages.json: the shared contract every platform product page follows (Figma 902:111) and one record per platform page (Figma 902:114 is X), rendered by layouts/platform-page.html. A record EXTENDS a supported platform and never restates it: the platform name, logo, docs page and reach come from data/integrations.json plus data/platforms/<platform>.yaml, and every action's name, behavior and limits come from data/actions.json plus that YAML. A record holds only page copy, the activity types (each pointing at one action id), the illustrative examples and the breakdown order. This schema checks shape; .github/scripts/check_platform_pages.py --source checks the cross-references (platform supported, each action id in the platform's YAML, each example's activity declared, card variants never repeated within a rail window) and the template fails the build on the same mismatches. Docs: docs/platform-pages.md. Hyphens, never em dashes. No browser or operating system brand names: marketing wording stays general.",
+  "description": "data/platform_pages.json: the shared contract every platform product page follows (Figma 902:111) and one record per platform page (Figma 902:114 is X), rendered by layouts/platform-page.html. A record EXTENDS a supported platform and never restates it: the platform name, logo, docs page and reach come from data/integrations.json plus data/platforms/<platform>.yaml, every action's name, behavior and limits from data/actions.json plus that YAML, and each action's CLI line from data/action_examples.json. A record holds only page copy, the activity types (each pointing at one action id), the playground's starter drafts, and sourced facts: every rules-of-engagement, Field Manual and usage item quotes the public page it came from (source), and .github/scripts/check_platform_pages.py --source fails a quote or snippet that page does not carry, or a number the quote does not hold. This schema checks shape; the check script and the template fail the build on the cross-references. Docs: docs/platform-pages.md. Hyphens, never em dashes. No browser or operating system brand names: marketing wording stays general.",
   "type": "object",
   "additionalProperties": false,
   "required": ["contract", "pages"],
   "properties": {
     "$schema": { "type": "string" },
     "contract": { "$ref": "#/definitions/contract" },
-    "pages": {
-      "type": "array",
-      "minItems": 1,
-      "items": { "$ref": "#/definitions/page" }
-    }
+    "pages": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/page" } }
   },
   "definitions": {
-    "id": {
-      "type": "string",
-      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
-      "maxLength": 40
-    },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$", "maxLength": 40 },
     "copy": {
       "type": "string",
       "minLength": 1,
@@ -37,9 +29,12 @@
       "description": "What every platform page shares (Figma 902:111): the three stages an activity goes through, the preview and illustration labels, and the closing Activities continuity visual. Once and recurring activities share one Activities model in which the platform is a filter, not a separate Upcoming or History destination, so the continuity visual is the same on every page; only the platform and the selected activity type change.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["previewNotice", "stageLabel", "stages", "continuity"],
+      "required": ["reviewerNote", "stageLabel", "stages", "continuity"],
       "properties": {
-        "previewNotice": { "$ref": "#/definitions/copy" },
+        "reviewerNote": {
+          "description": "The one reviewer annotation the preview keeps: it says the page is not final and not linked. It is drawn as an annotation (alternate colour, mono type and the explicit mark), never as a standard caption. Remove it, and this property, when a page leaves preview.",
+          "$ref": "#/definitions/marked"
+        },
         "stageLabel": {
           "description": "Eyebrow over the hero illustration. It says the panel is an interactive preview, never a recording.",
           "$ref": "#/definitions/copy"
@@ -67,7 +62,17 @@
             "filters": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["title", "applied", "time", "past", "upcoming", "recurrence", "any", "platform", "type"],
+              "required": [
+                "title",
+                "applied",
+                "time",
+                "past",
+                "upcoming",
+                "recurrence",
+                "any",
+                "platform",
+                "type"
+              ],
               "properties": {
                 "title": { "$ref": "#/definitions/copy" },
                 "applied": { "$ref": "#/definitions/copy" },
@@ -116,7 +121,19 @@
     "page": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["platform", "route", "head", "start", "activities", "media", "examples", "breakdown"],
+      "required": [
+        "platform",
+        "route",
+        "head",
+        "start",
+        "activities",
+        "media",
+        "playground",
+        "matrix",
+        "roe",
+        "fieldManual",
+        "usage"
+      ],
       "properties": {
         "platform": {
           "description": "A platform id from data/integrations.json whose status is supported and that has data/platforms/<id>.yaml. The page borrows its name, logo, docs link and reach from there.",
@@ -135,20 +152,16 @@
             "eyebrow": { "$ref": "#/definitions/copy" },
             "headline": { "$ref": "#/definitions/copy" },
             "lede": { "$ref": "#/definitions/paragraph" },
-            "description": {
-              "description": "Meta description.",
-              "$ref": "#/definitions/paragraph"
-            }
+            "description": { "description": "Meta description.", "$ref": "#/definitions/paragraph" }
           }
         },
         "start": {
-          "description": "The page's one primary call to action. It always goes to the download page (the template builds the link, so a deep link cannot be invented here). The app's only web link (blowhorn://content/new) takes a URL, a title and text, not a platform or an activity type, so Start cannot pre-select either; note must say what Start does and that the pick is made again in the app.",
+          "description": "The page's one primary call to action. It installs the Blowhorn browser extension from its Chrome Web Store listing, the same link the download page's extension card uses; the template builds the link (data partial extensionHref), so it cannot be invented here, and check_platform_pages.py fails the built page if the two differ. No note or caption sits under it. When a link exists that installs Blowhorn with the platform and type picked, change the label, the partial and the check together.",
           "type": "object",
           "additionalProperties": false,
-          "required": ["label", "note"],
+          "required": ["label"],
           "properties": {
-            "label": { "$ref": "#/definitions/copy" },
-            "note": { "$ref": "#/definitions/paragraph" }
+            "label": { "type": "string", "enum": ["Get the browser extension"] }
           }
         },
         "activities": {
@@ -159,10 +172,8 @@
           "items": { "$ref": "#/definitions/activity" }
         },
         "media": { "$ref": "#/definitions/media" },
-        "examples": { "$ref": "#/definitions/examples" },
-        "breakdown": { "$ref": "#/definitions/breakdown" },
         "related": {
-          "description": "Optional quiet links beside the breakdown (the platform's docs link is always first and comes from the YAML). Site-relative paths only.",
+          "description": "Optional quiet links beside the action matrix (the platform's docs link is always first and comes from the YAML). Site-relative paths only.",
           "type": "array",
           "maxItems": 3,
           "items": {
@@ -174,7 +185,12 @@
               "href": { "type": "string", "pattern": "^/[a-z0-9/_-]*/?$" }
             }
           }
-        }
+        },
+        "playground": { "$ref": "#/definitions/playground" },
+        "matrix": { "$ref": "#/definitions/matrix" },
+        "roe": { "$ref": "#/definitions/roe" },
+        "fieldManual": { "$ref": "#/definitions/fieldManual" },
+        "usage": { "$ref": "#/definitions/usage" }
       }
     },
     "activity": {
@@ -223,52 +239,202 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["label"],
-      "properties": {
-        "label": { "$ref": "#/definitions/copy" }
-      }
+      "properties": { "label": { "$ref": "#/definitions/copy" } }
     },
-    "examples": {
-      "description": "An optional rail of illustrative examples, below the hero. Examples show shapes an activity can take, never core facts, and each one is labelled illustrative. Without script the rail is a native scroll area; with it, previous and next buttons page it by hand (never automatically) and each example can be shown in the hero preview.",
+    "sitePath": {
+      "description": "A site-relative path to a public page, optionally with a #fragment. Never a private repository link.",
+      "type": "string",
+      "pattern": "^/[a-z0-9/_.-]*/(#[a-z0-9-]+)?$"
+    },
+    "sourced": {
+      "description": "A fact shown on the page with the public page it came from. text is what the page shows; quote is a verbatim passage of the source page (whitespace may differ) that backs it, and every number in text must appear in quote. check_platform_pages.py --source reads the source's Markdown under content/en/ and fails a quote it does not carry.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["heading", "intro", "label", "footnote", "items"],
+      "required": ["text", "quote", "source"],
+      "properties": {
+        "text": { "$ref": "#/definitions/copy" },
+        "quote": { "type": "string", "minLength": 8, "maxLength": 400 },
+        "source": { "$ref": "#/definitions/sitePath" }
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "href"],
+      "properties": { "label": { "$ref": "#/definitions/copy" }, "href": { "$ref": "#/definitions/sitePath" } }
+    },
+    "marked": {
+      "description": "A line with an explicit mark (for instance Reviewer note or Planned). The template draws the mark in mono caps, so it is never mistaken for a caption.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mark", "text"],
+      "properties": { "mark": { "$ref": "#/definitions/copy" }, "text": { "$ref": "#/definitions/paragraph" } }
+    },
+    "playground": {
+      "description": "A local-only try-on: the visitor types a draft, may pick an image from their own computer and sees it in an illustrated preview. Nothing is sent anywhere: no form, no request, no access to the extension, accounts or credentials; the image is read with an object URL and released. Without script the preview shows the first starter's text and the controls stay hidden. Starter drafts select their type and fill the draft. The image and the thread counter belong to the activity bound to the post action (the YAML says a post takes an image and goes out as a thread past thread.at characters).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["heading", "intro", "label", "fields", "starters", "thread", "planned"],
       "properties": {
         "heading": { "$ref": "#/definitions/copy" },
         "intro": { "$ref": "#/definitions/paragraph" },
         "label": {
-          "description": "Badge on every example, for instance Illustrative example.",
+          "description": "Illustration label on the preview, for instance Local preview.",
           "$ref": "#/definitions/copy"
         },
-        "footnote": { "$ref": "#/definitions/paragraph" },
-        "items": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 8,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["id", "activity", "variant", "title", "blurb", "sample"],
-            "properties": {
-              "id": { "$ref": "#/definitions/id" },
-              "activity": {
-                "description": "An activities[].id on this page.",
-                "$ref": "#/definitions/id"
-              },
-              "variant": {
-                "description": "The card variant, picked by what the example is (DESIGN.md, Cards): paper for the one featured example, field for an explanation, plain for a secondary one, stamp for a recap of facts. The rail shows up to four at once, so any four neighbours differ, and paper is used at most once.",
-                "type": "string",
-                "enum": ["paper", "field", "plain", "stamp"]
-              },
-              "title": { "$ref": "#/definitions/copy" },
-              "blurb": { "$ref": "#/definitions/copy" },
-              "sample": { "$ref": "#/definitions/paragraph" }
+        "fields": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["text", "image", "clear", "notImage", "unreadable"],
+          "properties": {
+            "text": { "$ref": "#/definitions/copy" },
+            "image": { "$ref": "#/definitions/copy" },
+            "clear": { "$ref": "#/definitions/copy" },
+            "notImage": { "description": "Announced when the picked file is not an image.", "$ref": "#/definitions/copy" },
+            "unreadable": { "description": "Announced when the browser cannot show the picked image (for instance a format it does not decode).", "$ref": "#/definitions/copy" }
+          }
+        },
+        "starters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["label", "items"],
+          "properties": {
+            "label": { "$ref": "#/definitions/copy" },
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "activity", "title", "sample"],
+                "properties": {
+                  "id": { "$ref": "#/definitions/id" },
+                  "activity": { "description": "An activities[].id on this page.", "$ref": "#/definitions/id" },
+                  "title": { "$ref": "#/definitions/copy" },
+                  "sample": {
+                    "description": "Invented sample text, shown as a draft.",
+                    "$ref": "#/definitions/paragraph"
+                  }
+                }
+              }
             }
           }
+        },
+        "thread": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["at", "label"],
+          "properties": {
+            "at": {
+              "description": "The length past which a post goes out as a thread. Must match the platform YAML's post behavior (\"longer than <at> characters\").",
+              "type": "integer",
+              "minimum": 1
+            },
+            "label": { "$ref": "#/definitions/copy" }
+          }
+        },
+        "planned": {
+          "description": "What is planned for this flow and not shipped. Drawn with its mark so it never reads as a current feature.",
+          "$ref": "#/definitions/marked"
         }
       }
     },
-    "breakdown": {
-      "description": "Progressive disclosure, all collapsed at load. The body of each item is computed from the platform's YAML and the action vocabulary by kind, never written here: supported lists the actions, limits lists each action's limits (a Dispatch card: technical facts), behavior lists each action's behavior and the platform's reach. Only titles and hints are page copy, so the breakdown cannot drift from the canonical data.",
+    "matrix": {
+      "description": "Every action the platform YAML lists, in its order, visible at load (never collapsed). Cells are computed, never written here: the action name from data/actions.json, what it does and limits from the YAML, the CLI line (or its placeholder note) from data/action_examples.json. Only the heading, intro, column labels and the empty-limits label are page copy. The selector highlights the rows bound to the picked type and hides nothing.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["heading", "intro", "columns", "none"],
+      "properties": {
+        "heading": { "$ref": "#/definitions/copy" },
+        "intro": { "$ref": "#/definitions/paragraph" },
+        "columns": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "does", "limits", "cli"],
+          "properties": {
+            "action": { "$ref": "#/definitions/copy" },
+            "does": { "$ref": "#/definitions/copy" },
+            "limits": { "$ref": "#/definitions/copy" },
+            "cli": { "$ref": "#/definitions/copy" }
+          }
+        },
+        "none": {
+          "description": "Shown in the limits column for an action the YAML gives no limits.",
+          "$ref": "#/definitions/copy"
+        }
+      }
+    },
+    "roe": {
+      "description": "Rules of engagement on this platform: the three presets, each with its daily post cap on the platform as the rules-of-engagement docs state it, and short sourced notes. Never a number the docs do not give.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["heading", "intro", "defaultMark", "unit", "presets", "notes", "link"],
+      "properties": {
+        "heading": { "$ref": "#/definitions/copy" },
+        "intro": { "$ref": "#/definitions/paragraph" },
+        "defaultMark": { "$ref": "#/definitions/copy" },
+        "unit": { "$ref": "#/definitions/copy" },
+        "presets": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "means", "stat", "quote", "source"],
+            "properties": {
+              "label": { "$ref": "#/definitions/copy" },
+              "means": {
+                "description": "The preset's meaning, verbatim from the source.",
+                "$ref": "#/definitions/copy"
+              },
+              "stat": { "type": "string", "pattern": "^[0-9][0-9,.]*$" },
+              "default": { "type": "boolean" },
+              "quote": { "type": "string", "minLength": 8, "maxLength": 400 },
+              "source": { "$ref": "#/definitions/sitePath" }
+            }
+          }
+        },
+        "notes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": { "$ref": "#/definitions/sourced" }
+        },
+        "link": { "$ref": "#/definitions/link" }
+      }
+    },
+    "fieldManual": {
+      "description": "A teaser of the platform's Field Manual: one or two sourced facts, each card linking to the section it quotes, and one link to the whole briefing.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["heading", "intro", "label", "facts", "link"],
+      "properties": {
+        "heading": { "$ref": "#/definitions/copy" },
+        "intro": { "$ref": "#/definitions/paragraph" },
+        "label": { "$ref": "#/definitions/copy" },
+        "facts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["title", "text", "quote", "source"],
+            "properties": {
+              "title": { "$ref": "#/definitions/copy" },
+              "text": { "$ref": "#/definitions/copy" },
+              "quote": { "type": "string", "minLength": 8, "maxLength": 400 },
+              "source": { "$ref": "#/definitions/sitePath" }
+            }
+          }
+        },
+        "link": { "$ref": "#/definitions/link" }
+      }
+    },
+    "usage": {
+      "description": "A rail of real setups, each a terminal code card with one-click copy: an MCP entry, a CLI command and an agent skill. code must appear verbatim (whitespace may differ) on its source page, a public docs or agent page, so nothing here is invented; the source link is shown on the card. Without script the rail is a native scroll area; with it, previous and next buttons page it by hand, never automatically.",
       "type": "object",
       "additionalProperties": false,
       "required": ["heading", "intro", "items"],
@@ -277,16 +443,26 @@
         "intro": { "$ref": "#/definitions/paragraph" },
         "items": {
           "type": "array",
-          "minItems": 1,
-          "maxItems": 3,
+          "minItems": 2,
+          "maxItems": 6,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["kind", "title", "hint"],
+            "required": ["id", "label", "title", "file", "lang", "code", "source", "sourceLabel"],
             "properties": {
-              "kind": { "type": "string", "enum": ["supported", "limits", "behavior"] },
+              "id": { "$ref": "#/definitions/id" },
+              "label": { "$ref": "#/definitions/copy" },
               "title": { "$ref": "#/definitions/copy" },
-              "hint": { "$ref": "#/definitions/copy" }
+              "file": {
+                "description": "The code card's title bar: a file name, or terminal.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "lang": { "type": "string", "enum": ["bash", "json", "markdown", "toml", "yaml"] },
+              "code": { "type": "string", "minLength": 1, "maxLength": 1200 },
+              "source": { "$ref": "#/definitions/sitePath" },
+              "sourceLabel": { "$ref": "#/definitions/copy" }
             }
           }
         }

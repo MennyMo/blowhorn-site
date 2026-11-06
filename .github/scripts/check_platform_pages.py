@@ -11,29 +11,42 @@ JSON Schema cannot express:
 - each record's platform is a supported row of data/integrations.json with a
   data/platforms/<id>.yaml, and its route is /preview/platforms/<id>/;
 - each activity type names an action that YAML lists, ids are unique and no two
-  types share an action; examples use a declared type, ids are unique, no four
-  neighbours share a card variant (the rail shows up to four) and paper, the
-  featured variant, is used at most once; breakdown kinds are unique and a limits
-  item needs an action with limits;
+  types share an action; starter drafts use a declared type and unique ids;
+  every action the YAML lists has a data/action_examples.json entry; the
+  playground's thread length is the one the YAML's post behavior states;
+- every sourced fact (rules of engagement, Field Manual) quotes its public source
+  page verbatim (whitespace aside), every number it shows is in that quote, and
+  every usage snippet appears verbatim on its source page; no source is the
+  private product repository;
 - each record has exactly one content page (content/en/preview-platform-<id>.md)
   with layout platform-page, the same platform and url, noindex, exclude_search,
   sitemap disabled and build list never, and no other page uses the layout;
-- hugo.toml keeps /preview/** out of llms.txt; no em dash anywhere in the data.
+- hugo.toml keeps /preview/** out of llms.txt; no em dash anywhere in the data;
+- assets/js/platform-page.js makes no request and touches no storage, cookie or
+  credential API (the playground is local only).
 
 With a build directory it also checks each built page and runs its script:
 
 - the page exists, is noindex, and its route is in no sitemap, llms.txt,
   llms-full.txt or search index, and no other built page links to it;
-- <main> holds exactly one primary button, Start, to the download page; one
-  radio per activity type in order, the first checked; one illustration, intent
-  and Start context per type; the examples in order with their card variants;
-  the breakdown collapsed, its rows the platform's actions in YAML order and its
-  limits exactly the limited actions; no em dash and no browser brand in it;
+- <main> holds exactly one primary button, the call to action, labelled as the
+  record says and linking to the extension listing the download page's own
+  extension card uses, with nothing under it (no note, no caption); the
+  reviewer annotation carries its mark and annotation style, never a caption;
+- one radio per activity type in order, the first checked; one illustration and
+  intent per type; the action matrix is a visible table (no <details> on the
+  page) whose rows are the YAML's actions in order and whose cells are the
+  vocabulary name, the YAML's behavior and limits and the examples' CLI line; the
+  presets, Field Manual cards and usage cards match the record, every code card
+  can be copied, and every source anchor exists; the playground has no form and
+  no named field; no em dash and no browser brand in the page;
 - assets/js/platform-page.js, run through platform_page_harness.js against the
   built <main>: picking each type swaps every [data-pp-for] element and marks
-  the bound rows; an example's preview selects its type, shows its sample and
-  moves focus to the illustration; the rail pages by hand with aria-disabled
-  ends, and under reduced motion nothing scrolls smoothly.
+  the bound rows; a starter selects its type and fills the draft; typing mirrors
+  into the preview as text and flags a thread past the length once; an image is
+  shown through an object URL and released when removed or replaced, and a
+  non-image is refused; the rail pages by hand with aria-disabled ends, and
+  under reduced motion nothing scrolls smoothly.
 
 Usage: check_platform_pages.py --source
        check_platform_pages.py [BUILD_DIR]
@@ -56,8 +69,15 @@ HARNESS = Path(__file__).resolve().parent / "platform_page_harness.js"
 SCRIPT = Path("assets/js/platform-page.js")
 EM_DASH = "—"
 BRAND_RE = re.compile(r"Chrome|Safari|Firefox|\bMac\b|macOS|Outbox")
-VARIANTS = {"paper": "card-paper", "field": "card-field", "plain": "card-plain", "stamp": "card-stamp"}
-RAIL_WINDOW = 4
+# The Chrome Web Store listing of the Blowhorn extension: the call to action's
+# target, and the link layouts/download.html's extension card uses.
+EXTENSION_HREF = "https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf"
+# The playground is local only: the page script never makes a request, reads
+# storage or cookies, or touches credentials.
+FORBIDDEN_JS = re.compile(
+    r"\b(fetch|XMLHttpRequest|sendBeacon|WebSocket|EventSource|localStorage|sessionStorage|indexedDB"
+    r"|document\.cookie|navigator\.credentials|chrome\.runtime|postMessage|FormData|\.submit\()")
+NUMBER_RE = re.compile(r"\d+(?:[.,]\d+)*")
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
 LLMS_EXCLUDE = "/preview/**"
 
@@ -70,18 +90,91 @@ def load_json(root: Path, rel: str) -> dict:
 
 def yaml_actions(root: Path, platform_id: str) -> list[dict] | None:
     """The action rows of data/platforms/<id>.yaml: id (from the shared
-    yaml_action_ids) and the text of its limits, empty when it lists none."""
+    yaml_action_ids), and the text of its behavior and limits, empty when it
+    lists none (each is one line in these files)."""
     path = root / "data" / "platforms" / f"{platform_id}.yaml"
     if not path.is_file():
         return None
-    limits: dict[str, str] = {}
+    rows: dict[str, dict] = {}
     current = ""
     for line in path.read_text(encoding="utf-8").splitlines():
         if line.startswith("  - id:"):
             current = line.split("id:", 1)[1].strip()
-        elif line.startswith("    limits:") and current:
-            limits[current] = line.split("limits:", 1)[1].strip()
-    return [{"id": i, "limits": limits.get(i, "")} for i in yaml_action_ids(platform_id, root)]
+            rows[current] = {"behavior": "", "limits": ""}
+        elif current and line.startswith(("    limits:", "    behavior:")):
+            key, _, value = line.strip().partition(":")
+            rows[current][key] = value.strip()
+    return [{"id": i, **rows.get(i, {"behavior": "", "limits": ""})} for i in yaml_action_ids(platform_id, root)]
+
+
+def squash(text: str) -> str:
+    """Collapse whitespace and drop Markdown emphasis, so a quote matches its
+    source however the source wraps or bolds it."""
+    return " ".join(text.replace("**", "").split())
+
+
+def source_file(root: Path, href: str) -> Path | None:
+    """The content file behind a site path (/docs/x/y/#frag -> content/en/docs/x/y.md)."""
+    path = href.split("#", 1)[0].strip("/")
+    base = root / "content" / "en" / path
+    for candidate in (base.with_suffix(".md"), base / "_index.md", base / "index.md"):
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def source_texts(path: Path) -> list[str]:
+    """The page's raw text, plus every string in a JSON front matter (the agent
+    pages keep their copy there), each squashed."""
+    raw = path.read_text(encoding="utf-8")
+    texts = [squash(raw)]
+    if raw.lstrip().startswith("{"):
+        try:
+            obj, _ = json.JSONDecoder().raw_decode(raw.lstrip())
+        except ValueError:
+            obj = None
+
+        def strings(o):
+            if isinstance(o, str):
+                yield o
+            elif isinstance(o, dict):
+                for v in o.values():
+                    yield from strings(v)
+            elif isinstance(o, list):
+                for v in o:
+                    yield from strings(v)
+        texts.extend(squash(s) for s in strings(obj))
+    return texts
+
+
+def check_quote(root: Path, where: str, quote: str, href: str, shown: str = "") -> list[str]:
+    """A quote must be on its source page, and every number the page shows for
+    it must be in the quote: no number the source does not give."""
+    path = source_file(root, href)
+    if path is None:
+        return [f"{where}: source {href!r} is not a page under content/en/"]
+    out: list[str] = []
+    if not any(squash(quote) in t for t in source_texts(path)):
+        out.append(f"{where}: {path.relative_to(root)} does not say {quote!r}")
+    missing = sorted(set(NUMBER_RE.findall(shown)) - set(NUMBER_RE.findall(quote)))
+    if missing:
+        out.append(f"{where}: shows {missing}, which the quote from {href} does not give")
+    return out
+
+
+def sourced_items(rec: dict) -> list[tuple[str, str, str, str]]:
+    """(where, quote, source, shown text) for every sourced fact on a record."""
+    items = []
+    for p in rec.get("roe", {}).get("presets", []):
+        items.append((f"rules of engagement {p['label']!r}", p["quote"], p["source"], p["stat"]))
+        items.append((f"rules of engagement {p['label']!r} meaning", p["means"], p["source"], ""))
+    for n in rec.get("roe", {}).get("notes", []):
+        items.append((f"rules of engagement note {n['text']!r}", n["quote"], n["source"], n["text"]))
+    for f in rec.get("fieldManual", {}).get("facts", []):
+        items.append((f"Field Manual {f['title']!r}", f["quote"], f["source"], f["text"]))
+    for u in rec.get("usage", {}).get("items", []):
+        items.append((f"usage {u['id']!r}", u["code"], u["source"], ""))
+    return items
 
 
 def links_to(html: str, route: str) -> bool:
@@ -165,31 +258,29 @@ def check_source(root: Path) -> list[str]:
                 problems.append(f"{where}: two activities bind action {act['action']!r}")
             bound.append(act["action"])
 
-        items = rec.get("examples", {}).get("items", [])
-        example_ids: list[str] = []
-        for i, ex in enumerate(items):
-            if ex["activity"] not in type_ids:
-                problems.append(f"{where}: example {ex['id']!r} uses undeclared activity {ex['activity']!r}")
-            if ex["id"] in example_ids:
-                problems.append(f"{where}: example id {ex['id']!r} repeats")
-            example_ids.append(ex["id"])
-            for other in items[i + 1:i + RAIL_WINDOW]:
-                if other["variant"] == ex["variant"]:
-                    problems.append(
-                        f"{where}: examples {ex['id']!r} and {other['id']!r} are within {RAIL_WINDOW} of each other "
-                        f"and share the {ex['variant']!r} card variant"
-                    )
-        papers = [ex["id"] for ex in items if ex.get("variant") == "paper"]
-        if len(papers) > 1:
-            problems.append(f"{where}: {len(papers)} paper examples ({', '.join(papers)}); paper is the one featured example")
+        play = rec.get("playground", {})
+        starter_ids: list[str] = []
+        for s in play.get("starters", {}).get("items", []):
+            if s["activity"] not in type_ids:
+                problems.append(f"{where}: starter {s['id']!r} uses undeclared activity {s['activity']!r}")
+            if s["id"] in starter_ids:
+                problems.append(f"{where}: starter id {s['id']!r} repeats")
+            starter_ids.append(s["id"])
+        post = next((a for a in actions if a["id"] == "post"), None)
+        at = play.get("thread", {}).get("at")
+        if post is not None and at is not None and f"longer than {at} characters" not in post["behavior"]:
+            problems.append(f"{where}: playground thread.at is {at}, but data/platforms/{pid}.yaml's post behavior does not say 'longer than {at} characters'")
 
-        kinds: list[str] = []
-        for item in rec.get("breakdown", {}).get("items", []):
-            if item["kind"] in kinds:
-                problems.append(f"{where}: breakdown kind {item['kind']!r} repeats")
-            kinds.append(item["kind"])
-            if item["kind"] == "limits" and not any(a["limits"] for a in actions):
-                problems.append(f"{where}: a limits breakdown, but data/platforms/{pid}.yaml lists no limits")
+        examples = {(e["platform"], e["action"]) for e in load_json(root, "data/action_examples.json")["examples"]}
+        for a in listed:
+            if (pid, a) not in examples:
+                problems.append(f"{where}: data/action_examples.json has no {pid} example for {a!r}, so the matrix has no CLI cell")
+
+        for label, quote, href, shown in sourced_items(rec):
+            if "github.com/blowhorn-ai/blowhorn/" in href or not href.startswith("/"):
+                problems.append(f"{where}: {label} cites {href!r}; cite a public page on this site")
+                continue
+            problems.extend(f"{where}: {m}" for m in check_quote(root, label, quote, href, shown))
 
         page = root / "content" / "en" / f"preview-platform-{pid}.md"
         if not page.is_file():
@@ -218,6 +309,11 @@ def check_source(root: Path) -> list[str]:
     hugo = (root / "hugo.toml").read_text(encoding="utf-8")
     if f'"{LLMS_EXCLUDE}"' not in hugo:
         problems.append(f'hugo.toml [params.llms] exclude must list "{LLMS_EXCLUDE}"')
+    script = root / SCRIPT
+    if script.is_file():
+        hit = FORBIDDEN_JS.search(script.read_text(encoding="utf-8"))
+        if hit:
+            problems.append(f"{SCRIPT}: uses {hit.group(0)!r}; the playground is local only and makes no request or storage call")
     return problems
 
 
@@ -311,15 +407,25 @@ def run_harness(tree: dict, scenario: dict, root: Path) -> list[dict]:
     return json.loads(out.stdout)
 
 
+def code_text(el: dict) -> str:
+    """A code card's text as the copy button copies it: without its "$" prompts."""
+    return "".join(
+        c if isinstance(c, str) else ("" if "term-ps" in classes(c) else code_text(c))
+        for c in el["children"]
+    )
+
+
 def check_behaviour(label: str, main: dict, rec: dict, actions: list[dict], root: Path) -> list[str]:
     problems: list[str] = []
     types = [a["id"] for a in rec["activities"]]
     action_of = {a["id"]: a["action"] for a in rec["activities"]}
     intents = {a["id"]: a["intent"] for a in rec["activities"]}
-    examples = rec["examples"]["items"]
-    # The stylesheet shows a whole number of cards (3 on desktop): 3 slides and 2 gaps fill the width.
-    rail = {"width": 1000, "slide": 312, "gap": 32}
-    edges = {i * (rail["slide"] + rail["gap"]) for i in range(len(examples))}
+    label_of = {a["id"]: a["label"] for a in rec["activities"]}
+    items = rec["usage"]["items"]
+    # The stylesheet shows a whole number of setups (2 on a wide screen).
+    rail = {"width": 1000, "slide": 484, "gap": 32}
+    per_view = 2
+    edges = {i * (rail["slide"] + rail["gap"]) for i in range(len(items))}
 
     steps = [{"choose": t} for t in types[1:]] + [{"choose": types[0]}]
     states = run_harness(main, {"rail": rail, "steps": steps}, root)
@@ -337,75 +443,107 @@ def check_behaviour(label: str, main: dict, rec: dict, actions: list[dict], root
         if sorted(set(state["picked"])) != want_picked:
             problems.append(f"{label}: choosing {want!r} marks rows {state['picked']}, want {want_picked}")
     for state, want in zip(states[1:], types[1:]):
-        if state["announce"] != f"{next(a['label'] for a in rec['activities'] if a['id'] == want)}. {intents[want]}":
+        if state["announce"] != f"{label_of[want]}. {intents[want]}":
             problems.append(f"{label}: choosing {want!r} announces {state['announce']!r}")
-    if first["tryShown"] != len(examples):
-        problems.append(f"{label}: {first['tryShown']} of {len(examples)} example preview buttons shown")
-
-    # An example's preview: its type, its sample, focus on the illustration.
-    ex = examples[-1]
-    for reduce, behaviour in ((False, "smooth"), (True, "auto")):
-        s = run_harness(main, {"rail": rail, "reduce": reduce, "steps": [{"try": ex["id"]}]}, root)[-1]
-        sample = s["samples"].get(ex["activity"], {})
-        if s["type"] != ex["activity"]:
-            problems.append(f"{label}: previewing {ex['id']!r} selects {s['type']!r}, want {ex['activity']!r}")
-        if not sample.get("sampleShown") or sample.get("sampleText") != ex["sample"] or sample.get("originalsShown"):
-            problems.append(f"{label}: previewing {ex['id']!r} does not put its sample in the illustration: {sample}")
-        if "data-pp-stage" not in s["focus"].split():
-            problems.append(f"{label}: previewing {ex['id']!r} leaves focus on {s['focus']!r}, not the illustration")
-        if s["intoView"] != [behaviour]:
-            problems.append(f"{label}: previewing with reduce={reduce} scrolls {s['intoView']}, want [{behaviour!r}]")
-
-    # Picking a type by hand after a preview returns the default illustration.
-    originals = {a["id"]: len(a["scene"]["text"]) for a in rec["activities"]}
-    back = run_harness(main, {"rail": rail, "steps": [{"try": ex["id"]}, {"choose": ex["activity"]}]}, root)[-1]
-    for t_id, want_count in originals.items():
-        sample = back["samples"].get(t_id, {})
-        if sample.get("sampleShown") or sample.get("sampleText") or sample.get("originalsShown") != want_count:
-            problems.append(f"{label}: choosing {ex['activity']!r} after a preview leaves {t_id!r} showing {sample}, want its {want_count} original lines")
-
-    # The same radio (already checked after the preview) fires click but no change
-    # event; it must still restore the default scene, announce once, and a radio
-    # chosen by pointer or by arrow key must do the same through change, once.
-    other = next(t for t in types if t != ex["activity"])
-    want_say = f"{next(a['label'] for a in rec['activities'] if a['id'] == ex['activity'])}. {intents[ex['activity']]}"
-    for how, step in (("clicking", {"choose": ex["activity"]}),):
-        runs = run_harness(main, {"rail": rail, "steps": [{"try": ex["id"]}, step]}, root)
-        if runs[-1]["announceWrites"] - runs[-2]["announceWrites"] != 1 or runs[-1]["announce"] != want_say:
-            problems.append(f"{label}: {how} the checked {ex['activity']!r} radio after a preview announced {runs[-1]['announceWrites'] - runs[-2]['announceWrites']} time(s), {runs[-1]['announce']!r}; want once, {want_say!r}")
-    for how, key in (("clicking", "choose"), ("arrowing to", "key")):
-        runs = run_harness(main, {"rail": rail, "steps": [{"try": ex["id"]}, {key: other}, {"try": ex["id"]}, {key: ex["activity"]}]}, root)
-        for i, want in ((2, other), (4, ex["activity"])):
-            s = runs[i]
-            says = f"{next(a['label'] for a in rec['activities'] if a['id'] == want)}. {intents[want]}"
-            if s["type"] != want or s["checked"] != [want] or s["announce"] != says or s["announceWrites"] - runs[i - 1]["announceWrites"] != 1:
-                problems.append(f"{label}: {how} {want!r} after a preview shows {s['type']!r}, checked {s['checked']}, announced {s['announceWrites'] - runs[i - 1]['announceWrites']} time(s) {s['announce']!r}")
-            for t_id, want_count in originals.items():
-                sample = s["samples"].get(t_id, {})
-                if sample.get("sampleShown") or sample.get("sampleText") or sample.get("originalsShown") != want_count:
-                    problems.append(f"{label}: {how} {want!r} after a preview leaves {t_id!r} showing {sample}, want its {want_count} original lines")
-    # With no preview showing, clicking the checked radio changes and announces nothing.
+    # Clicking the radio that is already checked fires no change and changes nothing.
     idle = run_harness(main, {"rail": rail, "steps": [{"choose": types[0]}]}, root)
     if idle[-1]["announceWrites"] != idle[0]["announceWrites"] or idle[-1]["type"] != types[0]:
-        problems.append(f"{label}: clicking the checked radio with no preview showing announced or changed the page")
+        problems.append(f"{label}: clicking the checked radio announced or changed the page")
+
+    # The playground: local, enhanced in place.
+    play = rec["playground"]
+    starters = play["starters"]["items"]
+    at = play["thread"]["at"]
+    if first["tryControls"] is not True:
+        problems.append(f"{label}: the playground controls stay hidden after the script runs")
+    if first["out"] != starters[0]["sample"] or first["draft"] != starters[0]["sample"]:
+        problems.append(f"{label}: the playground starts with {first['draft']!r} / {first['out']!r}, want the first starter's sample")
+    want_count = f"{len(starters[0]['sample'])} / {at}"
+    if first["tryCount"] != want_count:
+        problems.append(f"{label}: the playground counter reads {first['tryCount']!r}, want {want_count!r}")
+    for s in starters:
+        st = run_harness(main, {"rail": rail, "steps": [{"input": ""}, {"starter": s["id"]}]}, root)[-1]
+        if st["type"] != s["activity"] or st["draft"] != s["sample"] or st["out"] != s["sample"]:
+            problems.append(f"{label}: starter {s['id']!r} shows type {st['type']!r}, draft {st['draft']!r}, preview {st['out']!r}")
+        if st["tryAnnounce"] != f"{s['title']} is in your draft.":
+            problems.append(f"{label}: starter {s['id']!r} announces {st['tryAnnounce']!r}")
+    markup = "<b>bold</b> & <img src=x onerror=alert(1)>"
+    long = "a" * (at + 1)
+    typed = run_harness(main, {"rail": rail, "steps": [
+        {"input": markup}, {"input": long}, {"input": long + "b"}, {"input": "short"}]}, root)
+    if typed[1]["out"] != markup:
+        problems.append(f"{label}: the preview does not mirror the draft as text: {typed[1]['out']!r}")
+    if typed[1]["threadShown"] or not typed[2]["threadShown"] or not typed[3]["threadShown"] or typed[4]["threadShown"]:
+        problems.append(f"{label}: the thread flag over {at} characters reads {[s['threadShown'] for s in typed[1:]]}")
+    writes = [s["tryAnnounceWrites"] for s in typed]
+    if writes[2] - writes[1] != 1 or writes[3] != writes[2] or typed[2]["tryAnnounce"] != play["thread"]["label"]:
+        problems.append(f"{label}: crossing {at} characters announced {[w - writes[0] for w in writes]}; want once, {play['thread']['label']!r}")
+    if typed[2]["tryCount"] != f"{at + 1} / {at}":
+        problems.append(f"{label}: the counter over the limit reads {typed[2]['tryCount']!r}")
+    img = run_harness(main, {"rail": rail, "steps": [
+        {"file": {"type": "image/png"}}, {"file": {"type": "image/jpeg"}}, {"clearImage": True},
+        {"file": {"type": "text/html"}}]}, root)
+    one, two, gone, refused = img[1], img[2], img[3], img[4]
+    if not one["mediaShown"] or one["mediaImages"] != one["created"][-1:] or not one["clearShown"]:
+        problems.append(f"{label}: a picked image is not shown through its object URL: {one['mediaImages']}, created {one['created']}")
+    if two["mediaImages"] != two["created"][-1:] or one["created"][0] not in two["revoked"]:
+        problems.append(f"{label}: replacing the image keeps {two['mediaImages']} and revokes {two['revoked']}")
+    if gone["mediaShown"] or gone["mediaImages"] or gone["clearShown"] or gone["fileValue"] != "" or two["created"][-1] not in gone["revoked"]:
+        problems.append(f"{label}: removing the image leaves shown={gone['mediaShown']}, images={gone['mediaImages']}, revoked {gone['revoked']}")
+    if "data-pp-try-file" not in gone["focus"].split():
+        problems.append(f"{label}: removing the image leaves focus on {gone['focus']!r}, not the picker")
+    if refused["mediaShown"] or refused["mediaImages"] or len(refused["created"]) != len(gone["created"]) or refused["fileValue"] != "":
+        problems.append(f"{label}: a non-image file is not refused: {refused['mediaImages']}")
+
+    # Feedback for a file that is not shown, and a bfcache-safe release.
+    play_fields = play["fields"]
+    bad = run_harness(main, {"rail": rail, "steps": [{"file": {"type": "image/png"}}, {"file": {"type": "text/html"}}]}, root)
+    if bad[2]["tryAnnounce"] != play_fields["notImage"] or bad[2]["mediaShown"] or bad[2]["fileValue"] != "":
+        problems.append(f"{label}: a non-image file announces {bad[2]['tryAnnounce']!r} (want {play_fields['notImage']!r}) and leaves the picker at {bad[2]['fileValue']!r}")
+    broken = run_harness(main, {"rail": rail, "steps": [{"file": {"type": "image/heic"}}, {"imageError": True}]}, root)
+    one_, two_ = broken[1], broken[2]
+    if not one_["mediaShown"] or two_["mediaShown"] or two_["mediaImages"] or two_["clearShown"] or two_["fileValue"] != "" or one_["created"][0] not in two_["revoked"]:
+        problems.append(f"{label}: an image the browser cannot decode leaves shown={two_['mediaShown']}, remove={two_['clearShown']}, picker {two_['fileValue']!r}, revoked {two_['revoked']}")
+    if two_["tryAnnounce"] != play_fields["unreadable"]:
+        problems.append(f"{label}: an undecodable image announces {two_['tryAnnounce']!r}, want {play_fields['unreadable']!r}")
+    for persisted, released in ((True, False), (False, True)):
+        gone_ = run_harness(main, {"rail": rail, "steps": [{"file": {"type": "image/png"}}, {"pagehide": {"persisted": persisted}}]}, root)[-1]
+        if bool(gone_["revoked"]) != released:
+            problems.append(f"{label}: pagehide with persisted={persisted} revoked {gone_['revoked']}; the object URL is released only when the page is not kept")
+
+    # The counter, its description and the thread announcement belong to the post type.
+    post_type = next((a["id"] for a in rec["activities"] if a["action"] == "post"), None)
+    other_type = next((a["id"] for a in rec["activities"] if a["action"] != "post"), None)
+    if post_type and other_type:
+        long_ = "a" * (at + 5)
+        run_ = run_harness(main, {"rail": rail, "steps": [
+            {"choose": other_type}, {"input": long_}, {"choose": post_type}, {"choose": other_type}]}, root)
+        in_other, back_to_post, away = run_[2], run_[3], run_[4]
+        if in_other["describedBy"] is not None or in_other["threadShown"] or in_other["tryAnnounceWrites"] != run_[1]["tryAnnounceWrites"]:
+            problems.append(f"{label}: a long draft under {other_type!r} describes {in_other['describedBy']!r}, shows the thread flag={in_other['threadShown']} or announces it")
+        if back_to_post["describedBy"] != "pp-try-count" or not back_to_post["threadShown"] or back_to_post["tryAnnounce"] != play["thread"]["label"]:
+            problems.append(f"{label}: back on {post_type!r} the draft is described by {back_to_post['describedBy']!r}, flag={back_to_post['threadShown']}, announces {back_to_post['tryAnnounce']!r}")
+        if away["tryAnnounce"] != "":
+            problems.append(f"{label}: leaving {post_type!r} leaves the stale live message {away['tryAnnounce']!r}")
+        if away["describedBy"] is not None or away["threadShown"]:
+            problems.append(f"{label}: leaving {post_type!r} keeps the counter described ({away['describedBy']!r}) or the flag shown")
 
     # The rail, paged by hand.
-    n = len(examples)
+    n = len(items)
     wide = run_harness(main, {"rail": {"width": n * rail["slide"] + (n - 1) * rail["gap"] + 50, "slide": rail["slide"], "gap": rail["gap"]}}, root)[0]
     if wide["controlsShown"]:
-        problems.append(f"{label}: rail controls show although every example fits")
+        problems.append(f"{label}: rail controls show although every setup fits")
     pages = run_harness(main, {"rail": rail, "steps": [{"click": "next"}] * n + [{"click": "prev"}] * n}, root)
     start = pages[0]
     if not start["controlsShown"] or start["prevDisabled"] != "true" or start["nextDisabled"] != "false":
         problems.append(f"{label}: rail at load shows controls={start['controlsShown']}, prev={start['prevDisabled']}, next={start['nextDisabled']}")
-    if start["count"] != f"1-3 of {n}":
-        problems.append(f"{label}: rail count at load is {start['count']!r}, want '1-3 of {n}'")
+    if start["count"] != f"1-{per_view} of {n}":
+        problems.append(f"{label}: rail count at load is {start['count']!r}, want '1-{per_view} of {n}'")
     end = pages[n]
     if end["nextDisabled"] != "true" or end["prevDisabled"] != "false" or end["scrollLeft"] <= 0:
         problems.append(f"{label}: rail after paging forward: next={end['nextDisabled']}, prev={end['prevDisabled']}, left={end['scrollLeft']}")
     if any(p["prevDisabledAttr"] for p in pages) or "data-pp-next" not in end["focus"].split():
         problems.append(f"{label}: a rail button lost focus at the end (it must use aria-disabled, not disabled)")
-    # Every stop of a button press is a card's own left edge, never mid-card.
     stray = [p["scrollLeft"] for p in pages if p["scrollLeft"] not in edges]
     if stray:
         problems.append(f"{label}: the rail stops mid-card at {stray}; card edges are {sorted(edges)}")
@@ -413,16 +551,14 @@ def check_behaviour(label: str, main: dict, rec: dict, actions: list[dict], root
         problems.append(f"{label}: rail did not page back to the start: left={pages[-1]['scrollLeft']}")
     if set(end["scrolls"]) != {"smooth"}:
         problems.append(f"{label}: rail scrolls {sorted(set(end['scrolls']))}, want smooth")
-    # Scrolling by any means keeps the count current but announces nothing; a
-    # button press announces the range it lands on, once.
     farthest = n * rail["slide"] + (n - 1) * rail["gap"] - rail["width"]
     swipes = run_harness(main, {"rail": rail, "steps": [{"scroll": farthest}, {"scroll": 0}]}, root)
     if swipes[1]["count"] != end["count"] or swipes[2]["count"] != start["count"]:
         problems.append(f"{label}: the rail count while scrolling is {[s['count'] for s in swipes]}, want {end['count']!r} at the far end and {start['count']!r} back at the start")
     if any(s["railAnnounce"] != "" for s in swipes):
         problems.append(f"{label}: scrolling the rail announced {[s['railAnnounce'] for s in swipes]}; only a button press may")
-    if end["railAnnounce"] != f"Showing examples {end['count']}":
-        problems.append(f"{label}: paging forward announced {end['railAnnounce']!r}, want 'Showing examples {end['count']}'")
+    if end["railAnnounce"] != f"Showing {end['count']}":
+        problems.append(f"{label}: paging forward announced {end['railAnnounce']!r}, want 'Showing {end['count']}'")
     calm = run_harness(main, {"rail": rail, "reduce": True, "steps": [{"click": "next"}]}, root)[-1]
     if calm["scrolls"] != ["auto"]:
         problems.append(f"{label}: under reduced motion the rail scrolls {calm['scrolls']}, want ['auto']")
@@ -437,9 +573,18 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
     problems: list[str] = []
     data = load_json(root, "data/platform_pages.json")
     vocab = {a["id"]: a for a in load_json(root, "data/actions.json")["actions"]}
+    examples = load_json(root, "data/action_examples.json")["examples"]
     indexes = [build_dir / "sitemap.xml", build_dir / "llms.txt", build_dir / "llms-full.txt",
                *sorted(build_dir.glob("offline-search-index*.json"))]
     pages_html = sorted(build_dir.rglob("*.html"))
+
+    # The download page's extension card is the one install path the site offers.
+    download = built_file(build_dir, "/download/")
+    if download.is_file():
+        dl = parse(download).main
+        offered = [e["attrs"].get("href", "") for e in walk(dl) if "button-primary" in classes(e)] if dl else []
+        if EXTENSION_HREF not in offered:
+            problems.append(f"/download/ no longer offers {EXTENSION_HREF} as a primary button; the platform pages' call to action must follow it")
 
     for rec in data["pages"]:
         route = rec["route"]
@@ -473,14 +618,28 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
         if any("style" in e["attrs"] for e in walk(main)):
             problems.append(f"{label}: an inline style attribute")
 
+        # One primary call to action: install the extension, nothing under it.
         primary = [e for e in walk(main) if "button-primary" in classes(e)]
-        if len(primary) != 1 or not primary[0]["attrs"].get("href", "").endswith("/download/") or "data-pp-start" not in primary[0]["attrs"]:
-            problems.append(f"{label}: needs exactly one primary button, Start, to the download page; found {len(primary)}")
+        cta = primary[0] if len(primary) == 1 else None
+        if cta is None or cta["attrs"].get("href") != EXTENSION_HREF or "data-pp-start" not in cta["attrs"]:
+            problems.append(f"{label}: needs exactly one primary button, the call to action, to {EXTENSION_HREF}; found {len(primary)}")
+        elif " ".join(text(cta).split()) != rec["start"]["label"]:
+            problems.append(f"{label}: the call to action reads {text(cta)!r}, want {rec['start']['label']!r}")
+        go = next((e for e in walk(main) if "pp-go" in classes(e)), None)
+        if go is None or [c for c in go["children"] if isinstance(c, dict)] != ([cta] if cta else []) or text(go).strip() != (text(cta).strip() if cta else ""):
+            problems.append(f"{label}: something sits beside or under the call to action; it stands alone")
+        if cta is not None and "aria-describedby" in cta["attrs"]:
+            problems.append(f"{label}: the call to action points at a note (aria-describedby); it needs none")
+        for e in walk(main):
+            if "data-pp-annotation" in e["attrs"]:
+                marks = [m for m in walk(e) if "pp-annot-mark" in classes(m)]
+                if "pp-annot" not in classes(e) or "caption" in classes(e) or not marks or not text(marks[0]).strip():
+                    problems.append(f"{label}: a reviewer annotation must be drawn as one (pp-annot, its mark), never a caption")
 
         order = [e["attrs"] for e in walk(main)]
         where = {k: next((i for i, a in enumerate(order) if k in a), -1) for k in ("data-pp-choice", "data-pp-start", "data-pp-stage")}
         if not 0 <= where["data-pp-choice"] < where["data-pp-start"] < where["data-pp-stage"]:
-            problems.append(f"{label}: source order must be selector, Start, illustration so Start is in a phone's first screen; got {where}")
+            problems.append(f"{label}: source order must be selector, call to action, illustration so it is in a phone's first screen; got {where}")
 
         types = [a["id"] for a in rec["activities"]]
         radios = find(main, "data-pp-choice")
@@ -496,45 +655,126 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
         if not find(main, "data-pp-stage") or not find(main, "data-pp-announce"):
             problems.append(f"{label}: the illustration or the announcement region is missing")
 
-        cards = find(main, "data-pp-example")
-        want_cards = [(e["id"], VARIANTS[e["variant"]]) for e in rec["examples"]["items"]]
-        got_cards = [(c["attrs"]["data-pp-example"], next((k for k in classes(c) if k in VARIANTS.values()), "")) for c in cards]
-        if got_cards != want_cards:
-            problems.append(f"{label}: examples {got_cards}, want {want_cards}")
-
-        details = [e for e in walk(main) if e["tag"] == "details"]
-        if [d["attrs"].get("data-pp-kind") for d in details] != [i["kind"] for i in rec["breakdown"]["items"]]:
-            problems.append(f"{label}: breakdowns {[d['attrs'].get('data-pp-kind') for d in details]} do not match the record")
-        if any("open" in d["attrs"] for d in details):
-            problems.append(f"{label}: a breakdown is open at load; all start collapsed")
+        # The matrix: visible, every action, every cell from the canonical data.
+        if any(e["tag"] == "details" for e in walk(main)):
+            problems.append(f"{label}: a <details> on the page; the action matrix is visible at load")
         actions = yaml_actions(root, rec["platform"]) or []
         ids = [a["id"] for a in actions]
-        for block, want in (("data-pp-actions", ids), ("data-pp-behavior", ids), ("data-pp-limits", [a["id"] for a in actions if a["limits"]])):
-            regions = find(main, block)
-            if not regions:
-                continue
-            got = [e["attrs"]["data-action"] for e in walk(regions[0]) if "data-action" in e["attrs"]]
-            if got != want:
-                problems.append(f"{label}: {block} rows {got}, want {want}")
-        for el in find(main, "data-pp-limits"):
-            shown = {
-                row["attrs"]["data-action"]: " ".join(text(next(d for d in walk(row) if d["tag"] == "dd")).split())
-                for row in walk(el) if "data-action" in row["attrs"]
-            }
-            want_text = {a["id"]: a["limits"] for a in actions if a["limits"]}
-            if shown != want_text:
-                problems.append(f"{label}: limits text {shown}, want the YAML's {want_text}")
+        mx = rec["matrix"]
+        tables = find(main, "data-pp-matrix")
+        if len(tables) != 1 or tables[0]["tag"] != "table" or "hidden" in tables[0]["attrs"]:
+            problems.append(f"{label}: needs one visible action matrix table")
+        else:
+            table = tables[0]
+            heads = [" ".join(text(h).split()) for h in walk(table) if h["tag"] == "th" and h["attrs"].get("scope") == "col"]
+            want_heads = [mx["columns"][k] for k in ("action", "does", "limits", "cli")]
+            if heads != want_heads:
+                problems.append(f"{label}: matrix columns {heads}, want {want_heads}")
+            rows = [r for r in walk(table) if r["tag"] == "tr" and "data-action" in r["attrs"]]
+            if [r["attrs"]["data-action"] for r in rows] != ids:
+                problems.append(f"{label}: matrix rows {[r['attrs']['data-action'] for r in rows]}, want {ids}")
+            cli_of = {e["action"]: e["surfaces"]["cli"] for e in examples if e["platform"] == rec["platform"]}
+            for row, a in zip(rows, actions):
+                cells = {c["attrs"].get("data-pp-col"): c for c in walk(row) if c["tag"] == "td"}
+                name = next((x for x in walk(row) if "pp-action-name" in classes(x)), None)
+
+                def cell(key):
+                    c = cells.get(key)
+                    if c is None:
+                        return None
+                    return " ".join("".join(
+                        x if isinstance(x, str) else ("" if "pp-col-label" in classes(x) else text(x))
+                        for x in c["children"]).split())
+                want_does = a["behavior"] or vocab.get(a["id"], {}).get("description", "")
+                cli = cli_of.get(a["id"], {})
+                want = {
+                    "does": want_does,
+                    "limits": a["limits"] or mx["none"],
+                    "cli": cli.get("command") if cli.get("status") == "available" else cli.get("notes"),
+                }
+                if name is None or text(name).strip() != vocab.get(a["id"], {}).get("name"):
+                    problems.append(f"{label}: matrix row {a['id']!r} is not named {vocab.get(a['id'], {}).get('name')!r}")
+                for key, value in want.items():
+                    if cell(key) != value:
+                        problems.append(f"{label}: matrix {a['id']!r} {key} reads {cell(key)!r}, want {value!r}")
+
+        # Rules of engagement, Field Manual, usage: as the record says.
+        presets = find(main, "data-pp-preset")
+        if [p["attrs"]["data-pp-preset"] for p in presets] != [p["label"] for p in rec["roe"]["presets"]]:
+            problems.append(f"{label}: presets {[p['attrs']['data-pp-preset'] for p in presets]} do not match the record")
+        for el, want in zip(presets, rec["roe"]["presets"]):
+            stat = next((x for x in walk(el) if "pp-stat-n" in classes(x)), None)
+            link = next((x for x in walk(el) if x["tag"] == "a"), None)
+            if stat is None or text(stat).strip() != want["stat"] or link is None or not link["attrs"].get("href", "").endswith(want["source"]):
+                problems.append(f"{label}: preset {want['label']!r} shows {text(stat) if stat else None!r}, not {want['stat']!r} linked to its source")
+        fm = [e for e in walk(main) if "pp-fm-card" in classes(e)]
+        if [e["attrs"].get("href", "") for e in fm] != [f["source"] for f in rec["fieldManual"]["facts"]] and \
+           not all(e["attrs"].get("href", "").endswith(f["source"]) for e, f in zip(fm, rec["fieldManual"]["facts"])):
+            problems.append(f"{label}: Field Manual cards do not link to their sources")
+        variants = [next((k for k in classes(e) if k.startswith("card-")), "") for e in fm]
+        if len(set(variants)) != len(variants):
+            problems.append(f"{label}: Field Manual cards in one row share a variant: {variants}")
+        uses = find(main, "data-pp-use")
+        if [u["attrs"]["data-pp-use"] for u in uses] != [i["id"] for i in rec["usage"]["items"]]:
+            problems.append(f"{label}: usage cards {[u['attrs']['data-pp-use'] for u in uses]} do not match the record")
+        for el, want in zip(uses, rec["usage"]["items"]):
+            codes = [c for c in walk(el) if c["tag"] == "code"]
+            copy = [b for b in walk(el) if "term-copy" in classes(b)]
+            src = [x for x in walk(el) if x["tag"] == "a" and x["attrs"].get("href", "").endswith(want["source"])]
+            if not codes or code_text(codes[0]).rstrip("\n") != want["code"]:
+                problems.append(f"{label}: usage {want['id']!r} shows {code_text(codes[0]) if codes else None!r}, want the record's code")
+            if not copy:
+                problems.append(f"{label}: usage {want['id']!r} cannot be copied")
+            if not src:
+                problems.append(f"{label}: usage {want['id']!r} does not link {want['source']}")
         counts = find(main, "data-pp-rail-count")
         announcers = find(main, "data-pp-rail-announce")
         if any("aria-live" in c["attrs"] for c in counts):
             problems.append(f"{label}: the rail count is a live region; scrolling would announce every frame")
         if len(announcers) != 1 or announcers[0]["attrs"].get("aria-live") != "polite":
             problems.append(f"{label}: needs one polite live region for rail button presses")
-        for el in find(main, "data-pp-actions"):
-            names = [text(n).strip() for n in walk(el) if "pp-fact-name" in classes(n)]
-            want_names = [vocab[i]["name"] for i in ids if i in vocab]
-            if names != want_names:
-                problems.append(f"{label}: supported actions named {names}, want {want_names}")
+
+        # Every source anchor resolves on the built site.
+        for where_, _quote, href, _shown in sourced_items(rec):
+            page_path, _, frag = href.partition("#")
+            target = built_file(build_dir, page_path)
+            if not target.is_file():
+                problems.append(f"{label}: {where_} cites {page_path}, which was not built")
+            elif frag and f'id="{frag}"' not in target.read_text(encoding="utf-8"):
+                problems.append(f"{label}: {where_} cites #{frag}, which {page_path} does not have")
+
+        # The playground is local only: no form, no named field, an image-only picker.
+        if any(e["tag"] == "form" for e in walk(main)):
+            problems.append(f"{label}: a <form> in the page; the playground submits nothing")
+        for e in walk(main):
+            if e["tag"] in ("input", "textarea", "select") and "name" in e["attrs"] and e["attrs"].get("type") != "radio":
+                problems.append(f"{label}: a named {e['tag']} ({e['attrs']['name']!r}); the playground fields are never submitted")
+        for b in find(main, "data-pp-try-starter"):
+            if "aria-describedby" in b["attrs"]:
+                problems.append(f"{label}: a starter button carries aria-describedby; its name is enough")
+        notes = find(main, "data-pp-try-announce")
+        pf = rec["playground"]["fields"]
+        if len(notes) != 1 or notes[0]["attrs"].get("data-not-image") != pf["notImage"] or notes[0]["attrs"].get("data-unreadable") != pf["unreadable"]:
+            problems.append(f"{label}: the playground announcer lacks its not-an-image and unreadable-image messages")
+        mt = find(main, "data-pp-matrix")
+        if mt:
+            if any("role" in e["attrs"] for e in walk(mt[0])) or any("pp-col-label" in classes(e) for e in walk(mt[0])):
+                problems.append(f"{label}: the matrix is a native table: no ARIA roles on it and no stacked cell labels")
+            wrap = next((e for e in walk(main) if "pp-matrix-scroll" in classes(e)), None)
+            kids = [c for c in wrap["children"] if isinstance(c, dict)] if wrap else []
+            title = [e for e in walk(main) if e["attrs"].get("id") == (wrap["attrs"].get("aria-labelledby") if wrap else None)]
+            if wrap is None or kids != [mt[0]] or wrap["attrs"].get("role") != "group" or wrap["attrs"].get("tabindex") != "0" or not title:
+                problems.append(f"{label}: the matrix table must sit alone in a focusable, labelled group (role=group, tabindex=0, aria-labelledby a heading) that scrolls sideways")
+        files = find(main, "data-pp-try-file")
+        if any(f["attrs"].get("accept") != "image/*" for f in files):
+            problems.append(f"{label}: the playground's picker must accept images only")
+        controls = find(main, "data-pp-try-controls")
+        if len(controls) != 1 or "hidden" not in controls[0]["attrs"]:
+            problems.append(f"{label}: the playground controls must be hidden until the script runs")
+        outs = find(main, "data-pp-try-out")
+        first_sample = rec["playground"]["starters"]["items"][0]["sample"]
+        if len(outs) != 1 or text(outs[0]) != first_sample:
+            problems.append(f"{label}: without script the playground preview must show the first starter's sample")
 
         try:
             problems.extend(check_behaviour(label, main, rec, actions, root))

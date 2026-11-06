@@ -20,12 +20,26 @@
 .pp-crumbs a { display: inline-flex; align-items: center; min-height: var(--space-6); }
 .pp-crumbs li + li::before { content: "/"; margin-right: var(--space-2); color: var(--line-strong); }
 .pp-crumbs [aria-current] { color: var(--ink); }
-.pp-preview {
+/* The one reviewer annotation (contract.reviewerNote). An annotation, never a
+   caption: mono type, the alternate (coral) colour and its explicit mark in a box,
+   with an even dashed edge on every side (DESIGN.md Cards rule 1). Coral shade on
+   the light page and coral on the dark one both hold AA for this size. */
+.pp-annot {
+  --annot: var(--coral-shade);
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
   padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
-  background: var(--surface-raised);
-  color: var(--ink-muted);
-  box-shadow: inset 0 0 0 var(--stroke-hairline) var(--line);
+  border: var(--stroke-hairline) dashed var(--annot);
+  border-radius: var(--radius-sm);
+  color: var(--annot);
+  font-family: var(--font-mono);
+}
+.pp-annot .pp-annot-mark { color: var(--annot); font-weight: 600; }
+.pp-annot-mark { padding: 0 var(--space-1); border: var(--stroke-hairline) solid var(--annot); border-radius: 2px; }
+@media (prefers-color-scheme: dark) {
+  .pp-annot { --annot: var(--coral); }
 }
 
 /* ---------- Hero ----------
@@ -121,13 +135,9 @@
 .pp.is-enhanced .pp-intent-for {
   position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
-.pp:not(.is-enhanced) .pp-start-type,
 .pp:not(.is-enhanced) .pp-stage-label { display: none; }
 
-.pp-start { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
-.pp-start .button { min-width: 7.5rem; }
-.pp-start-for { color: var(--ink-muted); }
-.pp-note { margin-top: var(--space-3); max-width: 24rem; color: var(--ink-muted); }
+.pp-go .button { min-width: 7.5rem; }
 
 /* ---------- The storyboard: one floating glass surface, tinted ----------
    Text never sits on the glass itself except the eyebrow and the caption, which
@@ -187,7 +197,6 @@
 .pp-draft-text { margin-top: var(--space-2); }
 .pp-draft-text p { max-width: 34ch; color: var(--ink); }
 .pp-draft-text p + p { margin-top: var(--space-3); }
-.pp-draft-foot { margin-top: var(--space-6); color: var(--ink-muted); }
 .pp-steps ol { margin: var(--space-3) 0 0; padding: 0; list-style: none; }
 .pp-steps li {
   display: grid;
@@ -196,7 +205,7 @@
   padding-block: var(--space-2);
 }
 .pp-steps li + li { box-shadow: inset 0 var(--stroke-hairline) 0 0 var(--line); }
-.pp-step-n { grid-row: span 2;font-family: var(--font-mono); color: var(--ink-muted); }
+.pp-step-n { grid-row: span 2; font-family: var(--font-mono); color: var(--ink-muted); }
 .pp-step-t { font-weight: 600; color: var(--ink-wordmark); }
 .pp-step-d { color: var(--ink-muted); }
 .pp-stage-cap { margin-top: var(--space-6); color: var(--ink-muted); }
@@ -227,10 +236,248 @@
   background-position: top center;
 }
 
-/* ---------- Examples rail ----------
+/* ---------- Playground: try on a draft, local only ----------
+   The controls are hidden until the script runs; without it the preview shows
+   the first starter as a static draft. The preview is a solid surface (not
+   glass: it is a mock post, not a floating panel). */
+.pp-try-grid {
+  display: grid;
+  gap: var(--grid-gap);
+  margin-top: var(--head-gap);
+}
+@media (min-width: 900px) {
+  /* The preview comes first in the source (a phone shows it above the draft);
+     a wide screen puts it on the right, beside the controls. */
+  .pp-try-grid { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); grid-template-areas: "controls mock"; column-gap: var(--space-16); align-items: start; }
+  .pp-try-controls { grid-area: controls; }
+  .pp-mock { grid-area: mock; }
+  /* The preview stays beside the draft while the controls scroll past. */
+  .pp-mock { position: sticky; top: calc(var(--header-h) + var(--space-6)); }
+}
+.pp-try-controls > * + * { margin-top: var(--space-6); }
+.pp-starter-row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.pp-starter {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--surface-tint);
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+.pp-starter:hover { box-shadow: inset 0 0 0 var(--stroke-hairline) var(--line-strong); }
+.pp-starter:focus-visible { border-radius: var(--radius-pill); }
+.pp-field { display: grid; gap: var(--space-2); }
+.pp-field label { font-weight: 600; color: var(--ink); }
+.pp-textarea {
+  width: 100%;
+  min-height: 8rem;
+  padding: var(--space-3) var(--space-4);
+  border: var(--stroke-hairline) solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  resize: vertical;
+}
+.pp-textarea:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.pp-try-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); }
+.pp-count { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.pp-thread {
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--surface-tint);
+  color: var(--ink);
+  font-weight: 600;
+}
+.pp-file { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); margin-top: var(--space-3); }
+.pp-file-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 var(--stroke-hairline) var(--line-strong);
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+.pp-file-label:hover { background: var(--surface-raised); }
+.pp-file-label:has(input:focus-visible) { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.pp-file-input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.pp-try-clear {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font-weight: 600;
+  cursor: pointer;
+}
+.pp-try-clear:hover { color: var(--link-hover); }
+.pp-planned { max-width: var(--text-measure); color: var(--ink); }
+.pp-planned-mark {
+  display: inline-block;
+  margin-right: var(--space-2);
+  padding: 0 var(--space-2);
+  border: var(--stroke-hairline) dashed var(--line-strong);
+  border-radius: 2px;
+  color: var(--ink);
+}
+.pp-mock { margin: 0; }
+.pp-mock-post {
+  padding: var(--card-pad);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 0 0 var(--stroke-hairline) var(--glass-edge), var(--glass-shadow);
+}
+.pp-mock-text {
+  margin-top: var(--space-2);
+  min-height: 3em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+.pp-mock-media { margin-top: var(--space-4); }
+.pp-mock-media img {
+  display: block;
+  width: 100%;
+  max-height: 20rem;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 var(--stroke-hairline) var(--glass-edge);
+}
+.pp-mock .pp-stage-cap { margin-top: var(--space-3); }
+@media (prefers-reduced-motion: no-preference) {
+  .pp-mock-media:not([hidden]) img { animation: pp-settle 220ms ease-out both; }
+}
+
+/* ---------- Action matrix: visible at load, a tinted band ----------
+   A real table at every width, so its two-axis semantics never depend on CSS. On
+   a narrow screen the table keeps its width and its wrapper scrolls sideways
+   (a focusable, labelled region), so the page itself never overflows. The row
+   bound to the picked type gets a full-row tint, never an edge stripe. */
+.pp-band {
+  padding-block: var(--section-y);
+  background: var(--surface-tint);
+}
+.pp-matrix-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-8);
+}
+.pp-related { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin: 0; padding: 0; list-style: none; }
+.pp-related a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+.pp-matrix-scroll {
+  margin-top: var(--head-gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: 0 0 0 var(--stroke-hairline) var(--glass-edge), var(--glass-shadow);
+}
+.pp-matrix-scroll:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.pp-matrix {
+  width: 100%;
+  min-width: 52rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+.pp-matrix th,
+.pp-matrix td {
+  padding: var(--space-4);
+  vertical-align: top;
+  color: var(--ink);
+}
+.pp-matrix thead th {
+  padding-block: var(--space-3);
+  color: var(--ink-muted);
+  font-size: inherit;
+  font-weight: 600;
+  box-shadow: inset 0 calc(-1 * var(--stroke-hairline)) 0 0 var(--line);
+}
+.pp-matrix tbody tr + tr > * { box-shadow: inset 0 var(--stroke-hairline) 0 0 var(--line); }
+.pp-matrix tbody td { color: var(--ink-muted); }
+.pp-row.is-picked > * { background: color-mix(in srgb, var(--surface-tint) 70%, var(--surface)); }
+.pp-row.is-picked td { color: var(--ink); }
+.pp-cell-action { white-space: nowrap; }
+.pp-action-name { font-weight: 600; }
+.pp-type {
+  display: inline-block;
+  margin-left: var(--space-2);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+  color: var(--ink-muted);
+}
+.pp-cli {
+  font-family: var(--font-mono);
+  overflow-wrap: break-word;
+  color: var(--ink);
+}
+/* A command wraps only between whole tokens, never after the hyphen of a flag;
+   the spans leave the copied text unchanged. */
+.pp-tok { white-space: nowrap; }
+.pp-matrix thead th:nth-child(1) { width: 13%; }
+.pp-matrix thead th:nth-child(2) { width: 30%; }
+.pp-matrix thead th:nth-child(3) { width: 25%; }
+
+/* ---------- Rules of engagement: one Stamp card, one stat row ---------- */
+.pp-roe { margin-top: var(--head-gap); padding: 0; }
+.pp-presets { display: grid; margin: 0; padding: 0; list-style: none; }
+.pp-preset + .pp-preset { box-shadow: inset 0 var(--stroke-hairline) 0 0 var(--line-strong); }
+@media (min-width: 760px) {
+  .pp-presets { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pp-preset + .pp-preset { box-shadow: inset var(--stroke-hairline) 0 0 0 var(--line-strong); }
+}
+.pp-preset-link {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  height: 100%;
+  padding: var(--card-pad);
+  color: var(--ink);
+  text-decoration: none;
+}
+.pp-preset-link:hover .pp-stat-n { color: var(--link); }
+.pp-preset-link:focus-visible { outline-offset: -4px; border-radius: var(--radius-sm); }
+.pp-preset-top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.pp-default { color: var(--ink-muted); }
+.pp-stat { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-2); }
+.pp-stat-n { color: var(--ink); font-variant-numeric: tabular-nums; }
+.pp-stat-u { color: var(--ink); }
+.pp-means { color: var(--ink-muted); }
+.pp-roe-notes { margin: var(--space-6) 0 0; padding: 0; list-style: none; max-width: var(--text-measure); }
+.pp-roe-notes li + li { margin-top: var(--space-2); }
+.pp-roe-notes a { color: var(--ink); text-decoration-color: var(--line-strong); }
+.pp-roe-notes a:hover { color: var(--link); }
+.pp-more { margin-top: var(--space-6); }
+.pp-more a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+
+/* ---------- Field Manual teaser: two linked cards, paper then field ---------- */
+.pp-fm { display: grid; gap: var(--grid-gap); margin: var(--head-gap) 0 0; padding: 0; list-style: none; }
+@media (min-width: 760px) { .pp-fm { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.pp-fm-card {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  height: 100%;
+  padding: var(--card-pad);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+}
+.pp-fm-text { color: var(--card-muted, var(--ink-muted)); max-width: var(--text-measure); }
+
+/* ---------- Setups rail ----------
    A native scroll area with snap points. Without script it scrolls by touch,
    trackpad or arrow keys (it is focusable); the script adds previous and next. */
-.pp-examples-head {
+.pp-rail-head {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
@@ -238,7 +485,8 @@
   gap: var(--space-4) var(--space-8);
 }
 .pp-rail-controls { display: flex; align-items: center; gap: var(--space-2); }
-.pp-rail-count { min-width: 5rem; margin-right: var(--space-2); text-align: right; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.pp-rail-count { margin-right: var(--space-2); color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+@media (min-width: 640px) { .pp-rail-count { min-width: 5rem; text-align: right; } }
 .pp-icon-button {
   display: inline-grid;
   place-items: center;
@@ -263,7 +511,7 @@
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  padding-block: var(--space-1) var(--space-4);
+  padding: var(--space-1) var(--space-1) var(--space-4);
   border-radius: var(--radius-lg);
 }
 .pp.is-enhanced .pp-rail { scrollbar-width: none; }
@@ -279,11 +527,11 @@
   padding: 0;
   list-style: none;
 }
-/* A phone shows one card and a peek of the next (the cue that the row scrolls).
-   A wider rail shows a whole number of cards, so the last stop of the scroll
-   range is a card's own left edge: with a fractional width (2.15, 3.3) the end
-   of the range fell mid-card and Next left a card cut off at the left. The phone
-   gets a trailing spacer so its last card can start at the left edge too. */
+/* A phone shows one setup and a peek of the next (the cue that the row scrolls),
+   with a trailing spacer so the last one can start at the left edge. A wider
+   rail shows a whole number (2), so every stop of the scroll range is a setup's
+   own left edge and Next never leaves one cut off at the left. Code needs the
+   width, so the rail never shows three. */
 .pp-slide {
   flex: 0 0 86%;
   min-width: 0;
@@ -293,122 +541,15 @@
   content: "";
   flex: 0 0 calc(14% - var(--grid-gap));
 }
-@media (min-width: 640px) {
+@media (min-width: 900px) {
   .pp-slide { flex-basis: calc((100% - var(--grid-gap)) / 2); }
   .pp-rail-track::after { content: none; }
 }
-@media (min-width: 1024px) { .pp-slide { flex-basis: calc((100% - 2 * var(--grid-gap)) / 3); } }
-.pp-example {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: var(--card-pad);
-  border-radius: var(--radius-lg);
-}
-.pp-example.card-stamp { border-radius: var(--radius-sm); }
-.pp-example > * + * { margin-top: var(--space-3); }
-.pp-example-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
-.pp-example .pp-example-top .label { margin-top: 0; }
-.pp-sample {
-  margin-top: var(--space-4);
-  min-height: 4.5em;
-  color: var(--card-ink);
-}
-.pp-example .h3 { margin-top: var(--space-6); }
-.pp-example-foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-4);
-  margin-top: auto;
-  padding-top: var(--space-6);
-}
-.pp-example-foot .caption { color: var(--card-muted); }
-.pp-try {
-  min-height: 44px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--link);
-  font-weight: 600;
-  cursor: pointer;
-}
-.pp-try:hover { color: var(--link-hover); }
-.pp-footnote { margin-top: var(--space-6); color: var(--ink-muted); }
-
-/* ---------- Breakdown: a tinted band, the one background shift ---------- */
-.pp-band {
-  padding-block: var(--section-y);
-  background: var(--surface-tint);
-}
-.pp-breakdown {
-  display: grid;
-  gap: var(--head-gap);
-}
-@media (min-width: 900px) {
-  .pp-breakdown { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); column-gap: var(--space-16); align-items: start; }
-}
-.pp-related { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin: var(--space-8) 0 0; padding: 0; list-style: none; }
-.pp-related a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
-.pp-disclosures.glass {
-  --card-bg: var(--glass-fill-strong);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-}
-.pp-disclosure + .pp-disclosure { box-shadow: inset 0 var(--stroke-hairline) 0 0 var(--line); }
-.pp-disclosure summary {
-  display: grid;
-  grid-template-columns: 2.25rem minmax(0, 1fr) 20px;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-6);
-  cursor: pointer;
-  list-style: none;
-}
-.pp-disclosure summary::-webkit-details-marker { display: none; }
-.pp-disclosure summary:hover .pp-d-name { color: var(--link); }
-.pp-disclosure summary:focus-visible { outline-offset: -4px; border-radius: var(--radius-lg); }
-.pp-d-num { font-family: var(--font-mono); color: var(--ink-muted); }
-.pp-d-title { display: grid; gap: var(--space-1); }
-.pp-d-hint { color: var(--ink-muted); }
-.pp-d-chev { width: 20px; height: 20px; fill: none; stroke: var(--ink-muted); stroke-width: var(--stroke-icon); stroke-linecap: round; stroke-linejoin: round; }
-.pp-disclosure[open] .pp-d-chev { transform: rotate(180deg); }
-.pp-d-body { padding: 0 var(--space-6) var(--space-6) calc(var(--space-6) + 2.25rem + var(--space-3)); }
-@media (max-width: 560px) {
-  .pp-d-body { padding-left: var(--space-6); }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .pp-d-chev { transition: transform 180ms ease-out; }
-  .pp-disclosure[open] .pp-d-body { animation: pp-settle 220ms ease-out both; }
-}
-
-.pp-facts { margin: 0; padding: 0; list-style: none; }
-.pp-fact {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-1) var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  margin-inline: calc(-1 * var(--space-3));
-  border-radius: var(--radius-md);
-}
-.pp-fact.is-picked { background: var(--surface-tint); }
-.pp-fact-name { font-weight: 600; color: var(--ink); }
-.pp-fact-type { color: var(--ink-muted); }
-.pp-fact-pick { margin-left: auto; color: var(--link); }
-.pp-behavior { margin: var(--space-3) 0 0; }
-.pp-behavior .pp-fact { display: block; }
-.pp-behavior dt { font-weight: 600; color: var(--ink); }
-.pp-behavior dd { margin: var(--space-1) 0 0; max-width: var(--text-measure); color: var(--ink-muted); }
-.pp-reach { color: var(--ink); }
-
-.pp-limits { padding: var(--card-pad); border-radius: var(--radius-lg); }
-.pp-limits dl { margin: var(--space-4) 0 0; }
-.pp-limits dl > div + div { margin-top: var(--space-4); }
-.pp-limits dt { font-family: var(--font-mono); color: var(--ink); }
-.pp-limits dd { margin: var(--space-1) 0 0; max-width: var(--text-measure); color: var(--ink-muted); }
-.pp-d-more { margin-top: var(--space-4); color: var(--ink-muted); }
+.pp-use { display: flex; flex-direction: column; }
+.pp-use .h3 { margin-top: var(--eyebrow-gap); }
+.pp-use .term { margin-top: var(--space-4); }
+.pp-use-src { margin-top: var(--space-3); }
+.pp-use-src a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
 
 /* ---------- Activities continuity: an illustration, not the app's screen ---------- */
 .pp-activities { margin: var(--head-gap) 0 0; }
@@ -495,15 +636,15 @@
 .pp-now::after { content: ""; flex: 1; height: 2px; border-radius: var(--radius-pill); background: var(--link); }
 .pp-activities-cap { margin-top: var(--space-4); color: var(--ink-muted); text-align: center; }
 
-/* More contrast: the storyboard and the breakdown panel go solid. These rules
-   set --card-bg at a higher specificity than cards.css's own .glass fallback,
+/* More contrast: the storyboard goes solid. This rule
+   sets --card-bg at a higher specificity than cards.css's own .glass fallback,
    so the fallback is restated here. */
 @media (prefers-contrast: more) {
-  .pp-stage.glass,
-  .pp-disclosures.glass { --card-bg: var(--surface); }
+  .pp-stage.glass { --card-bg: var(--surface); }
 }
 
 @media (forced-colors: active) {
   .pp-choice::after, .pp-now::after { background: CanvasText; }
-  .pp-draft, .pp-steps, .pp-filters, .pp-list, .pp-activities-art { border: 1px solid CanvasText; }
+  .pp-draft, .pp-steps, .pp-filters, .pp-list, .pp-activities-art, .pp-mock-post, .pp-textarea { border: 1px solid CanvasText; }
+  .pp-row.is-picked { outline: 2px solid Highlight; outline-offset: -2px; }
 }

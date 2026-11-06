@@ -1,20 +1,28 @@
 /* Platform product pages (layouts/platform-page.html, docs/platform-pages.md).
 
    Without this file the page is complete: every activity type's intent is listed,
-   the first type's illustration shows, the examples rail is a native scroll area
-   and the breakdowns are native <details>. With it (.is-enhanced on the page):
+   the first type's illustration shows, the playground shows its first starter
+   draft as a static preview (its controls stay hidden), the action matrix is a
+   plain table and the setups rail is a native scroll area. With it (.is-enhanced
+   on the page):
 
    - The activity type radios ([data-pp-choice]) swap every [data-pp-for] element
-     (the illustration, the intent, Start's context, the breakdown's "Your pick"
-     marks and the Activities illustration) and mark the bound breakdown rows
-     ([data-pp-row]). The change is announced in [data-pp-announce].
+     (the illustration, the intent, the playground's preview title and post-only
+     controls, the Activities illustration) and mark the matrix rows bound to the
+     type ([data-pp-row]); no row is hidden. The change is announced in
+     [data-pp-announce].
+   - The playground ([data-pp-try]) is local only. The draft ([data-pp-try-text])
+     is mirrored into the preview as text, never markup; a starter
+     ([data-pp-try-starter]) selects its type and fills the draft; the counter
+     ([data-pp-try-count]) shows the length against data-max and flags a thread
+     past it; an image picked from the visitor's own computer
+     ([data-pp-try-file]) is shown through an object URL that is released when it
+     is removed or replaced. There is no form, and nothing here makes a request,
+     reads storage or cookies, or talks to the extension.
    - The rail ([data-pp-rail]) gets previous and next buttons that page it by hand,
-     never on a timer, and a count of the examples in view (plain text; only a
+     never on a timer, and a count of the items in view (plain text; only a
      button press is announced, once, in [data-pp-rail-announce]). The buttons use
      aria-disabled, never disabled, so a focused button keeps focus at either end.
-     The rail is still a native scroller, so a focused example scrolls into view.
-   - Each example's "Preview above" button ([data-pp-try]) selects the example's
-     type, puts its sample text in the illustration and moves focus there.
 
    No library and no request to another host. Motion is CSS; under reduced motion
    nothing here scrolls smoothly. Tested through platform_page_harness.js by
@@ -32,17 +40,8 @@
 
   function enhance(root) {
     var choices = all(root, "[data-pp-choice]");
-    if (!choices.length) return;
+    if (!choices.length) return null;
     var announce = root.querySelector("[data-pp-announce]");
-    var stage = root.querySelector("[data-pp-stage]");
-
-    function labelOf(id) {
-      var label = "";
-      choices.forEach(function (input) {
-        if (input.value === id) label = input.getAttribute("data-label") || "";
-      });
-      return label;
-    }
 
     function intentOf(id) {
       var text = "";
@@ -66,68 +65,13 @@
       if (announce && say) announce.textContent = say;
     }
 
-    /* Picking a type by hand returns every illustration to its own scene,
-       whatever an example's preview put there. */
-    function restoreScenes() {
-      all(root, "[data-pp-sample]").forEach(function (slot) {
-        slot.textContent = "";
-        slot.hidden = true;
-      });
-      all(root, "[data-pp-original]").forEach(function (p) { p.hidden = false; });
-    }
-
-    function previewing() {
-      return all(root, "[data-pp-sample]").some(function (slot) { return !slot.hidden; });
-    }
-
     /* Selecting a different radio (pointer, arrow keys or assistive technology)
-       fires change, which does the work. Clicking or pressing Space on the radio
-       that is already checked fires click but never change, so that path restores
-       the default scene itself. A click that selects a new radio has not yet moved
-       data-pp-type, so it is left to change and nothing is announced twice. */
+       fires change. Clicking the radio that is already checked fires no change
+       and needs nothing: the page already shows that type. */
     choices.forEach(function (input) {
       input.addEventListener("change", function () {
         if (!input.checked) return;
-        restoreScenes();
         select(input.value, intentOf(input.value));
-      });
-      input.addEventListener("click", function () {
-        if (!input.checked || root.getAttribute("data-pp-type") !== input.value) return;
-        if (!previewing()) return;
-        restoreScenes();
-        select(input.value, intentOf(input.value));
-      });
-    });
-
-    all(root, "[data-pp-try]").forEach(function (button) {
-      button.hidden = false;
-      button.addEventListener("click", function () {
-        var card = null;
-        all(root, "[data-pp-example]").forEach(function (el) {
-          if (el.getAttribute("data-pp-example") === button.getAttribute("data-pp-try")) card = el;
-        });
-        if (!card) return;
-        var type = card.getAttribute("data-activity");
-        var sample = card.querySelector("[data-pp-sample-text]");
-        var title = card.querySelector("[data-pp-example-title]");
-        all(root, "[data-pp-scene-text]").forEach(function (box) {
-          var mine = box.getAttribute("data-pp-scene-text") === type;
-          var slot = box.querySelector("[data-pp-sample]");
-          if (!slot) return;
-          if (mine && sample) {
-            slot.textContent = sample.textContent;
-            slot.hidden = false;
-          } else {
-            slot.textContent = "";
-            slot.hidden = true;
-          }
-          all(box, "[data-pp-original]").forEach(function (p) { p.hidden = mine && !!sample; });
-        });
-        select(type, (title ? title.textContent : "") + ", shown in the preview as " + labelOf(type) + ".");
-        if (stage) {
-          if (stage.scrollIntoView) stage.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "center" });
-          stage.focus({ preventScroll: true });
-        }
       });
     });
 
@@ -135,6 +79,138 @@
     choices.forEach(function (input) { if (input.checked) initial = input.value; });
     select(initial || choices[0].value, "");
     root.classList.add("is-enhanced");
+    return select;
+  }
+
+  function enhancePlayground(root, select) {
+    var box = root.querySelector("[data-pp-try]");
+    if (!box) return;
+    var controls = box.querySelector("[data-pp-try-controls]");
+    var text = box.querySelector("[data-pp-try-text]");
+    var out = box.querySelector("[data-pp-try-out]");
+    if (!controls || !text || !out) return;
+    var count = box.querySelector("[data-pp-try-count]");
+    var thread = box.querySelector("[data-pp-try-thread]");
+    var file = box.querySelector("[data-pp-try-file]");
+    var clear = box.querySelector("[data-pp-try-clear]");
+    var media = box.querySelector("[data-pp-try-img]");
+    var announce = box.querySelector("[data-pp-try-announce]");
+    var postBox = box.querySelector("[data-pp-try-post]");
+    var max = count ? parseInt(count.getAttribute("data-max"), 10) || 0 : 0;
+    var over = false;
+    var url = "";
+
+    function say(message) {
+      if (announce) announce.textContent = message;
+    }
+
+    /* The counter, the thread flag and the image belong to the post type: they
+       sit in postBox, which the type selector hides for the others. */
+    function postActive() {
+      return !!postBox && !postBox.hidden;
+    }
+
+    /* The preview mirrors the draft as text, so nothing typed is ever markup.
+       The counter is plain text, described to the draft only while it is shown;
+       only crossing the thread length is announced, once each way, and only for
+       the post type. */
+    function render() {
+      var value = text.value;
+      out.textContent = value;
+      if (!count) return;
+      if (postActive()) text.setAttribute("aria-describedby", count.getAttribute("id"));
+      else text.removeAttribute("aria-describedby");
+      var n = Array.from(value).length;
+      count.textContent = n + " / " + max;
+      var now = postActive() && max > 0 && n > max;
+      if (thread) thread.hidden = !now;
+      if (now !== over) {
+        over = now;
+        if (now && thread) say(thread.textContent);
+      }
+      /* The thread message is about the post type only: off Post it must not be
+         read as the current state of a reply. */
+      if (!postActive() && thread && announce && announce.textContent === thread.textContent) say("");
+    }
+
+    function release() {
+      if (url && window.URL && URL.revokeObjectURL) URL.revokeObjectURL(url);
+      url = "";
+    }
+
+    function dropImage() {
+      release();
+      if (media) {
+        media.textContent = "";
+        media.hidden = true;
+      }
+      if (clear) clear.hidden = true;
+    }
+
+    text.addEventListener("input", render);
+    /* A type change (after the selector's own handler has shown or hidden postBox)
+       refreshes the description and the flag. */
+    all(root, "[data-pp-choice]").forEach(function (input) {
+      input.addEventListener("change", render);
+    });
+
+    all(box, "[data-pp-try-starter]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        if (select) select(button.getAttribute("data-activity"), "");
+        text.value = button.getAttribute("data-sample") || "";
+        render();
+        say(button.textContent + " is in your draft.");
+      });
+    });
+
+    if (file && media && window.URL && URL.createObjectURL && document.createElement) {
+      file.addEventListener("change", function () {
+        var picked = file.files && file.files[0];
+        dropImage();
+        if (!picked) {
+          file.value = "";
+          return;
+        }
+        if (!/^image\//.test(picked.type || "")) {
+          file.value = "";
+          say(announce ? announce.getAttribute("data-not-image") || "" : "");
+          return;
+        }
+        url = URL.createObjectURL(picked);
+        var img = document.createElement("img");
+        /* A format the browser cannot decode (HEIC, TIFF) must not leave a blank
+           slot and a Remove button: drop it, clear the picker and say so. */
+        img.addEventListener("error", function () {
+          dropImage();
+          file.value = "";
+          say(announce ? announce.getAttribute("data-unreadable") || "" : "");
+        });
+        img.setAttribute("alt", "");
+        img.setAttribute("src", url);
+        media.appendChild(img);
+        media.hidden = false;
+        if (clear) clear.hidden = false;
+      });
+      if (clear) {
+        clear.addEventListener("click", function () {
+          dropImage();
+          file.value = "";
+          file.focus();
+        });
+      }
+      /* A page kept in the back/forward cache comes back with its image, so only a
+         page that is really going away releases the URL. */
+      window.addEventListener("pagehide", function (event) {
+        if (!event.persisted) release();
+      });
+    } else if (file) {
+      /* No object URLs: hide the picker rather than offer something that fails. */
+      var picker = file.closest ? file.closest("label") : null;
+      if (picker) picker.hidden = true;
+    }
+
+    render();
+    controls.hidden = false;
   }
 
   function enhanceRail(root) {
@@ -192,7 +268,7 @@
       var i = Math.max(0, Math.min(slides.length - 1, index));
       var max = Math.max(0, rail.scrollWidth - rail.clientWidth);
       var left = Math.min(max, slides[i].offsetLeft - origin());
-      if (announce) announce.textContent = "Showing examples " + describe(inView(left));
+      if (announce) announce.textContent = "Showing " + describe(inView(left));
       rail.scrollTo({ left: left, behavior: reduced() ? "auto" : "smooth" });
     }
 
@@ -222,7 +298,8 @@
 
   function init() {
     all(document, "[data-platform-page]").forEach(function (root) {
-      enhance(root);
+      var select = enhance(root);
+      enhancePlayground(root, select);
       enhanceRail(root);
     });
   }
