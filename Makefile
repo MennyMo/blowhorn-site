@@ -286,7 +286,7 @@ check-third-party: site-build
 check-urls: site-build
 	python3 .github/scripts/check-site-contract.py $(BUILD_DIR)
 
-## Validate every data file that has a JSON Schema in schemas/ (data/hero.json, data/machines.json, data/home_ai.json, data/roles.json, data/use_cases.json, data/solutions.json, data/themes.json, data/integrations.json, data/hero_demo.json, data/actions.json, data/action_examples.json, data/tells.json, data/docs_events.json, data/activity_feed.sample.json, internal-worker/access.json).
+## Validate every data file that has a JSON Schema in schemas/ (data/hero.json, data/machines.json, data/home_ai.json, data/roles.json, data/use_cases.json, data/solutions.json, data/themes.json, data/integrations.json, data/hero_demo.json, data/actions.json, data/action_examples.json, data/tells.json, data/support.json, data/docs_events.json, data/activity_feed.sample.json, internal-worker/access.json).
 ## Role, use-case and solution schemas $ref shared line/text/card types; ajv -r loads that file.
 ## data/docs_events.json $refs the docs event payload types in schemas/defs/docs-event.schema.json (ajv -r).
 ## check_action_examples.py also requires every supported YAML action to have an example.
@@ -305,6 +305,7 @@ check-schemas:
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/actions.schema.json -d data/actions.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/action_examples.schema.json -d data/action_examples.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/tells.schema.json -d data/tells.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/support.schema.json -d data/support.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/docs_events.schema.json -r schemas/defs/docs-event.schema.json -d data/docs_events.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/internal_access.schema.json -d internal-worker/access.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/bookmarklet.schema.json -d data/bookmarklet.json

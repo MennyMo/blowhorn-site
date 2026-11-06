@@ -14,8 +14,8 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 ## Website, documentation, and feature updates
 
-- Website and documentation updates: make them to the best of your ability, push when ready, and merge the PR when ready.
-- New or augmented features: update their associated tests, update internal and external documentation, then run the changes through No Mistakes at a maximum of three turns.
+- Website and documentation updates: make them to the best of your ability, run `make check`, push, open the PR and merge it when ready. Never run them through No Mistakes (Lee, 6 Nov 2026).
+- Code that is not the website (the `signup-worker/` and `internal-worker/` Workers, `.github/scripts/`, workflows, the Makefile): update its tests and its internal and external documentation, then run the change through No Mistakes at a maximum of three turns.
 
 ## Building the site locally
 
@@ -52,6 +52,9 @@ Every link to Blowhorn Tells (the free "Am I a Bot?" check) is built by
 `layouts/_partials/tells-link.html` from `data/tells.json`, with UTM tags and a
 placement; never hard-code a Tells URL in a template. `make check-tells` fails a
 lost placement or a mistagged link ([docs/tells.md](docs/tells.md)).
+Every docs page also shows a contact-support card under the Tells card
+(`docs-support-card.html`, `data/support.json`); both use the `docs-rail-card`
+classes that show one copy per width ([docs/tells.md](docs/tells.md)).
 
 Role pages (`/for/<slug>/`), use-case pages (`/use-cases/<slug>/`) and
 solution pages (`/solutions/<slug>/`, one per category of tool replaced) are
@@ -176,13 +179,19 @@ and dark, no horizontal scroll from 320 px).
   another branch), work there, and release it with `treehouse return <path>` once the change
   has merged. `treehouse status` lists the pool. Never make one with `git worktree add` or a
   second clone.
-- **Land every change through no-mistakes, at most three runs per pull request.** Commit in
+- **Website and documentation changes skip no-mistakes.** Layouts, content, styles, data
+  files and their schemas, and these docs: commit in the worktree, run `make check`, push the
+  branch, open the pull request with `gh-axi pr create` and merge it. A pull request that also
+  touches code outside the website follows the next rule.
+- **Other code lands through no-mistakes, at most three runs per pull request.** Commit in
   the worktree, then run `no-mistakes axi run --intent "<goal>"` (a clone without a
   `no-mistakes` remote needs `no-mistakes init` once). `no-mistakes axi status` shows the step
   and its findings, and `no-mistakes axi respond` answers a review gate. The pipeline reviews,
   tests, pushes and opens the pull request. After the third run, merge the pull request as it
   stands and open an issue for anything still flagged. A run that stopped on a usage limit
   counts; one cancelled before it did anything does not.
+- **`make check` locally needs PyYAML** for the script tests (`test_check_api_reference`);
+  CI's runner has it, a bare macOS `python3` does not (`python3 -m pip install pyyaml`).
 
 ## Maintaining this file
 

@@ -41,6 +41,13 @@ Build a link with the partial; never hard-code a Tells URL in a template:
 | `docs` | Card under the table of contents (1280px and up), else at the end of the page | `tells-docs-card.html` in `docs/baseof.html` |
 | `404` | Line under the 404 message | `404.html` |
 
+The docs card shares its spot with the support card: `docs-support-card.html`,
+copy and address in `data/support.json` (schema: `schemas/support.schema.json`),
+a Dispatch card so it never matches the Field-toned Tells card above it. Both
+carry `docs-rail-card` plus `docs-rail-card-toc` or `-end`, and those rules in
+`assets/scss/_styles_project.scss` decide which copy shows; a new rail card
+takes the same classes. Its mailto subject names the page the reader was on.
+
 The alternate home layouts (`/home-oil/`, `/home-reveille/`) do not render
 `signal.html` and carry no band. Prose links in the docs (synced from the
 product repository), the Field Manual, the Trust Center and the role and
