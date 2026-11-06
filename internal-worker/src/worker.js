@@ -233,9 +233,12 @@ function escHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
-function csvCell(v) {
-  const s = String(v ?? '');
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+export function csvCell(v) {
+  let s = String(v ?? '');
+  if (/^[=+@\t\r-]/.test(s)) {
+    s = `'${s}`;
+  }
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
 const ADMIN_HEADERS = {
