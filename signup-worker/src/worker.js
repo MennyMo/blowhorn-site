@@ -97,9 +97,17 @@ function jsonResponse(request, status, body) {
   });
 }
 
-function pageResponse(request, status, title, body) {
+export function safeHtml(content) {
+  return { html: String(content ?? '') };
+}
+
+export function pageResponse(request, status, title, body) {
+  const safeTitle = escHtml(title);
+  const safeBody = (typeof body === 'object' && body !== null && 'html' in body)
+    ? body.html
+    : escHtml(body);
   return new Response(
-    `<!DOCTYPE html>\n<html lang="en">\n<head><meta charset="utf-8"><title>${title}</title></head>\n<body>\n<main>\n<h1>${title}</h1>\n<p>${body}</p>\n</main>\n</body>\n</html>\n`,
+    `<!DOCTYPE html>\n<html lang="en">\n<head><meta charset="utf-8"><title>${safeTitle}</title></head>\n<body>\n<main>\n<h1>${safeTitle}</h1>\n<p>${safeBody}</p>\n</main>\n</body>\n</html>\n`,
     {
       status,
       headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', ...corsHeaders(request) },
@@ -168,7 +176,7 @@ function fail(request, status, message, sourcePage) {
       request,
       status,
       'Something went wrong',
-      `${safeMsg} <a href="${link}">Go back</a> and try again.`,
+      safeHtml(`${safeMsg} <a href="${link}">Go back</a> and try again.`),
     );
   }
   return jsonResponse(request, status, { ok: false, error: message });
@@ -261,7 +269,7 @@ export function createHandler(db) {
         request,
         200,
         'Confirm unsubscribe',
-        `Click below to confirm unsubscribing from Blowhorn updates.<br><br>\n<form method="POST" action="/api/unsubscribe">\n<input type="hidden" name="token" value="${token}">\n<button type="submit">Confirm unsubscribe</button>\n</form>`,
+        safeHtml(`Click below to confirm unsubscribing from Blowhorn updates.<br><br>\n<form method="POST" action="/api/unsubscribe">\n<input type="hidden" name="token" value="${token}">\n<button type="submit">Confirm unsubscribe</button>\n</form>`),
       );
     }
 

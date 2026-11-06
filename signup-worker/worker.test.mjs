@@ -2,7 +2,7 @@
 // unsubscribes and rate-limits, with an in-memory fake for the db adapter.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createHandler, THANKS_URL, safeBackLink, escHtml } from './src/worker.js';
+import { createHandler, THANKS_URL, safeBackLink, escHtml, safeHtml, pageResponse } from './src/worker.js';
 
 function fakeDb() {
   const rows = new Map();
@@ -291,4 +291,21 @@ test('form post error escapes HTML and protects Go back link from attribute inje
   const textMalicious = await resMalicious.text();
   assert.doesNotMatch(textMalicious, /onmouseover/);
   assert.match(textMalicious, /<a href="https:\/\/blowhorn\.ai">Go back<\/a>/);
+});
+
+test('pageResponse structurally escapes title and plain body, preserving safeHtml', async () => {
+  const req = new Request('https://api.blowhorn.ai/api/test');
+
+  // Plain strings in title and body are escaped by default
+  const resPlain = pageResponse(req, 400, 'Alert <script>', 'Error & "quotes"');
+  const textPlain = await resPlain.text();
+  assert.match(textPlain, /<title>Alert &lt;script&gt;<\/title>/);
+  assert.match(textPlain, /<h1>Alert &lt;script&gt;<\/h1>/);
+  assert.match(textPlain, /<p>Error &amp; &quot;quotes&quot;<\/p>/);
+
+  // safeHtml wrapper is preserved for trusted markup
+  const resHtml = pageResponse(req, 200, 'Clean Title', safeHtml('<b>formatted</b>'));
+  const textHtml = await resHtml.text();
+  assert.match(textHtml, /<title>Clean Title<\/title>/);
+  assert.match(textHtml, /<p><b>formatted<\/b><\/p>/);
 });
