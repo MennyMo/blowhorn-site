@@ -366,7 +366,7 @@ function diskTable(snap) {
     .map((m) =>
       m.reachable
         ? `<tr><td>${escHtml(m.name)}</td><td>${escHtml(m.os)}</td><td class="n${m.used_pct >= 90 ? ' hot' : ''}">${escHtml(num(m.used_pct))}%</td>` +
-          `<td class="n">${fmtGB(m.free_bytes)}</td><td class="n">${fmtGB(m.size_bytes)}</td><td>${escHtml(m.mount)}</td></tr>`
+          `<td class="n" data-v="${num(m.free_bytes)}">${fmtGB(m.free_bytes)}</td><td class="n" data-v="${num(m.size_bytes)}">${fmtGB(m.size_bytes)}</td><td>${escHtml(m.mount)}</td></tr>`
         : `<tr><td>${escHtml(m.name)}</td><td colspan="5" class="stale">Unreachable: ${escHtml(m.error || 'no answer')}</td></tr>`,
     )
     .join('');
@@ -447,11 +447,18 @@ const FLEET_CSS =
 // in localStorage across refreshes (fleet-stats-sort).
 export const FLEET_SORT_JS = `(() => {
   const STORE = 'fleet-stats-sort';
+  const MULT = { b: 1, kb: 1e3, mb: 1e6, gb: 1e9, tb: 1e12 };
   const key = (td) => {
     if (!td) return null;
     const raw = (td.dataset.v ?? td.textContent).trim();
     if (raw === '' || raw === '-') return null;
-    return /^-?\\d+(\\.\\d+)?(%| GB)?$/.test(raw) ? parseFloat(raw) : raw.toLowerCase();
+    const m = raw.match(/^(-?\\d+(?:\\.\\d+)?)\\s*(%|[kmgt]?b)?$/i);
+    if (m) {
+      const n = parseFloat(m[1]);
+      const u = (m[2] || '').toLowerCase();
+      return u && MULT[u] ? n * MULT[u] : n;
+    }
+    return raw.toLowerCase();
   };
   const readStore = () => {
     try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch { return {}; }

@@ -318,3 +318,13 @@ test('csvCell preserves normal values and quotes cells containing bare carriage 
   assert.equal(csvCell(null), '');
   assert.equal(csvCell(undefined), '');
 });
+
+test('fleet sort script normalizes storage units and disk table embeds byte keys', async () => {
+  assert.match(FLEET_SORT_JS, /MULT/);
+  assert.match(FLEET_SORT_JS, /\[kmgt]\?b/i);
+
+  const e = fleetEnv({ disk: [diskSnap], workload: [workloadSnap] });
+  const html = await (await handle(authed('/engineering/fleet/'), e, certsFetch)).text();
+  assert.match(html, /data-v="45000000000"/);
+  assert.match(html, /data-v="500000000000"/);
+});
