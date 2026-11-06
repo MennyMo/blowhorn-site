@@ -1,0 +1,117 @@
+{{- /* Resolve one platform page (layout platform-page, content front matter
+  `platform: <id>`). Joins the page record in data/platform_pages.json with the
+  shared contract in the same file, the platform's canonical identity
+  (data/integrations.json + data/platforms/<id>.yaml) and the action vocabulary
+  (data/actions.json), and FAILS THE BUILD when they disagree, so a mismatched
+  platform or action id can never render:
+
+  - the platform must be a supported row in data/integrations.json with a YAML file
+  - the record's route must be this page's URL
+  - every activity type's action id must be in the vocabulary AND listed by the YAML
+  - activity ids are unique, and each is bound to a different action
+  - every example's activity id must be declared on the page, example ids are
+    unique, no four neighbouring examples share a card variant (the rail shows up
+    to four) and paper, the featured variant, is used at most once
+  - breakdown kinds are unique, and a limits item needs an action with limits
+
+  Name, logo, docs link, reach, and every action's name, behavior and limits come
+  from the canonical files. The record holds only page copy.
+  check_platform_pages.py makes the same checks on the source files and checks
+  the built page. Input: the content page (.). Returns the resolved dict. */ -}}
+{{- $page := . -}}
+{{- $id := $page.Params.platform -}}
+{{- if not $id }}{{ errorf "platform-page: %s sets no `platform:` front matter" $page.File.Path }}{{ end -}}
+{{- $data := hugo.Data.platform_pages -}}
+{{- $contract := $data.contract -}}
+{{- if not $contract }}{{ errorf "platform-page: data/platform_pages.json has no contract" }}{{ end -}}
+{{- $rec := false -}}
+{{- range $data.pages }}{{ if eq .platform $id }}{{ $rec = . }}{{ end }}{{ end -}}
+{{- if not $rec }}{{ errorf "platform-page: no record for platform %q in data/platform_pages.json" $id }}{{ end -}}
+{{- if ne $page.RelPermalink ($rec.route | relURL) }}{{ errorf "platform-page: %s is served at %q but its record says route %q" $page.File.Path $page.RelPermalink $rec.route }}{{ end -}}
+
+{{- $row := false -}}
+{{- range hugo.Data.integrations.platforms }}{{ if eq .id $id }}{{ $row = . }}{{ end }}{{ end -}}
+{{- if not $row }}{{ errorf "platform-page: %q is not in data/integrations.json platforms" $id }}{{ end -}}
+{{- if ne $row.status "supported" }}{{ errorf "platform-page: %q is %q in data/integrations.json; only a supported platform gets a page" $id $row.status }}{{ end -}}
+{{- $yaml := index hugo.Data.platforms $id -}}
+{{- if not $yaml }}{{ errorf "platform-page: no data/platforms/%s.yaml for %q" $id $id }}{{ end -}}
+
+{{- /* The platform's own actions, resolved against the vocabulary. */ -}}
+{{- $byId := dict -}}
+{{- $resolved := slice -}}
+{{- range $yaml.actions -}}
+  {{- $a := partial "action-resolve.html" . -}}
+  {{- $byId = merge $byId (dict $a.id $a) -}}
+  {{- $resolved = $resolved | append $a -}}
+{{- end -}}
+
+{{- /* Activity types: each bound to one action the platform lists. */ -}}
+{{- $activities := slice -}}
+{{- $typeOf := dict -}}
+{{- $activityOf := dict -}}
+{{- $labelOf := dict -}}
+{{- range $rec.activities -}}
+  {{- if index $labelOf .id }}{{ errorf "platform-page: %q repeats activity id %q" $id .id }}{{ end -}}
+  {{- $labelOf = merge $labelOf (dict .id .label) -}}
+  {{- $act := index $byId .action -}}
+  {{- if not $act }}{{ errorf "platform-page: activity %q of %q names action %q, which data/platforms/%s.yaml does not list" .id $id .action $id }}{{ end -}}
+  {{- if index $typeOf .action }}{{ errorf "platform-page: %q binds two activities to action %q" $id .action }}{{ end -}}
+  {{- $typeOf = merge $typeOf (dict .action .label) -}}
+  {{- $activityOf = merge $activityOf (dict .action .id) -}}
+  {{- $activities = $activities | append (merge . (dict "resolved" $act)) -}}
+{{- end -}}
+
+{{- /* Examples: declared activity, unique id, a card variant no neighbour in a
+  four-wide window shares, and at most one featured (paper) example. */ -}}
+{{- $examples := slice -}}
+{{- $exampleIds := dict -}}
+{{- $papers := 0 -}}
+{{- $items := $rec.examples.items -}}
+{{- range $i, $e := $items -}}
+  {{- if not (index $labelOf $e.activity) }}{{ errorf "platform-page: example %q of %q uses activity %q, which the page does not declare" $e.id $id $e.activity }}{{ end -}}
+  {{- if index $exampleIds $e.id }}{{ errorf "platform-page: %q repeats example id %q" $id $e.id }}{{ end -}}
+  {{- $exampleIds = merge $exampleIds (dict $e.id true) -}}
+  {{- if eq $e.variant "paper" }}{{ $papers = add $papers 1 }}{{ end -}}
+  {{- range $j, $f := $items -}}
+    {{- if and (gt $j $i) (lt (sub $j $i) 4) (eq $e.variant $f.variant) }}{{ errorf "platform-page: examples %q and %q of %q are within four of each other and share the %q card variant" $e.id $f.id $id $e.variant }}{{ end -}}
+  {{- end -}}
+  {{- $examples = $examples | append (merge $e (dict "typeLabel" (index $labelOf $e.activity))) -}}
+{{- end -}}
+{{- if gt $papers 1 }}{{ errorf "platform-page: %q features %d paper examples; paper is the one featured example" $id $papers }}{{ end -}}
+
+{{- /* Actions in the platform's own order, each tagged with the type it belongs to. */ -}}
+{{- $actions := slice -}}
+{{- $limited := slice -}}
+{{- range $resolved -}}
+  {{- $a := merge . (dict "type" (index $typeOf .id | default "") "activity" (index $activityOf .id | default "")) -}}
+  {{- $actions = $actions | append $a -}}
+  {{- if $a.limits }}{{ $limited = $limited | append $a }}{{ end -}}
+{{- end -}}
+
+{{- $kinds := dict -}}
+{{- range $rec.breakdown.items -}}
+  {{- if index $kinds .kind }}{{ errorf "platform-page: %q repeats breakdown kind %q" $id .kind }}{{ end -}}
+  {{- $kinds = merge $kinds (dict .kind true) -}}
+  {{- if and (eq .kind "limits") (not $limited) }}{{ errorf "platform-page: %q has a limits breakdown but data/platforms/%s.yaml lists no limits" $id $id }}{{ end -}}
+{{- end -}}
+
+{{- /* Start goes to an existing entrypoint, never a deep link made up here. */ -}}
+{{- $startHref := "" -}}
+{{- if eq $rec.start.destination "download" }}{{ $startHref = "download/" | relURL }}{{ else }}{{ errorf "platform-page: unknown start destination %q" $rec.start.destination }}{{ end -}}
+
+{{- return dict
+  "id" $id
+  "rec" $rec
+  "contract" $contract
+  "name" $yaml.name
+  "short" (replaceRE `\s*\(.*\)$` "" $yaml.name)
+  "logo" $yaml.logo
+  "docs" ($yaml.docs | default $row.docs)
+  "reach" $yaml.reach
+  "activities" $activities
+  "examples" $examples
+  "actions" $actions
+  "limited" $limited
+  "startHref" $startHref
+  "catalogPath" hugo.Data.integrations.catalogPath
+-}}

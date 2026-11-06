@@ -1,0 +1,184 @@
+{
+  "$schema": "../schemas/platform_page.schema.json",
+  "contract": {
+    "previewNotice": "Preview: not final, and not linked from the site",
+    "stageLabel": "Interactive preview",
+    "stages": {
+      "write": "Write",
+      "review": "Review",
+      "track": "Track"
+    },
+    "continuity": {
+      "heading": "One place for every activity",
+      "intro": "Start it here, then follow it in the app with everything else: once or recurring, past and upcoming.",
+      "caption": "Illustration of the Activities model. The platform and the activity type are filters on one list, not separate places.",
+      "filters": {
+        "title": "Filters",
+        "applied": "Applied",
+        "time": "Time",
+        "past": "Past",
+        "upcoming": "Upcoming",
+        "recurrence": "Recurrence",
+        "any": "Any",
+        "platform": "Platform",
+        "type": "Activity type"
+      },
+      "columns": {
+        "when": "When",
+        "activity": "Activity",
+        "recurrence": "Recurrence",
+        "status": "Status"
+      },
+      "now": "Now",
+      "rows": [
+        { "when": "Last week", "time": "past", "recurrence": "Once", "status": "Sent" },
+        { "when": "Yesterday", "time": "past", "recurrence": "Weekly", "status": "Sent" },
+        { "when": "Tomorrow", "time": "upcoming", "recurrence": "Weekly", "status": "Scheduled" },
+        { "when": "Next week", "time": "upcoming", "recurrence": "Once", "status": "Scheduled" }
+      ]
+    }
+  },
+  "pages": [
+    {
+      "platform": "x",
+      "route": "/preview/platforms/x/",
+      "stage": "preview",
+      "head": {
+        "eyebrow": "X / Activities",
+        "headline": "Make your next move on X.",
+        "lede": "Publish a post, join a conversation or amplify an idea, from your own browser, as you.",
+        "description": "Post, respond or amplify on X from your own browser with Blowhorn. A preview of the X platform page."
+      },
+      "start": {
+        "label": "Start",
+        "destination": "download",
+        "note": "Start opens the download page. Pick the activity again in the app, then run it once or on a schedule."
+      },
+      "activities": [
+        {
+          "id": "post",
+          "action": "post",
+          "label": "Post",
+          "intent": "Share an update in your voice.",
+          "scene": {
+            "title": "Post preview",
+            "state": "Draft",
+            "text": [
+              "A useful idea starts a better conversation.",
+              "Here's what we learned building our latest release."
+            ],
+            "steps": {
+              "write": "Shape a useful update",
+              "review": "Check the final post",
+              "track": "Follow it in one list"
+            }
+          }
+        },
+        {
+          "id": "respond",
+          "action": "reply",
+          "label": "Respond",
+          "intent": "Add something useful to a conversation.",
+          "scene": {
+            "title": "Reply preview",
+            "state": "Draft",
+            "text": [
+              "That trade-off is familiar. We tried a smaller first step, and here's what we learned."
+            ],
+            "steps": {
+              "write": "Address the conversation",
+              "review": "Check the reply first",
+              "track": "Follow it in one list"
+            }
+          }
+        },
+        {
+          "id": "amplify",
+          "action": "amplify",
+          "label": "Amplify",
+          "intent": "Pass along a post you believe in.",
+          "scene": {
+            "title": "Amplify preview",
+            "state": "Draft",
+            "text": [
+              "Worth reading: a practical approach to making the next iteration easier."
+            ],
+            "steps": {
+              "write": "Repost it, or quote it",
+              "review": "Check which profiles take part",
+              "track": "See each profile's result"
+            }
+          }
+        }
+      ],
+      "media": {
+        "status": "pending",
+        "label": "Illustration, not a recording"
+      },
+      "examples": {
+        "heading": "A few ways to start",
+        "intro": "Shapes an activity can take. Preview one above, then make it yours.",
+        "label": "Illustrative example",
+        "footnote": "Examples are optional and made up. Post, Respond and Amplify stay available above.",
+        "items": [
+          {
+            "id": "launch-update",
+            "activity": "post",
+            "variant": "paper",
+            "title": "Launch update",
+            "blurb": "A clear update for your next release.",
+            "sample": "We shipped a simpler way to turn an idea into an activity. Here's what changed."
+          },
+          {
+            "id": "reply-with-context",
+            "activity": "respond",
+            "variant": "field",
+            "title": "Reply with context",
+            "blurb": "Add what you learned, not just agreement.",
+            "sample": "That trade-off is familiar. We tried a smaller first step, and here's what we learned."
+          },
+          {
+            "id": "pass-along-an-idea",
+            "activity": "amplify",
+            "variant": "plain",
+            "title": "Pass along an idea",
+            "blurb": "Share the signal with your audience.",
+            "sample": "Worth reading: a practical approach to making the next iteration easier."
+          },
+          {
+            "id": "weekly-recap",
+            "activity": "post",
+            "variant": "stamp",
+            "title": "Weekly recap",
+            "blurb": "Three facts, once a week.",
+            "sample": "Three things we learned this week, and what we're trying next."
+          }
+        ]
+      },
+      "breakdown": {
+        "heading": "No mystery between Start and done",
+        "intro": "Open only what you need. It is the same list the X docs show.",
+        "items": [
+          {
+            "kind": "supported",
+            "title": "What Blowhorn can do on X",
+            "hint": "Every action, and the type it belongs to"
+          },
+          {
+            "kind": "limits",
+            "title": "Limits to know",
+            "hint": "The caps Blowhorn keeps for you"
+          },
+          {
+            "kind": "behavior",
+            "title": "How each action runs",
+            "hint": "What happens on X, as you"
+          }
+        ]
+      },
+      "related": [
+        { "label": "Every action on every platform", "href": "/integrations/actions/" }
+      ]
+    }
+  ]
+}

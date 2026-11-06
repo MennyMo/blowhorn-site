@@ -42,8 +42,9 @@ include .github/build/Makefile.show-help.mk
 #   check-urls         Production build, then fail on a lost public URL or anchor.
 #   site-check         Production build once, then validate-html, check-links,
 #                      check-third-party, check-urls, check-no-internal,
-#                      check-theme, check-platform-docs, check-naming
-#                      check-action-matrix and check-download-links (site.yml).
+#                      check-theme, check-platform-docs, check-naming,
+#                      check-action-matrix, check-platform-pages and
+#                      check-download-links (site.yml).
 #   check-no-internal  Fail if the production build contains /internal/,
 #                      or its offline search index is missing or contains /internal/.
 #   check-platform-docs Production build, then fail if a supported platform
@@ -53,6 +54,9 @@ include .github/build/Makefile.show-help.mk
 #                      (/integrations/actions/) or the docs all-actions table
 #                      drifts from data/actions.json plus data/platforms/, or
 #                      links to a dead page or anchor.
+#   check-platform-pages Production build, then fail if a platform page drifts
+#                      from data/platform_pages.json, leaks into the sitemap,
+#                      llms.txt or search, or its script stops working.
 #   check-api-reference Production build, then (once params.apiReference.spec is set)
 #                      fail if the API reference page drifts from its spec, loses
 #                      its "Not an HTTP API" notice or names the private repository.
@@ -304,9 +308,11 @@ check-schemas:
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/docs_events.schema.json -r schemas/defs/docs-event.schema.json -d data/docs_events.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/internal_access.schema.json -d internal-worker/access.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/bookmarklet.schema.json -d data/bookmarklet.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/platform_page.schema.json -d data/platform_pages.json
 	python3 .github/scripts/check_action_examples.py
 	python3 .github/scripts/check_bookmarklet.py
 	python3 .github/scripts/check_action_matrix.py --source
+	python3 .github/scripts/check_platform_pages.py --source
 
 ## Production build, then fail if / is not the home-page theme (themes.json default plus _index.md front matter), the Reveille preview lost today's look, or a theme-specific content file appeared outside content/en/home-reveille.md.
 check-theme: site-build
@@ -320,8 +326,12 @@ check-platform-docs: site-build
 check-action-matrix: site-build
 	python3 .github/scripts/check_action_matrix.py $(BUILD_DIR)
 
+## Production build, then fail if a platform page (/preview/platforms/<id>/) drifts from data/platform_pages.json, loses noindex, appears in the sitemap, llms.txt or search, is linked from another page, or its script stops swapping the activity type, paging the examples by hand or honouring reduced motion (docs/platform-pages.md).
+check-platform-pages: site-build
+	python3 .github/scripts/check_platform_pages.py $(BUILD_DIR)
+
 ## Build for production once, then validate-html, check-links, check-third-party and check-urls, plus check-schemas (what site.yml runs).
-site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-download-links check-feeds check-brand-kits check-tells check-tips check-api-reference
+site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-platform-pages check-download-links check-feeds check-brand-kits check-tells check-tips check-api-reference
 
 ## Production build, then fail if any built page or script links to /releases/latest/download (an axi release can hold Latest; build download URLs from data/download.json).
 check-download-links: site-build
@@ -511,6 +521,7 @@ clean:
 	check-theme \
 	check-platform-docs \
 	check-action-matrix \
+	check-platform-pages \
 	setup \
 	build \
 	build-preview \

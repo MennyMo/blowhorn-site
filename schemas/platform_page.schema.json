@@ -1,0 +1,303 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/platform_page.schema.json",
+  "title": "Platform pages",
+  "description": "data/platform_pages.json: the shared contract every platform product page follows (Figma 902:111) and one record per platform page (Figma 902:114 is X), rendered by layouts/platform-page.html. A record EXTENDS a supported platform and never restates it: the platform name, logo, docs page and reach come from data/integrations.json plus data/platforms/<platform>.yaml, and every action's name, behavior and limits come from data/actions.json plus that YAML. A record holds only page copy, the activity types (each pointing at one action id), the illustrative examples and the breakdown order. This schema checks shape; .github/scripts/check_platform_pages.py --source checks the cross-references (platform supported, each action id in the platform's YAML, each example's activity declared, card variants never repeated within a rail window) and the template fails the build on the same mismatches. Docs: docs/platform-pages.md. Hyphens, never em dashes. No browser or operating system brand names: marketing wording stays general.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "pages"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "contract": { "$ref": "#/definitions/contract" },
+    "pages": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/page" }
+    }
+  },
+  "definitions": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "maxLength": 40
+    },
+    "copy": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "not": { "pattern": "—|Chrome|Safari|Firefox|\\bMac\\b|macOS|Outbox" }
+    },
+    "paragraph": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "not": { "pattern": "—|Chrome|Safari|Firefox|\\bMac\\b|macOS|Outbox" }
+    },
+    "contract": {
+      "description": "What every platform page shares (Figma 902:111): the three stages an activity goes through, the preview and illustration labels, and the closing Activities continuity visual. Once and recurring activities share one Activities model in which the platform is a filter, not a separate Upcoming or History destination, so the continuity visual is the same on every page; only the platform and the selected activity type change.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["previewNotice", "stageLabel", "stages", "continuity"],
+      "properties": {
+        "previewNotice": { "$ref": "#/definitions/copy" },
+        "stageLabel": {
+          "description": "Eyebrow over the hero illustration. It says the panel is an interactive preview, never a recording.",
+          "$ref": "#/definitions/copy"
+        },
+        "stages": {
+          "description": "The labels of the three stages, in order. Each activity's scene.steps gives one line per stage.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["write", "review", "track"],
+          "properties": {
+            "write": { "$ref": "#/definitions/copy" },
+            "review": { "$ref": "#/definitions/copy" },
+            "track": { "$ref": "#/definitions/copy" }
+          }
+        },
+        "continuity": {
+          "description": "The closing Activities visual. An illustration, never a screenshot or a live list, and never a second call to action.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["heading", "intro", "caption", "filters", "columns", "now", "rows"],
+          "properties": {
+            "heading": { "$ref": "#/definitions/copy" },
+            "intro": { "$ref": "#/definitions/paragraph" },
+            "caption": { "$ref": "#/definitions/paragraph" },
+            "filters": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["title", "applied", "time", "past", "upcoming", "recurrence", "any", "platform", "type"],
+              "properties": {
+                "title": { "$ref": "#/definitions/copy" },
+                "applied": { "$ref": "#/definitions/copy" },
+                "time": { "$ref": "#/definitions/copy" },
+                "past": { "$ref": "#/definitions/copy" },
+                "upcoming": { "$ref": "#/definitions/copy" },
+                "recurrence": { "$ref": "#/definitions/copy" },
+                "any": { "$ref": "#/definitions/copy" },
+                "platform": { "$ref": "#/definitions/copy" },
+                "type": { "$ref": "#/definitions/copy" }
+              }
+            },
+            "columns": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["when", "activity", "recurrence", "status"],
+              "properties": {
+                "when": { "$ref": "#/definitions/copy" },
+                "activity": { "$ref": "#/definitions/copy" },
+                "recurrence": { "$ref": "#/definitions/copy" },
+                "status": { "$ref": "#/definitions/copy" }
+              }
+            },
+            "now": { "$ref": "#/definitions/copy" },
+            "rows": {
+              "description": "Illustrative rows: relative times only, never a date or a clock time that reads as real. Past rows come first, then upcoming; the template draws the now line between them.",
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["when", "time", "recurrence", "status"],
+                "properties": {
+                  "when": { "$ref": "#/definitions/copy" },
+                  "time": { "type": "string", "enum": ["past", "upcoming"] },
+                  "recurrence": { "$ref": "#/definitions/copy" },
+                  "status": { "$ref": "#/definitions/copy" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform", "route", "stage", "head", "start", "activities", "media", "examples", "breakdown"],
+      "properties": {
+        "platform": {
+          "description": "A platform id from data/integrations.json whose status is supported and that has data/platforms/<id>.yaml. The page borrows its name, logo, docs link and reach from there.",
+          "$ref": "#/definitions/id"
+        },
+        "route": {
+          "description": "Public path. Preview pages live at /preview/platforms/<platform>/ and are noindex, out of the sitemap, llms.txt and search, and unlinked from navigation.",
+          "type": "string",
+          "pattern": "^/preview/platforms/[a-z0-9-]+/$"
+        },
+        "stage": {
+          "description": "preview is the only stage. Promoting a page to general availability is a deliberate schema change, so a preview cannot ship as GA by editing data alone.",
+          "type": "string",
+          "enum": ["preview"]
+        },
+        "head": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["eyebrow", "headline", "lede", "description"],
+          "properties": {
+            "eyebrow": { "$ref": "#/definitions/copy" },
+            "headline": { "$ref": "#/definitions/copy" },
+            "lede": { "$ref": "#/definitions/paragraph" },
+            "description": {
+              "description": "Meta description.",
+              "$ref": "#/definitions/paragraph"
+            }
+          }
+        },
+        "start": {
+          "description": "The page's one primary call to action. destination names an existing entrypoint; the template maps it to a real route, so a deep link cannot be invented here. The app's only web link (blowhorn://content/new) takes a URL, a title and text, not a platform or an activity type, so Start cannot pre-select either; note must say what Start does and that the pick is made again in the app.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["label", "destination", "note"],
+          "properties": {
+            "label": { "$ref": "#/definitions/copy" },
+            "destination": { "type": "string", "enum": ["download"] },
+            "note": { "$ref": "#/definitions/paragraph" }
+          }
+        },
+        "activities": {
+          "description": "The activity type selector (for X: Post, Respond, Amplify). Each type points at one action id from data/actions.json that the platform's YAML lists, so the selector can only name what the platform supports. The type label may differ from the action name (Respond is the reply action). The first type is selected at load.",
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "items": { "$ref": "#/definitions/activity" }
+        },
+        "media": { "$ref": "#/definitions/media" },
+        "examples": { "$ref": "#/definitions/examples" },
+        "breakdown": { "$ref": "#/definitions/breakdown" },
+        "related": {
+          "description": "Optional quiet links beside the breakdown (the platform's docs link is always first and comes from the YAML). Site-relative paths only.",
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "href"],
+            "properties": {
+              "label": { "$ref": "#/definitions/copy" },
+              "href": { "type": "string", "pattern": "^/[a-z0-9/_-]*/?$" }
+            }
+          }
+        }
+      }
+    },
+    "activity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "action", "label", "intent", "scene"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "action": {
+          "description": "An action id from data/actions.json that the platform's YAML lists.",
+          "$ref": "#/definitions/id"
+        },
+        "label": { "$ref": "#/definitions/copy" },
+        "intent": { "$ref": "#/definitions/copy" },
+        "scene": {
+          "description": "The illustrated hero scene for this type. Illustration only: sample text is invented and labelled as such, never a real post, screenshot or testimonial.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["title", "state", "text", "steps"],
+          "properties": {
+            "title": { "$ref": "#/definitions/copy" },
+            "state": { "$ref": "#/definitions/copy" },
+            "text": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "items": { "$ref": "#/definitions/paragraph" }
+            },
+            "steps": {
+              "description": "One short line per contract stage.",
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["write", "review", "track"],
+              "properties": {
+                "write": { "$ref": "#/definitions/copy" },
+                "review": { "$ref": "#/definitions/copy" },
+                "track": { "$ref": "#/definitions/copy" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "media": {
+      "description": "The hero media. pending is the only status today: no recording exists yet, so the hero is an illustrated, switchable storyboard with an explicit label and no player controls. Never present an illustration as footage. When a real recording exists, add an available status here, in the template and in check_platform_pages.py together.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "label"],
+      "properties": {
+        "status": { "type": "string", "enum": ["pending"] },
+        "label": { "$ref": "#/definitions/copy" }
+      }
+    },
+    "examples": {
+      "description": "An optional rail of illustrative examples, below the hero. Examples show shapes an activity can take, never core facts, and each one is labelled illustrative. Without script the rail is a native scroll area; with it, previous and next buttons page it by hand (never automatically) and each example can be shown in the hero preview.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["heading", "intro", "label", "footnote", "items"],
+      "properties": {
+        "heading": { "$ref": "#/definitions/copy" },
+        "intro": { "$ref": "#/definitions/paragraph" },
+        "label": {
+          "description": "Badge on every example, for instance Illustrative example.",
+          "$ref": "#/definitions/copy"
+        },
+        "footnote": { "$ref": "#/definitions/paragraph" },
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "activity", "variant", "title", "blurb", "sample"],
+            "properties": {
+              "id": { "$ref": "#/definitions/id" },
+              "activity": {
+                "description": "An activities[].id on this page.",
+                "$ref": "#/definitions/id"
+              },
+              "variant": {
+                "description": "The card variant, picked by what the example is (DESIGN.md, Cards): paper for the one featured example, field for an explanation, plain for a secondary one, stamp for a recap of facts. The rail shows up to four at once, so any four neighbours differ, and paper is used at most once.",
+                "type": "string",
+                "enum": ["paper", "field", "plain", "stamp"]
+              },
+              "title": { "$ref": "#/definitions/copy" },
+              "blurb": { "$ref": "#/definitions/copy" },
+              "sample": { "$ref": "#/definitions/paragraph" }
+            }
+          }
+        }
+      }
+    },
+    "breakdown": {
+      "description": "Progressive disclosure, all collapsed at load. The body of each item is computed from the platform's YAML and the action vocabulary by kind, never written here: supported lists the actions, limits lists each action's limits (a Dispatch card: technical facts), behavior lists each action's behavior and the platform's reach. Only titles and hints are page copy, so the breakdown cannot drift from the canonical data.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["heading", "intro", "items"],
+      "properties": {
+        "heading": { "$ref": "#/definitions/copy" },
+        "intro": { "$ref": "#/definitions/paragraph" },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "title", "hint"],
+            "properties": {
+              "kind": { "type": "string", "enum": ["supported", "limits", "behavior"] },
+              "title": { "$ref": "#/definitions/copy" },
+              "hint": { "$ref": "#/definitions/copy" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

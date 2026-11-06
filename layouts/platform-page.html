@@ -1,0 +1,294 @@
+{{- /* A platform product page, rendered from one record in data/platform_pages.json
+  (schemas/platform_page.schema.json) and that file's shared contract, joined with
+  the platform's canonical identity and actions by
+  layouts/_partials/platform-page-data.html, which fails the build on a mismatched
+  platform or action id. The page file is content/en/preview-platform-<id>.md
+  (front matter `platform: <id>`, a /preview/platforms/<id>/ url, noindex, out of the
+  sitemap, llms.txt and search, not linked from navigation). Docs: docs/platform-pages.md.
+
+  Anatomy (Figma 902:114, contract 902:111, blowhorn-site#466): a hero with the
+  activity type selector, one Start button and a switchable illustrated storyboard
+  (labelled an illustration, no player controls); an optional examples rail; a
+  tinted band of collapsed breakdowns; the Activities continuity illustration.
+
+  Works without script: the selector is replaced by a static list of every type's
+  intent, the first type's illustration shows, the rail is a native scroll area and
+  the breakdowns are native <details>. assets/js/platform-page.js enhances in place
+  (.is-enhanced): a radio group swaps every [data-pp-for] element, the rail gets
+  previous and next buttons, and an example can be shown in the hero. No third-party
+  script; motion is CSS transform and opacity only, off under reduced motion.
+
+  Hooks the script and .github/scripts/check_platform_pages.py read:
+  data-pp-choice (radios), data-pp-for (shown for one type), data-pp-row (a breakdown
+  row bound to a type), data-pp-announce, data-pp-stage, data-pp-scene-text,
+  data-pp-original, data-pp-sample, data-pp-rail, data-pp-slide, data-pp-prev,
+  data-pp-next, data-pp-rail-count, data-pp-try. */ -}}
+{{ define "head" }}
+    {{- $d := partialCached "platform-page-data.html" . .RelPermalink }}
+    {{- $css := resources.Get "css/platform-page.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+    {{- if not .Description }}
+    <meta name="description" content="{{ $d.rec.head.description }}">
+    {{- end }}
+{{- end }}
+
+{{ define "main" }}
+    {{- $d := partialCached "platform-page-data.html" . .RelPermalink }}
+    {{- $rec := $d.rec }}
+    {{- $c := $d.contract }}
+    {{- $first := index $d.activities 0 }}
+    {{- $logo := $d.logo | relURL }}
+    {{- $variant := dict "paper" "card-paper" "field" "card-field" "plain" "card-plain" "stamp" "card-stamp" }}
+    <main id="main" class="pp" data-platform-page="{{ $d.id }}" data-pp-type="{{ $first.id }}">
+      <div class="wrap pp-top">
+        <nav class="pp-crumbs ui" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="{{ $d.catalogPath | relURL }}">Platforms</a></li>
+            <li aria-current="page">{{ $d.short }}</li>
+          </ol>
+        </nav>
+        <p class="pp-preview caption">{{ $c.previewNotice }}</p>
+      </div>
+
+      <section class="wrap pp-hero" aria-labelledby="pp-title">
+        <div class="pp-hero-head">
+          <p class="label">{{ $rec.head.eyebrow }}</p>
+          <h1 id="pp-title" class="display">{{ $rec.head.headline }}</h1>
+          <p class="body-lg muted">{{ $rec.head.lede }}</p>
+        </div>
+
+        <div class="pp-pick">
+          <fieldset class="pp-choices" data-pp-choices>
+            <legend class="visually-hidden">Choose an activity type on {{ $d.short }}</legend>
+            {{- range $i, $a := $d.activities }}
+            <label class="pp-choice">
+              <input type="radio" name="pp-type" value="{{ $a.id }}" data-pp-choice data-label="{{ $a.label }}" data-action="{{ $a.action }}"{{ if eq $i 0 }} checked{{ end }}>
+              <span>{{ $a.label }}</span>
+            </label>
+            {{- end }}
+          </fieldset>
+          <ul class="pp-intents">
+            {{- range $d.activities }}
+            <li class="pp-intent" data-pp-for="{{ .id }}" data-pp-intent><strong class="pp-intent-for">{{ .label }}.</strong> {{ .intent }}</li>
+            {{- end }}
+          </ul>
+          <p class="visually-hidden" data-pp-announce aria-live="polite"></p>
+        </div>
+
+        <figure class="pp-stage glass" data-pp-stage tabindex="-1" aria-labelledby="pp-stage-cap">
+          <p class="pp-stage-top">
+            <span class="label pp-stage-label">{{ $c.stageLabel }}</span>
+          </p>
+          {{- range $i, $a := $d.activities }}
+          <div class="pp-scene" data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}>
+            <div class="pp-draft">
+              <p class="pp-draft-head">
+                <span class="logo-tile pp-tile-sm"><img src="{{ $logo }}" alt="" width="14" height="14"></span>
+                <span class="pp-draft-title ui">{{ $a.scene.title }}</span>
+                <span class="pp-draft-state caption">{{ $a.scene.state }}</span>
+              </p>
+              <p class="pp-draft-who caption">Your {{ $d.short }} profile</p>
+              <div class="pp-draft-text" data-pp-scene-text="{{ $a.id }}">
+                {{- range $a.scene.text }}
+                <p data-pp-original>{{ . }}</p>
+                {{- end }}
+                <p data-pp-sample hidden></p>
+              </div>
+              <p class="pp-draft-foot caption">Illustrative text, not a real post</p>
+            </div>
+            <div class="pp-steps">
+              <p class="label">{{ $a.label }} activity</p>
+              <ol>
+                {{- range $n, $k := slice "write" "review" "track" }}
+                <li>
+                  <span class="pp-step-n caption" aria-hidden="true">{{ printf "%02d" (add $n 1) }}</span>
+                  <span class="pp-step-t ui">{{ index $c.stages $k }}</span>
+                  <span class="pp-step-d caption">{{ index $a.scene.steps $k }}</span>
+                </li>
+                {{- end }}
+              </ol>
+            </div>
+          </div>
+          {{- end }}
+          <figcaption id="pp-stage-cap" class="pp-stage-cap caption" data-pp-recording="{{ $rec.media.status }}">{{ $rec.media.label }}</figcaption>
+        </figure>
+
+        <div class="pp-go">
+          <p class="pp-start">
+            <a class="button button-primary" href="{{ $d.startHref }}" data-pp-start aria-describedby="pp-start-note">{{ $rec.start.label }}</a>
+            <span class="pp-start-for caption">{{ $d.short }}<span class="pp-start-type">{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}> &middot; {{ $a.label }}</span>{{ end }}</span></span>
+          </p>
+          <p id="pp-start-note" class="pp-note caption">{{ $rec.start.note }}</p>
+        </div>
+      </section>
+
+      <section class="pp-section" aria-labelledby="pp-examples-title" data-pp-examples>
+        <div class="wrap">
+          <div class="pp-examples-head">
+            <div class="section-head">
+              <h2 id="pp-examples-title" class="h2">{{ $rec.examples.heading }}</h2>
+              <p class="muted">{{ $rec.examples.intro }}</p>
+            </div>
+            <div class="pp-rail-controls" data-pp-rail-controls hidden>
+              <p class="pp-rail-count caption" data-pp-rail-count aria-live="polite"></p>
+              <button type="button" class="pp-icon-button" data-pp-prev aria-controls="pp-rail" aria-label="Previous examples">
+                <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M12.5 15L7.5 10L12.5 5"/></svg>
+              </button>
+              <button type="button" class="pp-icon-button" data-pp-next aria-controls="pp-rail" aria-label="Next examples">
+                <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M7.5 15L12.5 10L7.5 5"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="pp-rail" id="pp-rail" data-pp-rail tabindex="0" role="group" aria-label="Examples, scroll sideways">
+            <ul class="pp-rail-track">
+              {{- range $i, $e := $d.examples }}
+              <li class="pp-slide" data-pp-slide>
+                <article class="card {{ index $variant $e.variant }} pp-example" data-pp-example="{{ $e.id }}" data-activity="{{ $e.activity }}" aria-labelledby="pp-ex-{{ $e.id }}">
+                  <p class="pp-example-top">
+                    <span class="logo-tile pp-tile-sm"><img src="{{ $logo }}" alt="" width="14" height="14"></span>
+                    <span class="label">{{ $e.typeLabel }}</span>
+                  </p>
+                  <p class="pp-sample" data-pp-sample-text>{{ $e.sample }}</p>
+                  <h3 id="pp-ex-{{ $e.id }}" class="h3" data-pp-example-title>{{ $e.title }}</h3>
+                  <p>{{ $e.blurb }}</p>
+                  <p class="pp-example-foot">
+                    <span class="caption">{{ $rec.examples.label }}</span>
+                    <button type="button" class="pp-try ui" data-pp-try="{{ $e.id }}" aria-describedby="pp-ex-{{ $e.id }}" hidden>Preview above</button>
+                  </p>
+                </article>
+              </li>
+              {{- end }}
+            </ul>
+          </div>
+          <p class="pp-footnote caption">{{ $rec.examples.footnote }}</p>
+        </div>
+      </section>
+
+      <section class="pp-band" aria-labelledby="pp-breakdown-title">
+        <div class="wrap pp-breakdown">
+          <div class="pp-breakdown-head">
+            <div class="section-head">
+              <h2 id="pp-breakdown-title" class="h2">{{ $rec.breakdown.heading }}</h2>
+              <p class="muted">{{ $rec.breakdown.intro }}</p>
+            </div>
+            <nav aria-label="Keep reading">
+              <ul class="pp-related ui">
+                <li><a href="{{ $d.docs | relURL }}">The {{ $d.short }} docs</a></li>
+                {{- range $rec.related }}
+                <li><a href="{{ .href | relURL }}">{{ .label }}</a></li>
+                {{- end }}
+              </ul>
+            </nav>
+          </div>
+          <div class="pp-disclosures glass">
+            {{- range $i, $b := $rec.breakdown.items }}
+            <details class="pp-disclosure" data-pp-kind="{{ $b.kind }}">
+              <summary>
+                <span class="pp-d-num caption" aria-hidden="true">{{ printf "%02d" (add $i 1) }}</span>
+                <span class="pp-d-title">
+                  <span class="pp-d-name">{{ $b.title }}</span>
+                  {{- if eq $b.kind "supported" }}
+                  <span class="pp-d-hint caption">{{ $b.hint }}. {{ len $d.actions }} actions</span>
+                  {{- else if eq $b.kind "limits" }}
+                  <span class="pp-d-hint caption">{{ $b.hint }}. {{ len $d.limited }} of {{ len $d.actions }} actions</span>
+                  {{- else }}
+                  <span class="pp-d-hint caption">{{ $b.hint }}</span>
+                  {{- end }}
+                </span>
+                <svg class="pp-d-chev" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M5 7.5L10 12.5L15 7.5"/></svg>
+              </summary>
+              <div class="pp-d-body">
+                {{- if eq $b.kind "supported" }}
+                <ul class="pp-facts" data-pp-actions>
+                  {{- range $d.actions }}
+                  <li class="pp-fact{{ if eq .activity $first.id }} is-picked{{ end }}" data-action="{{ .id }}" data-pp-row="{{ .activity }}">
+                    <span class="pp-fact-name">{{ .name }}</span>
+                    {{- with .type }}<span class="pp-fact-type caption">{{ . }}</span>{{ end }}
+                    {{- with .activity }}<span class="pp-fact-pick caption" data-pp-for="{{ . }}"{{ if ne . $first.id }} hidden{{ end }}>Your pick</span>{{ end }}
+                  </li>
+                  {{- end }}
+                </ul>
+                {{- else if eq $b.kind "limits" }}
+                <div class="card card-dispatch pp-limits">
+                  <p class="label">Limits on {{ $d.short }}</p>
+                  <dl data-pp-limits>
+                    {{- range $d.limited }}
+                    <div data-action="{{ .id }}">
+                      <dt>{{ .name }}</dt>
+                      <dd>{{ .limits }}</dd>
+                    </div>
+                    {{- end }}
+                  </dl>
+                </div>
+                <p class="pp-d-more caption">Actions with no cap here still follow {{ $d.short }}'s own limits. <a href="{{ $d.docs | relURL }}">The {{ $d.short }} docs</a> list them.</p>
+                {{- else }}
+                <p class="pp-reach">{{ $d.reach }}.</p>
+                <dl class="pp-behavior" data-pp-behavior>
+                  {{- range $d.actions }}
+                  <div class="pp-fact{{ if eq .activity $first.id }} is-picked{{ end }}" data-action="{{ .id }}" data-pp-row="{{ .activity }}">
+                    <dt>{{ .name }}</dt>
+                    <dd>{{ .description }}</dd>
+                  </div>
+                  {{- end }}
+                </dl>
+                {{- end }}
+              </div>
+            </details>
+            {{- end }}
+          </div>
+        </div>
+      </section>
+
+      {{- $k := $c.continuity }}
+      {{- $f := $k.filters }}
+      <section class="pp-section pp-continuity" aria-labelledby="pp-activities-title">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="pp-activities-title" class="h2">{{ $k.heading }}</h2>
+            <p class="muted">{{ $k.intro }}</p>
+          </div>
+          <figure class="pp-activities" aria-labelledby="pp-activities-cap">
+            <div class="pp-activities-art" aria-hidden="true">
+              <div class="pp-filters">
+                <p class="pp-filters-title ui">{{ $f.title }}</p>
+                <p class="caption muted">{{ $f.applied }}</p>
+                <p class="pp-chips">
+                  <span class="pp-chip caption">{{ $d.short }}<svg viewBox="0 0 12 12" width="10" height="10" focusable="false"><path d="M3 3l6 6M9 3l-6 6"/></svg></span>
+                  <span class="pp-chip caption">{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}>{{ $a.label }}</span>{{ end }}<svg viewBox="0 0 12 12" width="10" height="10" focusable="false"><path d="M3 3l6 6M9 3l-6 6"/></svg></span>
+                </p>
+                <p class="pp-filter-group caption">{{ $f.time }}</p>
+                <p class="pp-check caption"><span class="pp-box"><svg viewBox="0 0 12 12" width="10" height="10" focusable="false"><path d="M2.5 6.2l2.4 2.4 4.6-5"/></svg></span>{{ $f.past }}</p>
+                <p class="pp-check caption"><span class="pp-box"><svg viewBox="0 0 12 12" width="10" height="10" focusable="false"><path d="M2.5 6.2l2.4 2.4 4.6-5"/></svg></span>{{ $f.upcoming }}</p>
+                <p class="pp-filter-row caption"><span>{{ $f.recurrence }}</span><span class="muted">{{ $f.any }}</span></p>
+                <p class="pp-filter-row caption"><span>{{ $f.platform }}</span><span class="muted">{{ $d.short }}</span></p>
+                <p class="pp-filter-row caption"><span>{{ $f.type }}</span><span class="muted">{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}>{{ $a.label }}</span>{{ end }}</span></p>
+              </div>
+              <div class="pp-list">
+                <p class="pp-list-row pp-list-headrow caption">
+                  <span>{{ $k.columns.when }}</span><span>{{ $k.columns.activity }}</span><span class="pp-col-rec">{{ $k.columns.recurrence }}</span><span>{{ $k.columns.status }}</span>
+                </p>
+                {{- $past := true }}
+                {{- range $k.rows }}
+                {{- if and $past (eq .time "upcoming") }}{{ $past = false }}
+                <p class="pp-now caption"><span>{{ $k.now }}</span></p>
+                {{- end }}
+                <p class="pp-list-row caption" data-time="{{ .time }}">
+                  <span>{{ .when }}</span>
+                  <span class="pp-list-act"><span class="logo-tile pp-tile-xs"><img src="{{ $logo }}" alt="" width="10" height="10"></span>{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}>{{ $a.label }}</span>{{ end }}</span>
+                  <span class="pp-col-rec">{{ .recurrence }}</span>
+                  <span class="pp-status">{{ .status }}</span>
+                </p>
+                {{- end }}
+              </div>
+            </div>
+            <figcaption id="pp-activities-cap" class="pp-activities-cap caption">{{ $k.caption }}</figcaption>
+          </figure>
+        </div>
+      </section>
+    </main>
+{{- end }}
+
+{{ define "scripts" }}
+    {{- $js := resources.Get "js/platform-page.js" | minify | fingerprint }}
+    <script src="{{ $js.RelPermalink }}" defer></script>
+{{- end }}
