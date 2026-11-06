@@ -2,7 +2,7 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync, createSign } from 'node:crypto';
-import { handle, ipAllowed, resetCertsCache, sortWorkloadTeammates, FLEET_SORT_JS } from './src/worker.js';
+import { handle, ipAllowed, resetCertsCache, sortWorkloadTeammates, FLEET_SORT_JS, csvCell } from './src/worker.js';
 
 const TEAM_HOST = 'example-team.cloudflareaccess.com';
 const TEAM = `https://${TEAM_HOST}`;
@@ -286,4 +286,35 @@ test('fleet page tables get sortable headers', async () => {
   const html = await (await handle(authed('/engineering/fleet/'), fleetEnv({ disk: [diskSnap], workload: [workloadSnap] }), certsFetch)).text();
   assert.match(html, /<script>[\s\S]*aria-sort[\s\S]*<\/script>/);
   assert.match(html, /data-v="/);
+});
+
+test('csvCell neutralizes formula injection triggers with a leading single quote', () => {
+  assert.equal(csvCell('=HYPERLINK("http://evil.com","Click")'), '"\'=HYPERLINK(""http://evil.com"",""Click"")"');
+  assert.equal(csvCell('+1+1@blowhorn.ai'), "'+1+1@blowhorn.ai");
+  assert.equal(csvCell('-5+2'), "'-5+2");
+  assert.equal(csvCell('@SUM(1,2)'), '"\'@SUM(1,2)"');
+  assert.equal(csvCell('\tTabbedValue'), "'\tTabbedValue");
+  assert.equal(csvCell('\rCarriageReturnStart'), '"\'\rCarriageReturnStart"');
+  assert.equal(csvCell('  =cmd'), "'  =cmd");
+  assert.equal(csvCell('   @calc'), "'   @calc");
+});
+
+test('csvCell neutralizes formula triggers that follow leading whitespace', () => {
+  assert.equal(csvCell(' =cmd'), "' =cmd");
+  assert.equal(csvCell('  +1+1'), "'  +1+1");
+  assert.equal(csvCell('   -5+2'), "'   -5+2");
+  assert.equal(csvCell(' \t=cmd'), "' \t=cmd");
+  assert.equal(csvCell(' @SUM(1,2)'), '"\' @SUM(1,2)"');
+  assert.equal(csvCell('\n=cmd'), '"\'\n=cmd"');
+});
+
+test('csvCell preserves normal values and quotes cells containing bare carriage returns', () => {
+  assert.equal(csvCell('hello world'), 'hello world');
+  assert.equal(csvCell('   leading space'), '   leading space');
+  assert.equal(csvCell('test@blowhorn.ai'), 'test@blowhorn.ai');
+  assert.equal(csvCell('line1\rline2'), '"line1\rline2"');
+  assert.equal(csvCell('comma,value'), '"comma,value"');
+  assert.equal(csvCell('quote "value"'), '"quote ""value"""');
+  assert.equal(csvCell(null), '');
+  assert.equal(csvCell(undefined), '');
 });

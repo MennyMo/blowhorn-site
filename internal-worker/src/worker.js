@@ -233,9 +233,17 @@ function escHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
-function csvCell(v) {
-  const s = String(v ?? '');
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+/**
+ * Sanitizes and quotes cell values for CSV export (RFC 4180).
+ * Neutralizes spreadsheet formula injection (OWASP CWE-1236)
+ * by prepending a single quote to cells starting with =, +, -, @, \t, or \r.
+ */
+export function csvCell(v) {
+  let s = String(v ?? '');
+  if (/^\s*[=+@\t\r-]/.test(s)) {
+    s = `'${s}`;
+  }
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
 const ADMIN_HEADERS = {
