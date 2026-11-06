@@ -70,6 +70,16 @@ steps ahead wait as dim rows. A step that holds what it asks for takes a teal
 check; one you passed empty, such as a skipped landing zone, takes a dashed
 "-". Each step's **Next** moves on.
 
+Press and hold the **+** button for about a third of a second (or press Up arrow
+while it has focus) to fan out shortcuts above it. A click, Enter or Space
+still opens a blank order. The fan lists the three kinds of order (**Compose a
+dispatch**, **Answer the line**, **Rally the troops**), then a mark for each
+platform you have connected. A kind opens the order on **Dispatch to** with that
+kind ready for when you pick a platform. A platform opens it with that platform
+picked and **From the desk of** open. Esc, or a press anywhere else, closes the
+fan and opens nothing. With reduced motion on, the shortcuts are the same and
+nothing animates.
+
 1. **Dispatch to** - press one or more platform tiles (LinkedIn, X, Reddit,
    Bluesky, Slack, GitHub), each showing that platform's mark in its own
    colour; a picked tile lifts and rings in that colour. Press again to drop
