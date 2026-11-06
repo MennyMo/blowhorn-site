@@ -366,7 +366,7 @@ function diskTable(snap) {
     .map((m) =>
       m.reachable
         ? `<tr><td>${escHtml(m.name)}</td><td>${escHtml(m.os)}</td><td class="n${m.used_pct >= 90 ? ' hot' : ''}">${escHtml(num(m.used_pct))}%</td>` +
-          `<td class="n" data-v="${num(m.free_bytes)}">${fmtGB(m.free_bytes)}</td><td class="n" data-v="${num(m.size_bytes)}">${fmtGB(m.size_bytes)}</td><td>${escHtml(m.mount)}</td></tr>`
+          `<td class="n" data-v="${escHtml(num(m.free_bytes))}">${fmtGB(m.free_bytes)}</td><td class="n" data-v="${escHtml(num(m.size_bytes))}">${fmtGB(m.size_bytes)}</td><td>${escHtml(m.mount)}</td></tr>`
         : `<tr><td>${escHtml(m.name)}</td><td colspan="5" class="stale">Unreachable: ${escHtml(m.error || 'no answer')}</td></tr>`,
     )
     .join('');
