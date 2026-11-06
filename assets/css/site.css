@@ -525,6 +525,22 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 .mm-card-title { grid-row: 2; grid-column: 1; font-size: 15px; line-height: 21px; font-weight: 700; padding-right: var(--space-6); }
 .mm-card:hover .mm-card-title { color: var(--link); }
 .mm-card-desc { font-size: 13px; line-height: 18px; color: var(--ink-muted); }
+/* Chrome logo on the Browser extension card: same asset and drop-shadow
+   treatment as .download-icon on /download/, sized for the miniature art. */
+.mm-card-art { position: relative; display: block; }
+.mm-card-chrome {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(30, 33, 23, 0.28));
+  pointer-events: none;
+}
+@media (max-width: 1079px) {
+  .mm-card-chrome { width: 22px; height: 22px; right: 4px; bottom: 4px; }
+}
 /* The arrow rides the title's row (the title keeps room for it), never the art. */
 .mm-card-arrow {
   grid-row: 2; grid-column: 1; justify-self: end; align-self: center; width: 22px; height: 22px; border-radius: var(--radius-pill);
@@ -554,7 +570,8 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 @media (max-width: 1079px) {
   .mm-cards { grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
   .mm-card { grid-template-columns: auto minmax(0, 1fr); column-gap: var(--space-3); align-items: center; padding: var(--space-3); }
-  .mm-card .iface-art { grid-row: span 2; width: 92px; }
+  .mm-card > .iface-art,
+  .mm-card > .mm-card-art { grid-row: span 2; width: 92px; }
   .mm-card-title { grid-row: 1; grid-column: 2; }
   .mm-card-desc { grid-column: 2; }
   .mm-card-arrow { display: none; }
@@ -3551,10 +3568,11 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
 
 /* ---------- Blowhorn Tells, the free Am I a Bot? check (data/tells.json) ----------
    One look for every place the site points at Tells: a slim bar above the
-   header, a Free pill on the header item, the home page band, the callout on
-   compare, /ai/ and /agents/, and the card on /download/thanks/. Sleeper Cell's
-   art keeps its black ground in a rounded frame, like the cast pages. The docs
-   card lives with the docs layout (assets/scss/_styles_project.scss). */
+   header (with the Free pill inline), the Resources menu entry, the home page
+   band, the callout on compare, /ai/ and /agents/, and the card on
+   /download/thanks/. Sleeper Cell's art keeps its black ground in a rounded
+   frame, like the cast pages. The docs card lives with the docs layout
+   (assets/scss/_styles_project.scss). */
 .tells-bar {
   background: var(--yellow);
   color: var(--on-yellow);
@@ -3571,6 +3589,24 @@ html[data-tells-bar="off"] .tells-bar { display: none; }
   padding-right: calc(var(--gutter) + var(--space-8));
 }
 .tells-bar-text { margin: 0; font-size: 13px; line-height: 18px; font-weight: 500; }
+/* Free pill: same teal treatment the nav item used; stays legible on yellow.
+   inline-block so it sits in the text flow on wrapped mobile lines. */
+.tells-bar-pill {
+  display: inline-block;
+  vertical-align: 1px;
+  margin-right: 4px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--teal-deep);
+  color: var(--white);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+@media (prefers-color-scheme: dark) {
+  .tells-bar-pill { background: var(--teal-bright); color: var(--near-black); }
+}
 .tells-bar-link,
 .tells-docs-card-link a {
   display: inline-flex;
@@ -3623,22 +3659,6 @@ html[data-tells-bar="off"] .tells-bar { display: none; }
 .tells-bar-close svg { fill: none; stroke: currentColor; stroke-width: var(--stroke-icon); stroke-linecap: round; }
 @media (min-width: 720px) {
   .tells-bar-inner { justify-content: center; padding-left: calc(var(--gutter) + var(--space-8)); text-align: center; }
-}
-
-/* Header item: the label with a small Free pill. */
-.mm-top-label { display: inline-flex; align-items: center; gap: 6px; }
-.mm-pill {
-  padding: 0 6px;
-  border-radius: var(--radius-pill);
-  background: var(--teal-deep);
-  color: var(--white);
-  font-size: 11px;
-  line-height: 16px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-@media (prefers-color-scheme: dark) {
-  .mm-pill { background: var(--teal-bright); color: var(--near-black); }
 }
 
 /* Home band (layouts/_partials/home/tells.html) and the callout

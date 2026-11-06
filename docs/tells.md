@@ -31,8 +31,8 @@ Build a link with the partial; never hard-code a Tells URL in a template:
 
 | Placement | Where | Template |
 | --- | --- | --- |
-| `bar` | Slim, dismissible bar above the header on every public page | `tells-bar.html`, `tells-bar-head.html`, `assets/js/tells-bar.js` |
-| `nav` | Top-level "Am I a Bot?" item with a Free pill, before Pricing; also the Resources menu entry | `header.html` |
+| `bar` | Slim, dismissible bar above the header on every public page, with the Free pill inline | `tells-bar.html`, `tells-bar-head.html`, `assets/js/tells-bar.js` |
+| `nav` | Resources menu entry (label); the Free pill now sits in the announcement bar | `header.html`, `tells-bar.html` |
 | `home` | Band after Trust on the Signal home page (Sleeper Cell art) | `home/tells.html` |
 | `footer` | Free tools column | `footer.html` |
 | `compare` | Callout before the FAQ on every `/compare/<slug>/` page, and the FAQ links that point at Tells | `tells-callout.html` in `versus.html` |

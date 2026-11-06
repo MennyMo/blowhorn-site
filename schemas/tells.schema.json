@@ -66,7 +66,7 @@
       }
     },
     "nav": {
-      "description": "The top-level header item, just before Pricing.",
+      "description": "Resources menu label, and the Free pill shown in the announcement bar.",
       "type": "object",
       "additionalProperties": false,
       "required": ["label", "pill"],
