@@ -71,11 +71,14 @@
   {{- if index $sceneIds .id }}{{ errorf "platform-page: %q repeats local scene id %q" $id .id }}{{ end -}}
   {{- $sceneIds = merge $sceneIds (dict .id true) -}}
   {{- $sid := .id -}}
-  {{- $join := .join | default "description" -}}
+  {{- $join := .join -}}
   {{- $fact := "" -}}
   {{- with .action -}}
     {{- $act := index $byId . -}}
     {{- if not $act }}{{ errorf "platform-page: local scene %q of %q names action %q, which data/platforms/%s.yaml does not list" $sid $id . $id }}{{ end -}}
+    {{- /* The schema requires a join on every action-bearing scene. No fallback: a
+      missing join is a build error, so the page never shows a text it did not choose. */ -}}
+    {{- if not $join }}{{ errorf "platform-page: local scene %q of %q names action %q but sets no join; the schema requires one" $sid $id . }}{{ end -}}
     {{- $fact = index $act $join -}}
     {{- if not $fact }}{{ errorf "platform-page: local scene %q of %q joins an empty %q from action %q" $sid $id $join . }}{{ end -}}
   {{- end -}}

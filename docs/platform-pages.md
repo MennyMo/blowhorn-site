@@ -121,6 +121,22 @@ scripts are outside this page's scope.
   with a rule between the facts. Their source text and links are unchanged. The setups
   rail and Activities are unchanged.
 
+## Stage geometry checks
+
+Check the stage in a real browser at 320, 390, 640, 820, 1039, 1040, 1280 and 1440 px,
+in light and dark, in every scene (amplify, follow, dry fire). Measure with
+`getBoundingClientRect` and the rendered height, not estimates:
+
+- The page has no horizontal overflow: the document is no wider than the viewport.
+- Every visible `.pp-slip`, `.pp-out`, `.pp-relay` and `.pp-crew-guard` lies inside
+  `.pp-theatre`, which clips at its edges (`overflow: hidden`).
+- The follow guard and the outcome do not overlap.
+- Exactly one scene panel is visible, and it is the selected scene.
+
+On a phone the outcome is anchored to the theatre's bottom edge, so taller text grows it
+upward and never past the edge. The follow guard sits on the left edge, clear of the
+relay and the outcome.
+
 ## Preview route rules
 
 The page file sets `layout: platform-page`, `platform: <id>`,

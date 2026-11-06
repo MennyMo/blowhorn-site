@@ -40,7 +40,7 @@
 
   function enhance(root) {
     var choices = all(root, "[data-pp-choice]");
-    if (!choices.length) return null;
+    if (!choices.length) return;
     var announce = root.querySelector("[data-pp-announce]");
 
     function intentOf(id) {
@@ -79,7 +79,6 @@
     choices.forEach(function (input) { if (input.checked) initial = input.value; });
     select(initial || choices[0].value, "");
     root.classList.add("is-enhanced");
-    return select;
   }
 
   function enhanceLocal(root) {

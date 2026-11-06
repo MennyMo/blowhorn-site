@@ -105,6 +105,11 @@ class SourceTest(unittest.TestCase):
             rec["local"]["scenes"][2]["planned"]["mark"] = "Planned"
         self.assertNamed(self.mutate(mark), "must say the extension flow is planned")
 
+    def test_the_local_introduction_is_the_approved_line(self):
+        def fn(rec):
+            rec["local"]["intro"] = "Your computer. Your browser. Every profile, still you."
+        self.assertNamed(self.mutate(fn), "want the approved line 'Your login stays home.'")
+
     def test_the_boundary_text_keeps_its_quote_scope(self):
         def fn(rec):
             rec["local"]["boundary"]["text"] = "The extension acts as you, in your own signed-in browser: the tabs you have open, with the sessions you made by hand."
@@ -309,6 +314,43 @@ class LinkGuardTest(unittest.TestCase):
                 self.assertFalse(check.links_to(f'<a href="{href}">x</a>', ROUTE))
 
 
+class RawBuildTest(unittest.TestCase):
+    """Hugo itself must refuse a record the schema refuses: an action-bearing scene with
+    no join fails the build instead of falling back to a default text."""
+
+    def build_with(self, mutate):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        site = Path(tmp.name) / "site"
+        site.mkdir()
+        for name in ("hugo.toml", "go.mod", "go.sum", "package.json", "postcss.config.js"):
+            shutil.copy(ROOT / name, site / name)
+        # static/ is 60 MB and no join check reads it. node_modules is linked, not
+        # copied: Docsy's head CSS runs the repo's postcss.
+        for name in ("config", "content", "data", "layouts", "assets", "api"):
+            shutil.copytree(ROOT / name, site / name)
+        (site / "node_modules").symlink_to(ROOT / "node_modules", target_is_directory=True)
+        path = site / "data/platform_pages.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        mutate(data)
+        path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+        return subprocess.run(
+            [hugo_binary(), "--source", str(site), "--destination", str(site / "public"),
+             "--cleanDestinationDir"],
+            capture_output=True, text=True, check=False,
+        )
+
+    @unittest.skipUnless(hugo_binary(), "needs hugo")
+    def test_an_action_scene_without_a_join_fails_the_build(self):
+        control = self.build_with(lambda data: None)
+        self.assertEqual(control.returncode, 0, control.stderr[-600:] + control.stdout[-600:])
+        def drop_join(data):
+            del data["pages"][0]["local"]["scenes"][0]["join"]
+        run = self.build_with(drop_join)
+        self.assertNotEqual(run.returncode, 0, "a scene with an action and no join built anyway")
+        self.assertIn("sets no join", run.stdout + run.stderr)
+
+
 @unittest.skipUnless(hugo_binary() and shutil.which("node"), "needs hugo and node")
 class BuiltTest(unittest.TestCase):
     """The generated page, and the real script run against it."""
@@ -506,7 +548,7 @@ class BuiltTest(unittest.TestCase):
 
     def test_the_private_issue_never_reaches_a_page(self):
         build = self.copy()
-        self.edit_page(build, "Every profile, still you.", "Every profile, still you. blowhorn-ai/blowhorn/issues/2178")
+        self.edit_page(build, "Your login stays home.", "Your login stays home. blowhorn-ai/blowhorn/issues/2178")
         self.assertIn("names 'blowhorn-ai/blowhorn/issues/2178'", self.problems(build))
 
     def test_a_scene_plays_once_per_change(self):

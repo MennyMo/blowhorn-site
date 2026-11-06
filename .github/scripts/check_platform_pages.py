@@ -350,6 +350,8 @@ def check_source(root: Path) -> list[str]:
                 problems.append(f"{where}: local scene 'dry-fire' relay is {dry.get('relay')!r}, want 'Desktop app' (the diagram must not advertise an extension dry fire)")
             if dry.get("planned") and "extension" not in dry["planned"].get("mark", "").lower():
                 problems.append(f"{where}: local scene 'dry-fire' planned mark {dry['planned'].get('mark')!r} must say the extension flow is planned")
+        if local and local.get("intro") != APPROVED_LOCAL_INTRO:
+            problems.append(f"{where}: the local introduction reads {local.get('intro')!r}, want the approved line {APPROVED_LOCAL_INTRO!r}")
         boundary = local.get("boundary")
         if boundary and squash(boundary["quote"]) not in squash(boundary["text"]):
             problems.append(f"{where}: local boundary text {boundary['text']!r} drops the scope of its quote {boundary['quote']!r}")
@@ -619,6 +621,8 @@ def built_file(build_dir: Path, route: str) -> Path:
 
 
 PRIVATE_ISSUE = "blowhorn-ai/blowhorn/issues/2178"
+# The approved marketing line of the local section (brief: the local-browser differentiator).
+APPROVED_LOCAL_INTRO = "Your login stays home."
 
 
 def check_local_built(main: dict, rec: dict, root: Path, build_dir: Path, page: Path) -> list[str]:

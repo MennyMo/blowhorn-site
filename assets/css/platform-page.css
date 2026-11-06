@@ -473,14 +473,18 @@
   .pp-relay { width: 124px; height: 124px; padding-bottom: 14px; }
   .pp-relay-name { font-size: 0.8125rem; }
   .pp-crew-relay { top: -58px; width: 96px; }
-  .pp-crew-guard { width: 104px; left: 60%; top: 66%; }
+  /* Guard: left edge, 60% down, 96 px wide. Clear of the relay rim (its nearest
+     point stays more than 60 px from the centre at 320 px) and of the outcome. */
+  .pp-crew-guard { width: 96px; left: 0; top: 60%; }
   .pp-spoke:nth-child(1) { --a: -30deg; --r: 128px; --lx: 123px; --ly: -64px; }
   .pp-spoke:nth-child(2) { --a: -10deg; --r: 116px; --lx: 123px; --ly: -28px; }
   .pp-spoke:nth-child(3) { --a: 10deg; --r: 116px; --lx: 123px; --ly: 8px; }
   .pp-spoke:nth-child(4) { --a: 30deg; --r: 128px; --lx: 123px; --ly: 44px; }
   .pp-slip { width: 100px; padding: 6px 8px; font-size: 0.8125rem; }
   .pp-local[data-scene="follow"] .pp-slip { width: 100px; }
-  .pp-out { top: 94%; min-width: 0; width: 88%; }
+  /* Outcome: anchored to the bottom edge, so its real height (68 px measured with
+     the longest scene text at 320 px) can never push it past the theatre. */
+  .pp-out { top: auto; bottom: var(--space-3); min-width: 0; width: 88%; transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: no-preference) {
