@@ -61,7 +61,7 @@ the "Am I a Bot?" label and the green Free pill share a single link to Tells
 (`utm_content=bar`). Free appears only in the pill. The dismiss control is
 pinned to the far right and kept clear of the CTA (equal side padding keeps
 the group optically centered). Below 720px the bar shows `bar.text_short`
-instead of `bar.text`; there is no ellipsis.
+instead of `bar.text` on one line with the CTA; there is no wrap or ellipsis.
 
 Dismissing the bar stores `dismissed` under `bar.storage_key`
 (`bh-tells-bar-v1`) in localStorage. An inline script in the head

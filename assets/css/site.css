@@ -3592,27 +3592,32 @@ html[data-tells-bar="off"] .tells-bar { display: none; }
   padding-block: var(--space-2);
   padding-inline: var(--gutter);
 }
-/* Message immediately followed by the CTA; the pair is the centered group. */
+/* Message immediately followed by the CTA; the pair is the centered group.
+   Never wrap: one horizontal line at every width, including 320. */
 .tells-bar-cluster {
   grid-column: 2;
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
   gap: 6px var(--space-2);
-  max-width: min(100%, 52rem);
+  max-width: 100%;
   text-align: center;
+  white-space: nowrap;
 }
 .tells-bar-text {
   margin: 0;
   font-size: 13px;
   line-height: 18px;
   font-weight: 500;
+  white-space: nowrap;
 }
 .tells-bar-text-short { display: none; }
 @media (max-width: 719px) {
   .tells-bar-text-full { display: none; }
   .tells-bar-text-short { display: inline; }
+  .tells-bar-cluster { gap: 6px; }
+  .tells-bar-cta { padding-inline: 4px; }
 }
 /* One clickable cluster: label + Free pill. Free appears only in the pill. */
 .tells-bar-cta {
