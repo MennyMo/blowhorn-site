@@ -7,7 +7,7 @@
 {{- if partial "analytics-enabled.html" . }}
     <section id="consent" class="consent glass" aria-labelledby="consent-title" hidden>
       <h2 id="consent-title" class="consent-title">Cookies</h2>
-      <p class="consent-text">Yes, we use cookies. Yes, you can eat them, if you can find them. Do you want us to remember you or pretend we've never met?<a href="{{ (site.GetPage "/legal/privacy").RelPermalink }}#google-analytics">Details</a></p>
+      <p class="consent-text">Yes, we use cookies. Yes, you can eat them, if you can find them. Do you want us to <a href="{{ (site.GetPage "/legal/privacy").RelPermalink }}#google-analytics">remember you</a> or pretend we've never met?</p>
       <div class="consent-actions">
         <button type="button" class="button button-primary consent-button" data-consent="granted">Accept</button>
         <button type="button" class="button button-secondary consent-button" data-consent="denied">Decline</button>
