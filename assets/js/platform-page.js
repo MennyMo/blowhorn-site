@@ -76,9 +76,24 @@
       all(root, "[data-pp-original]").forEach(function (p) { p.hidden = false; });
     }
 
+    function previewing() {
+      return all(root, "[data-pp-sample]").some(function (slot) { return !slot.hidden; });
+    }
+
+    /* Selecting a different radio (pointer, arrow keys or assistive technology)
+       fires change, which does the work. Clicking or pressing Space on the radio
+       that is already checked fires click but never change, so that path restores
+       the default scene itself. A click that selects a new radio has not yet moved
+       data-pp-type, so it is left to change and nothing is announced twice. */
     choices.forEach(function (input) {
       input.addEventListener("change", function () {
         if (!input.checked) return;
+        restoreScenes();
+        select(input.value, intentOf(input.value));
+      });
+      input.addEventListener("click", function () {
+        if (!input.checked || root.getAttribute("data-pp-type") !== input.value) return;
+        if (!previewing()) return;
         restoreScenes();
         select(input.value, intentOf(input.value));
       });

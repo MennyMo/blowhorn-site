@@ -364,6 +364,31 @@ def check_behaviour(label: str, main: dict, rec: dict, actions: list[dict], root
         if sample.get("sampleShown") or sample.get("sampleText") or sample.get("originalsShown") != want_count:
             problems.append(f"{label}: choosing {ex['activity']!r} after a preview leaves {t_id!r} showing {sample}, want its {want_count} original lines")
 
+    # The same radio (already checked after the preview) fires click but no change
+    # event; it must still restore the default scene, announce once, and a radio
+    # chosen by pointer or by arrow key must do the same through change, once.
+    other = next(t for t in types if t != ex["activity"])
+    want_say = f"{next(a['label'] for a in rec['activities'] if a['id'] == ex['activity'])}. {intents[ex['activity']]}"
+    for how, step in (("clicking", {"choose": ex["activity"]}),):
+        runs = run_harness(main, {"rail": rail, "steps": [{"try": ex["id"]}, step]}, root)
+        if runs[-1]["announceWrites"] - runs[-2]["announceWrites"] != 1 or runs[-1]["announce"] != want_say:
+            problems.append(f"{label}: {how} the checked {ex['activity']!r} radio after a preview announced {runs[-1]['announceWrites'] - runs[-2]['announceWrites']} time(s), {runs[-1]['announce']!r}; want once, {want_say!r}")
+    for how, key in (("clicking", "choose"), ("arrowing to", "key")):
+        runs = run_harness(main, {"rail": rail, "steps": [{"try": ex["id"]}, {key: other}, {"try": ex["id"]}, {key: ex["activity"]}]}, root)
+        for i, want in ((2, other), (4, ex["activity"])):
+            s = runs[i]
+            says = f"{next(a['label'] for a in rec['activities'] if a['id'] == want)}. {intents[want]}"
+            if s["type"] != want or s["checked"] != [want] or s["announce"] != says or s["announceWrites"] - runs[i - 1]["announceWrites"] != 1:
+                problems.append(f"{label}: {how} {want!r} after a preview shows {s['type']!r}, checked {s['checked']}, announced {s['announceWrites'] - runs[i - 1]['announceWrites']} time(s) {s['announce']!r}")
+            for t_id, want_count in originals.items():
+                sample = s["samples"].get(t_id, {})
+                if sample.get("sampleShown") or sample.get("sampleText") or sample.get("originalsShown") != want_count:
+                    problems.append(f"{label}: {how} {want!r} after a preview leaves {t_id!r} showing {sample}, want its {want_count} original lines")
+    # With no preview showing, clicking the checked radio changes and announces nothing.
+    idle = run_harness(main, {"rail": rail, "steps": [{"choose": types[0]}]}, root)
+    if idle[-1]["announceWrites"] != idle[0]["announceWrites"] or idle[-1]["type"] != types[0]:
+        problems.append(f"{label}: clicking the checked radio with no preview showing announced or changed the page")
+
     # The rail, paged by hand.
     n = len(examples)
     wide = run_harness(main, {"rail": {"width": n * rail["slide"] + (n - 1) * rail["gap"] + 50, "slide": rail["slide"], "gap": rail["gap"]}}, root)[0]

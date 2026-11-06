@@ -352,6 +352,39 @@ class BuiltTest(unittest.TestCase):
         fx.edit(check.SCRIPT, "        restoreScenes();\n", "")
         self.assertIn("after a preview leaves", self.problems(self.build, fx.root))
 
+    def test_clicking_the_checked_radio_restores_the_default_scene(self):
+        """A real browser fires click but no change for the checked radio; the
+        harness now does the same, so the change handler alone cannot pass."""
+        tree = check.parse(check.built_file(self.build, ROUTE)).main
+        rec = json.loads((ROOT / "data/platform_pages.json").read_text(encoding="utf-8"))["pages"][0]
+        ex = rec["examples"]["items"][-1]
+        other = next(a["id"] for a in rec["activities"] if a["id"] != ex["activity"])
+        runs = check.run_harness(tree, {"steps": [{"try": ex["id"]}, {"choose": ex["activity"]}]}, ROOT)
+        self.assertTrue(runs[1]["samples"][ex["activity"]]["sampleShown"])
+        self.assertFalse(runs[2]["samples"][ex["activity"]]["sampleShown"])
+        self.assertEqual(runs[2]["announceWrites"] - runs[1]["announceWrites"], 1)
+        # Native selection of another radio, by pointer or arrow key, still works once.
+        for step in ({"choose": other}, {"key": other}):
+            runs = check.run_harness(tree, {"steps": [{"try": ex["id"]}, step]}, ROOT)
+            self.assertEqual(runs[2]["checked"], [other])
+            self.assertFalse(runs[2]["samples"][ex["activity"]]["sampleShown"])
+            self.assertEqual(runs[2]["announceWrites"] - runs[1]["announceWrites"], 1)
+        # The harness fires no change for the checked radio.
+        idle = check.run_harness(tree, {"steps": [{"choose": rec["activities"][0]["id"]}]}, ROOT)
+        self.assertEqual(idle[1]["announceWrites"], idle[0]["announceWrites"])
+
+    def test_a_script_that_ignores_the_checked_radio_is_caught(self):
+        fx = Fixture()
+        self.addCleanup(fx.close)
+        fx.edit(check.SCRIPT, 'if (!input.checked || root.getAttribute("data-pp-type") !== input.value) return;', "return;")
+        self.assertIn("the checked", self.problems(self.build, fx.root))
+
+    def test_a_script_that_announces_twice_is_caught(self):
+        fx = Fixture()
+        self.addCleanup(fx.close)
+        fx.edit(check.SCRIPT, 'if (!input.checked || root.getAttribute("data-pp-type") !== input.value) return;', "if (!input.checked) return;")
+        self.assertIn("announced 2 time(s)", self.problems(self.build, fx.root))
+
     def test_scrolling_the_rail_announces_nothing(self):
         fx = Fixture()
         self.addCleanup(fx.close)

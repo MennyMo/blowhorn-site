@@ -8,8 +8,10 @@
    Usage: node platform_page_harness.js SCRIPT  < {"tree": <element>, "scenario": {...}}
    Element: {"tag": "div", "attrs": {...}, "children": [<element> | "text"]}
    Scenario: {"reduce": false, "rail": {"width": 1000, "slide": 300, "gap": 32},
-              "steps": [{"choose": "respond"}, {"try": "weekly-recap"},
+              "steps": [{"choose": "respond"}, {"key": "respond"}, {"try": "weekly-recap"},
                         {"click": "next"}, {"click": "prev"}, {"scroll": 120}]}
+   "choose" clicks a radio and "key" arrows onto it; both fire change only when the
+   checked radio changes, as a browser does.
    Prints one state object per step (the first is the state after load). */
 "use strict";
 const fs = require("fs");
@@ -55,7 +57,7 @@ class El {
   get textContent() {
     return this.children.map((c) => (typeof c === "string" ? c : c.textContent)).join("");
   }
-  set textContent(v) { this.children = v === "" ? [] : [String(v)]; }
+  set textContent(v) { this.writes = (this.writes || 0) + 1; this.children = v === "" ? [] : [String(v)]; }
   addEventListener(t, fn) { (this.listeners[t] = this.listeners[t] || []).push(fn); }
   dispatch(t) {
     const ev = { type: t, target: this, preventDefault() {} };
@@ -147,6 +149,7 @@ function state(env, root) {
     hidden,
     picked: root.querySelectorAll("[data-pp-row]").filter((r) => r.classList.contains("is-picked")).map((r) => r.getAttribute("data-action")),
     announce: q("[data-pp-announce]") ? q("[data-pp-announce]").textContent : null,
+    announceWrites: q("[data-pp-announce]") ? (q("[data-pp-announce]").writes || 0) : null,
     tryShown: root.querySelectorAll("[data-pp-try]").filter((b) => !b.hidden).length,
     samples,
     controlsShown: q("[data-pp-rail-controls]") ? !q("[data-pp-rail-controls]").hidden : false,
@@ -160,6 +163,19 @@ function state(env, root) {
     intoView: env.intoView.slice(),
     focus: keyOf(env.active),
   };
+}
+
+/* A click on a radio, as a browser runs it: click fires with the radio already
+   checked, then input and change fire only if the checked radio changed. Clicking
+   (or pressing Space on) the radio that is already checked fires click alone. */
+function selectRadio(radios, radio) {
+  const was = radio.checked;
+  if (!was) radios.forEach((r) => { r.checked = r === radio; });
+  radio.dispatch("click");
+  if (!was) {
+    radio.dispatch("input");
+    radio.dispatch("change");
+  }
 }
 
 function main() {
@@ -195,8 +211,15 @@ function main() {
       const radios = root.querySelectorAll("[data-pp-choice]");
       const radio = radios.find((r) => r.value === step.choose);
       if (!radio) throw new Error("harness: no radio for " + step.choose);
-      radios.forEach((r) => { r.checked = r === radio; });
-      radio.dispatch("change");
+      selectRadio(radios, radio);
+    } else if (step.key) {
+      /* Arrow keys move focus and selection to the next radio: the same events as
+         a click on an unchecked radio, with focus on it. */
+      const radios = root.querySelectorAll("[data-pp-choice]");
+      const radio = radios.find((r) => r.value === step.key);
+      if (!radio) throw new Error("harness: no radio for " + step.key);
+      radio.focus();
+      selectRadio(radios, radio);
     } else if (step.try) {
       const button = root.querySelectorAll("[data-pp-try]").find((b) => b.getAttribute("data-pp-try") === step.try);
       if (!button) throw new Error("harness: no example button for " + step.try);
