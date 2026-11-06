@@ -32,6 +32,8 @@
 const CERTS_TTL_MS = 10 * 60 * 1000;
 let certsCache = { url: '', keys: null, fetchedAt: 0 };
 
+const certsUrl = (teamDomain) => `https://${teamDomain}/cdn-cgi/access/certs`;
+
 const DENY_HEADERS = {
   'content-type': 'text/plain; charset=utf-8',
   'cache-control': 'no-store',
@@ -55,7 +57,7 @@ function decodeJson(part) {
 }
 
 async function accessKeys(teamDomain, fetchImpl) {
-  const url = `https://${teamDomain}/cdn-cgi/access/certs`;
+  const url = certsUrl(teamDomain);
   const now = Date.now();
   if (certsCache.url === url && certsCache.keys && now - certsCache.fetchedAt < CERTS_TTL_MS) {
     return certsCache.keys;
@@ -92,8 +94,14 @@ export async function verifyAccessToken(token, env, fetchImpl = fetch, nowSec = 
     return null;
   }
   if (header.alg !== 'RS256' || !header.kid) return null;
-  const keys = await accessKeys(env.TEAM_DOMAIN, fetchImpl);
-  const jwk = keys.find((k) => k.kid === header.kid);
+  const hadCachedKeys = certsCache.url === certsUrl(env.TEAM_DOMAIN) && Boolean(certsCache.keys);
+  let keys = await accessKeys(env.TEAM_DOMAIN, fetchImpl);
+  let jwk = keys.find((k) => k.kid === header.kid);
+  if (!jwk && hadCachedKeys) {
+    resetCertsCache();
+    keys = await accessKeys(env.TEAM_DOMAIN, fetchImpl);
+    jwk = keys.find((k) => k.kid === header.kid);
+  }
   if (!jwk) return null;
   const key = await crypto.subtle.importKey(
     'jwk',

@@ -98,6 +98,30 @@ test('root serves the /internal/ contents page', async () => {
   assert.equal(res.status, 200);
   assert.equal(await res.text(), 'asset:/internal/');
 });
+test('rotated signing key refetches certs when kid is not in cache and caches new key', async () => {
+  const { privateKey: k2Priv, publicKey: k2Pub } = generateKeyPairSync('rsa', { modulusLength: 2048 });
+  const k2Jwk = { ...k2Pub.export({ format: 'jwk' }), kid: 'k2', alg: 'RS256' };
+
+  let fetchCount = 0;
+  const rotatingFetch = async (url) => {
+    fetchCount++;
+    const keys = fetchCount === 1 ? [jwk] : [jwk, k2Jwk];
+    return new Response(JSON.stringify({ keys }), { status: 200 });
+  };
+
+  // 1. Prime cache with k1
+  assert.equal(await status(req({ 'cf-access-jwt-assertion': sign(good()) }), env, rotatingFetch), 200);
+  assert.equal(fetchCount, 1);
+
+  // 2. Request with rotated key k2: bypasses stale cache, fetches certs, and admits
+  const tokenK2 = sign(good(), k2Priv, 'k2');
+  assert.equal(await status(req({ 'cf-access-jwt-assertion': tokenK2 }), env, rotatingFetch), 200);
+  assert.equal(fetchCount, 2);
+
+  // 3. Subsequent request with k2 uses the updated cache without extra network fetch
+  assert.equal(await status(req({ 'cf-access-jwt-assertion': tokenK2 }), env, rotatingFetch), 200);
+  assert.equal(fetchCount, 2);
+});
 test('root without a token is denied', async () =>
   assert.equal(await status(new Request('https://internal.blowhorn.ai/')), 403));
 
