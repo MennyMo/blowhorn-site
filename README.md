@@ -44,7 +44,7 @@ The Chrome extension ships through the Chrome Web Store, not from this repositor
 
 ## Working on the site
 
-You need Go (Hugo modules), Node.js and npm (the pinned Hugo extended and postcss come from `package.json`), Python 3 and `make`. The build targets mirror the blowhorn repository's website targets; the [layer5io/docs](https://github.com/layer5io/docs/blob/master/Makefile) names (`build-production`, `build-internal`, `preview-internal`) are kept as aliases. `make help` lists every target.
+You need Go (Hugo modules), Node.js and npm (the pinned Hugo extended and postcss come from `package.json`), Python 3 with PyYAML (the check scripts' tests in `make check` parse YAML), and `make`. `make setup` installs only the npm side; add PyYAML once with `python3 -m pip install --user pyyaml`, or on Homebrew's Python, which refuses a plain install, `python3 -m pip install --user --break-system-packages pyyaml`. The build targets mirror the blowhorn repository's website targets; the [layer5io/docs](https://github.com/layer5io/docs/blob/master/Makefile) names (`build-production`, `build-internal`, `preview-internal`) are kept as aliases. `make help` lists every target.
 
 ```bash
 make setup             # npm install: the pinned Hugo extended and postcss

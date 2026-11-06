@@ -21,7 +21,8 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 blowhorn.ai is Hugo with Docsy as a Hugo module, built like layer5io/docs. Run
 `make setup` once (npm install) for the pinned toolchain (the dependency check
-also accepts system `hugo` and `postcss`), then `make site`
+also accepts system `hugo` and `postcss`), install PyYAML for the script tests (README),
+then `make site`
 (live reload, http://localhost:1313) or `make site-build` (writes `public/`).
 `make check` is exactly what CI runs. Go must be on PATH: Hugo fetches Docsy through it.
 
@@ -190,10 +191,10 @@ and dark, no horizontal scroll from 320 px).
   tests, pushes and opens the pull request. After the third run, merge the pull request as it
   stands and open an issue for anything still flagged. A run that stopped on a usage limit
   counts; one cancelled before it did anything does not.
-- **`make check` locally needs PyYAML** for the script tests (`test_check_api_reference`);
-  CI's runner has it, Homebrew's `python3` does not, and refuses a plain `pip install`
-  (PEP 668): `python3 -m pip install --user --break-system-packages pyyaml` puts it in the
-  user site, leaving Homebrew's packages alone.
+- **`make check` locally needs PyYAML** for the script tests (`test_check_api_reference`).
+  CI's runner has it and `make setup` does not install it; the install line, including the
+  Homebrew variant (PEP 668 refuses a plain `pip install`), is in the README's
+  [Working on the site](README.md#working-on-the-site).
 
 ## Maintaining this file
 
