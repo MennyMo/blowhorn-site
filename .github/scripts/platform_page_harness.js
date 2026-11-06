@@ -9,7 +9,7 @@
    Element: {"tag": "div", "attrs": {...}, "children": [<element> | "text"]}
    Scenario: {"reduce": false, "rail": {"width": 1000, "slide": 300, "gap": 32},
               "steps": [{"choose": "respond"}, {"try": "weekly-recap"},
-                        {"click": "next"}, {"click": "prev"}]}
+                        {"click": "next"}, {"click": "prev"}, {"scroll": 120}]}
    Prints one state object per step (the first is the state after load). */
 "use strict";
 const fs = require("fs");
@@ -151,6 +151,7 @@ function state(env, root) {
     samples,
     controlsShown: q("[data-pp-rail-controls]") ? !q("[data-pp-rail-controls]").hidden : false,
     count: q("[data-pp-rail-count]") ? q("[data-pp-rail-count]").textContent : null,
+    railAnnounce: q("[data-pp-rail-announce]") ? q("[data-pp-rail-announce]").textContent : null,
     prevDisabled: q("[data-pp-prev]") ? q("[data-pp-prev]").getAttribute("aria-disabled") : null,
     nextDisabled: q("[data-pp-next]") ? q("[data-pp-next]").getAttribute("aria-disabled") : null,
     prevDisabledAttr: q("[data-pp-prev]") ? q("[data-pp-prev]").hasAttribute("disabled") : null,
@@ -201,6 +202,10 @@ function main() {
       if (!button) throw new Error("harness: no example button for " + step.try);
       button.focus();
       button.dispatch("click");
+    } else if (step.scroll !== undefined) {
+      const rail = root.querySelector("[data-pp-rail]");
+      rail.scrollLeft = step.scroll;
+      rail.dispatch("scroll");
     } else if (step.click) {
       const button = root.querySelector(step.click === "prev" ? "[data-pp-prev]" : "[data-pp-next]");
       if (!button) throw new Error("harness: no " + step.click + " button");

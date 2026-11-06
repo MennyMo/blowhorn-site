@@ -162,6 +162,37 @@ class SourceTest(unittest.TestCase):
         self.assertNamed(self.mutate(fn), "carries an em dash")
 
 
+class LinkGuardTest(unittest.TestCase):
+    """links_to finds a link to the preview however it is written."""
+
+    def test_every_way_of_writing_the_link_is_found(self):
+        for href in (
+            "/preview/platforms/x/",
+            "/preview/platforms/x",
+            "/preview/platforms/x/#examples",
+            "/preview/platforms/x?ref=nav",
+            "https://blowhorn.ai/preview/platforms/x/",
+            "http://localhost:1313/preview/platforms/x",
+            "/blowhorn-site/preview/platforms/x/",
+            "preview/platforms/x/",
+            "../preview/platforms/x/",
+        ):
+            with self.subTest(href=href):
+                self.assertTrue(check.links_to(f'<a class="n" href="{href}">x</a>', ROUTE))
+                self.assertTrue(check.links_to(f"<a href='{href}'>x</a>", ROUTE))
+
+    def test_other_pages_are_not_mistaken_for_it(self):
+        for href in (
+            "/preview/platforms/xylophone/",
+            "/preview/platforms/x/other/",
+            "/notpreview/platforms/x/",
+            "/docs/reference/platforms/x/",
+            "https://example.com/?next=/preview/platforms/x/",
+        ):
+            with self.subTest(href=href):
+                self.assertFalse(check.links_to(f'<a href="{href}">x</a>', ROUTE))
+
+
 @unittest.skipUnless(hugo_binary() and shutil.which("node"), "needs hugo and node")
 class BuiltTest(unittest.TestCase):
     """The generated page, and the real script run against it."""
@@ -226,6 +257,26 @@ class BuiltTest(unittest.TestCase):
         self.edit_page(build, 'class="pp-try ui"', 'class="pp-try ui button-primary"')
         self.assertIn("exactly one primary button", self.problems(build))
 
+    def test_start_comes_before_the_illustration(self):
+        """A phone stacks in source order: Start must not sit below the 546px storyboard."""
+        build = self.copy()
+        path = check.built_file(build, ROUTE)
+        html = path.read_text(encoding="utf-8")
+        go_start = html.index('<div class="pp-go">')
+        go_end = html.index("</div>", html.index('id="pp-start-note"')) + len("</div>")
+        stage_end = html.index("</figure>", html.index('data-pp-stage')) + len("</figure>")
+        self.assertLess(go_start, html.index("<figure"))
+        moved = html[:go_start] + html[html.index("<figure", go_start):stage_end] + html[go_start:go_end] + html[stage_end:]
+        path.write_text(moved, encoding="utf-8")
+        self.assertIn("source order must be selector, Start, illustration", self.problems(build))
+
+    def test_the_rail_never_stops_mid_card(self):
+        fx = Fixture()
+        self.addCleanup(fx.close)
+        fx.edit(check.SCRIPT, "var left = Math.min(max, slides[i].offsetLeft - origin());",
+                "var left = Math.min(max, slides[i].offsetLeft - origin() + 24);")
+        self.assertIn("the rail stops mid-card", self.problems(self.build, fx.root))
+
     def test_breakdowns_start_collapsed(self):
         build = self.copy()
         self.edit_page(build, '<details class="pp-disclosure"', '<details open class="pp-disclosure"')
@@ -257,6 +308,67 @@ class BuiltTest(unittest.TestCase):
         self.addCleanup(fx.close)
         fx.edit(check.SCRIPT, "stage.focus({ preventScroll: true });", "")
         self.assertIn("not the illustration", self.problems(self.build, fx.root))
+
+    def test_a_link_in_any_form_is_caught(self):
+        for href in ("https://blowhorn.ai/preview/platforms/x/", "/preview/platforms/x", "/base/preview/platforms/x/#a"):
+            with self.subTest(href=href):
+                build = self.copy()
+                page = build / "pricing/index.html"
+                page.write_text(page.read_text(encoding="utf-8").replace("</main>", f'<a href="{href}">x</a></main>', 1), encoding="utf-8")
+                self.assertIn("is linked from pricing/index.html", self.problems(build))
+
+    def test_the_activities_intro_starts_in_the_app(self):
+        tree = check.parse(check.built_file(self.build, ROUTE)).main
+        section = next(e for e in check.walk(tree) if e["attrs"].get("aria-labelledby") == "pp-activities-title")
+        intro = " ".join(check.text(section).split())
+        self.assertIn("Start in the app", intro)
+        self.assertNotIn("Start it here", intro)
+
+    def test_the_limits_are_the_docs_limits(self):
+        """Post and Respond show X's published daily caps, the same text on the
+        preview and on the docs page, because both read data/platforms/x.yaml."""
+        preview = " ".join(check.text(check.parse(check.built_file(self.build, ROUTE)).main).split())
+        docs = " ".join(check.text(check.parse(check.built_file(self.build, "/docs/reference/platforms/x/")).main).split())
+        limited = {a["id"]: a["limits"] for a in check.yaml_actions(ROOT, "x") if a["limits"]}
+        for action in ("post", "reply", "follow"):
+            self.assertIn(action, limited)
+            self.assertIn(limited[action], preview)
+            self.assertIn(limited[action], docs)
+        self.assertIn("50 original posts", limited["post"])
+        self.assertIn("200 replies", limited["reply"])
+
+    def test_limits_name_themselves_honestly(self):
+        """The list holds what the YAML lists, caps and notes, so it is titled
+        and counted that way: Read-only analytics is a note, not a cap."""
+        tree = check.parse(check.built_file(self.build, ROUTE)).main
+        details = next(d for d in check.walk(tree) if d["attrs"].get("data-pp-kind") == "limits")
+        summary = " ".join(check.text(details).split())
+        self.assertIn("Limits and notes", summary)
+        self.assertIn("4 of 5 actions", summary)
+
+    def test_a_picked_type_returns_the_default_illustration(self):
+        fx = Fixture()
+        self.addCleanup(fx.close)
+        fx.edit(check.SCRIPT, "        restoreScenes();\n", "")
+        self.assertIn("after a preview leaves", self.problems(self.build, fx.root))
+
+    def test_scrolling_the_rail_announces_nothing(self):
+        fx = Fixture()
+        self.addCleanup(fx.close)
+        fx.edit(check.SCRIPT, "if (count) count.textContent = describe(inView());",
+                "if (count) count.textContent = describe(inView()); if (announce) announce.textContent = describe(inView());")
+        self.assertIn("scrolling the rail announced", self.problems(self.build, fx.root))
+
+    def test_a_button_press_announces_where_the_rail_lands(self):
+        fx = Fixture()
+        self.addCleanup(fx.close)
+        fx.edit(check.SCRIPT, 'if (announce) announce.textContent = "Showing examples " + describe(inView(left));', "")
+        self.assertIn("paging forward announced", self.problems(self.build, fx.root))
+
+    def test_the_rail_count_is_never_live(self):
+        build = self.copy()
+        self.edit_page(build, "data-pp-rail-count>", 'data-pp-rail-count aria-live="polite">')
+        self.assertIn("the rail count is a live region", self.problems(build))
 
 
 if __name__ == "__main__":

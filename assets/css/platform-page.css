@@ -17,6 +17,7 @@
   padding-top: var(--space-8);
 }
 .pp-crumbs ol { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: 0; margin: 0; list-style: none; color: var(--ink-muted); }
+.pp-crumbs a { display: inline-flex; align-items: center; min-height: var(--space-6); }
 .pp-crumbs li + li::before { content: "/"; margin-right: var(--space-2); color: var(--line-strong); }
 .pp-crumbs [aria-current] { color: var(--ink); }
 .pp-preview {
@@ -28,12 +29,14 @@
 }
 
 /* ---------- Hero ----------
-   Phone and tablet: the copy, the selector, then the illustration it drives, then
-   Start. Desktop: the copy column on the left, the illustration on the right. */
+   Phone and tablet: the copy, the selector, Start, then the illustration it
+   drives (Figma 902:111: a narrow screen stacks the visual below the intent and
+   keeps Start in the first screen; the DOM follows the same order). Desktop: the
+   copy column and Start on the left, the illustration on the right. */
 .pp-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "head" "pick" "stage" "go";
+  grid-template-areas: "head" "pick" "go" "stage";
   gap: var(--space-8);
   padding-block: var(--head-gap) var(--section-y);
 }
@@ -43,7 +46,7 @@
 .pp-go { grid-area: go; }
 .pp-hero-head > .label + * { margin-top: var(--eyebrow-gap); }
 .pp-hero-head .display { max-width: 12ch; }
-.pp-hero-head .body-lg { margin-top: var(--space-6); max-width: 30rem; }
+.pp-hero-head .body-lg { margin-top: var(--intro-gap); max-width: 30rem; }
 @media (min-width: 960px) {
   .pp-hero {
     grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
@@ -76,8 +79,6 @@
   min-height: 44px;
   padding-inline: var(--space-2);
   color: var(--ink-muted);
-  font-size: 14px;
-  line-height: 20px;
   font-weight: 600;
   cursor: pointer;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
@@ -278,13 +279,25 @@
   padding: 0;
   list-style: none;
 }
+/* A phone shows one card and a peek of the next (the cue that the row scrolls).
+   A wider rail shows a whole number of cards, so the last stop of the scroll
+   range is a card's own left edge: with a fractional width (2.15, 3.3) the end
+   of the range fell mid-card and Next left a card cut off at the left. The phone
+   gets a trailing spacer so its last card can start at the left edge too. */
 .pp-slide {
   flex: 0 0 86%;
   min-width: 0;
   scroll-snap-align: start;
 }
-@media (min-width: 640px) { .pp-slide { flex-basis: calc((100% - var(--grid-gap)) / 2.15); } }
-@media (min-width: 1024px) { .pp-slide { flex-basis: calc((100% - 2 * var(--grid-gap)) / 3.3); } }
+.pp-rail-track::after {
+  content: "";
+  flex: 0 0 calc(14% - var(--grid-gap));
+}
+@media (min-width: 640px) {
+  .pp-slide { flex-basis: calc((100% - var(--grid-gap)) / 2); }
+  .pp-rail-track::after { content: none; }
+}
+@media (min-width: 1024px) { .pp-slide { flex-basis: calc((100% - 2 * var(--grid-gap)) / 3); } }
 .pp-example {
   display: flex;
   flex-direction: column;
@@ -299,8 +312,6 @@
 .pp-sample {
   margin-top: var(--space-4);
   min-height: 4.5em;
-  font-size: 16px;
-  line-height: 24px;
   color: var(--card-ink);
 }
 .pp-example .h3 { margin-top: var(--space-6); }
@@ -360,7 +371,6 @@
 .pp-disclosure summary:focus-visible { outline-offset: -4px; border-radius: var(--radius-lg); }
 .pp-d-num { font-family: var(--font-mono); color: var(--ink-muted); }
 .pp-d-title { display: grid; gap: var(--space-1); }
-.pp-d-name { font-family: var(--font-display); font-size: 18px; line-height: 24px; font-weight: 700; color: var(--ink-wordmark); }
 .pp-d-hint { color: var(--ink-muted); }
 .pp-d-chev { width: 20px; height: 20px; fill: none; stroke: var(--ink-muted); stroke-width: var(--stroke-icon); stroke-linecap: round; stroke-linejoin: round; }
 .pp-disclosure[open] .pp-d-chev { transform: rotate(180deg); }
@@ -396,7 +406,7 @@
 .pp-limits { padding: var(--card-pad); border-radius: var(--radius-lg); }
 .pp-limits dl { margin: var(--space-4) 0 0; }
 .pp-limits dl > div + div { margin-top: var(--space-4); }
-.pp-limits dt { font-family: var(--font-mono); font-size: 14px; line-height: 20px; color: var(--ink); }
+.pp-limits dt { font-family: var(--font-mono); color: var(--ink); }
 .pp-limits dd { margin: var(--space-1) 0 0; max-width: var(--text-measure); color: var(--ink-muted); }
 .pp-d-more { margin-top: var(--space-4); color: var(--ink-muted); }
 
@@ -484,6 +494,14 @@
 }
 .pp-now::after { content: ""; flex: 1; height: 2px; border-radius: var(--radius-pill); background: var(--link); }
 .pp-activities-cap { margin-top: var(--space-4); color: var(--ink-muted); text-align: center; }
+
+/* More contrast: the storyboard and the breakdown panel go solid. These rules
+   set --card-bg at a higher specificity than cards.css's own .glass fallback,
+   so the fallback is restated here. */
+@media (prefers-contrast: more) {
+  .pp-stage.glass,
+  .pp-disclosures.glass { --card-bg: var(--surface); }
+}
 
 @media (forced-colors: active) {
   .pp-choice::after, .pp-now::after { background: CanvasText; }

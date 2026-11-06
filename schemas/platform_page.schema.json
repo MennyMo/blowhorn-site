@@ -116,7 +116,7 @@
     "page": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["platform", "route", "stage", "head", "start", "activities", "media", "examples", "breakdown"],
+      "required": ["platform", "route", "head", "start", "activities", "media", "examples", "breakdown"],
       "properties": {
         "platform": {
           "description": "A platform id from data/integrations.json whose status is supported and that has data/platforms/<id>.yaml. The page borrows its name, logo, docs link and reach from there.",
@@ -126,11 +126,6 @@
           "description": "Public path. Preview pages live at /preview/platforms/<platform>/ and are noindex, out of the sitemap, llms.txt and search, and unlinked from navigation.",
           "type": "string",
           "pattern": "^/preview/platforms/[a-z0-9-]+/$"
-        },
-        "stage": {
-          "description": "preview is the only stage. Promoting a page to general availability is a deliberate schema change, so a preview cannot ship as GA by editing data alone.",
-          "type": "string",
-          "enum": ["preview"]
         },
         "head": {
           "type": "object",
@@ -147,13 +142,12 @@
           }
         },
         "start": {
-          "description": "The page's one primary call to action. destination names an existing entrypoint; the template maps it to a real route, so a deep link cannot be invented here. The app's only web link (blowhorn://content/new) takes a URL, a title and text, not a platform or an activity type, so Start cannot pre-select either; note must say what Start does and that the pick is made again in the app.",
+          "description": "The page's one primary call to action. It always goes to the download page (the template builds the link, so a deep link cannot be invented here). The app's only web link (blowhorn://content/new) takes a URL, a title and text, not a platform or an activity type, so Start cannot pre-select either; note must say what Start does and that the pick is made again in the app.",
           "type": "object",
           "additionalProperties": false,
-          "required": ["label", "destination", "note"],
+          "required": ["label", "note"],
           "properties": {
             "label": { "$ref": "#/definitions/copy" },
-            "destination": { "type": "string", "enum": ["download"] },
             "note": { "$ref": "#/definitions/paragraph" }
           }
         },
@@ -225,12 +219,11 @@
       }
     },
     "media": {
-      "description": "The hero media. pending is the only status today: no recording exists yet, so the hero is an illustrated, switchable storyboard with an explicit label and no player controls. Never present an illustration as footage. When a real recording exists, add an available status here, in the template and in check_platform_pages.py together.",
+      "description": "The hero media. No recording exists yet, so the hero is an illustrated, switchable storyboard with an explicit label and no player controls. Never present an illustration as footage. When a real recording exists, extend this definition, the template and check_platform_pages.py together.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "label"],
+      "required": ["label"],
       "properties": {
-        "status": { "type": "string", "enum": ["pending"] },
         "label": { "$ref": "#/definitions/copy" }
       }
     },

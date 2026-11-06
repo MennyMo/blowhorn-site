@@ -49,6 +49,8 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 
+from check_action_examples import yaml_action_ids
+
 ROOT = Path(__file__).resolve().parents[2]
 HARNESS = Path(__file__).resolve().parent / "platform_page_harness.js"
 SCRIPT = Path("assets/js/platform-page.js")
@@ -67,17 +69,28 @@ def load_json(root: Path, rel: str) -> dict:
 
 
 def yaml_actions(root: Path, platform_id: str) -> list[dict] | None:
-    """The action rows of data/platforms/<id>.yaml: id, and whether it lists limits."""
+    """The action rows of data/platforms/<id>.yaml: id (from the shared
+    yaml_action_ids) and the text of its limits, empty when it lists none."""
     path = root / "data" / "platforms" / f"{platform_id}.yaml"
     if not path.is_file():
         return None
-    rows: list[dict] = []
+    limits: dict[str, str] = {}
+    current = ""
     for line in path.read_text(encoding="utf-8").splitlines():
         if line.startswith("  - id:"):
-            rows.append({"id": line.split("id:", 1)[1].strip().strip("\"'"), "limits": False})
-        elif line.startswith("    limits:") and rows and line.split("limits:", 1)[1].strip():
-            rows[-1]["limits"] = True
-    return rows
+            current = line.split("id:", 1)[1].strip()
+        elif line.startswith("    limits:") and current:
+            limits[current] = line.split("limits:", 1)[1].strip()
+    return [{"id": i, "limits": limits.get(i, "")} for i in yaml_action_ids(platform_id, root)]
+
+
+def links_to(html: str, route: str) -> bool:
+    """Whether html has an href to the route: absolute, with a host or a base
+    path in front, relative, with or without the trailing slash, with or
+    without a fragment or query."""
+    path = re.escape(route.strip("/"))
+    return bool(re.search(
+        rf"""href=["'](?:[^"'#?]*/)?{path}/?(?:[#?][^"']*)?["']""", html, re.I))
 
 
 def front_matter(path: Path) -> dict:
@@ -304,7 +317,9 @@ def check_behaviour(label: str, main: dict, rec: dict, actions: list[dict], root
     action_of = {a["id"]: a["action"] for a in rec["activities"]}
     intents = {a["id"]: a["intent"] for a in rec["activities"]}
     examples = rec["examples"]["items"]
-    rail = {"width": 1000, "slide": 300, "gap": 32}
+    # The stylesheet shows a whole number of cards (3 on desktop): 3 slides and 2 gaps fill the width.
+    rail = {"width": 1000, "slide": 312, "gap": 32}
+    edges = {i * (rail["slide"] + rail["gap"]) for i in range(len(examples))}
 
     steps = [{"choose": t} for t in types[1:]] + [{"choose": types[0]}]
     states = run_harness(main, {"rail": rail, "steps": steps}, root)
@@ -341,9 +356,17 @@ def check_behaviour(label: str, main: dict, rec: dict, actions: list[dict], root
         if s["intoView"] != [behaviour]:
             problems.append(f"{label}: previewing with reduce={reduce} scrolls {s['intoView']}, want [{behaviour!r}]")
 
+    # Picking a type by hand after a preview returns the default illustration.
+    originals = {a["id"]: len(a["scene"]["text"]) for a in rec["activities"]}
+    back = run_harness(main, {"rail": rail, "steps": [{"try": ex["id"]}, {"choose": ex["activity"]}]}, root)[-1]
+    for t_id, want_count in originals.items():
+        sample = back["samples"].get(t_id, {})
+        if sample.get("sampleShown") or sample.get("sampleText") or sample.get("originalsShown") != want_count:
+            problems.append(f"{label}: choosing {ex['activity']!r} after a preview leaves {t_id!r} showing {sample}, want its {want_count} original lines")
+
     # The rail, paged by hand.
     n = len(examples)
-    wide = run_harness(main, {"rail": {"width": n * 300 + (n - 1) * 32 + 50, "slide": 300, "gap": 32}}, root)[0]
+    wide = run_harness(main, {"rail": {"width": n * rail["slide"] + (n - 1) * rail["gap"] + 50, "slide": rail["slide"], "gap": rail["gap"]}}, root)[0]
     if wide["controlsShown"]:
         problems.append(f"{label}: rail controls show although every example fits")
     pages = run_harness(main, {"rail": rail, "steps": [{"click": "next"}] * n + [{"click": "prev"}] * n}, root)
@@ -357,10 +380,24 @@ def check_behaviour(label: str, main: dict, rec: dict, actions: list[dict], root
         problems.append(f"{label}: rail after paging forward: next={end['nextDisabled']}, prev={end['prevDisabled']}, left={end['scrollLeft']}")
     if any(p["prevDisabledAttr"] for p in pages) or "data-pp-next" not in end["focus"].split():
         problems.append(f"{label}: a rail button lost focus at the end (it must use aria-disabled, not disabled)")
+    # Every stop of a button press is a card's own left edge, never mid-card.
+    stray = [p["scrollLeft"] for p in pages if p["scrollLeft"] not in edges]
+    if stray:
+        problems.append(f"{label}: the rail stops mid-card at {stray}; card edges are {sorted(edges)}")
     if pages[-1]["scrollLeft"] != 0 or pages[-1]["prevDisabled"] != "true":
         problems.append(f"{label}: rail did not page back to the start: left={pages[-1]['scrollLeft']}")
     if set(end["scrolls"]) != {"smooth"}:
         problems.append(f"{label}: rail scrolls {sorted(set(end['scrolls']))}, want smooth")
+    # Scrolling by any means keeps the count current but announces nothing; a
+    # button press announces the range it lands on, once.
+    farthest = n * rail["slide"] + (n - 1) * rail["gap"] - rail["width"]
+    swipes = run_harness(main, {"rail": rail, "steps": [{"scroll": farthest}, {"scroll": 0}]}, root)
+    if swipes[1]["count"] != end["count"] or swipes[2]["count"] != start["count"]:
+        problems.append(f"{label}: the rail count while scrolling is {[s['count'] for s in swipes]}, want {end['count']!r} at the far end and {start['count']!r} back at the start")
+    if any(s["railAnnounce"] != "" for s in swipes):
+        problems.append(f"{label}: scrolling the rail announced {[s['railAnnounce'] for s in swipes]}; only a button press may")
+    if end["railAnnounce"] != f"Showing examples {end['count']}":
+        problems.append(f"{label}: paging forward announced {end['railAnnounce']!r}, want 'Showing examples {end['count']}'")
     calm = run_harness(main, {"rail": rail, "reduce": True, "steps": [{"click": "next"}]}, root)[-1]
     if calm["scrolls"] != ["auto"]:
         problems.append(f"{label}: under reduced motion the rail scrolls {calm['scrolls']}, want ['auto']")
@@ -400,7 +437,7 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
             if other == path:
                 continue
             body = other.read_text(encoding="utf-8")
-            if f'href="{route}"' in body or f'href="{route}#' in body:
+            if links_to(body, route):
                 problems.append(f"{label} is linked from {other.relative_to(build_dir)}")
 
         body = text(main)
@@ -414,6 +451,11 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
         primary = [e for e in walk(main) if "button-primary" in classes(e)]
         if len(primary) != 1 or not primary[0]["attrs"].get("href", "").endswith("/download/") or "data-pp-start" not in primary[0]["attrs"]:
             problems.append(f"{label}: needs exactly one primary button, Start, to the download page; found {len(primary)}")
+
+        order = [e["attrs"] for e in walk(main)]
+        where = {k: next((i for i, a in enumerate(order) if k in a), -1) for k in ("data-pp-choice", "data-pp-start", "data-pp-stage")}
+        if not 0 <= where["data-pp-choice"] < where["data-pp-start"] < where["data-pp-stage"]:
+            problems.append(f"{label}: source order must be selector, Start, illustration so Start is in a phone's first screen; got {where}")
 
         types = [a["id"] for a in rec["activities"]]
         radios = find(main, "data-pp-choice")
@@ -449,6 +491,20 @@ def check_built(build_dir: Path, root: Path) -> list[str]:
             got = [e["attrs"]["data-action"] for e in walk(regions[0]) if "data-action" in e["attrs"]]
             if got != want:
                 problems.append(f"{label}: {block} rows {got}, want {want}")
+        for el in find(main, "data-pp-limits"):
+            shown = {
+                row["attrs"]["data-action"]: " ".join(text(next(d for d in walk(row) if d["tag"] == "dd")).split())
+                for row in walk(el) if "data-action" in row["attrs"]
+            }
+            want_text = {a["id"]: a["limits"] for a in actions if a["limits"]}
+            if shown != want_text:
+                problems.append(f"{label}: limits text {shown}, want the YAML's {want_text}")
+        counts = find(main, "data-pp-rail-count")
+        announcers = find(main, "data-pp-rail-announce")
+        if any("aria-live" in c["attrs"] for c in counts):
+            problems.append(f"{label}: the rail count is a live region; scrolling would announce every frame")
+        if len(announcers) != 1 or announcers[0]["attrs"].get("aria-live") != "polite":
+            problems.append(f"{label}: needs one polite live region for rail button presses")
         for el in find(main, "data-pp-actions"):
             names = [text(n).strip() for n in walk(el) if "pp-fact-name" in classes(n)]
             want_names = [vocab[i]["name"] for i in ids if i in vocab]

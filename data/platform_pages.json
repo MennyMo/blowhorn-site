@@ -10,7 +10,7 @@
     },
     "continuity": {
       "heading": "One place for every activity",
-      "intro": "Start it here, then follow it in the app with everything else: once or recurring, past and upcoming.",
+      "intro": "Start in the app, then follow it there with everything else: once or recurring, past and upcoming.",
       "caption": "Illustration of the Activities model. The platform and the activity type are filters on one list, not separate places.",
       "filters": {
         "title": "Filters",
@@ -42,7 +42,6 @@
     {
       "platform": "x",
       "route": "/preview/platforms/x/",
-      "stage": "preview",
       "head": {
         "eyebrow": "X / Activities",
         "headline": "Make your next move on X.",
@@ -51,7 +50,6 @@
       },
       "start": {
         "label": "Start",
-        "destination": "download",
         "note": "Start opens the download page. Pick the activity again in the app, then run it once or on a schedule."
       },
       "activities": [
@@ -112,7 +110,6 @@
         }
       ],
       "media": {
-        "status": "pending",
         "label": "Illustration, not a recording"
       },
       "examples": {
@@ -166,8 +163,8 @@
           },
           {
             "kind": "limits",
-            "title": "Limits to know",
-            "hint": "The caps Blowhorn keeps for you"
+            "title": "Limits and notes",
+            "hint": "What Blowhorn lists for each action"
           },
           {
             "kind": "behavior",

@@ -42,31 +42,54 @@ breakdown titles.
 - **Selector.** A native radio group. Picking a type swaps every `[data-pp-for]`
   element: the illustration, the intent line, Start's context, the "Your pick"
   rows in the breakdown and the Activities chips. The change is announced in a
-  polite live region. Arrow keys move between types natively.
+  polite live region. Arrow keys move between types natively. Picking a type by
+  hand also returns the illustration to its own scene, whatever an example's
+  preview put there.
+- **Source order is copy, selector, Start, illustration** (Figma 902:111: a narrow
+  screen stacks the visual below the intent and keeps Start in the first screen).
+  The desktop grid still puts Start under the selector in the left column beside
+  the illustration. There is one Start, never a duplicate; the build check fails an
+  illustration placed before it.
 - **One primary call to action.** Start goes to `/download/`. The app's only web
   link, `blowhorn://content/new`, takes a URL, title and text (the bookmarklet's
   contract), not a platform or an activity type, so Start cannot pre-select X or
   Post. The note under Start says so: pick the activity again in the app. When the
-  app gains a link that takes a platform and a type, add a `destination` to the
-  schema, map it in the data partial and update the note in the same change.
+  app gains a link that takes a platform and a type, build that link in the data
+  partial (`startHref`) and update the schema description and the note in the same
+  change. The closing Activities copy says the activity starts in the app, never
+  on this page.
 - **Illustration, not footage.** The hero is a switchable storyboard labelled
   "Interactive preview" and "Illustration, not a recording", with no play button,
-  scrubber or timestamp. `media.status` is `pending`; a real recording needs a new
-  status in the schema, template and checks together.
+  scrubber or timestamp. No recording exists; when one does, extend `media` in the
+  schema, template and checks together.
 - **Examples rail** (optional content, never core facts). A native scroll area
-  with snap points; the script adds previous and next buttons that page it by hand
-  (no autoplay) and a count of the examples in view. The buttons use
+  with snap points. A phone shows one card and a peek of the next, with a trailing
+  spacer so the last card can start at the left edge; a wider rail shows a whole
+  number of cards (2, then 3), so every stop is a card's own edge and Next never
+  leaves a card cut off at the left. The script adds previous and next buttons that page it by hand
+  (no autoplay) and a count of the examples in view. The count is plain text that
+  follows any scrolling; only a button press is announced, once, from where the
+  rail will land, so a swipe never reads out every frame. The buttons use
   `aria-disabled`, so a focused button keeps focus at either end, and a focused
   example scrolls into view natively. "Preview above" puts an example's sample in
   the hero, selects its type and moves focus to the illustration.
 - **Breakdowns.** Native `<details>`, all collapsed at load: what Blowhorn can do,
-  limits (a Dispatch card: technical facts), how each action runs.
+  limits and notes (a Dispatch card: technical facts), how each action runs. The
+  limits item lists whatever `data/platforms/<id>.yaml` gives an action under
+  `limits`, so it mixes caps with notes such as analytics' "Read-only." and is
+  titled and counted that way, never as caps only. For X, Post and Respond carry
+  the daily caps the X docs already state (50 original posts, 200 replies, for an
+  account without a checkmark); they are in the YAML, so the docs table and this
+  page read the same text.
 - **Cards** are picked by content (`DESIGN.md`, Cards): in the rail, paper for the
   featured example, field for an explanation, plain for a secondary one, stamp for
   a recap of facts; Dispatch for the limits. The rail shows up to four at once, so
   any four neighbours differ and paper appears once (`--source` and the build fail
-  otherwise). Glass is used for the two floating surfaces only: the storyboard and
-  the breakdown panel.
+  otherwise). The variant is data, not dealt by `card-deal.html`, because the deal
+  picks by preference order and cannot keep a variant bound to what its example is.
+  Glass is used for the two floating surfaces only: the storyboard and the
+  breakdown panel; both go solid under `prefers-contrast: more`. Type uses the
+  site's styles (`.h3`, `.ui`, `.body`), no literal sizes.
 - **Motion** is CSS transform and opacity: a swapped scene and an opened breakdown
   settle in, the chevron turns. Under `prefers-reduced-motion: reduce` nothing
   animates and nothing scrolls smoothly.
@@ -84,7 +107,8 @@ The page file sets `layout: platform-page`, `platform: <id>`,
 `sitemap: {disable: true}` and `build: {list: never}`; `hugo.toml` excludes
 `/preview/**` from llms.txt. Nothing in the navigation links to it.
 `make check-platform-pages` fails if the built page is indexed, listed in the
-sitemap, llms.txt, llms-full.txt or the search index, or linked from another page.
+sitemap, llms.txt, llms-full.txt or the search index, or linked from another page
+(absolute, base-prefixed, relative, with or without the trailing slash).
 
 ## Add the next platform
 
@@ -99,9 +123,9 @@ sitemap, llms.txt, llms-full.txt or the search index, or linked from another pag
    then check 390, 820 and 1440 px in light and dark, and 320 px for overflow
    (`docs/deploy.md`).
 
-Promoting a page out of preview is a deliberate schema change (`stage`, `route`),
-not a data edit, and needs a navigation entry, sitemap and search inclusion, and
-an update to these rules.
+Promoting a page out of preview is a deliberate change, not a data edit: the
+schema's `route` pattern is preview-only, and a promoted page needs a new route, a
+navigation entry, sitemap and search inclusion, and an update to these rules.
 
 ## Known limits
 

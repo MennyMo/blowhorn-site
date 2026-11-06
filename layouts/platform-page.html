@@ -8,8 +8,11 @@
 
   Anatomy (Figma 902:114, contract 902:111, blowhorn-site#466): a hero with the
   activity type selector, one Start button and a switchable illustrated storyboard
-  (labelled an illustration, no player controls); an optional examples rail; a
-  tinted band of collapsed breakdowns; the Activities continuity illustration.
+  (labelled an illustration, no player controls). Source order is copy, selector,
+  Start, illustration: on a phone the illustration stacks below the intent and Start
+  stays in the first screen; on desktop the grid puts Start under the selector in the
+  left column beside the illustration (platform-page.css, .pp-hero). An optional
+  examples rail; a tinted band of collapsed breakdowns; the Activities continuity illustration.
 
   Works without script: the selector is replaced by a static list of every type's
   intent, the first type's illustration shows, the rail is a native scroll area and
@@ -22,7 +25,7 @@
   data-pp-choice (radios), data-pp-for (shown for one type), data-pp-row (a breakdown
   row bound to a type), data-pp-announce, data-pp-stage, data-pp-scene-text,
   data-pp-original, data-pp-sample, data-pp-rail, data-pp-slide, data-pp-prev,
-  data-pp-next, data-pp-rail-count, data-pp-try. */ -}}
+  data-pp-next, data-pp-rail-count, data-pp-rail-announce, data-pp-try. */ -}}
 {{ define "head" }}
     {{- $d := partialCached "platform-page-data.html" . .RelPermalink }}
     {{- $css := resources.Get "css/platform-page.css" | minify | fingerprint }}
@@ -61,7 +64,7 @@
           <fieldset class="pp-choices" data-pp-choices>
             <legend class="visually-hidden">Choose an activity type on {{ $d.short }}</legend>
             {{- range $i, $a := $d.activities }}
-            <label class="pp-choice">
+            <label class="pp-choice ui">
               <input type="radio" name="pp-type" value="{{ $a.id }}" data-pp-choice data-label="{{ $a.label }}" data-action="{{ $a.action }}"{{ if eq $i 0 }} checked{{ end }}>
               <span>{{ $a.label }}</span>
             </label>
@@ -73,6 +76,14 @@
             {{- end }}
           </ul>
           <p class="visually-hidden" data-pp-announce aria-live="polite"></p>
+        </div>
+
+        <div class="pp-go">
+          <p class="pp-start">
+            <a class="button button-primary" href="{{ $d.startHref }}" data-pp-start aria-describedby="pp-start-note">{{ $rec.start.label }}</a>
+            <span class="pp-start-for caption">{{ $d.short }}<span class="pp-start-type">{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}> &middot; {{ $a.label }}</span>{{ end }}</span></span>
+          </p>
+          <p id="pp-start-note" class="pp-note caption">{{ $rec.start.note }}</p>
         </div>
 
         <figure class="pp-stage glass" data-pp-stage tabindex="-1" aria-labelledby="pp-stage-cap">
@@ -110,16 +121,8 @@
             </div>
           </div>
           {{- end }}
-          <figcaption id="pp-stage-cap" class="pp-stage-cap caption" data-pp-recording="{{ $rec.media.status }}">{{ $rec.media.label }}</figcaption>
+          <figcaption id="pp-stage-cap" class="pp-stage-cap caption">{{ $rec.media.label }}</figcaption>
         </figure>
-
-        <div class="pp-go">
-          <p class="pp-start">
-            <a class="button button-primary" href="{{ $d.startHref }}" data-pp-start aria-describedby="pp-start-note">{{ $rec.start.label }}</a>
-            <span class="pp-start-for caption">{{ $d.short }}<span class="pp-start-type">{{ range $i, $a := $d.activities }}<span data-pp-for="{{ $a.id }}"{{ if ne $i 0 }} hidden{{ end }}> &middot; {{ $a.label }}</span>{{ end }}</span></span>
-          </p>
-          <p id="pp-start-note" class="pp-note caption">{{ $rec.start.note }}</p>
-        </div>
       </section>
 
       <section class="pp-section" aria-labelledby="pp-examples-title" data-pp-examples>
@@ -130,7 +133,8 @@
               <p class="muted">{{ $rec.examples.intro }}</p>
             </div>
             <div class="pp-rail-controls" data-pp-rail-controls hidden>
-              <p class="pp-rail-count caption" data-pp-rail-count aria-live="polite"></p>
+              <p class="pp-rail-count caption" data-pp-rail-count></p>
+              <p class="visually-hidden" data-pp-rail-announce aria-live="polite"></p>
               <button type="button" class="pp-icon-button" data-pp-prev aria-controls="pp-rail" aria-label="Previous examples">
                 <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><path d="M12.5 15L7.5 10L12.5 5"/></svg>
               </button>
@@ -148,7 +152,7 @@
                     <span class="logo-tile pp-tile-sm"><img src="{{ $logo }}" alt="" width="14" height="14"></span>
                     <span class="label">{{ $e.typeLabel }}</span>
                   </p>
-                  <p class="pp-sample" data-pp-sample-text>{{ $e.sample }}</p>
+                  <p class="pp-sample body" data-pp-sample-text>{{ $e.sample }}</p>
                   <h3 id="pp-ex-{{ $e.id }}" class="h3" data-pp-example-title>{{ $e.title }}</h3>
                   <p>{{ $e.blurb }}</p>
                   <p class="pp-example-foot">
@@ -186,7 +190,7 @@
               <summary>
                 <span class="pp-d-num caption" aria-hidden="true">{{ printf "%02d" (add $i 1) }}</span>
                 <span class="pp-d-title">
-                  <span class="pp-d-name">{{ $b.title }}</span>
+                  <span class="pp-d-name h3">{{ $b.title }}</span>
                   {{- if eq $b.kind "supported" }}
                   <span class="pp-d-hint caption">{{ $b.hint }}. {{ len $d.actions }} actions</span>
                   {{- else if eq $b.kind "limits" }}
@@ -210,17 +214,17 @@
                 </ul>
                 {{- else if eq $b.kind "limits" }}
                 <div class="card card-dispatch pp-limits">
-                  <p class="label">Limits on {{ $d.short }}</p>
+                  <p class="label">Limits and notes on {{ $d.short }}</p>
                   <dl data-pp-limits>
                     {{- range $d.limited }}
                     <div data-action="{{ .id }}">
-                      <dt>{{ .name }}</dt>
+                      <dt class="ui">{{ .name }}</dt>
                       <dd>{{ .limits }}</dd>
                     </div>
                     {{- end }}
                   </dl>
                 </div>
-                <p class="pp-d-more caption">Actions with no cap here still follow {{ $d.short }}'s own limits. <a href="{{ $d.docs | relURL }}">The {{ $d.short }} docs</a> list them.</p>
+                <p class="pp-d-more caption">Actions with no entry here still follow {{ $d.short }}'s own limits. <a href="{{ $d.docs | relURL }}">The {{ $d.short }} docs</a> list them.</p>
                 {{- else }}
                 <p class="pp-reach">{{ $d.reach }}.</p>
                 <dl class="pp-behavior" data-pp-behavior>

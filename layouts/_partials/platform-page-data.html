@@ -95,9 +95,8 @@
   {{- if and (eq .kind "limits") (not $limited) }}{{ errorf "platform-page: %q has a limits breakdown but data/platforms/%s.yaml lists no limits" $id $id }}{{ end -}}
 {{- end -}}
 
-{{- /* Start goes to an existing entrypoint, never a deep link made up here. */ -}}
-{{- $startHref := "" -}}
-{{- if eq $rec.start.destination "download" }}{{ $startHref = "download/" | relURL }}{{ else }}{{ errorf "platform-page: unknown start destination %q" $rec.start.destination }}{{ end -}}
+{{- /* Start goes to the download page, an existing entrypoint, never a deep link made up here. */ -}}
+{{- $startHref := "download/" | relURL -}}
 
 {{- return dict
   "id" $id
