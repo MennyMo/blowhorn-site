@@ -3568,11 +3568,12 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
 
 /* ---------- Blowhorn Tells, the free Am I a Bot? check (data/tells.json) ----------
    One look for every place the site points at Tells: a slim bar above the
-   header (message on the left; Am I a Bot? + Free pill as one CTA on the
-   right), the Resources menu entry, the home page band, the callout on
-   compare, /ai/ and /agents/, and the card on /download/thanks/. Sleeper
-   Cell's art keeps its black ground in a rounded frame, like the cast pages.
-   The docs card lives with the docs layout (assets/scss/_styles_project.scss). */
+   header (message + Am I a Bot?/Free CTA centered as a group; dismiss pinned
+   far right and separated), the Resources menu entry, the home page band, the
+   callout on compare, /ai/ and /agents/, and the card on /download/thanks/.
+   Sleeper Cell's art keeps its black ground in a rounded frame, like the cast
+   pages. The docs card lives with the docs layout
+   (assets/scss/_styles_project.scss). */
 .tells-bar {
   background: var(--yellow);
   color: var(--on-yellow);
@@ -3580,40 +3581,45 @@ a.docs-card.platform-card[href$="/facebook/"]::before { background-image: url("/
 }
 /* Dismissed: tells-bar-head.html sets this before first paint. */
 html[data-tells-bar="off"] .tells-bar { display: none; }
+/* Three columns: equal side lanes keep the message+CTA group optically
+   centered; the dismiss control sits in the right lane, clear of the CTA. */
 .tells-bar-inner {
-  position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(32px, 1fr) auto minmax(32px, 1fr);
   align-items: center;
-  gap: var(--space-3);
+  column-gap: var(--space-2);
   min-height: 40px;
   padding-block: var(--space-2);
-  padding-right: calc(var(--gutter) + var(--space-8));
+  padding-inline: var(--gutter);
+}
+/* Message immediately followed by the CTA; the pair is the centered group. */
+.tells-bar-cluster {
+  grid-column: 2;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px var(--space-2);
+  max-width: min(100%, 52rem);
+  text-align: center;
 }
 .tells-bar-text {
-  flex: 1 1 auto;
-  min-width: 0;
   margin: 0;
   font-size: 13px;
   line-height: 18px;
   font-weight: 500;
 }
-/* Narrow: keep the CTA cluster visible; trim the message with an ellipsis. */
+.tells-bar-text-short { display: none; }
 @media (max-width: 719px) {
-  .tells-bar-text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  .tells-bar-text-full { display: none; }
+  .tells-bar-text-short { display: inline; }
 }
 /* One clickable cluster: label + Free pill. Free appears only in the pill. */
 .tells-bar-cta {
-  flex: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  max-width: 100%;
   padding: 2px 4px 2px 6px;
-  margin-inline: -4px;
   border-radius: var(--radius-md);
   color: var(--on-yellow);
   cursor: pointer;
@@ -3695,10 +3701,10 @@ html[data-tells-bar="off"] .tells-bar { display: none; }
   .tells-docs-card-link svg { transition: transform 160ms ease; }
   .tells-docs-card-link a:hover svg { transform: translateX(2px); }
 }
+/* Dismiss in the right lane, separated from the centered CTA. */
 .tells-bar-close {
-  position: absolute;
-  top: 50%;
-  right: calc(var(--gutter) - var(--space-2));
+  grid-column: 3;
+  justify-self: end;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -3710,7 +3716,6 @@ html[data-tells-bar="off"] .tells-bar { display: none; }
   background: transparent;
   color: var(--on-yellow);
   cursor: pointer;
-  transform: translateY(-50%);
 }
 .tells-bar-close[hidden] { display: none; }
 .tells-bar-close:hover { background: color-mix(in srgb, var(--on-yellow) 14%, transparent); color: var(--on-yellow); }

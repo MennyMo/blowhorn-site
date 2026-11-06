@@ -55,13 +55,14 @@
       "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
     },
     "bar": {
-      "description": "The site-wide announcement bar above the header (layouts/_partials/tells-bar.html): message text on the left, Am I a Bot? + Free pill as one CTA on the right. storage_key remembers a dismissal in localStorage; change it to show the bar again to everyone who closed it.",
+      "description": "The site-wide announcement bar above the header (layouts/_partials/tells-bar.html): message + Am I a Bot?/Free CTA centered as a group; dismiss control pinned far right and separated. text is the desktop message; text_short is the mobile message (no ellipsis). storage_key remembers a dismissal in localStorage; change it to show the bar again to everyone who closed it.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["storage_key", "text", "link"],
+      "required": ["storage_key", "text", "text_short", "link"],
       "properties": {
         "storage_key": { "type": "string", "pattern": "^[a-z0-9-]+$" },
         "text": { "$ref": "#/definitions/text" },
+        "text_short": { "$ref": "#/definitions/text" },
         "link": { "$ref": "#/definitions/text" }
       }
     },
