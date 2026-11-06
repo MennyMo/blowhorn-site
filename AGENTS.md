@@ -191,7 +191,9 @@ and dark, no horizontal scroll from 320 px).
   stands and open an issue for anything still flagged. A run that stopped on a usage limit
   counts; one cancelled before it did anything does not.
 - **`make check` locally needs PyYAML** for the script tests (`test_check_api_reference`);
-  CI's runner has it, a bare macOS `python3` does not (`python3 -m pip install pyyaml`).
+  CI's runner has it, Homebrew's `python3` does not, and refuses a plain `pip install`
+  (PEP 668): `python3 -m pip install --user --break-system-packages pyyaml` puts it in the
+  user site, leaving Homebrew's packages alone.
 
 ## Maintaining this file
 
