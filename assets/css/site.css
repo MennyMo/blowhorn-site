@@ -3244,6 +3244,9 @@ a.agent-tile { padding-right: var(--space-6); }
    the guide pages. Tokens only. */
 .fm-page { padding-top: var(--space-8); }
 .fm-hero > * + * { margin-top: var(--space-4); }
+.fm-plate { margin-top: var(--space-6); max-width: 40rem; }
+.fm-plate img { display: block; width: 100%; height: auto; border-radius: var(--radius-md); background: #000; }
+.fm-plate figcaption { margin-top: var(--space-2); }
 .fm-section { margin-top: var(--space-12); }
 .fm-section .section-head + * { margin-top: var(--space-6); }
 .fm-prose { margin-top: var(--space-12); }
