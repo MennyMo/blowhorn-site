@@ -121,6 +121,43 @@ scripts are outside this page's scope.
   with a rule between the facts. Their source text and links are unchanged. The setups
   rail and Activities are unchanged.
 
+### Scroll continuity and the gauge (#501, intentional delta)
+
+Approved by the product owner for this preview. It deliberately goes past the site's
+restraint (`DESIGN.md`) for the X page only:
+
+- **Gauge.** The three rules-of-engagement levels are three horizontal bars, one per
+  level: 01 blue, 02 green, 03 coral. Each row has a level dot and a bar filled in its
+  level colour, longer at each level. There is no vertical rule. The colours are
+  page values (`--pp-blue`, `--pp-green`, `--pp-coral`, scoped to `.pp`, with
+  dark-ground lifts). The brand tokens have no blue or green step; coral is the
+  brand's own.
+- **Real actions at body-UI size.** Hero Start is 20px. The other actions are 18px:
+  the section action links (`.pp-more`), the setup source links (`.pp-use-src`) and the
+  "Keep reading" links in the matrix header (`.pp-related`). Captions (counts, type
+  chips, the gauge's numbers) stay small.
+- **Section order and bands.** Hero, then the near-black local stage, the action matrix
+  (teal relief band), Rules of engagement (surface), Field Manual (soft blue wash),
+  setups (surface), Activities (soft green wash).
+- **Gridlines and bridges.** Surface sections carry faint vertical gridlines (5% ink).
+  Four seams carry one diagonal blue, green and coral bridge, drawn in the section's
+  padding and never over text: hero into the stage, stage into the matrix, Rules of
+  engagement into Field Manual, and the setups into Activities. Light seams between
+  sections (matrix into Rules of engagement, Field Manual, setups, Activities) also get
+  a neutral hairline, so they still read under more contrast. The stage's dark edge
+  needs none. All of it is CSS pseudo-elements and background layers, with no markup
+  change and no script change.
+- **The local stage stays near-black.** It is the deliberate dark beat in the page.
+- **Accessibility.** Under `prefers-reduced-transparency` the gridlines go. Under
+  `prefers-contrast: more` the gridlines and bridges go and the washes turn to the
+  plain surface, leaving the hairlines. Forced colours get CanvasText and Highlight.
+  Intent: section text meets 4.5:1 or better on every wash, in both themes.
+- **Scope.** The usage rail (#500 carousel) is unchanged apart from the larger
+  source-link type. No composer, form, network or storage call was added.
+- **Checks.** No check in `check_platform_pages.py` covers these visual rules. The
+  rules are verified in a browser (computed font sizes, bar colours and widths,
+  overflow at each width).
+
 ## Stage geometry checks
 
 Check the stage in a real browser at 320, 390, 640, 820, 1039, 1040, 1280 and 1440 px,

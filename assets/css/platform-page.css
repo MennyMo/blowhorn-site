@@ -1,9 +1,28 @@
 /* Platform product pages (layouts/platform-page.html, docs/platform-pages.md).
-   Figma 902:114 (X) on the shared contract 902:111. Every colour, radius and
-   shadow is a token from site.css (static/assets/brand/tokens.json); spacing reads
-   the rhythm tokens (DESIGN.md, "Whitespace and rhythm"). Card looks come from
-   cards.css; this file only lays them out. Motion is transform and opacity only,
-   and none of it runs under prefers-reduced-motion. */
+   Figma 902:114 (X) on the shared contract 902:111. Most colours, radii and shadows
+   are tokens from site.css (static/assets/brand/tokens.json), and spacing reads the
+   rhythm tokens (DESIGN.md, "Whitespace and rhythm"). Card looks come from cards.css.
+   This file also styles the page's own look: a page-scoped palette (the .pp block
+   below) and the section bands, gridlines and bridges of the #501 scroll continuity.
+   Those are deliberate exceptions to the site's restraint (docs/platform-pages.md,
+   "Scroll continuity and the gauge"). Motion is finite and off under
+   prefers-reduced-motion. */
+
+/* Page-scoped colour (#501). The brand tokens have no blue or green step, so the
+   rules of engagement gauge and the section washes take two page values from here.
+   Coral is the brand's own token. Dark values lift each step for a dark ground. */
+.pp {
+  --pp-blue: #2563EB;
+  --pp-green: #15803D;
+  --pp-coral: var(--coral);
+  --pp-wash-blue: #EEF4FF;
+  --pp-wash-green: #EDF8F1;
+  --pp-grid: color-mix(in srgb, var(--ink) 5%, transparent);
+  /* Ribbons bleed past the wrap on both sides. Clip them here so the page never
+     scrolls sideways. overflow-x: clip does not make <main> a scroll container. */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
 
 .pp [hidden] { display: none !important; }
 
@@ -40,6 +59,12 @@
 .pp-annot-mark { padding: 0 var(--space-1); border: var(--stroke-hairline) solid var(--annot); border-radius: 2px; }
 @media (prefers-color-scheme: dark) {
   .pp-annot { --annot: var(--coral); }
+  .pp {
+    --pp-blue: #7CAEFF;
+    --pp-green: #4ADE80;
+    --pp-wash-blue: #1A2440;
+    --pp-wash-green: #15281F;
+  }
 }
 
 /* ---------- Hero ----------
@@ -168,16 +193,62 @@
   position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 
-.pp-go .button { min-width: 7.5rem; }
+/* Start is the page's one real action, so it reads at body-UI size (20px), not the
+   14px button size. It may wrap onto two lines at 320 px rather than overflow. */
+.pp-go .button {
+  min-width: 9.5rem;
+  min-height: 56px;
+  padding: var(--space-3) var(--space-6);
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  white-space: normal;
+  text-align: center;
+}
 
-/* ---------- Sections ---------- */
-.pp-section { padding-block: var(--section-y); }
+/* ---------- Sections: bands, gridlines and bridges (#501) ----------
+   Section order: hero, the local stage (near-black), the action matrix (teal relief
+   band), Rules of engagement, Field Manual (blue wash), setups, Activities (green
+   wash). Surface sections carry faint vertical gridlines. Each seam between two light
+   sections or a light section and the matrix gets a hairline, so the boundary still
+   reads under more contrast. The stage's dark edges need none. Each seam into a band
+   or out of the usage rail gets one blue, green and coral bridge, drawn in the
+   section's padding (about 28 px above the seam, inside the 64 px phone padding),
+   never over text. Decoration only: pseudo-elements and background layers, no
+   markup. Under reduced transparency the gridlines go; under more contrast the
+   gridlines and bridges go and the washes turn to the plain surface. */
+.pp-hero,
+.pp-section {
+  background-image: repeating-linear-gradient(90deg, var(--pp-grid) 0 1px, transparent 1px 96px);
+}
+.pp-section { position: relative; padding-block: var(--section-y); }
 .pp-section + .pp-section,
-.pp-hero + .pp-section {
-  background-image: linear-gradient(90deg, transparent, var(--line) 18%, var(--line) 82%, transparent);
-  background-size: min(100%, var(--measure)) 1px;
-  background-repeat: no-repeat;
-  background-position: top center;
+.pp-band + .pp-section {
+  background-image:
+    linear-gradient(90deg, transparent, var(--line) 18%, var(--line) 82%, transparent),
+    repeating-linear-gradient(90deg, var(--pp-grid) 0 1px, transparent 1px 96px);
+  background-size: min(100%, var(--measure)) 1px, auto;
+  background-repeat: no-repeat, repeat;
+  background-position: top center, top left;
+}
+.pp-section[data-pp-field-manual] { background-color: var(--pp-wash-blue); }
+.pp-section.pp-continuity { background-color: var(--pp-wash-green); }
+
+/* The four bridges: hero into the stage (.pp-local::before), stage into the matrix
+   (.pp-band::before), Rules of engagement into Field Manual, and the setups into
+   Activities. */
+.pp-local::before,
+.pp-band::before,
+.pp-section[data-pp-field-manual]::before,
+.pp-section.pp-continuity::before {
+  content: "";
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  top: -28px;
+  height: 56px;
+  background: linear-gradient(90deg, var(--pp-blue) 0%, var(--pp-green) 50%, var(--pp-coral) 100%);
+  transform: skewY(-2deg);
+  pointer-events: none;
 }
 
 /* ---------- Only on your computer: the local-action stage ----------
@@ -191,11 +262,11 @@
    ledger straightens; nothing loops. Off under reduced motion; solid edges under
    high contrast. Transparent cutouts only (static/assets/brand/cast/icons/). */
 .pp-local {
+  position: relative;
   margin-top: var(--section-y);
   padding-block: var(--section-y);
   background: var(--near-black);
   color: var(--cream);
-  overflow: hidden;
 }
 .pp-local .label,
 .pp-local .caption { color: var(--yellow); }
@@ -506,6 +577,7 @@
    (a focusable, labelled region), so the page itself never overflows. The row
    bound to the picked type gets a full-row tint, never an edge stripe. */
 .pp-band {
+  position: relative;
   padding-block: var(--section-y);
   background: var(--surface-tint);
 }
@@ -517,7 +589,7 @@
   gap: var(--space-4) var(--space-8);
 }
 .pp-related { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin: 0; padding: 0; list-style: none; }
-.pp-related a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+.pp-related a { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
 .pp-matrix-scroll {
   margin-top: var(--head-gap);
   overflow-x: auto;
@@ -574,9 +646,14 @@
 .pp-matrix thead th:nth-child(3) { width: 25%; }
 
 /* ---------- Rules of engagement: an open numbered gauge, no frame ---------- */
-.pp-roe { margin-top: var(--head-gap); }
-.pp-gauge { margin: 0; padding: 0; list-style: none; border-top: var(--stroke-hairline) solid var(--line-strong); }
+/* The gauge is three horizontal bars, one per level, as Lee asked: 01 blue, 02 green,
+   03 coral (--lvl). Each row has a level dot and a bar whose fill is the level
+   colour, longer at each level. No vertical rule. */
+.pp-gauge { margin: var(--head-gap) 0 0; padding: 0; list-style: none; border-top: var(--stroke-hairline) solid var(--line-strong); }
 .pp-gauge li + li { border-top: var(--stroke-hairline) solid var(--line); }
+.pp-gauge li { --lvl: var(--pp-blue); }
+.pp-gauge li:nth-child(2) { --lvl: var(--pp-green); }
+.pp-gauge li:nth-child(3) { --lvl: var(--pp-coral); }
 .pp-preset-link {
   position: relative;
   display: grid;
@@ -589,7 +666,21 @@
 }
 .pp-preset-link:hover .pp-stat-n { color: var(--link); }
 .pp-preset-link:focus-visible { outline-offset: 2px; border-radius: var(--radius-sm); }
-.pp-gauge-no { color: var(--ink-muted); font-family: var(--font-mono); }
+.pp-gauge-no {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+.pp-gauge-no::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--lvl);
+}
 .pp-stat-n { color: var(--ink); font-variant-numeric: tabular-nums; }
 .pp-preset-body { display: grid; gap: var(--space-1); min-width: 0; }
 .pp-preset-top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
@@ -609,7 +700,7 @@
   inset: 0 auto 0 0;
   width: var(--w);
   border-radius: inherit;
-  background: var(--link);
+  background: var(--lvl);
 }
 .pp-gauge li:nth-child(1) { --w: 24%; }
 .pp-gauge li:nth-child(2) { --w: 50%; }
@@ -619,7 +710,9 @@
 .pp-roe-notes a { color: var(--ink); text-decoration-color: var(--line-strong); }
 .pp-roe-notes a:hover { color: var(--link); }
 .pp-more { margin-top: var(--space-6); }
-.pp-more a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+/* Section actions ("Choose your rules of engagement", "Read the X field manual"):
+   real actions, so body-UI size (18px), not the 14px caption-sized link. */
+.pp-more a { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
 
 /* ---------- Field Manual: one editorial two-column briefing ---------- */
 .pp-brief { display: grid; gap: var(--space-8); margin: var(--head-gap) 0 0; }
@@ -708,7 +801,7 @@
 .pp-use .h3 { margin-top: var(--eyebrow-gap); }
 .pp-use .term { margin-top: var(--space-4); }
 .pp-use-src { margin-top: var(--space-3); }
-.pp-use-src a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+.pp-use-src a { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; }
 
 /* ---------- Activities continuity: an illustration, not the app's screen ---------- */
 .pp-activities { margin: var(--head-gap) 0 0; }
@@ -795,15 +888,24 @@
 .pp-now::after { content: ""; flex: 1; height: 2px; border-radius: var(--radius-pill); background: var(--link); }
 .pp-activities-cap { margin-top: var(--space-4); color: var(--ink-muted); text-align: center; }
 
+/* Gridlines are a transparent ink; a reader who asks for less transparency or more
+   contrast gets none. More contrast also drops the colour washes to the plain
+   surface, so each boundary is the hairline or the bridge, never a faint tint. */
+@media (prefers-reduced-transparency: reduce) {
+  .pp { --pp-grid: transparent; }
+}
 @media (prefers-contrast: more) {
+  .pp { --pp-grid: transparent; --pp-wash-blue: var(--surface); --pp-wash-green: var(--surface); }
   .pp-local { background: var(--near-black); }
   .pp-theatre::before, .pp-theatre::after { display: none; }
   .pp-route { stroke-width: 4; }
   .pp-slip, .pp-out, .pp-relay { box-shadow: 0 0 0 2px var(--cream); }
+  .pp-gauge-bar { background: var(--line-strong); }
+  .pp-local::before, .pp-band::before, .pp-section[data-pp-field-manual]::before, .pp-section.pp-continuity::before { display: none; }
 }
 
 @media (forced-colors: active) {
-  .pp-choice::after, .pp-now::after { background: CanvasText; }
+  .pp-choice::after, .pp-now::after, .pp-gauge-bar::after, .pp-gauge-no::before { background: CanvasText; }
   .pp-filters, .pp-list, .pp-activities-art, .pp-slip, .pp-out, .pp-scene-choice { border: 1px solid CanvasText; }
   .pp-route, .pp-spoke::before { stroke: CanvasText; background: CanvasText; }
   .pp-scene-choice:has(input:checked) { background: Highlight; color: HighlightText; }
