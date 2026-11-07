@@ -172,7 +172,7 @@ The sign-in on this machine (the Keychain item `ai.blowhorn.cloud-token`, the
 entitlement cache `ai.blowhorn.entitlement.v2`, `cloud.yaml` and the `cloud-token`
 file) is removed on every uninstall. Local data is kept and named (the store
 connection file an older version wrote, which Blowhorn no longer reads, the
-desktop app's state, Blowhorn's own Chrome trees under `~/.blowhorn`, the app's
+desktop app's state, Blowhorn's own Chrome trees and service sockets under `~/.blowhorn`, the app's
 per-user Library state and the checkout's `data/cache/`, which holds each
 profile's runtime state); `--purge` removes it after you type `purge` at the prompt, or with
 `--yes` when there is no terminal (`--json --purge` needs `--yes` outside a dry
