@@ -87,6 +87,23 @@ test('alg none is denied', async () => {
 });
 test('garbage token is denied', async () =>
   assert.equal(await status(req({ 'cf-access-jwt-assertion': 'x.y.z' })), 403));
+test('token with invalid characters in signature is denied (403, not 503)', async () => {
+  const head = b64({ alg: 'RS256', kid: 'k1', typ: 'JWT' });
+  const body = b64(good());
+  const token = `${head}.${body}.invalid!chars`;
+  assert.equal(await status(req({ 'cf-access-jwt-assertion': token })), 403);
+});
+test('token with invalid base64 length in signature is denied (403, not 503)', async () => {
+  const head = b64({ alg: 'RS256', kid: 'k1', typ: 'JWT' });
+  const body = b64(good());
+  const token = `${head}.${body}.a`;
+  assert.equal(await status(req({ 'cf-access-jwt-assertion': token })), 403);
+});
+test('token with null JSON header is denied (403, not 503)', async () => {
+  const body = b64(good());
+  const token = `bnVsbA.${body}.xyz`;
+  assert.equal(await status(req({ 'cf-access-jwt-assertion': token })), 403);
+});
 test('missing configuration fails closed', async () =>
   assert.equal(await status(req({ 'cf-access-jwt-assertion': sign(good()) }), { ...env, POLICY_AUD: '' }), 503));
 test('certs outage fails closed', async () =>

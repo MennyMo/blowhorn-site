@@ -45,6 +45,7 @@ function deny(status = 403) {
 }
 
 function b64urlToBytes(s) {
+  if (s.length % 4 === 1) throw new Error('invalid base64url length');
   const pad = s.length % 4 === 0 ? '' : '='.repeat(4 - (s.length % 4));
   const bin = atob(s.replace(/-/g, '+').replace(/_/g, '/') + pad);
   const out = new Uint8Array(bin.length);
@@ -93,7 +94,8 @@ export async function verifyAccessToken(token, env, fetchImpl = fetch, nowSec = 
   } catch {
     return null;
   }
-  if (header.alg !== 'RS256' || !header.kid) return null;
+  if (!header || typeof header !== 'object' || header.alg !== 'RS256' || !header.kid) return null;
+  if (!claims || typeof claims !== 'object') return null;
   const hadCachedKeys = certsCache.url === certsUrl(env.TEAM_DOMAIN) && Boolean(certsCache.keys);
   let keys = await accessKeys(env.TEAM_DOMAIN, fetchImpl);
   let jwk = keys.find((k) => k.kid === header.kid);
@@ -110,17 +112,28 @@ export async function verifyAccessToken(token, env, fetchImpl = fetch, nowSec = 
     false,
     ['verify'],
   );
-  const ok = await crypto.subtle.verify(
-    'RSASSA-PKCS1-v1_5',
-    key,
-    b64urlToBytes(parts[2]),
-    new TextEncoder().encode(`${parts[0]}.${parts[1]}`),
-  );
+  let sigBytes;
+  try {
+    sigBytes = b64urlToBytes(parts[2]);
+  } catch {
+    return null;
+  }
+  let ok = false;
+  try {
+    ok = await crypto.subtle.verify(
+      'RSASSA-PKCS1-v1_5',
+      key,
+      sigBytes,
+      new TextEncoder().encode(`${parts[0]}.${parts[1]}`),
+    );
+  } catch {
+    return null;
+  }
   if (!ok) return null;
   const aud = Array.isArray(claims.aud) ? claims.aud : [claims.aud];
   if (!aud.includes(env.POLICY_AUD)) return null;
   if (claims.iss !== `https://${env.TEAM_DOMAIN}`) return null;
-  if (typeof claims.exp !== 'number' || claims.exp <= nowSec) return null;
+  if (typeof claims.exp !== 'number' || !Number.isFinite(claims.exp) || claims.exp <= nowSec) return null;
   if (typeof claims.nbf === 'number' && claims.nbf > nowSec + 60) return null;
   const email = String(claims.email || '').toLowerCase();
   if (!emailAllowed(email, listFrom(env.ALLOWED_EMAILS), listFrom(env.ALLOWED_EMAIL_DOMAINS))) return null;
