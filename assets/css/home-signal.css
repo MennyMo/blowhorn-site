@@ -367,8 +367,12 @@ html[data-machines="battalion-map"] #how .section-head .body-lg { margin-inline:
   grid-template-columns: repeat(2, minmax(0, auto));
   gap: var(--space-4) var(--space-6);
 }
-.machines-voice { display: grid; justify-items: start; gap: var(--space-2); }
-.machines-voice img { width: 112px; border-radius: 6px; display: block; }
+.machines-voice { display: grid; justify-items: start; gap: var(--space-2); position: relative; }
+/* The platform this voice posts to: a small white tile on the corner of its
+   picture, shown outright without motion, lit by the loop with it. */
+.machines-voice-plat { position: absolute; top: -8px; left: 92px; width: 28px; height: 28px; border-radius: 50%; background: var(--white); display: grid; place-items: center; box-shadow: 0 0 0 2px var(--teal-bright, #00D3A9); }
+.machines-voice-plat img { width: 16px; height: 16px; }
+.machines-voice > img { width: 112px; border-radius: 6px; display: block; }
 .machines-thunder-major { margin: 0; position: relative; justify-self: center; }
 .machines-thunder-major > img { width: min(430px, 100%); border-radius: 6px; display: block; }
 .machines-arcs {
@@ -554,30 +558,50 @@ button.machines-add:focus-visible, button.machines-pill:focus-visible { outline:
 
 /* One Thunder */
 @keyframes machines-flow { to { stroke-dashoffset: -20; } }
-@keyframes machines-voice-run { 0% { offset-distance: 0%; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
-@keyframes machines-arc-out {
-  0% { opacity: 0; transform: translateY(-50%) translateX(-14px) scale(0.85); }
-  35% { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-50%) translateX(18px) scale(1.08); }
+/* One six-second loop, every part on the same clock (small --d staggers
+   only): 0-32% the voices report in to the Major, 32-44% the Major sounds
+   the call, 38-62% the signal runs back out to every voice, 62-94% each
+   voice posts and its platform tile lights, as the call lands on the
+   platforms at the right. */
+@keyframes machines-voice-run { 0% { offset-distance: 0%; opacity: 0; } 3% { opacity: 1; } 28% { opacity: 1; } 31% { offset-distance: 100%; opacity: 0; } 100% { offset-distance: 100%; opacity: 0; } }
+@keyframes machines-voice-signal { 0%, 38% { offset-distance: 100%; opacity: 0; } 41% { opacity: 1; } 58% { opacity: 1; } 62% { offset-distance: 0%; opacity: 0; } 100% { offset-distance: 0%; opacity: 0; } }
+@keyframes machines-voice-post {
+  0%, 60% { opacity: 0; box-shadow: 0 0 0 2px var(--teal-bright, #00D3A9); }
+  64% { opacity: 1; box-shadow: 0 0 0 2px var(--teal-bright, #00D3A9); }
+  76% { box-shadow: 0 0 0 10px transparent; }
+  92% { opacity: 1; box-shadow: 0 0 0 2px var(--teal-bright, #00D3A9); }
+  97%, 100% { opacity: 0; }
 }
-@keyframes machines-land {
-  0%, 100% { box-shadow: 0 0 0 0 transparent; }
-  12% { box-shadow: 0 0 0 4px var(--teal-bright, #00D3A9); }
-  40% { box-shadow: 0 0 0 10px transparent; }
+@keyframes machines-major-call { 0%, 32%, 46%, 100% { transform: translateY(0) rotate(0); } 36%, 42% { transform: translateY(-3px) rotate(-1deg); } 39% { transform: translateY(0) rotate(0); } }
+@keyframes machines-arcs-call {
+  0%, 34% { opacity: 0; transform: translateY(-50%) translateX(-14px) scale(0.85); }
+  42% { opacity: 1; }
+  62%, 100% { opacity: 0; transform: translateY(-50%) translateX(18px) scale(1.08); }
+}
+@keyframes machines-land-call {
+  0%, 62%, 100% { box-shadow: 0 0 0 0 transparent; }
+  67% { box-shadow: 0 0 0 4px var(--teal-bright, #00D3A9); }
+  80% { box-shadow: 0 0 0 10px transparent; }
 }
 .machines-thunder { position: relative; overflow-x: clip; }
-.machines-voice-wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+/* Above the Major's picture, so a voice's report and the Major's signal
+   back are seen along the whole line, not only in the gap before him. */
+.machines-voice-wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 2; }
 .machines-voice-wire { fill: none; stroke: color-mix(in srgb, var(--teal) 70%, transparent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 4 6; }
 .machines-voice-wire.is-mate { stroke: color-mix(in srgb, var(--yellow) 70%, transparent); }
 .machines-voice-packet.is-mate { fill: var(--yellow); }
 .machines-voice-packet { fill: var(--teal-bright, #00D3A9); offset-rotate: 0deg; opacity: 0; }
+.machines-voice-signal { fill: var(--teal-bright, #00D3A9); stroke: var(--white); stroke-width: 1.5; offset-rotate: 0deg; opacity: 0; }
+.machines-panel.is-armed:not(.is-live) .machines-voice-plat { opacity: 0; }
 .machines-panel.is-armed:not(.is-live) .machines-voice-wire { stroke-dashoffset: 0; opacity: 0; }
 .machines-panel.is-live .machines-voice-wire { opacity: 1; transition: opacity 0.5s ease-out var(--d, 0ms); animation: machines-flow 1s linear infinite; }
-.machines-panel.is-live .machines-voice-packet { animation: machines-voice-run 2s ease-in var(--d, 0ms) infinite; }
+.machines-panel.is-live .machines-voice-packet { animation: machines-voice-run 6s ease-in var(--d, 0ms) infinite; }
+.machines-panel.is-live .machines-voice-signal { animation: machines-voice-signal 6s ease-out var(--d, 0ms) infinite; }
+.machines-panel.is-live .machines-voice-plat { animation: machines-voice-post 6s ease-out var(--d, 0ms) infinite both; }
 .machines-thunder-people, .machines-thunder-major, .machines-thunder-plats { position: relative; z-index: 1; }
-.machines-panel.is-live .machines-arcs { animation: machines-arc-out 1.6s ease-out infinite; }
-.machines-panel.is-live .machines-thunder-major > img { animation: stage-bark 1.6s ease-in-out infinite; transform-origin: 50% 100%; }
-.machines-panel.is-live .machines-thunder-plats li { animation: machines-land 2.4s ease-out calc(var(--d, 0ms) + 600ms) infinite; }
+.machines-panel.is-live .machines-arcs { animation: machines-arcs-call 6s ease-out infinite; }
+.machines-panel.is-live .machines-thunder-major > img { animation: machines-major-call 6s ease-in-out infinite; transform-origin: 50% 100%; }
+.machines-panel.is-live .machines-thunder-plats li { animation: machines-land-call 6s ease-out var(--d, 0ms) infinite; }
 
 /* Call to Arms */
 @keyframes machines-beat-on {
