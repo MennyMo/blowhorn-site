@@ -975,6 +975,18 @@ html[data-theme="signal"] #platforms .logo-tile img[src*="github-invertocat-blac
 }
 .constellation-label { display: block; font: 500 14px var(--font-sans); color: var(--ink-muted); margin: var(--space-2) 0; }
 .constellation-ctl { z-index: 1; margin-top: var(--space-4); }
+/* The platforms clip (platforms-clip.html): one framed loop under the section
+   head; its Pause motion reuses the constellation button. */
+.plat-clip { max-width: 960px; margin: var(--space-8) auto 0; text-align: center; }
+.plat-clip-video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 0 var(--stroke-hairline) var(--line), var(--shadow-soft);
+  background: var(--surface-raised);
+}
+.plat-clip-ctl { margin-top: var(--space-3); }
 .constellation-pause {
   height: 38px;
   padding: 0 14px;
