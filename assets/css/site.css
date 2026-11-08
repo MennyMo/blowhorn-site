@@ -3826,6 +3826,8 @@ html[data-tells-bar="off"] .tells-bar { display: none; }
 .ai-agents-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 .ai-content-price { color: var(--ink); }
 .ai-agent-cards .cli-flag { white-space: nowrap; }
+/* Each card leads with its way in's interface art (as on the Product menu). */
+.ai-agent-cards .iface-art { margin-bottom: var(--space-4); }
 
 /* Signup form honeypot: off-screen, not display:none, so naive bots still
    fill it while sighted visitors never see it. The Worker answers such
