@@ -99,6 +99,11 @@ test('token with invalid base64 length in signature is denied (403, not 503)', a
   const token = `${head}.${body}.a`;
   assert.equal(await status(req({ 'cf-access-jwt-assertion': token })), 403);
 });
+test('token with null JSON header is denied (403, not 503)', async () => {
+  const body = b64(good());
+  const token = `bnVsbA.${body}.xyz`;
+  assert.equal(await status(req({ 'cf-access-jwt-assertion': token })), 403);
+});
 test('missing configuration fails closed', async () =>
   assert.equal(await status(req({ 'cf-access-jwt-assertion': sign(good()) }), { ...env, POLICY_AUD: '' }), 503));
 test('certs outage fails closed', async () =>

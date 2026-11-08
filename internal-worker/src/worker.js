@@ -94,7 +94,8 @@ export async function verifyAccessToken(token, env, fetchImpl = fetch, nowSec = 
   } catch {
     return null;
   }
-  if (header.alg !== 'RS256' || !header.kid) return null;
+  if (!header || typeof header !== 'object' || header.alg !== 'RS256' || !header.kid) return null;
+  if (!claims || typeof claims !== 'object') return null;
   const hadCachedKeys = certsCache.url === certsUrl(env.TEAM_DOMAIN) && Boolean(certsCache.keys);
   let keys = await accessKeys(env.TEAM_DOMAIN, fetchImpl);
   let jwk = keys.find((k) => k.kid === header.kid);
