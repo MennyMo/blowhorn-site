@@ -2990,9 +2990,31 @@ a.card.docs-card > * { margin-top: 0; }
 .proof-flag { display: inline-block; padding: 0.1em 0.55em; border-radius: 999px; background: #FFE08A; color: #3A2E00; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
 .proof-avatar { display: inline-grid; place-items: center; flex: none; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--glass-fill-strong); border: var(--stroke-hairline, 1px) solid var(--glass-edge); box-shadow: var(--glass-shadow); font-weight: 700; font-size: 0.8rem; }
 .proof-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
-.proof-big { max-width: 46rem; margin: 0 auto; text-align: center; }
-.proof-big blockquote { margin: 0 0 var(--space-4); }
-.proof-big blockquote::before { content: "\201C"; display: block; font-family: var(--font-display); font-size: 4rem; line-height: 0.6; color: var(--teal-deep); }
+/* The pull-quote: a big Keppel-to-Caribbean quote mark beside the words,
+   the first sentence leading in full ink, the rest quieter, and the person
+   (photo, name, role) under it. Stacks and centres on narrow screens. */
+.proof-big { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--space-8); align-items: start; max-width: 60rem; margin: 0 auto; }
+.proof-big-mark { grid-row: span 2; font-family: var(--font-display); font-weight: 800; font-size: clamp(8rem, 16vw, 13rem); line-height: 0.8; background: linear-gradient(160deg, var(--teal), var(--teal-bright)); -webkit-background-clip: text; background-clip: text; color: transparent; user-select: none; }
+.proof-big-quote { margin: 0 0 var(--space-6); font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 3.1vw, 2.5rem); line-height: 1.2; letter-spacing: -0.01em; color: var(--ink-muted); text-wrap: pretty; }
+.proof-big-lead { color: var(--ink-wordmark); background: linear-gradient(color-mix(in srgb, var(--teal-bright) 30%, transparent), color-mix(in srgb, var(--teal-bright) 30%, transparent)) no-repeat 0 88% / 100% 0.32em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.proof-big-who { display: flex; align-items: center; gap: var(--space-3); margin: 0; }
+.proof-big-who .proof-avatar { width: 3.5rem; height: 3.5rem; border: 2px solid var(--teal); box-shadow: none; }
+@media (max-width: 720px) {
+  .proof-big { grid-template-columns: minmax(0, 1fr); text-align: center; }
+  .proof-big-mark { grid-row: auto; font-size: 7rem; line-height: 1; margin-bottom: -0.45em; }
+  .proof-big-who { justify-content: center; text-align: left; }
+}
+/* Motion: only where the browser can tie it to scrolling and the reader has
+   not asked for less. The mark settles in and the marker sweeps under the
+   lead as the quote enters view; otherwise both simply sit in place. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .proof-big-mark { animation: proof-mark-in linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
+    .proof-big-lead { animation: proof-lead-sweep linear both; animation-timeline: view(); animation-range: entry 30% cover 50%; }
+  }
+}
+@keyframes proof-mark-in { from { opacity: 0; transform: translateY(0.4em) scale(0.85); } to { opacity: 1; transform: none; } }
+@keyframes proof-lead-sweep { from { background-size: 0% 0.32em; } to { background-size: 100% 0.32em; } }
 
 /* Ticker: the user organisations' horizontal logos (data/user_logos.json,
    files in static/assets/orgs/), directly under the hero. The track is
