@@ -11,14 +11,14 @@ and queues posts, amplifies what went out, and manages profiles. The
 server runs on your own computer, and the assistant only ever acts
 through the commands you already run. What the server is, how it
 groups its tools, and how it keeps writes safe are in the
-[MCP server reference](../../reference/mcp-server.md). New to this?
+[MCP server reference](/docs/reference/mcp-server/). New to this?
 Follow [Connect an assistant and send your first
-post](../../tutorials/first-mcp-connection.md) first.
+post](/docs/tutorials/first-mcp-connection/) first.
 
 Before you connect anything, finish Blowhorn's own setup: [install
-the app](install-the-app.md), [sign a profile in to each
-platform](platform-accounts.md), and [map each profile to its Google
-Chrome profile](map-chrome-profiles.md). The server takes its
+the app](/docs/how-to/set-up/install-the-app/), [sign a profile in to each
+platform](/docs/how-to/set-up/platform-accounts/), and [map each profile to its Google
+Chrome profile](/docs/how-to/set-up/map-chrome-profiles/). The server takes its
 credentials the way the CLI takes them, from your existing Blowhorn
 config and environment, so there is no second sign-in and nothing new
 to paste into a client config. Put no secrets in a client config. If a
@@ -733,7 +733,7 @@ Every MCP call runs as an agent. The server sets
 environment says: `BLOWHORN_ACTOR=human` in a client's `env` is
 ignored, and the server says so in one line on stderr when it starts.
 Under approval mode `agent` or `all`, the queue rules in
-[You are in control](../../explanation/youre-in-control.md) therefore
+[You are in control](/docs/explanation/youre-in-control/) therefore
 apply to MCP calls exactly as they apply to any other agent caller.
 `content_approve` is one of the tools, but `content approve` refuses
 an agent caller in every mode, so an agent can never approve its own
@@ -751,7 +751,7 @@ tool (`destructiveHint` true), such as `content_upsert`,
 already exists. Your client may ask you before a destructive call;
 either kind is still a dry run until `confirm` is true. The full list
 is in the
-[MCP server reference](../../reference/mcp-server.md#destructive-and-additive-tools).
+[MCP server reference](/docs/reference/mcp-server/#destructive-and-additive-tools).
 
 Note the limit of this transport: there is no desktop-app
 approval step here. On this server, `confirm` true is the approval.
@@ -768,12 +768,12 @@ schema's fixed list, or a field its schema marks `x-mcp-not-secret`.
 Secret-shaped fragments in text output are replaced the same way. A
 client on protocol version `2025-06-18` or later also gets each JSON
 tool's `outputSchema` and a checked `structuredContent` in its
-results; see [Structured output](../../reference/mcp-server.md#structured-output). A failed run
+results; see [Structured output](/docs/reference/mcp-server/#structured-output). A failed run
 reports its exit code and its (redacted) error, never the arguments
 it ran.
 
 How these rules fit together is in
-[How the MCP server keeps you in control](../../explanation/mcp-and-safety.md).
+[How the MCP server keeps you in control](/docs/explanation/mcp-and-safety/).
 
 ### Hidden tools
 
@@ -848,13 +848,13 @@ config.
 
 ## Related
 
-- [MCP server reference](../../reference/mcp-server.md) - what the
+- [MCP server reference](/docs/reference/mcp-server/) - what the
   server is, the tour of its tools, and the safety rules in full
-- [How the MCP server keeps you in control](../../explanation/mcp-and-safety.md) -
+- [How the MCP server keeps you in control](/docs/explanation/mcp-and-safety/) -
   how the server, the CLI and approvals fit together
-- [Command reference](../../reference/cli.md) - every command the
+- [Command reference](/docs/reference/cli/) - every command the
   tools wrap, generated from the app itself
-- [You are in control](../../explanation/youre-in-control.md) -
+- [You are in control](/docs/explanation/youre-in-control/) -
   approval modes, pauses, and every safety control in one place
-- [blowhorn-axi](../../reference/cli/blowhorn-axi.md) - the agent
+- [blowhorn-axi](/docs/reference/cli/blowhorn-axi/) - the agent
   CLI: the same commands through a command line instead of MCP
