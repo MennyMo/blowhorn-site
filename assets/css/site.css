@@ -526,6 +526,11 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
   position: relative; display: grid; gap: var(--space-2); align-content: start;
   padding: var(--space-4); border-radius: var(--radius-lg); color: var(--ink);
 }
+/* The panel's fill is --surface-tint, the field card's fill and the arrow
+   chip's default, so inside it the field card takes --surface and the chips on
+   unfilled cards take it too. */
+.mm-panel :is(.card-stamp, .card-plain) { --card-chip: var(--surface); }
+.mm-panel .card-field { --card-bg: var(--surface); --card-chip: var(--surface-tint); }
 .mm-card-title { grid-row: 2; grid-column: 1; font-size: 15px; line-height: 21px; font-weight: 700; padding-right: var(--space-6); }
 .mm-card:hover .mm-card-title { color: var(--link); }
 .mm-card-desc { font-size: 13px; line-height: 18px; color: var(--ink-muted); }

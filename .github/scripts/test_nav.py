@@ -121,6 +121,12 @@ class NavTest(unittest.TestCase):
         out = run_nav([enter("product"), click("product"), wait(100), click("product")])
         self.assertEqual(out["openCount"], 0, "the pending hover open must not pin the panel")
 
+    def test_press_dragged_off_a_sibling_trigger_closes_the_open_panel(self):
+        out = run_nav([click("product"), {"do": "drag-off", "id": "platforms"}])
+        self.assertEqual(out["openCount"], 0, "focus left Product and no click followed")
+        out = run_nav([click("product"), {"do": "drag-off", "id": "platforms"}, click("resources")])
+        self.assertEqual(out["openIds"], ["resources"], "a stale press must not linger")
+
     def test_tab_to_sibling_trigger_closes_without_expanding(self):
         steps = [focus("product"), click("product"), focus("platforms"), focus("resources")]
         out = run_nav(steps)

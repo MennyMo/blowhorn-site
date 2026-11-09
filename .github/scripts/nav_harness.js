@@ -173,7 +173,14 @@ function moveFocus(g, label) {
     case "click":
       g.li.dispatch("pointerdown", { pointerType: step.pointer || "mouse" });
       if (!step.nofocus) { moveFocus(g, label); sample(label + ":focus"); }
+      fire("pointerup", { type: "pointerup", target: g.trigger });
       g.trigger.dispatch("click");
+      break;
+    case "drag-off":
+      g.li.dispatch("pointerdown", { pointerType: "mouse" });
+      moveFocus(g, label);
+      sample(label + ":focus");
+      fire("pointerup", { type: "pointerup", target: outside });
       break;
     case "wait": advance(step.ms, label); break;
     case "focus":

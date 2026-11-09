@@ -17,8 +17,8 @@
   var hover = window.matchMedia('(hover: hover) and (pointer: fine)');
   var openTimer = null, closeTimer = null;
   // The group under the latest pointer press (focus moves on press, before the
-  // click) and the group a hover opened.
-  var pressed = null, hovered = null;
+  // click), the open group that focus left for it, and the group a hover opened.
+  var pressed = null, leftFor = null, hovered = null;
 
   header.classList.add('is-enhanced');
   if (toggle) toggle.hidden = false;
@@ -79,7 +79,7 @@
   groups.forEach(function (li) {
     var t = trig(li);
     t.addEventListener('click', function () {
-      pressed = null;
+      pressed = leftFor = null;
       clearTimeout(openTimer);
       if (hovered === li) { hovered = null; return; }
       var open = !isOpen(li);
@@ -104,10 +104,20 @@
     li.addEventListener('focusout', function (e) {
       if (!wide.matches || li.contains(e.relatedTarget)) return;
       // A press on a sibling trigger moves focus first; its click does the swap.
-      if (pressed && pressed !== li && pressed.contains(e.relatedTarget)) return;
+      if (pressed && pressed !== li && pressed.contains(e.relatedTarget)) { leftFor = li; return; }
       setOpen(li, false);
     });
   });
+
+  // A press that ends off its trigger never clicks, so the group focus left
+  // for it closes as a plain focusout would have.
+  function endPress(e) {
+    if (!pressed || (e.type === 'pointerup' && pressed.contains(e.target))) return;
+    if (leftFor) setOpen(leftFor, false);
+    pressed = leftFor = null;
+  }
+  document.addEventListener('pointerup', endPress);
+  document.addEventListener('pointercancel', endPress);
 
   if (toggle) {
     toggle.addEventListener('click', function () {
@@ -116,7 +126,7 @@
   }
 
   document.addEventListener('keydown', function (e) {
-    pressed = null;
+    pressed = leftFor = null;
     if (e.key !== 'Escape') return;
     var open = groups.filter(isOpen)[0];
     if (open) { setOpen(open, false); trig(open).focus(); return; }
