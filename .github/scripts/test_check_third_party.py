@@ -73,6 +73,11 @@ class CheckThirdPartyTest(unittest.TestCase):
                                  "evil.example")
         self.assert_fails_naming({"index.html": page(body=f'<img src="https://{cloud_host}/x.png" alt="">')}, cloud_host)
 
+    def test_activity_feed_url_is_allowed_only_on_the_cloud_host(self):
+        cloud_url = tomllib.loads(HUGO_TOML.read_text(encoding="utf-8"))["params"]["cloud_url"]
+        self.assert_passes({"index.html": page(body=f'<aside data-feed-url="{cloud_url}/api/events/feed?page=0"></aside>')})
+        self.assert_fails_naming({"index.html": page(body='<aside data-feed-url="https://evil.example/feed"></aside>')}, "evil.example")
+
     def test_gtag_script_src_is_the_one_allowed_analytics_load(self):
         self.assert_passes({"index.html": page('<script async src="https://www.googletagmanager.com/gtag/js?id=G-2ZLYGVE3HN"></script>'
                                                "<script>window.dataLayer = window.dataLayer || [];</script>")})

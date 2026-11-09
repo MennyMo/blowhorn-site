@@ -3080,6 +3080,77 @@ a.card.docs-card > * { margin-top: 0; }
   .proof-ticker-track { animation: none; flex-wrap: wrap; width: auto; row-gap: var(--space-3); }
 }
 
+/* Hero activity card (layouts/_partials/activity-feed.html). Glass, because it
+   floats in the hero and is not one of a grid. The stage keeps a fixed
+   minimum so a longer line does not move the page. Previous and Next take
+   their space even before the script marks the card ready, so enabling
+   them does not shift the layout. The script never announces rotations. */
+.activity-feed-slot { min-width: 0; }
+@media (min-width: 900px) {
+  .activity-feed-slot { grid-column: 1; }
+}
+@media (max-width: 899px) {
+  .hero-copy { order: 1; }
+  .activity-feed-slot { order: 2; }
+  .hero-film-cell, .hero-grid > .hero-art { order: 3; }
+}
+.activity-feed {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  max-width: 36rem;
+  margin-top: var(--space-6);
+}
+.activity-feed-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.activity-feed-badge {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--yellow);
+  color: var(--on-yellow);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.activity-feed-note { margin: 0; max-width: var(--text-measure, 64ch); }
+.activity-feed-stage { min-height: calc(var(--space-16) + var(--space-2)); }
+.activity-feed-line {
+  margin: 0;
+  min-height: calc(var(--space-12) + var(--space-6));
+  overflow-wrap: anywhere;
+  color: var(--card-ink, var(--ink));
+  transition: opacity 180ms ease;
+}
+.activity-feed.is-swap .activity-feed-line { opacity: 0; }
+.activity-feed-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: baseline;
+  margin: var(--space-2) 0 0;
+}
+.activity-feed-profile { margin: 0; }
+.activity-feed-profile[hidden] { display: none; }
+.activity-feed-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  visibility: hidden;
+}
+.activity-feed.is-ready .activity-feed-nav { visibility: visible; }
+@media (prefers-reduced-motion: reduce) {
+  .activity-feed-line { transition: none; }
+}
+
 /* ---------- Pricing (/pricing/) ----------
    Four plan cards on glass, a CSS-only monthly/yearly switch (two radios and
    :has(), monthly when :has() is unsupported), the refund promise and the FAQ.

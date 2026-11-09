@@ -25,7 +25,11 @@ scripts from third parties other than the ones it discloses: Google Analytics
   redirects).
   A refresh is a top-level navigation the reader asked for by opening that
   path, not a subresource load; every other refresh host fails.
-  A third: Google's gtag.js may come from a host in ANALYTICS_SCRIPT_HOSTS,
+  A third: the home hero activity card's data-feed-url (any element) may name
+  the same Blowhorn host (params.cloud_url). assets/js/activity-feed.js reads
+  that attribute and fetches the public event feed from the reader's browser;
+  the privacy page discloses the request. Every other host there fails.
+  A fourth: Google's gtag.js may come from a host in ANALYTICS_SCRIPT_HOSTS,
   either as a <script src> or named in a script a page loads. Today
   layouts/_partials/analytics.html loads it directly on every production
   page. The privacy page discloses Google
@@ -190,6 +194,8 @@ def main(root: Path, first_party: str) -> int:
         for tag, attr, ref in collector.refs:
             host = host_of(ref)
             if attr == "refresh" and host in REFRESH_HOSTS:
+                continue
+            if attr == "data-feed-url" and host in REFRESH_HOSTS:
                 continue
             if tag == "script" and attr == "src" and host in ANALYTICS_SCRIPT_HOSTS:
                 continue

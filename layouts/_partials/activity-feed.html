@@ -1,0 +1,37 @@
+{{- /* Hero activity card. The first bundled example is in the HTML, so the
+   card is readable with no JavaScript. assets/js/activity-feed.js asks the
+   account service for the public event feed (data-feed-url, built from
+   params.cloud_url) and shows it only while it is fresh; on an empty feed,
+   a failure or an invalid payload it rotates the bundled examples, labelled
+   as such. docs/activity-feed.md */ -}}
+{{- $feed := index site.Data "activity_feed.examples" -}}
+{{- if not $feed -}}
+  {{- with index site.Data "activity_feed" -}}
+    {{- $feed = index . "examples" -}}
+  {{- end -}}
+{{- end -}}
+{{- $cloud := site.Params.cloud_url | default "" | strings.TrimSuffix "/" -}}
+{{- $feedURL := "" -}}
+{{- if $cloud }}{{ $feedURL = printf "%s/api/events/feed?page=0&pagesize=20&category=schedule&action=completed" $cloud }}{{ end -}}
+{{- if not $feed }}{{ errorf "activity feed: data/activity_feed.examples.json is missing" }}{{ end -}}
+{{- $first := index $feed.data 0 -}}
+{{- if not $first }}{{ errorf "activity feed: data/activity_feed.examples.json has no data" }}{{ end -}}
+<aside class="activity-feed card card-glass" data-activity-feed{{ with $feedURL }} data-feed-url="{{ . }}"{{ end }} aria-labelledby="activity-feed-label">
+  <div class="activity-feed-head">
+    <p id="activity-feed-label" class="label">Recent activity</p>
+    <p class="activity-feed-badge" data-activity-examples>Examples</p>
+  </div>
+  <p class="activity-feed-note caption" data-activity-note>Illustrative examples, not real customer activity.</p>
+  <div class="activity-feed-stage">
+    <p class="activity-feed-line body" data-activity-line>{{ $first.line }}</p>
+    <p class="activity-feed-meta caption muted"><span data-activity-role>{{ $first.role }}</span> <span data-activity-when>Example activity</span></p>
+  </div>
+  <p class="activity-feed-profile" data-activity-link-slot hidden></p>
+  <div class="activity-feed-nav">
+    <button type="button" class="button button-secondary" data-activity-prev aria-label="Previous activity">Previous</button>
+    <button type="button" class="button button-secondary" data-activity-next aria-label="Next activity">Next</button>
+  </div>
+</aside>
+<script type="application/json" id="activity-feed-data">{{ $feed | jsonify | safeJS }}</script>
+{{- $js := resources.Get "js/activity-feed.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" type="module" defer></script>
