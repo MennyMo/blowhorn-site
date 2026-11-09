@@ -460,12 +460,14 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
      blurring the page, so the panel carries the glass look without relying on it. */
   background:
     linear-gradient(180deg, var(--glass-sheen), transparent 46%),
-    var(--glass-fill-solid);
+    var(--surface-tint);
+  /* Lifted off the Signal field: the tinted fill, a strong rim and the lift
+     shadow set the panel apart from the pale ambient surface. */
   box-shadow:
     inset 0 1px 0 0 var(--glass-specular),
-    inset 0 0 0 1px var(--glass-rim),
+    inset 0 0 0 1px var(--line-strong),
     0 0 0 1px var(--glass-edge),
-    var(--glass-shadow);
+    var(--glass-shadow-lift);
 }
 .mm-panel-wide { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .site-header:not(.is-enhanced) .mm-item:hover > .mm-panel,
@@ -474,6 +476,8 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 @media (prefers-reduced-motion: no-preference) {
   .mm-item.is-open > .mm-panel { animation: mm-in 160ms ease-out; }
   @keyframes mm-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  /* Sibling swap: the surface stays put, only its content changes. */
+  .site-header.is-mm-swap .mm-item.is-open > .mm-panel { animation: none; }
 }
 .mm-intro-title,
 .mm-group-title {
@@ -522,6 +526,11 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
   position: relative; display: grid; gap: var(--space-2); align-content: start;
   padding: var(--space-4); border-radius: var(--radius-lg); color: var(--ink);
 }
+/* The panel's fill is --surface-tint, the field card's fill and the arrow
+   chip's default, so inside it the field card takes --surface and the chips on
+   unfilled cards take it too. */
+.mm-panel :is(.card-stamp, .card-plain) { --card-chip: var(--surface); }
+.mm-panel .card-field { --card-bg: var(--surface); --card-chip: var(--surface-tint); }
 .mm-card-title { grid-row: 2; grid-column: 1; font-size: 15px; line-height: 21px; font-weight: 700; padding-right: var(--space-6); }
 .mm-card:hover .mm-card-title { color: var(--link); }
 .mm-card-desc { font-size: 13px; line-height: 18px; color: var(--ink-muted); }
