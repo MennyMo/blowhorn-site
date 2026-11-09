@@ -26,14 +26,14 @@ There are two agent doors into the same commands, and they differ in
 how the agent talks, not in what it can do, apart from the few
 tools the MCP server [hides by default](#hidden-tools). The MCP server
 is the standard plug: any MCP client can discover one tool per command
-and call it over the protocol. [blowhorn-axi](cli/blowhorn-axi.md) is the
+and call it over the protocol. [blowhorn-axi](/docs/reference/cli/blowhorn-axi/) is the
 agent command line: an agent runs it directly and reads compact,
 agent-shaped answers, with every write a dry run until `--confirm`.
 Both drive the same `blowhorn` commands, both rehearse before they
 act, and both run on your own computer. If your assistant speaks MCP,
 connect it here; if it runs shell commands, give it `blowhorn-axi`
 or the CLI itself. The steps for connecting a client are in
-[Connect an AI assistant over MCP](../how-to/set-up/connect-mcp-client.md).
+[Connect an AI assistant over MCP](/docs/how-to/set-up/connect-mcp-client/).
 
 ## Tour of the tools
 
@@ -62,7 +62,7 @@ into two tools:
   is hidden by default.
 
 A tool's name is its command's operation id, so the
-[CLI reference](cli.md) documents exactly what each tool does: find
+[CLI reference](/docs/reference/cli/) documents exactly what each tool does: find
 the command there for its flags, its examples, and its exit codes.
 
 ## Starting it
@@ -411,7 +411,7 @@ the server's own environment says. `BLOWHORN_ACTOR=human` (or any
 other value) in the client's `env` is ignored, and the server says so
 in one line on stderr when it starts. No tool takes an argument that
 names the caller. Under approval mode `agent` or `all`, the queue
-rules in [You are in control](../explanation/youre-in-control.md)
+rules in [You are in control](/docs/explanation/youre-in-control/)
 therefore apply to MCP calls exactly as they apply to any other agent
 caller. `content_approve` is a tool like any other, but
 `content approve` refuses an agent caller in every approval mode, so
@@ -432,7 +432,7 @@ Where the schema comes from. Each tool's `outputSchema` is generated
 when the server starts, from the command's success (2xx)
 `application/json` response schema in the schema bundle
 (`schemas/dist/openapi.yaml`), the same schema the
-[CLI reference](cli.md) documents for `--json`. It is not written
+[CLI reference](/docs/reference/cli/) documents for `--json`. It is not written
 by hand. The server removes the bundle's `x-` annotations, carries
 every shape the response refers to under `$defs`, and points each
 `$ref` there. MCP requires the root to be an object: a response whose
@@ -442,7 +442,7 @@ gets `type: object` added at the root, and nothing else changes.
 Text-only tools. A tool whose command has no `--json` flag (its
 response is `text/plain`, for example `accept`, `comment` or
 `config_path`) has no `outputSchema` and never returns
-`structuredContent`. The [CLI reference](cli.md) shows which commands
+`structuredContent`. The [CLI reference](/docs/reference/cli/) shows which commands
 take `--json`.
 
 What a result carries. When a JSON tool's command exits 0, the server
@@ -622,7 +622,7 @@ startup:
 
 Until Cloud answers on `mcp.blowhorn.ai` itself, an interim transport proxy
 runs at `https://mcp.blowhorn.ai/mcp` (`hosted/` in blowhorn-ai/blowhorn-mcp).
-It forwards each MCP request to Blowhorn Cloud's `/mcp` and Cloud's answer
+It forwards each MCP request to Blowhorn's `/mcp` and Cloud's answer
 back. Cloud owns the tools, token checks and activity events. The Worker
 serves RFC 9728 protected-resource metadata locally (both
 `/.well-known/oauth-protected-resource` and
@@ -636,7 +636,7 @@ from the metadata, but end-to-end sign-in stays gated until Cloud enables
 dynamic client registration (`POST /oauth2/register` currently returns 403).
 
 If a token you send through this gateway leaks, see
-[Revoke a leaked token](../how-to/set-up/connect-mcp-client.md#revoke-a-leaked-token).
+[Revoke a leaked token](/docs/how-to/set-up/connect-mcp-client/#revoke-a-leaked-token).
 
 ## Checking it
 
@@ -700,8 +700,8 @@ The first prints the latest npm version. The second lists the registry
 entries; the one named `io.github.blowhorn-ai/blowhorn` with
 `"isLatest": true` is the current one.
 
-See also the [CLI reference](cli.md) for the commands themselves,
-[Connect an AI assistant over MCP](../how-to/set-up/connect-mcp-client.md)
+See also the [CLI reference](/docs/reference/cli/) for the commands themselves,
+[Connect an AI assistant over MCP](/docs/how-to/set-up/connect-mcp-client/)
 for the client-by-client setup steps, and
-[Settings and configuration](configuration.md) for the config and
+[Settings and configuration](/docs/reference/configuration/) for the config and
 environment the server's subprocesses inherit.
