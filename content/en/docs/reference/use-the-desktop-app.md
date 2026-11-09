@@ -419,8 +419,9 @@ registering the service happen here, not in a terminal.
 Settings edits the same `.blowhorn.yaml` defaults the CLI reads:
 default profile and platform, excluded profiles, notifications, logs, and the
 Chrome launch mode. Nothing has a Save button: a switch saves as you flip it,
-and a text, number or path field saves when you leave it, with one saved
-indicator on the card. Its **appearance** card is the app's own: the theme, the
+and a text, number or path field saves when you leave it. A completed save
+shows one brief "Changes saved" notice in the lower-right corner; a change
+that could not be saved says Not saved on the card. Its **appearance** card is the app's own: the theme, the
 material of the side rail and the **+** button (Solid, Teal glass, Ink glass or
 Clear glass, with tint strength, see-through and reduce transparency, which is
 on by default), and spacing; see [Change how the app looks](/docs/how-to/settings/appearance/).
