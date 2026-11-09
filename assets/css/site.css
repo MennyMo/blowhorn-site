@@ -460,12 +460,14 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
      blurring the page, so the panel carries the glass look without relying on it. */
   background:
     linear-gradient(180deg, var(--glass-sheen), transparent 46%),
-    var(--glass-fill-solid);
+    var(--surface-tint);
+  /* Lifted off the Signal field: the tinted fill, a strong rim and the lift
+     shadow set the panel apart from the pale ambient surface. */
   box-shadow:
     inset 0 1px 0 0 var(--glass-specular),
-    inset 0 0 0 1px var(--glass-rim),
+    inset 0 0 0 1px var(--line-strong),
     0 0 0 1px var(--glass-edge),
-    var(--glass-shadow);
+    var(--glass-shadow-lift);
 }
 .mm-panel-wide { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .site-header:not(.is-enhanced) .mm-item:hover > .mm-panel,
@@ -474,6 +476,8 @@ pre code { background: none; padding: 0; overflow-wrap: normal; }
 @media (prefers-reduced-motion: no-preference) {
   .mm-item.is-open > .mm-panel { animation: mm-in 160ms ease-out; }
   @keyframes mm-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  /* Sibling swap: the surface stays put, only its content changes. */
+  .site-header.is-mm-swap .mm-item.is-open > .mm-panel { animation: none; }
 }
 .mm-intro-title,
 .mm-group-title {

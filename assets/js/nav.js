@@ -1,7 +1,8 @@
 // Site header menus (layouts/_partials/header.html). Each group is a
 // disclosure: a button with aria-expanded that shows its panel. Click, Enter or
 // Space toggles; Escape closes and returns focus; leaving the group with Tab or
-// a click elsewhere closes it. A mouse may also open a group by hovering. Below
+// a click elsewhere closes it. A mouse may also open a group by hovering. Moving to a
+// sibling group, by pointer or Tab, swaps the open panel in one step. Below
 // 1080px the Menu button opens the whole nav as a sheet and groups expand in
 // place. Without this script the CSS opens panels on hover and focus instead.
 (function () {
@@ -23,11 +24,25 @@
     var t = trig(li);
     t.setAttribute('aria-expanded', open ? 'true' : 'false');
     li.classList.toggle('is-open', open);
+    // The swap mark lives only while some panel is open, so a cold open animates
+    // and a later sibling swap never replays the enter animation.
+    if (!groups.some(isOpen)) header.classList.remove('is-mm-swap');
   }
   function closeAll(except) {
     groups.forEach(function (li) { if (li !== except) setOpen(li, false); });
   }
   function isOpen(li) { return trig(li).getAttribute('aria-expanded') === 'true'; }
+  // Moving between sibling groups is one continuous surface. Close the others
+  // and open the target in the same synchronous turn, so the browser never
+  // paints a zero-open frame nor two panels at once (the ghost overlap). The
+  // swap mark tells the CSS to skip the enter animation, so opacity never
+  // drops to 0.
+  function switchTo(li) {
+    var swap = groups.some(function (g) { return g !== li && isOpen(g); });
+    closeAll(li);
+    setOpen(li, true);
+    if (swap) header.classList.add('is-mm-swap');
+  }
   // The sheet fills the screen below the header. Anything above the header
   // (the announcement bar, until it scrolls away) moves its bottom edge, so
   // measure it while the sheet is open instead of assuming --header-h.
@@ -56,14 +71,16 @@
     var t = trig(li);
     t.addEventListener('click', function () {
       var open = !isOpen(li);
-      if (wide.matches) closeAll(li);
-      setOpen(li, open);
+      if (open && wide.matches) switchTo(li);
+      else setOpen(li, open);
     });
     li.addEventListener('pointerenter', function (e) {
       if (e.pointerType !== 'mouse' || !wide.matches || !hover.matches) return;
       clearTimeout(closeTimer);
       clearTimeout(openTimer);
-      openTimer = setTimeout(function () { closeAll(li); setOpen(li, true); }, 90);
+      // Sibling swaps are immediate; only a cold open waits.
+      if (groups.some(function (g) { return g !== li && isOpen(g); })) { switchTo(li); return; }
+      openTimer = setTimeout(function () { switchTo(li); }, 90);
     });
     li.addEventListener('pointerleave', function (e) {
       if (e.pointerType !== 'mouse' || !wide.matches || !hover.matches) return;
@@ -71,7 +88,13 @@
       closeTimer = setTimeout(function () { setOpen(li, false); }, 220);
     });
     li.addEventListener('focusout', function (e) {
-      if (wide.matches && !li.contains(e.relatedTarget)) setOpen(li, false);
+      if (!wide.matches || li.contains(e.relatedTarget)) return;
+      // Focus moving to a sibling group hands the open panel over (focusin below).
+      if (groups.some(function (g) { return g !== li && g.contains(e.relatedTarget); })) return;
+      setOpen(li, false);
+    });
+    li.addEventListener('focusin', function () {
+      if (wide.matches && !isOpen(li) && groups.some(isOpen)) switchTo(li);
     });
   });
 
