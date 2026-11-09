@@ -95,9 +95,7 @@ function plain(value, min, max) {
 
 export function validateItem(input) {
   if (!input || typeof input !== "object" || Array.isArray(input)) return fail("type");
-  for (const key of Object.keys(input)) {
-    if (!ITEM_KEYS.has(key)) return fail("field");
-  }
+  // Unknown keys are ignored so a Cloud schema addition does not blank the card.
   const id = typeof input.id === "string" && UUID.test(input.id) ? input.id : null;
   const userId = typeof input.userId === "string" && UUID.test(input.userId) ? input.userId : null;
   const category = plain(input.category, 1, LIMITS.category);
@@ -172,9 +170,7 @@ function isCount(value, min) {
 export function normalizePayload(payload) {
   const empty = { items: [], example: false, dropped: 0, rawCount: 0, valid: false };
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return empty;
-  for (const key of Object.keys(payload)) {
-    if (!PAGE_KEYS.has(key)) return empty;
-  }
+  // Unknown page keys are ignored; required EventFeedPage fields are checked below.
   if (payload.example !== undefined && typeof payload.example !== "boolean") return empty;
   const example = payload.example === true;
   if (!Array.isArray(payload.data)) return empty;
@@ -580,10 +576,24 @@ export function mountActivityFeed(root, options = {}) {
     listen(listeners, reducedQuery, "change", onMotion);
   }
 
+  function syncNav() {
+    const nav = slot(root, ".activity-feed-nav");
+    const prev = slot(root, "[data-activity-prev]");
+    const next = slot(root, "[data-activity-next]");
+    const showNav = items.length >= 2;
+    if (nav) nav.hidden = !showNav;
+    for (const btn of [prev, next]) {
+      if (!btn) continue;
+      btn.hidden = !showNav;
+      btn.disabled = !showNav;
+    }
+  }
+
   function showResult(result) {
     items = result.items || [];
     if (!items.length) paintEmpty(root);
     else show(0, false);
+    syncNav();
     root.classList.add("is-ready");
     armRotation();
     clearTtl();

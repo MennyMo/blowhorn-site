@@ -198,9 +198,9 @@ test("validation rejects XSS urls, bad schemes, oversize text and unknown platfo
   assert.equal(validateItem(item({ role: "A" })).ok, false);
   assert.equal(validateItem(item({ platform: "youtube" })).ok, false);
   assert.equal(validateItem(item({ platform: "LinkedIn" })).ok, false);
-  assert.equal(validateItem(item({ extra: true })).ok, false);
+  assert.equal(validateItem(item({ extra: true })).ok, true); // unknown keys ignored
   assert.equal(validateItem(item({ visibility: "private" })).ok, false);
-  assert.equal(validateItem(item({ completedAt: "2026-10-02T08:15:00Z" })).ok, false);
+  assert.equal(validateItem(item({ completedAt: "2026-10-02T08:15:00Z" })).ok, true); // legacy key ignored
   assert.equal(validateItem(item({ id: "example-1" })).ok, false);
   assert.equal(validateItem(item({ userId: "example-account-1" })).ok, false);
   assert.equal(validateItem(item({ createdAt: "yesterday" })).ok, false);
@@ -276,9 +276,10 @@ test("a page that is not an EventFeedPage yields no items", () => {
   assert.equal(normalizePayload(good).valid, true);
   assert.equal(normalizePayload(good).items.length, 1);
   assert.equal(normalizePayload(live([])).valid, true);
-  // The retired envelope.
+  // The retired envelope has no `data`, so it is invalid.
   assert.equal(normalizePayload({ version: 1, sample: false, generatedAt: "2026-11-04T18:00:00Z", items: [item()] }).valid, false);
-  assert.equal(normalizePayload({ ...good, items: [item()] }).valid, false);
+  // An unknown sibling key beside a valid EventFeedPage is ignored.
+  assert.equal(normalizePayload({ ...good, items: [item()] }).valid, true);
   const { data, ...noData } = good;
   assert.equal(normalizePayload(noData).valid, false);
   assert.equal(normalizePayload({ ...good, page: -1 }).valid, false);
