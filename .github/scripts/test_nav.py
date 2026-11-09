@@ -39,6 +39,7 @@ def enter(i): return {"do": "enter", "id": i}
 def leave(i): return {"do": "leave", "id": i}
 def wait(ms): return {"do": "wait", "ms": ms}
 def focus(i): return {"do": "focus", "id": i}
+def click(i, **opts): return dict(opts, do="click", id=i)
 
 
 # A cold hover waits 90ms; this opens `product` and settles.
@@ -92,16 +93,38 @@ class NavTest(unittest.TestCase):
         self.assertNeverGapped(out["samples"], 2)
 
     def test_click_between_groups_never_gaps(self):
-        out = run_nav([{"do": "click", "id": "product"}, {"do": "click", "id": "platforms"}])
+        for pointer in ("mouse", "touch"):
+            out = run_nav([click("product", pointer=pointer), click("platforms", pointer=pointer)])
+            self.assertEqual(out["openIds"], ["platforms"], pointer)
+            self.assertNeverGapped(out["samples"], 1, pointer)
+            self.assertTrue(out["swap"])
+        # Safari does not focus a button on click.
+        out = run_nav([click("product", nofocus=True), click("platforms", nofocus=True)])
         self.assertEqual(out["openIds"], ["platforms"])
-        self.assertNeverGapped(out["samples"], 0)
-        self.assertTrue(out["swap"])
-
-    def test_keyboard_focus_between_triggers_never_gaps(self):
-        steps = [focus("product"), {"do": "click", "id": "product"}, focus("platforms"), focus("resources")]
-        out = run_nav(steps)
-        self.assertEqual(out["openIds"], ["resources"])
         self.assertNeverGapped(out["samples"], 1)
+
+    def test_click_toggles_closed(self):
+        out = run_nav([click("product"), click("product")])
+        self.assertEqual(out["openCount"], 0)
+
+    def test_hover_then_click_keeps_the_panel_open(self):
+        hop = OPEN_PRODUCT + [leave("product"), enter("platforms"), click("platforms")]
+        out = run_nav(hop)
+        self.assertEqual(out["openIds"], ["platforms"])
+        self.assertNeverGapped(out["samples"], 2)
+        out = run_nav(OPEN_PRODUCT + [click("product")])
+        self.assertEqual(out["openIds"], ["product"])
+        out = run_nav(hop + [click("platforms")])
+        self.assertEqual(out["openCount"], 0, "the second click closes it")
+
+    def test_click_during_cold_hover_delay_opens_once(self):
+        out = run_nav([enter("product"), click("product"), wait(100), click("product")])
+        self.assertEqual(out["openCount"], 0, "the pending hover open must not pin the panel")
+
+    def test_tab_to_sibling_trigger_closes_without_expanding(self):
+        steps = [focus("product"), click("product"), focus("platforms"), focus("resources")]
+        out = run_nav(steps)
+        self.assertEqual(out["openCount"], 0, "Tab never opens a panel")
 
     def test_escape_closes_to_zero_and_clears_swap(self):
         out = run_nav(OPEN_PRODUCT + [leave("product"), enter("platforms"), {"do": "escape"}])

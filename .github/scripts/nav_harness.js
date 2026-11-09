@@ -10,8 +10,10 @@
                           {"do": "wait", "ms": 100}, {"do": "click", "id": ...},
                           {"do": "focus", "id": ...}, {"do": "escape"},
                           {"do": "outside"}, {"do": "link"} ] }
-   "focus" moves focus to a group's trigger: focusout on the group that has focus
-   (relatedTarget set), then focusin on the new one, as a browser fires them.
+   "focus" is a Tab onto a group's trigger: a Tab keydown, then focusout on the
+   group that has focus (relatedTarget set) and focusin on the new one, as a
+   browser fires them. "click" is a press on a trigger: pointerdown, the same
+   focus move (unless "nofocus": true, as Safari does), then click.
    Prints: { "openIds": [...], "openCount": n, "swap": bool, "samples": [...] }
    A sample is { "after": step, "openCount", "mismatch", "swap" }, taken after
    each step and after every timer callback that fires during a wait; openCount
@@ -154,21 +156,29 @@ vm.runInNewContext(fs.readFileSync(scriptPath, "utf8"), sandbox, { filename: scr
 const fire = (t, ev) => (documentListeners[t] || []).forEach((fn) => fn(ev));
 
 let focused = null;
+function moveFocus(g, label) {
+  if (focused && focused !== g) {
+    focused.li.dispatch("focusout", { relatedTarget: g.trigger });
+    sample(label + ":focusout");
+  }
+  g.li.dispatch("focusin", { target: g.trigger });
+  focused = g;
+}
 (scenario.steps || []).forEach((step, i) => {
   const label = i + ":" + step.do + (step.id ? ":" + step.id : "");
   const g = step.id ? group[step.id] : null;
   switch (step.do) {
     case "enter": g.li.dispatch("pointerenter", { pointerType: "mouse" }); break;
     case "leave": g.li.dispatch("pointerleave", { pointerType: "mouse" }); break;
-    case "click": g.trigger.dispatch("click"); break;
+    case "click":
+      g.li.dispatch("pointerdown", { pointerType: step.pointer || "mouse" });
+      if (!step.nofocus) { moveFocus(g, label); sample(label + ":focus"); }
+      g.trigger.dispatch("click");
+      break;
     case "wait": advance(step.ms, label); break;
     case "focus":
-      if (focused && focused !== g) {
-        focused.li.dispatch("focusout", { relatedTarget: g.trigger });
-        sample(label + ":focusout");
-      }
-      g.li.dispatch("focusin", { target: g.trigger });
-      focused = g;
+      fire("keydown", { key: "Tab" });
+      moveFocus(g, label);
       break;
     case "escape": fire("keydown", { key: "Escape" }); break;
     case "outside": fire("click", { target: outside }); break;
