@@ -3913,3 +3913,40 @@ html[data-tells-bar="off"] .tells-bar { display: none; }
    fill it while sighted visitors never see it. The Worker answers such
    submissions with success without storing anything. */
 .signup-honeypot { position: absolute; left: -9999px; }
+
+/* ---------- Docs page footer (edit link + contributor resources) ---------- */
+.docs-page-meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4) var(--space-6);
+  margin-top: var(--space-12);
+  padding-top: var(--space-4);
+  border-top: var(--stroke-hairline) solid var(--line);
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+  flex-wrap: wrap;
+}
+.docs-page-meta .td-page-meta__lastmod { margin: 0; }
+.docs-page-edit-link {
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 0.5px;
+  text-underline-offset: 2px;
+}
+.docs-page-edit-link:hover { color: var(--link); }
+.docs-contributor-resources {
+  margin-top: var(--space-10);
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+.docs-contributor-eyebrow {
+  margin: 0 0 var(--space-2);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+.docs-contributor-links { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); align-items: center; }
+.docs-contributor-link { color: var(--ink-muted); text-decoration: underline; text-decoration-style: dotted; text-decoration-thickness: 0.5px; text-underline-offset: 2px; }
+.docs-contributor-link:hover { color: var(--link); }
+.docs-contributor-sep { color: var(--line); }
+.docs-contributor-plain { color: var(--ink-muted); }

@@ -1,0 +1,14 @@
+{{- /* "Edit this page" for docs pages, rendered next to the "Last modified"
+  line at the foot of layouts/docs/single.html and layouts/docs/rest-apis.html.
+  Links to this repository's docs source file. .File.Path is relative to the
+  content/en mount, so the GitHub path is content/en/ + .File.Path. Nothing
+  renders without github_repo or a real source file under docs/. */ -}}
+{{- $repo := site.Params.github_repo -}}
+{{- $branch := site.Params.github_branch | default "master" -}}
+{{- if and $repo .File -}}
+  {{- $path := .File.Path -}}
+  {{- if (hasPrefix $path "docs/") -}}
+    {{- $urlPath := printf "content/en/%s" $path -}}
+    <a href="{{ printf "%s/edit/%s/%s" $repo $branch $urlPath }}" class="docs-page-edit-link" target="_blank" rel="noopener noreferrer">Edit this page</a>
+  {{- end -}}
+{{- end -}}

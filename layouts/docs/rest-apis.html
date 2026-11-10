@@ -18,7 +18,13 @@
   {{ end -}}
   {{ partial "docs-content.html" . }}
   {{ partial "rest-apis/viewer.html" . }}
-  {{ partial "page-meta-lastmod.html" . -}}
+  <footer class="docs-page-footer">
+    <div class="docs-page-meta">
+      {{ partial "page-meta-lastmod.html" . -}}
+      {{ partial "docs-page-edit-link.html" . -}}
+    </div>
+    {{ partial "docs-contributor-resources.html" . -}}
+  </footer>
 </div>
 {{- $js := resources.Get "js/api-reference.js" | minify | fingerprint }}
 <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>

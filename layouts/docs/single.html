@@ -7,7 +7,13 @@
   <p class="body-lg docs-lead">{{ . | markdownify }}</p>
   {{ end -}}
   {{ partial "docs-content.html" . }}
-  {{ partial "page-meta-lastmod.html" . -}}
+  <footer class="docs-page-footer">
+    <div class="docs-page-meta">
+      {{ partial "page-meta-lastmod.html" . -}}
+      {{ partial "docs-page-edit-link.html" . -}}
+    </div>
+    {{ partial "docs-contributor-resources.html" . -}}
+  </footer>
 </div>
 {{- partial "docs-sibling-pager.html" . -}}
 {{ end -}}
