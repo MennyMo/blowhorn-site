@@ -286,7 +286,7 @@ check-third-party: site-build
 check-urls: site-build
 	python3 .github/scripts/check-site-contract.py $(BUILD_DIR)
 
-## Validate every data file that has a JSON Schema in schemas/ (data/hero.json, data/machines.json, data/home_ai.json, data/roles.json, data/use_cases.json, data/solutions.json, data/themes.json, data/integrations.json, data/hero_demo.json, data/actions.json, data/action_examples.json, data/tells.json, data/support.json, data/docs_events.json, data/activity_feed.examples.json, internal-worker/access.json).
+## Validate every data file that has a JSON Schema in schemas/ (data/hero.json, data/machines.json, data/home_ai.json, data/roles.json, data/use_cases.json, data/solutions.json, data/themes.json, data/integrations.json, data/hero_demo.json, data/actions.json, data/action_examples.json, data/tells.json, data/support.json, data/docs_events.json, data/activity_feed.examples.json, data/brand-token-extensions.json, internal-worker/access.json).
 ## Role, use-case and solution schemas $ref shared line/text/card types; ajv -r loads that file.
 ## data/docs_events.json $refs the docs event payload types in schemas/defs/docs-event.schema.json (ajv -r).
 ## check_action_examples.py also requires every supported YAML action to have an example.
@@ -311,6 +311,7 @@ check-schemas:
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/internal_access.schema.json -d internal-worker/access.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/bookmarklet.schema.json -d data/bookmarklet.json
 	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/platform_page.schema.json -d data/platform_pages.json
+	npx --yes ajv-cli@$(AJV_CLI_VERSION) validate --strict=false -s schemas/brand-token-extensions.schema.json -d data/brand-token-extensions.json
 	python3 .github/scripts/check_action_examples.py
 	python3 .github/scripts/check_bookmarklet.py
 	python3 .github/scripts/check_action_matrix.py --source
@@ -333,7 +334,7 @@ check-platform-pages: site-build
 	python3 .github/scripts/check_platform_pages.py $(BUILD_DIR)
 
 ## Build for production once, then validate-html, check-links, check-third-party and check-urls, plus check-schemas (what site.yml runs).
-site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-platform-pages check-download-links check-feeds check-brand-kits check-tells check-tips check-api-reference
+site-check: check-schemas validate-html check-links check-third-party check-urls check-no-internal check-theme check-platform-docs check-naming check-action-matrix check-platform-pages check-download-links check-feeds check-brand-kits check-brand-tokens check-tells check-tips check-api-reference
 
 ## Production build, then fail if any built page or script links to /releases/latest/download (an axi release can hold Latest; build download URLs from data/download.json).
 check-download-links: site-build
@@ -342,6 +343,27 @@ check-download-links: site-build
 ## Production build, then fail if the Brand page links a kit zip the build does not publish, or states its size wrong.
 check-brand-kits: site-build
 	python3 .github/scripts/check_brand_kits.py $(BUILD_DIR)
+
+## Validate the site's static/assets/brand/tokens.json against the product's
+## marketing/brand/tokens.json when a blowhorn checkout is present at
+## BLOWHORN_DIR (default ../blowhorn): each product group must be an exact
+## prefix of the site group, only named site-only colours may follow, and
+## .ui/.caption/.label in assets/css/site.css must match the token sizes.
+## Skipped silently when no product checkout is mounted.
+check-brand-tokens:
+	@if test -d "$(BLOWHORN_ABS)/marketing/brand"; then \
+		python3 .github/scripts/check_brand_tokens.py "$(BLOWHORN_DIR)" validate; \
+	else \
+		echo "brand tokens: no blowhorn checkout at $(BLOWHORN_DIR); skipping validate"; \
+	fi
+
+## Generate static/assets/brand/tokens.json from the product's
+## marketing/brand/tokens.json plus the site-only extension list in
+## data/brand-token-extensions.json. Runs in the docs sync PR when a product
+## checkout is present: make generate-brand-tokens [BLOWHORN_DIR=...].
+generate-brand-tokens:
+	@test -d "$(BLOWHORN_ABS)/marketing/brand" || { echo "Error: no blowhorn checkout at BLOWHORN_DIR=$(BLOWHORN_DIR) ($(BLOWHORN_ABS)). Clone it beside this repository (git clone https://github.com/blowhorn-ai/blowhorn ../blowhorn) or pass BLOWHORN_DIR=path/to/blowhorn."; exit 1; }
+	python3 .github/scripts/check_brand_tokens.py "$(BLOWHORN_DIR)" generate
 
 ## Production build, then validate the Resources RSS feeds, including the desktop contract feed (issue #253, Part D).
 check-feeds: site-build
@@ -517,6 +539,7 @@ clean:
 .PHONY: \
 	check-schemas \
 	check-brand-kits \
+	check-brand-tokens \
 	check-naming \
 	check-download-links \
 	check-feeds \
@@ -581,4 +604,5 @@ clean:
 	docs-sync-base \
 	docs-sync-start-checks \
 	docs-sync-merge \
+	generate-brand-tokens \
 	clean

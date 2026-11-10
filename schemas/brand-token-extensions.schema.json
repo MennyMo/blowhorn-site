@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://blowhorn.ai/schemas/brand-token-extensions.schema.json",
+  "title": "Brand token site-only extensions",
+  "description": "data/brand-token-extensions.json: colour tokens that exist only in the site's static/assets/brand/tokens.json and not in the product's marketing/brand/tokens.json. Each product colour group is an exact prefix of the site group; only these named site-only colours may follow.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["color"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "color": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "video-matte", "on-matte", "on-teal-deep", "teal-glow",
+        "status-bg", "status-ink", "mark-claude", "mark-deepseek",
+        "mark-openai", "proof-flag-bg", "proof-flag-ink", "print-ink",
+        "ai-soon-ink"
+      ],
+      "properties": {
+        "video-matte": { "$ref": "#/definitions/colorToken" },
+        "on-matte": { "$ref": "#/definitions/colorToken" },
+        "on-teal-deep": { "$ref": "#/definitions/colorToken" },
+        "teal-glow": { "$ref": "#/definitions/colorToken" },
+        "status-bg": { "$ref": "#/definitions/colorToken" },
+        "status-ink": { "$ref": "#/definitions/colorToken" },
+        "mark-claude": { "$ref": "#/definitions/colorToken" },
+        "mark-deepseek": { "$ref": "#/definitions/colorToken" },
+        "mark-openai": { "$ref": "#/definitions/colorToken" },
+        "proof-flag-bg": { "$ref": "#/definitions/colorToken" },
+        "proof-flag-ink": { "$ref": "#/definitions/colorToken" },
+        "print-ink": { "$ref": "#/definitions/colorToken" },
+        "ai-soon-ink": { "$ref": "#/definitions/colorToken" }
+      }
+    }
+  },
+  "definitions": {
+    "colorToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "usage"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$|^\\{[a-z-]+\\}$"
+        },
+        "usage": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

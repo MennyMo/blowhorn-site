@@ -1,0 +1,57 @@
+{
+  "$schema": "../schemas/brand-token-extensions.schema.json",
+  "color": {
+    "video-matte": {
+      "value": "#0F172A",
+      "usage": "Video player background and video-section ground; dark matte that recedes behind the art."
+    },
+    "on-matte": {
+      "value": "#FFFFFF",
+      "usage": "Text and icons on video-matte fills (11.8:1). Never near-black on matte."
+    },
+    "on-teal-deep": {
+      "value": "#FFFFFF",
+      "usage": "Text and icons on teal-deep fills where near-black would muddy the hue."
+    },
+    "teal-glow": {
+      "value": "#40E0D0",
+      "usage": "Soft teal glow behind active states and the hero's ambient rings; illustration and UI accent only, never text."
+    },
+    "status-bg": {
+      "value": "#F4F7F6",
+      "usage": "Status chip and pill backgrounds; same value as surface-raised but reserved for status semantics."
+    },
+    "status-ink": {
+      "value": "#1E2117",
+      "usage": "Text on status-bg and other light status grounds (12:1)."
+    },
+    "mark-claude": {
+      "value": "#D97706",
+      "usage": "Claude wordmark and icon accent in the agents gallery; brand colour of the model, used as-is."
+    },
+    "mark-deepseek": {
+      "value": "#0066CC",
+      "usage": "DeepSeek wordmark and icon accent in the agents gallery; brand colour of the model, used as-is."
+    },
+    "mark-openai": {
+      "value": "#00A86E",
+      "usage": "OpenAI wordmark and icon accent in the agents gallery; brand colour of the model, used as-is."
+    },
+    "proof-flag-bg": {
+      "value": "#FFF6E0",
+      "usage": "Proof-flag and badge backgrounds; cream, same as the cream token but reserved for proof semantics."
+    },
+    "proof-flag-ink": {
+      "value": "#1E2117",
+      "usage": "Text on proof-flag-bg (12:1)."
+    },
+    "print-ink": {
+      "value": "#1E2117",
+      "usage": "Ink for print stylesheets and exported artefacts; near-black on white."
+    },
+    "ai-soon-ink": {
+      "value": "#5B6A70",
+      "usage": "Muted ink for AI features marked Coming soon; same value as ink-muted but reserved for AI-soon semantics."
+    }
+  }
+}
