@@ -168,19 +168,6 @@ class ValidatePasses(unittest.TestCase):
             tmp.cleanup()
         self.assertEqual(problems, [])
 
-    def test_site_only_colours_after_product_prefix_pass(self):
-        tmp, bh, site, root = make_tmp(
-            products=PRODUCT_TOKENS,
-            site_tokens=site_with_site_only_colours(),
-            css=CSS_MATCHING,
-            extensions={"color": SITE_ONLY},
-        )
-        try:
-            problems = check.validate(bh, site / "tokens.json", site / "site.css", root / "extensions.json")
-        finally:
-            tmp.cleanup()
-        self.assertEqual(problems, [])
-
 
 class ValidateFails(unittest.TestCase):
     def test_product_drift_fails(self):
@@ -271,8 +258,49 @@ class GenerateWrites(unittest.TestCase):
 
 class NoBlowhornDir(unittest.TestCase):
     def test_missing_blowhorn_dir_fails(self):
-        rc = check.main(["/nonexistent/blowhorn", "validate"])
+        # argv[0] is the program name, so the missing directory is argv[1].
+        rc = check.main(["check_brand_tokens.py", "/nonexistent/blowhorn", "validate"])
         self.assertEqual(rc, 2)
+
+
+class MainEndToEnd(unittest.TestCase):
+    def test_main_validate_passes_with_valid_fixture(self):
+        tmp, bh, site, root = make_tmp(
+            products=PRODUCT_TOKENS,
+            site_tokens=site_with_site_only_colours(),
+            css=CSS_MATCHING,
+            extensions={"color": SITE_ONLY},
+        )
+        try:
+            check.EXTENSIONS_PATH = root / "extensions.json"
+            check.SITE_CSS_PATH = site / "site.css"
+            rc = check.main(
+                ["check_brand_tokens.py", str(bh), "validate", str(site / "tokens.json")]
+            )
+        finally:
+            check.EXTENSIONS_PATH = Path("data/brand-token-extensions.json")
+            check.SITE_CSS_PATH = Path("assets/css/site.css")
+            tmp.cleanup()
+        self.assertEqual(rc, 0)
+
+    def test_main_validate_fails_on_css_mismatch(self):
+        tmp, bh, site, root = make_tmp(
+            products=PRODUCT_TOKENS,
+            site_tokens=site_with_site_only_colours(),
+            css=CSS_MISMATCH,
+            extensions={"color": SITE_ONLY},
+        )
+        try:
+            check.EXTENSIONS_PATH = root / "extensions.json"
+            check.SITE_CSS_PATH = site / "site.css"
+            rc = check.main(
+                ["check_brand_tokens.py", str(bh), "validate", str(site / "tokens.json")]
+            )
+        finally:
+            check.EXTENSIONS_PATH = Path("data/brand-token-extensions.json")
+            check.SITE_CSS_PATH = Path("assets/css/site.css")
+            tmp.cleanup()
+        self.assertEqual(rc, 1)
 
 
 if __name__ == "__main__":

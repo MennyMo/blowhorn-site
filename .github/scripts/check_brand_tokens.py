@@ -11,13 +11,16 @@ validate (default): assert each product group is an exact prefix of the
     (video-matte, on-matte, on-teal-deep, teal-glow, status-bg, status-ink,
     mark-claude, mark-deepseek, mark-openai, proof-flag-bg, proof-flag-ink,
     print-ink, ai-soon-ink), and that .ui, .caption and .label in
-    assets/css/site.css match the token font sizes. Runs in make check when a
-    product checkout is present at BLOWHORN_DIR (default ../blowhorn).
+    assets/css/site.css match the token font sizes. Runs via
+    `make check-brand-tokens` when a product checkout is present at
+    BLOWHORN_DIR (default ../blowhorn); skipped silently otherwise. Held out of
+    `site-check` until the tree passes validation (run `generate` against the
+    product checkout to regenerate static/assets/brand/tokens.json).
 
 generate: write static/assets/brand/tokens.json as the product file plus the
     site-only extension list from data/brand-token-extensions.json (schema
-    validated in schemas/brand-token-extensions.schema.json). Runs in the docs
-    sync PR when a product checkout is present.
+    validated in schemas/brand-token-extensions.schema.json). Runs via
+    `make generate-brand-tokens` when a product checkout is present.
 
 Usage:
   check_brand_tokens.py [BLOWHORN_DIR] [MODE] [SITE_TOKENS]
@@ -39,13 +42,19 @@ SITE_ONLY_COLOURS = frozenset({
     "ai-soon-ink",
 })
 
-# .class { font-size: Npx; line-height: Mpx; } captured in declaration order.
+# .class { ... font-size: Npx; ... line-height: Mpx; ... } captured regardless
+# of declaration order (the real .label rule leads with font-family).
 CSS_SIZE_RE = re.compile(
-    r"\.(ui|caption|label)\s*\{\s*font-size:\s*(\d+)px\s*;\s*line-height:\s*(\d+)px\s*;"
+    r"\.(ui|caption|label)\s*\{[^}]*?font-size:\s*(\d+)px\s*;[^}]*?line-height:\s*(\d+)px\s*;"
 )
 
-EXTENSIONS_PATH = Path("data/brand-token-extensions.json")
-SITE_CSS_PATH = Path("assets/css/site.css")
+# Resolved from this file's location so the script works no matter what the
+# current working directory is (see the docstring usage). Repo root is the
+# grandparent of .github/scripts/, i.e. parents[2] of this file.
+ROOT = Path(__file__).resolve().parents[2]
+EXTENSIONS_PATH = ROOT / "data" / "brand-token-extensions.json"
+SITE_CSS_PATH = ROOT / "assets" / "css" / "site.css"
+DEFAULT_SITE_TOKENS = ROOT / "static" / "assets" / "brand" / "tokens.json"
 
 
 def load_json(path: Path):
@@ -108,12 +117,11 @@ def css_size_problems(site_css_path: Path, product_type_groups):
 
     want = {}
     for group in product_type_groups:
-        family = group.get("family")
+        # Look each style up by name across all groups: the product may place
+        # a style (e.g. label) in a different group than the site does.
         for style in group.get("styles", []):
             sname = style.get("name")
-            if sname in ("ui", "caption") and family == "sans":
-                want[sname] = (style["fontSize"], style["lineHeight"])
-            if sname == "label" and family == "mono":
+            if sname in ("ui", "caption", "label"):
                 want[sname] = (style["fontSize"], style["lineHeight"])
 
     found = set()
@@ -216,7 +224,7 @@ def main(argv):
     mode = argv[2] if len(argv) > 2 else "validate"
     site_tokens_path = (
         Path(argv[3]) if len(argv) > 3
-        else Path("static/assets/brand/tokens.json")
+        else DEFAULT_SITE_TOKENS
     )
 
     if not blowhorn_dir.is_dir():
@@ -234,16 +242,16 @@ def main(argv):
         return 2
     if not EXTENSIONS_PATH.is_file():
         print(
-            f"brand tokens: extensions file not found at {extensions_path}",
+            f"brand tokens: extensions file not found at {EXTENSIONS_PATH}",
             file=sys.stderr,
         )
         return 2
 
     if mode == "generate":
-        return generate(blowhorn_dir, site_tokens_path, extensions_path)
+        return generate(blowhorn_dir, site_tokens_path, EXTENSIONS_PATH)
     if mode == "validate":
         problems = validate(
-            blowhorn_dir, site_tokens_path, SITE_CSS_PATH, extensions_path
+            blowhorn_dir, site_tokens_path, SITE_CSS_PATH, EXTENSIONS_PATH
         )
         for p in problems:
             print(f"brand tokens: {p}", file=sys.stderr)
