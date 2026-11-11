@@ -232,7 +232,7 @@ def main(argv):
             file=sys.stderr,
         )
         return 2
-    if not extensions_path.is_file():
+    if not EXTENSIONS_PATH.is_file():
         print(
             f"brand tokens: extensions file not found at {extensions_path}",
             file=sys.stderr,
