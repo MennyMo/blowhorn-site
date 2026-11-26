@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import os
 import re
+import shutil
 import signal
 import subprocess
 import sys
@@ -142,6 +143,28 @@ def say(label: str, message: str) -> None:
     print(f"build-dmg: [{stamp()}] {label}: {message}", flush=True)
 
 
+def resolve_program(cmd: list[str]) -> list[str]:
+    """On Windows, CreateProcess finds only .exe, so a .cmd shim such as pnpm is looked up on PATH.
+
+    Elsewhere the command is returned unchanged.
+    """
+    if os.name != "nt" or not cmd:
+        return cmd
+    found = shutil.which(cmd[0])
+    return [found, *cmd[1:]] if found else cmd
+
+
+def kill_tree(proc: subprocess.Popen) -> None:
+    """End *proc* and its children: the process group where there is one, taskkill on Windows."""
+    if os.name == "nt":
+        subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)], check=False, capture_output=True)
+        return
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except (ProcessLookupError, PermissionError):
+        proc.kill()
+
+
 def run_logged(
     cmd: list[str],
     *,
@@ -161,14 +184,11 @@ def run_logged(
     last = None
     failing_files: set[str] = set()
     with log.open("wb") as sink:
-        proc = (popen or subprocess.Popen)(cmd, cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, start_new_session=True)
+        proc = (popen or subprocess.Popen)(resolve_program(cmd), cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, start_new_session=os.name != "nt")
 
         def expire() -> None:
             timed_out.set()
-            try:
-                os.killpg(proc.pid, signal.SIGKILL)
-            except (ProcessLookupError, PermissionError):
-                proc.kill()
+            kill_tree(proc)
 
         timer = threading.Timer(timeout_s, expire)
         timer.daemon = True
