@@ -201,6 +201,20 @@ A key holder reads it the same way:
 make build-dmg-log RUN=<run id> JOB=adhoc   # or JOB=signed; KEY=<identity file>, ATTEMPT=<n>
 ```
 
+## Building the Windows preview installer
+
+`build-windows.yml` builds an early-tester Windows installer (per-user, x64, Rust engine only) on the free `windows-latest` runner. It is manual only:
+
+```sh
+gh workflow run build-windows.yml -f ref=<product commit sha> -f version=<X.Y.Z>
+```
+
+- It runs the same Linux gates as the DMG build first, then checks the private product out sparsely with the read-only `DMG_SOURCE_TOKEN`, as the DMG build does.
+- The installer is signed with one self-signed development certificate. Its private key and password are the `WINDOWS_PREVIEW_CERT_PFX_BASE64` and `WINDOWS_PREVIEW_CERT_PASSWORD` secrets of the `windows-preview-signing` environment, passed to the build step alone. Only the public `.cer` is ever published. Testers see SmartScreen once and choose "More info", then "Run anyway".
+- Build output goes to a log under `RUNNER_TEMP` that is never printed, uploaded or cached. The only artifact is the installer and its `.sha256`, kept 1 day.
+- A second job, `smoke-windows`, downloads that artifact on a fresh Windows runner and runs `.github/scripts/build-windows/smoke.py`: a silent install into a throwaway folder, the packaged engine answering `--version`, `config show` and `platforms capabilities --json` with every user folder pointed at throwaway ones, and the uninstaller. It prints a label and ok or failed per check and never the product's output. It holds no secret. The native host registration and Chrome connecting to the extension over a throwaway profile are not in it yet.
+- A published preview is a GitHub pre-release named "Blowhorn for Windows (preview)" with short install notes. It never moves the site's download pin.
+
 ## Publishing a DMG
 
 The DMG must already be built, signed with a Developer ID certificate, notarized,
