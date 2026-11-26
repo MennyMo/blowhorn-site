@@ -992,9 +992,9 @@ html[data-theme="signal"] #platforms .logo-tile img[src*="github-invertocat-blac
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--teal) 40%, transparent);
 }
 .plat-row-roles .is-dim { opacity: 0.28; }
+/* A teal ring, and a glow short enough to stay inside half the row gap. */
 .plat-row-roles .is-hot .platform {
-  border-color: var(--teal);
-  box-shadow: 0 0 40px -10px rgba(0,211,169,.5);
+  box-shadow: 0 0 0 var(--stroke-hairline) var(--teal), 0 0 10px -4px color-mix(in srgb, var(--teal) 60%, transparent);
 }
 
 .constellation {
