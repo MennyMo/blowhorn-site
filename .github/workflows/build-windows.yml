@@ -29,6 +29,11 @@ on:
         description: "Desktop version (X.Y.Z, no leading v)"
         required: true
         type: string
+      skip_linux_gates:
+        description: "Skip the Linux gates (a preview build while the product's Linux suite is red); never for a release"
+        required: false
+        default: false
+        type: boolean
 
 run-name: Build Windows preview ${{ inputs.version }} ${{ inputs.ref }}
 
@@ -73,6 +78,7 @@ jobs:
   linux-green:
     name: Linux gates
     needs: validate
+    if: ${{ !inputs.skip_linux_gates }}
     uses: ./.github/workflows/product-ci.yml
     with:
       ref: ${{ needs.validate.outputs.ref }}
@@ -83,6 +89,8 @@ jobs:
   build-windows:
     name: Windows build
     needs: [validate, linux-green]
+    # The gates may be skipped on request (skip_linux_gates), never failed.
+    if: ${{ !cancelled() && needs.validate.result == 'success' && (needs.linux-green.result == 'success' || needs.linux-green.result == 'skipped') }}
     runs-on: windows-latest
     timeout-minutes: 120
     environment: windows-preview-signing
