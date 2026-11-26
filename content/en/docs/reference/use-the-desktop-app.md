@@ -158,16 +158,17 @@ An order is a form you fill in one step at a time. A finished step folds to a
 one-line summary, and you can press it to change it.
 
 1. **Dispatch to.** Pick one or more platforms: LinkedIn, X, Reddit, Bluesky,
-   Slack or GitHub. Then pick the kind of order. **Compose a dispatch** is a
+   Slack, GitHub or YouTube. Then pick the kind of order. **Compose a dispatch** is a
    post, **Answer the line** is a reply to a link, and **Rally the troops**
    amplifies a link. Only kinds that every picked platform supports are
    offered. **Or run** lists one-off actions, such as **Accept invitations** on
-   LinkedIn or **Follow accounts** on X.
+   LinkedIn, **Follow accounts** on X, or **Collect analytics** on YouTube.
 2. **From the desk of.** Pick one or more profiles. Each profile sends its own
    copy to each platform, so two platforms from two profiles makes four posts.
 3. **The message.** Type the post, with a character count. Type `@` to tag
    someone. **Who's who** then asks you to confirm each tag's handle on each
-   platform. LinkedIn can't carry tags yet, so tags go there as plain text. A
+   platform. LinkedIn can't carry tags yet, and YouTube takes none, so tags go
+   to both as plain text. A
    **Radio net** sketches a conversation between profiles, but cannot deploy yet.
 4. **Landing zone.** Drop or paste images or videos, or choose **LZ clear** for
    none.

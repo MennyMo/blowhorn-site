@@ -66,10 +66,13 @@ blowhorn post --profile all --pace slow
 An activity that fills `Image URL`, `GDrive Link`, or `Video URL` attaches that
 file to the post. Three things are worth knowing when such a post fails:
 
-- An activity whose text holds a URL and an image keeps the image: Blowhorn
-  removes the link preview LinkedIn generates first, because the preview
-  takes the slot the image needs. An activity with a URL and no image keeps its
-  preview.
+- An activity whose text holds a URL and an attached image keeps the image.
+  When that text also has a YouTube link, the attached image wins on every
+  platform and takes the media slot. On LinkedIn, Blowhorn removes the link
+  preview the composer draws into that slot, then attaches the image. On a
+  platform that already attaches the file as the media, the file stays the
+  attachment. An activity with a URL and no attached image keeps its preview.
+  A picture built from the YouTube link is only for the desktop preview.
 - A post never goes out without the image it asked for, on any platform. If
   the file cannot be downloaded or attached, the activity fails and stays
   pending for a later run, and the run goes on to the next activity. Re-run

@@ -80,6 +80,13 @@ A failed item does not stop the run: everything else is still removed, and
 the command exits 1. A real run that cannot read the sign-in in the Keychain
 exits 1 as well, and leaves that item in place.
 
+When the Keychain is turned off for Blowhorn (`BLOWHORN_KEYCHAIN=0`), the two
+Keychain items are *skipped*, not failed: the run exits 0 if everything else
+succeeded, and each skipped item says that the Keychain was not checked because it
+is turned off, that an item saved before it was turned off may remain, and the
+command that removes it (`security delete-generic-password -s ai.blowhorn.cloud-token -a default`
+for the sign-in). A real Keychain error is still a failure.
+
 The sign-in on this computer is removed on every run, with or without `--purge`:
 the Keychain item, `cloud.yaml`, the `cloud-token` file beside it, and the
 guided setup progress (`onboarding-progress.json`). The next time you open

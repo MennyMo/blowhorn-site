@@ -156,6 +156,41 @@ counts its planned rows against that ceiling for the rest of the same
 run, so it holds what the real run would; it does not stamp the
 activity, so the count does not carry into tomorrow.
 
+## Set a custom thumbnail
+
+On a video upload, set `Image URL` to a picture as well as `Video URL`
+to the video. Through the Data API, Blowhorn uploads that picture as the
+video's custom thumbnail after the upload answers with a video id. The
+video itself still comes from `Video URL`.
+
+```bash
+blowhorn content upsert --payload '{"Platform":"YouTube","Profile":"your-profile","Title":"Launch day","Message Text":"What we shipped and why it matters.","Video URL":"https://example.com/launch.mp4","Image URL":"https://example.com/launch-thumb.jpg","Approved?":"yes"}'
+```
+
+YouTube Help asks for a JPG, GIF, or PNG under 2 MB for a video
+([Add a custom thumbnail](https://support.google.com/youtube/answer/72431)).
+Blowhorn sends the picture only when the file is one of those and under
+2,000,000 bytes. The Data API call is
+[`thumbnails.set`](https://developers.google.com/youtube/v3/docs/thumbnails/set).
+That page also allows a larger JPEG or PNG, up to 50 MB, and says the
+call costs about 50 quota units. Blowhorn keeps the Help page's stricter
+limit. The 50 units are counted only when you set `thumbnails.set=50` in
+`BLOWHORN_YOUTUBE_API_QUOTA_COSTS`.
+
+If the thumbnail cannot be set, the video upload still stands. The report
+says the thumbnail was not set and that the video stays. Set the
+thumbnail in YouTube Studio. Blowhorn does not delete the video and does
+not upload it again.
+
+Through Google Chrome, Studio's upload walk does not set a custom
+thumbnail yet. The report says so. Set it in YouTube Studio after the
+upload.
+
+`Image URL` on a Posts-tab post is the post's image, not a video
+thumbnail. A comment, a reply, or a like does not get one either. A
+picture Blowhorn builds from a YouTube link in the text, for the desktop
+preview, is never uploaded.
+
 ## Choose visibility
 
 Set `Visibility` to `private` (the default), `unlisted` or `public`. Any
@@ -194,7 +229,8 @@ refused.
 ## Post on the Posts tab
 
 Set `Community` to `yes` and put the text in `Message Text`. Optionally
-set `Image URL` to one image. Leave `Title`, `Video URL`, `Comment on`
+set `Image URL` to one image. That image is the post's picture. It is not
+a custom thumbnail for a video. Leave `Title`, `Video URL`, `Comment on`
 and `Amplify` blank: any of those, or an `@` tag in the text, is refused
 by name. YouTube states no text length, so Blowhorn does not check one.
 

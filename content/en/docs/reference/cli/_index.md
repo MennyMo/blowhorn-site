@@ -381,6 +381,9 @@ refresh. It now gives the honest error
 naming `github` and listing what `profile` supports, whether you typed the
 platform or inherited it from `BLOWHORN_PLATFORM` or `defaults.platform`.
 
+Under `--json` the refusal also prints one document, the same shape other `--json`
+refusals use, and exits 1 as before: `{"ok": false, "error": "platform 'github' unsupported"}`.
+
 The commands that never look at `--platform` do not reject anything:
 
 - `config path/show/get/set`, `desktop`, `service`, `store`, `chrome` and `slack` ignore the option entirely -

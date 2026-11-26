@@ -24,17 +24,38 @@ No network request is made by either command. Missing components are listed expl
 The package includes OS/version/architecture, known component versions, bounded service state,
 registered error codes and known exception types from recent log tails, and reduced existing
 failure records. App version is read from the desktop's engine record when available. Extension
-version is unavailable unless the shared collector's caller supplies it; the collector never reads
-Google Chrome profiles or mistakes the source extension manifest for an installed extension version.
+version is unavailable unless the shared collector's caller supplies it; the collector never mistakes
+the source extension manifest for an installed extension version.
+
+The environment file also lists each Google Chrome profile directory (`Default`, `Profile N`) with
+whether the Blowhorn extension is installed and enabled there and at what version, read from that
+profile's installed-extension preferences. It reads profile directory names and those extension
+entries only: never display names, account emails, cookies, history, bookmarks, saved logins or
+extension storage. A profile whose extension entry is missing carries a reason.
+
+When the Chrome extension has run, the package also holds `activity.json`, an optional sixth file
+under the same `blowhorn.support-bundle/v1` schema. The extension keeps a content-free activity log
+(one record per step it performs: step name, ok/failed/timeout, a short error code, duration, the
+platform host, and versions) and the engine copies new records into its own store beside the
+logs, so the history covers every Chrome profile and survives an extension uninstall. The file
+holds the newest records per profile (attributed by profile directory name) and counts of
+attempts and failures by platform host, step and error code, so a platform-wide break is visible
+at a glance. It never holds post text, account names or handles, cookies, page titles, page
+contents or any URL beyond the platform host. The log keeps 5,000 records or 14 days per profile,
+whichever is smaller. Without extension activity the package has the five files above, as before.
 
 Arbitrary log prose is excluded, including post/account content. The package does not contain a
-full environment dump, credentials, cookies, Chrome profiles, account/post records or unrelated
+full environment dump, credentials, cookies, Chrome profile contents, account/post records or unrelated
 server logs. This deliberately favors privacy over a complete raw-log archive. Reproduction
 steps and expected/actual behavior must come from the person reporting the problem.
 
 Limits: 30 seconds collection time, 5 MiB included data, 2 MiB compressed archive, bounded reads,
-fixed archive member names, no symlink traversal and no archive extraction. Local output directories
-are owner-only (0700), files 0600. Collection never overwrites an earlier package.
+fixed archive member names, no symlink traversal below the folder you name, and no archive extraction.
+Local output directories are owner-only (0700), files 0600. Collection never overwrites an earlier package.
+
+The folder you name (the log directory, or the folder holding a file you pass) may itself be a link,
+as `/tmp` and every temporary folder are on macOS. Below it, nothing is read through a link: a log
+file or folder inside the log directory that links somewhere else is listed as missing, not read.
 
 ## Prepare one feedback point
 

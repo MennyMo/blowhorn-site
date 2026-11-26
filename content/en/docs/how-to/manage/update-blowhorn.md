@@ -75,7 +75,11 @@ step is named as it happens:
 4. **relaunching**. Blowhorn closes and the new version opens. Before it
    closes, Blowhorn stops the background service, so the running service is
    never the old version's; the new version registers the service against
-   itself when it opens. If Blowhorn
+   itself as soon as it opens. A scheduled pass the old version started
+   finishes on its own, and the new service waits for it before it starts
+   its next one, so the service is never left off while that pass runs. If
+   the update cannot relaunch, the current version stays open and registers
+   the service again. If Blowhorn
    asks what to do about work in progress before it closes and you choose
    **stay open**, the new version stays installed and opens the next time you
    start Blowhorn, or when you press **update** again.
@@ -95,8 +99,8 @@ and pause over before the background service starts. You need no Terminal,
 and there is nothing for you to do. The old place is left exactly as it was.
 
 If a scheduled pass is running when the new version opens, the carry waits
-until the pass ends, and the service stays as it was until then. If the
-carry cannot finish, the service is put back as it was and the next launch
+until the pass ends, and the background service keeps running meanwhile.
+If the carry cannot finish, the service is put back as it was and the next launch
 tries again. A notification says what was carried, and the Setup screen's
 **this computer on duty** row and the Service screen carry the same line.
 
