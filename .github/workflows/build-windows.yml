@@ -29,6 +29,14 @@ on:
         description: "Desktop version (X.Y.Z, no leading v)"
         required: true
         type: string
+      target:
+        description: "Package: nsis (the tester installer) or appx (the MSIX spike, never published to testers)"
+        required: false
+        default: nsis
+        type: choice
+        options:
+          - nsis
+          - appx
       skip_linux_gates:
         description: "Skip the Linux gates (a preview build while the product's Linux suite is red); never for a release"
         required: false
@@ -141,6 +149,7 @@ jobs:
           CSC_LINK: ${{ secrets.WINDOWS_PREVIEW_CERT_PFX_BASE64 }}
           CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_PREVIEW_CERT_PASSWORD }}
           BUILD_VERSION: ${{ needs.validate.outputs.version }}
+          PACKAGE_TARGET: ${{ inputs.target }}
         run: |
           set +x
           set -euo pipefail
@@ -165,6 +174,7 @@ jobs:
       - name: Stage the installer and its checksum
         env:
           EXPECT_VERSION: ${{ needs.validate.outputs.version }}
+          PACKAGE_TARGET: ${{ inputs.target }}
         run: |
           set -euo pipefail
           mkdir -p dist
@@ -172,7 +182,8 @@ jobs:
           import hashlib, os, shutil
           from pathlib import Path
           src = Path("product/desktop/release")
-          found = sorted(src.glob("*.exe"))
+          suffix = "appx" if os.environ["PACKAGE_TARGET"] == "appx" else "exe"
+          found = sorted(src.glob(f"*.{suffix}"))
           if len(found) != 1:
               raise SystemExit(f"expected one installer, found {len(found)}")
           exe = found[0]
@@ -195,7 +206,7 @@ jobs:
     needs: build-windows
     # A skipped ancestor (the Linux gates, when skipped on request) skips a job with the default
     # condition; this one needs only the installer.
-    if: ${{ !cancelled() && needs.build-windows.result == 'success' }}
+    if: ${{ !cancelled() && needs.build-windows.result == 'success' && inputs.target != 'appx' }}
     runs-on: windows-latest
     timeout-minutes: 30
     defaults:
