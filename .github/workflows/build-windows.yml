@@ -158,6 +158,18 @@ jobs:
             exit 1
           fi
           cd product/desktop
+          if [[ "$PACKAGE_TARGET" == "appx" ]]; then
+            # electron-builder's bundled signtool cannot sign an appx ("A required function is not
+            # present"); the runner's Windows SDK one can. The newest one, x64.
+            shopt -s nullglob
+            sdk=("/c/Program Files (x86)/Windows Kits/10/bin/"*/x64/signtool.exe)
+            if [[ "${#sdk[@]}" -eq 0 ]]; then
+              echo "build-windows: the Windows SDK signtool was not found"
+              exit 1
+            fi
+            export SIGNTOOL_PATH="${sdk[-1]}"
+            echo "build-windows: signing appx with the Windows SDK signtool"
+          fi
           if ! python3 ../../.github/scripts/build-dmg/timed_run.py \
             --label "package:win" \
             --timeout-minutes 100 \
