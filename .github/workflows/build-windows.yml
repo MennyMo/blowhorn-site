@@ -164,8 +164,8 @@ jobs:
             --log "$RUNNER_TEMP/build-windows/build.log" \
             -- pnpm package:win; then
             # package-win.mjs's own fixed lines ("package-win: <step> failed (exit N)"): labels and
-            # an exit code, the build task's own top-level Error sentence and cargo's summary lines (which name a crate or a missing tool) and electron-builder's own one-line errors, never compiler diagnostics, so they name the failing step safely.
-            grep -E '^(package-win: [A-Za-z :-]+( failed \(exit [0-9a-z]+\))?|Error: |error: (could not compile|failed to|linker|no matching package|the lock file)|Caused by:|[[:space:]]*⨯ )' "$RUNNER_TEMP/build-windows/build.log" | cut -c1-200 | head -n 12 || true
+            # an exit code, the build task's own top-level Error sentence and cargo's summary lines (which name a crate or a missing tool) and electron-builder's and SignTool's own one-line errors, never compiler diagnostics, so they name the failing step safely.
+            grep -E '^(package-win: [A-Za-z :-]+( failed \(exit [0-9a-z]+\))?|Error: |error: (could not compile|failed to|linker|no matching package|the lock file)|Caused by:|[[:space:]]*⨯ |SignTool Error|SignerSign|Error information)' "$RUNNER_TEMP/build-windows/build.log" | cut -c1-200 | head -n 12 || true
             echo "package:win failed. Run it in a local checkout of the same ref to see why."
             exit 1
           fi
