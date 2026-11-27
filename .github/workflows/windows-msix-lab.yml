@@ -104,6 +104,26 @@ jobs:
           $key = "HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.blowhorn.chrome_extension"
           Remove-Item $key -ErrorAction SilentlyContinue
 
+          # The engine's own host registration, run inside the package identity apart from the app, with
+          # its one-line answer kept in a file outside the package to read the verdict from.
+          $out = Join-Path $env:RUNNER_TEMP "registration.out"
+          Remove-Item $out -ErrorAction SilentlyContinue
+          try {
+            Invoke-CommandInDesktopPackage -PackageFamilyName $family -AppId Blowhorn -PreventBreakaway -Command "cmd.exe" -Args "/c `"`"$($engine.FullName)`" chrome extension-install --json > `"$out`" 2>&1`""
+          } catch { Say "registration command started" $false $_.Exception.GetType().Name }
+          for ($i = 0; $i -lt 20 -and -not (Test-Path $key); $i++) { Start-Sleep -Seconds 2 }
+          Say "engine registration reached the real HKCU" (Test-Path $key)
+          if (Test-Path $out) {
+            $answer = (Get-Content $out -Raw)
+            $ok = $answer -match '"ok":\s*true'
+            Say "engine registration answered ok" $ok
+            if (-not $ok) {
+              $line = ($answer -split "`n" | Where-Object { $_ -match "^The native host was not registered: [A-Za-z0-9 ,.'():_\\/-]{1,200}$|\"error\": \"[A-Za-z0-9 ,.'():_\\/-]{1,200}\"" } | Select-Object -First 1)
+              if ($line) { Write-Host "msix: registration said: $line" }
+            }
+          } else { Say "engine registration answered ok" $false "no output file" }
+          Remove-Item $key -ErrorAction SilentlyContinue
+
           # Start the packaged app by its application id (Blowhorn): the app registers the host after
           # it has resolved its engine, about twenty seconds in.
           Start-Process "shell:AppsFolder\$family!Blowhorn"
