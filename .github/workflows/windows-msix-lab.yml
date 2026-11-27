@@ -118,7 +118,8 @@ jobs:
             $ok = $answer -match '"ok":\s*true'
             Say "engine registration answered ok" $ok
             if (-not $ok) {
-              $line = ($answer -split "`n" | Where-Object { $_ -match "^The native host was not registered: [A-Za-z0-9 ,.'():_\\/-]{1,200}$|\"error\": \"[A-Za-z0-9 ,.'():_\\/-]{1,200}\"" } | Select-Object -First 1)
+              $pattern = '^The native host was not registered: [A-Za-z0-9 ,.():_\\/-]{1,200}$'
+              $line = ($answer -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ -match $pattern } | Select-Object -First 1)
               if ($line) { Write-Host "msix: registration said: $line" }
             }
           } else { Say "engine registration answered ok" $false "no output file" }
