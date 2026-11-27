@@ -1,0 +1,1405 @@
+<!DOCTYPE html><html lang="en" data-theme="reveille">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><script>
+      (function () {
+        var allowed = ["signal","reveille"], param = "theme", q = null, i;
+        try { q = new URLSearchParams(window.location.search).get(param); } catch (e) {}
+        if (!q) return;
+        for (i = 0; i < allowed.length; i++) {
+          if (allowed[i] === q) {
+            document.documentElement.setAttribute('data-theme', q);
+            return;
+          }
+        }
+      })();
+    </script>
+
+    <title>Blowhorn integrations - every supported platform</title>
+    <meta name="description" content="Every platform Blowhorn reaches. LinkedIn, X, Reddit, Hacker News, YouTube and more through your own browser, with YouTube uploads, comments, replies and likes going through YouTube&#39;s official API after Data API consent. Slack and Bluesky through their APIs. GitHub reactions on issues, never posts.">
+    <link rel="canonical" href="https://blowhorn.ai/integrations/">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1E2117">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/assets/brand/logo/blowhorn-favicon-32.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/assets/brand/logo/blowhorn-apple-touch-icon-180.png">
+<link rel="stylesheet" href="/css/site.min.654c287476b6fc6826d41405468d3e38d1c30bee950af7aa22102c55bf87d2b5.css">
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied'
+      });
+      gtag('js', new Date());
+      gtag('config', 'G-2ZLYGVE3HN');
+    </script>
+    <script src="/js/consent.min.87a540c5c86603eab7872bd71d23e8f0460cec66cc2ab450f6ab59bd6a2839fe.js" data-ga-id="G-2ZLYGVE3HN" defer></script>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Blowhorn">
+    <meta property="og:title" content="Blowhorn integrations - every supported platform">
+    <meta property="og:description" content="Every platform Blowhorn reaches. LinkedIn, X, Reddit, Hacker News, YouTube and more through your own browser, with YouTube uploads, comments, replies and likes going through YouTube&#39;s official API after Data API consent. Slack and Bluesky through their APIs. GitHub reactions on issues, never posts.">
+    <meta property="og:url" content="https://blowhorn.ai/integrations/">
+    <meta property="og:image" content="https://blowhorn.ai/assets/brand/marketing/blowhorn-og-1200x630.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="The Blowhorn logo: the Crowhorn icon beside the Blowhorn wordmark">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@blowhorn_ai">
+    <meta name="twitter:title" content="Blowhorn integrations - every supported platform">
+    <meta name="twitter:description" content="Every platform Blowhorn reaches. LinkedIn, X, Reddit, Hacker News, YouTube and more through your own browser, with YouTube uploads, comments, replies and likes going through YouTube&#39;s official API after Data API consent. Slack and Bluesky through their APIs. GitHub reactions on issues, never posts.">
+    <meta name="twitter:image" content="https://blowhorn.ai/assets/brand/marketing/blowhorn-og-1200x630.png">
+    <meta name="twitter:image:alt" content="The Blowhorn logo: the Crowhorn icon beside the Blowhorn wordmark">
+
+
+  </head>
+  <body>
+    <a class="skip-link ui" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/" aria-label="Blowhorn home" data-is-home="false">
+          <img class="logo-on-light" src="/assets/brand/logo/blowhorn-lockup-horizontal.svg" alt="Blowhorn" width="176" height="44">
+          <img class="logo-on-dark" src="/assets/brand/logo/blowhorn-lockup-horizontal-on-dark.svg" alt="" width="176" height="44">
+        </a>
+        <button type="button" class="mm-toggle" aria-expanded="false" aria-controls="site-menu" hidden>
+          <span class="mm-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="mm-toggle-text">Menu</span>
+        </button>
+        <nav class="site-nav" id="site-menu" aria-label="Primary">
+          <ul class="mm-list">
+            <li class="mm-item">
+              <button type="button" class="mm-trigger" aria-expanded="false" aria-controls="mm-product">Product<span class="mm-chev" aria-hidden="true"></span></button>
+              <div class="mm-panel mm-panel-cards" id="mm-product">
+                <ul class="mm-cards">
+                  <li><a class="mm-card card-stamp" href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">
+                    <span class="mm-card-art">
+                      <span class="iface-art iface-art-extension" aria-hidden="true"><span class="ia-panel ia-browser"><span class="ia-tabstrip">
+  <span class="ia-lights"><i></i><i></i><i></i></span>
+  <span class="ia-tab on"><svg class="ia-mark" viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8.3 10.6v6M12 16.6v-6M12 12.6c0-1.4 1-2.2 2.2-2.2 1.3 0 2.1.9 2.1 2.3v3.9"/><circle cx="8.3" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+<span class="ia-tab-title">Feed | LinkedIn</span><span class="ia-tab-x"></span>
+  </span>
+  <span class="ia-tab ia-tab-bg"><i class="ia-fav f-mail"></i><span class="ia-tab-title">Inbox</span></span>
+  <span class="ia-tab-new"></span>
+</span>
+<span class="ia-toolbar">
+  <svg class="ia-nav" viewBox="0 0 30 10" width="30" height="10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 2L2 5l3 3M2 5h6"/><path class="ia-nav-off" d="M14 2l3 3-3 3M17 5h-6"/><path d="M28 5a3 3 0 1 1-1-2.2M27.4 1.2v1.8h-1.8"/></svg>
+  <span class="ia-omni"><svg viewBox="0 0 10 10" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 3h4M7.5 3h1M1.5 7h1M4.5 7h4"/><circle cx="6.5" cy="3" r="1"/><circle cx="3.5" cy="7" r="1"/></svg><span class="ia-mono">linkedin.com/feed</span></span><img class="ia-pin" src="/assets/brand/logo/blowhorn-app-icon.svg" alt="" width="11" height="11"><span class="ia-avatar"></span>
+</span>
+<span class="ia-bookmarks"><span class="ia-bm"><i class="ia-fav f-docs"></i>Docs</span><span class="ia-bm"><i class="ia-fav f-cal"></i>Calendar</span><span class="ia-bm"><i class="ia-fav f-team"></i>Team</span></span>
+<span class="ia-page">
+      <span class="ia-card"><span class="ia-who"><i class="ia-face"></i><span class="ia-line w45"></span></span><span class="ia-line w75"></span><span class="ia-line w60"></span></span>
+      <span class="ia-row sweep"><span class="ia-line w50"></span><span class="ia-pill ok">Sent as you</span></span>
+    </span>
+  </span></span>
+
+                      <img class="mm-card-chrome" src="/assets/platforms/google-chrome-logo.svg" alt="" width="28" height="28">
+                    </span>
+                    <span class="mm-card-title">Browser extension</span>
+                    <span class="mm-card-desc">Blowhorn inside your own browser, where the work happens</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                  <li><a class="mm-card card-plain" href="https://cloud.blowhorn.ai">
+                    <span class="iface-art iface-art-web" aria-hidden="true"><span class="ia-panel ia-browser"><span class="ia-tabstrip">
+  <span class="ia-lights"><i></i><i></i><i></i></span>
+  <span class="ia-tab on"><img src="/assets/brand/logo/blowhorn-app-icon.svg" alt="" width="9" height="9"><span class="ia-tab-title">Blowhorn</span><span class="ia-tab-x"></span>
+  </span>
+  <span class="ia-tab ia-tab-bg"><i class="ia-fav f-mail"></i><span class="ia-tab-title">Inbox</span></span>
+  <span class="ia-tab-new"></span>
+</span>
+<span class="ia-toolbar">
+  <svg class="ia-nav" viewBox="0 0 30 10" width="30" height="10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 2L2 5l3 3M2 5h6"/><path class="ia-nav-off" d="M14 2l3 3-3 3M17 5h-6"/><path d="M28 5a3 3 0 1 1-1-2.2M27.4 1.2v1.8h-1.8"/></svg>
+  <span class="ia-omni"><svg viewBox="0 0 10 10" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 3h4M7.5 3h1M1.5 7h1M4.5 7h4"/><circle cx="6.5" cy="3" r="1"/><circle cx="3.5" cy="7" r="1"/></svg><span class="ia-mono">cloud.blowhorn.ai</span></span><span class="ia-avatar"></span>
+</span>
+<span class="ia-bookmarks"><span class="ia-bm"><i class="ia-fav f-docs"></i>Docs</span><span class="ia-bm"><i class="ia-fav f-cal"></i>Calendar</span><span class="ia-bm"><i class="ia-fav f-team"></i>Team</span></span>
+<span class="ia-page">
+      <span class="ia-page-head"><span class="ia-page-title">Activity</span><span class="ia-live"><i></i>Live</span></span>
+      <span class="ia-rows">
+        <span class="ia-row sweep"><svg class="ia-mark" viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8.3 10.6v6M12 16.6v-6M12 12.6c0-1.4 1-2.2 2.2-2.2 1.3 0 2.1.9 2.1 2.3v3.9"/><circle cx="8.3" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+<span class="ia-state live"><i></i>Ready</span><span class="ia-prev">Launch day, 9:30</span></span>
+        <span class="ia-row"><svg class="ia-mark" viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><ellipse cx="12" cy="14" rx="7.5" ry="5.5"/><path d="M12 8.5l1.2-4.5 3.3.9M9.5 16.5c1.5 1.2 3.5 1.2 5 0"/><circle cx="17.5" cy="5" r="1.2"/></svg>
+<span class="ia-state wait"><i></i>Needs you</span><span class="ia-prev">AMA thread</span></span>
+        <span class="ia-row"><svg class="ia-mark" viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3M15 21v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+<span class="ia-state done"><i></i>Sent</span><span class="ia-prev">v1.42 is out</span></span>
+      </span>
+    </span>
+  </span></span>
+
+                    <span class="mm-card-title">Web app</span>
+                    <span class="mm-card-desc">Your queue from any browser, at cloud.blowhorn.ai</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                  <li><a class="mm-card card-dispatch" href="/ai/blowhorn-axi/">
+                    <span class="iface-art iface-art-cli" aria-hidden="true"><span class="ia-panel ia-term">
+    <span class="ia-bar"><span class="ia-lights"><i></i><i></i><i></i></span><span class="ia-caption">zsh · blowhorn</span></span>
+    <span class="ia-code"><span class="ia-cline"><b>$</b> blowhorn post launch.md --dry-run</span><span class="ia-cline ok">✓ rehearsed · 3 voices, nothing sent</span><span class="ia-cline"><b>$</b> blowhorn post launch.md --go <span class="ia-cursor"></span></span></span>
+  </span></span>
+
+                    <span class="mm-card-title">Command line</span>
+                    <span class="mm-card-desc">Every action as a command: for you, scripts and agents</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                  <li><a class="mm-card card-field" href="/ai/mcp/">
+                    <span class="iface-art iface-art-mcp" aria-hidden="true"><span class="ia-panel ia-diagram">
+    <span class="ia-flow">
+      <span class="ia-chip"><span class="ia-chip-name">Claude</span><span class="ia-chip-sub">assistant</span></span>
+      <span class="ia-link"><i class="ia-pulse"></i></span>
+      <span class="ia-chip ia-chip-hub"><span class="ia-chip-name">MCP</span><span class="ia-chip-sub">tools/list</span></span>
+      <span class="ia-link"><i class="ia-pulse d2"></i></span>
+      <span class="ia-chip"><img src="/assets/brand/logo/blowhorn-app-icon.svg" alt="" width="14" height="14"><span class="ia-chip-sub">Blowhorn</span></span>
+    </span>
+    <span class="ia-mono ia-diagram-note">post · amplify · schedule · approval rules on</span>
+  </span></span>
+
+                    <span class="mm-card-title">MCP server</span>
+                    <span class="mm-card-desc">Plug Blowhorn into Claude and other AI assistants</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="mm-item">
+              <button type="button" class="mm-trigger" aria-expanded="false" aria-controls="mm-solutions">Solutions<span class="mm-chev" aria-hidden="true"></span></button>
+              <div class="mm-panel mm-panel-wide" id="mm-solutions">
+                <div class="mm-group">
+                  <p class="mm-group-title"><a href="/for/">By role</a></p>
+                  <ul class="mm-links"><li><a class="mm-link" href="/for/devrel/"><span class="mm-link-title">DevRel</span></a></li><li><a class="mm-link" href="/for/marketing/"><span class="mm-link-title">Marketing managers</span></a></li><li><a class="mm-link" href="/for/founders/"><span class="mm-link-title">Founders</span></a></li><li><a class="mm-link" href="/for/open-source/"><span class="mm-link-title">Open source maintainers</span></a></li><li><a class="mm-link" href="/for/community/"><span class="mm-link-title">Community managers</span></a></li><li><a class="mm-link" href="/for/agencies/"><span class="mm-link-title">Agencies and consultants</span></a></li><li><a class="mm-link" href="/for/social-media/"><span class="mm-link-title">Social media managers</span></a></li>
+                  </ul>
+                </div>
+                <div class="mm-group">
+                  <p class="mm-group-title"><a href="/use-cases/">By use case</a></p>
+                  <ul class="mm-links"><li><a class="mm-link" href="/use-cases/launch-day/"><span class="mm-link-title">Launch day</span></a></li><li><a class="mm-link" href="/use-cases/open-source-release/"><span class="mm-link-title">Open source release</span></a></li><li><a class="mm-link" href="/use-cases/conference/"><span class="mm-link-title">Conference</span></a></li><li><a class="mm-link" href="/use-cases/linkedin-outreach/"><span class="mm-link-title">LinkedIn hygiene</span></a></li><li><a class="mm-link" href="/use-cases/team-amplification/"><span class="mm-link-title">Team amplification</span></a></li><li><a class="mm-link" href="/use-cases/agent-publishing/"><span class="mm-link-title">Agent publishing</span></a></li>
+                  </ul>
+                </div>
+                <div class="mm-group">
+                  <p class="mm-group-title"><a href="/solutions/">By category</a></p>
+                  <ul class="mm-links"><li><a class="mm-link" href="/solutions/developer-distribution/"><span class="mm-link-title">Developer distribution</span></a></li><li><a class="mm-link" href="/solutions/employee-advocacy/"><span class="mm-link-title">Employee advocacy</span></a></li><li><a class="mm-link" href="/solutions/distributed-teams/"><span class="mm-link-title">Distributed teams</span></a></li><li><a class="mm-link" href="/solutions/social-scheduling/"><span class="mm-link-title">Social scheduling</span></a></li><li><a class="mm-link" href="/solutions/linkedin-automation/"><span class="mm-link-title">LinkedIn automation</span></a></li><li><a class="mm-link" href="/solutions/multi-profile/"><span class="mm-link-title">Multi-profile</span></a></li>
+                  </ul>
+                </div>
+                <div class="mm-group">
+                  <p class="mm-group-title"><a href="/ai/">AI native</a></p>
+                  <ul class="mm-links"><li><a class="mm-link" href="/agents/"><span class="mm-link-title">Agentic AI marketing</span><span class="mm-link-desc">Let your AI agent run the launch</span></a></li>
+                  </ul>
+                </div>
+                <div class="mm-group">
+                  <p class="mm-group-title">Works with</p>
+                  <ul class="mm-links mm-compact"><li><a class="mm-link" href="/agents/claude-code/"><span class="mm-link-title">Claude Code</span></a></li><li><a class="mm-link" href="/agents/opencode/"><span class="mm-link-title">OpenCode</span></a></li><li><a class="mm-link" href="/agents/pi/"><span class="mm-link-title">Pi</span></a></li><li><a class="mm-link" href="/agents/codex/"><span class="mm-link-title">Codex</span></a></li><li><a class="mm-link" href="/agents/grok/"><span class="mm-link-title">Grok</span></a></li><li><a class="mm-link" href="/agents/grok-bot/"><span class="mm-link-title">Grok Bot</span></a></li><li><a class="mm-link" href="/agents/deepseek/"><span class="mm-link-title">DeepSeek</span></a></li><li><a class="mm-link" href="/agents/cli/"><span class="mm-link-title">CLI</span></a></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li class="mm-item"><a class="mm-top" href="/integrations/">Integrations</a></li>
+            <li class="mm-item"><a class="mm-top" href="/compare/">Compare</a></li>
+            <li class="mm-item">
+              <button type="button" class="mm-trigger" aria-expanded="false" aria-controls="mm-resources">Resources<span class="mm-chev" aria-hidden="true"></span></button>
+              <div class="mm-panel mm-panel-links" id="mm-resources">
+                <ul class="mm-links mm-cols-3"><li><a class="mm-link" href="/docs/"><span class="mm-link-title">Docs</span><span class="mm-link-desc">Set up, how-to guides and reference</span></a></li><li><a class="mm-link" href="/resources/videos/"><span class="mm-link-title">Videos</span><span class="mm-link-desc">Short films and walkthroughs</span></a></li><li><a class="mm-link" href="/resources/articles/"><span class="mm-link-title">Articles</span><span class="mm-link-desc">Product intelligence and tips</span></a></li><li><a class="mm-link" href="/field-manual/"><span class="mm-link-title">Field Manual</span><span class="mm-link-desc">What each feed rewards and punishes</span></a></li><li><a class="mm-link" href="/docs/reference/support/"><span class="mm-link-title">Get help</span><span class="mm-link-desc">Support and troubleshooting</span></a></li><li><a class="mm-link" href="/support/"><span class="mm-link-title">Support</span><span class="mm-link-desc">Contact the team, or start with the docs</span></a></li><li><a class="mm-link" href="/major/"><span class="mm-link-title">Meet Major</span><span class="mm-link-desc">Our mascot and his troops</span></a></li><li><a class="mm-link" href="/brand/"><span class="mm-link-title">Brand</span><span class="mm-link-desc">Logo, colors and the brand kit</span></a></li><li><a class="mm-link" href="https://tells.blowhorn.ai/?utm_source=blowhorn.ai&amp;utm_medium=referral&amp;utm_campaign=tells&amp;utm_content=nav"><span class="mm-link-title">Am I a Bot?</span><span class="mm-link-desc">Free check: what sites can see about your browser</span></a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="mm-item"><a class="mm-top" href="/pricing/">Pricing</a></li>
+            <li class="mm-item mm-item-download"><a class="button button-secondary mm-download" href="/download/">Download</a></li>
+          </ul>
+        </nav>
+        <a class="button button-secondary site-cta" href="/download/">Download</a>
+      </div>
+    </header>
+    <script src="/js/nav.min.f9cb0a1cf5fb98c0ffc9bd2b8aff48c463061d31197aea2cfe97924da2a9a643.js" defer></script>
+<main id="main" class="page integrations-page">
+      <div class="wrap"><header class="page-head">
+          <p class="label">Integrations</p>
+          <h1 id="integrations-title" class="display">Every platform on the map</h1>
+          <p class="body-lg muted"><span data-count-activities>35</span> actions across more platforms than any screen can show. Blowhorn posts as you through your own browser or a platform API. GitHub does not take a post. Blowhorn stars repositories and rallies reactions on issues and pull requests.</p>
+          <p class="integrations-matrix-link"><a class="button button-secondary" href="/integrations/actions/" data-matrix-link>See every action on every platform</a></p>
+        </header><section id="platform-views" class="section platforms-signal platform-views" aria-labelledby="platform-views-title" data-platforms>
+        <div class="section-head">
+          <h2 id="platform-views-title" class="h2">See the map your way</h2>
+          <p class="muted">By type, by role, by action, or all at once.</p>
+        </div>
+        <div class="plat-toolbar">
+          <div class="plat-tabs" role="tablist" aria-label="Compare how the map looks">
+            <a class="plat-tab is-on" role="tab" id="plat-tab-category" href="#plat-panel-category" aria-selected="true" aria-controls="plat-panel-category" data-plat-tab="category">By type</a>
+            <a class="plat-tab" role="tab" id="plat-tab-role" href="#plat-panel-role" aria-selected="false" aria-controls="plat-panel-role" data-plat-tab="role">By role</a>
+            <a class="plat-tab" role="tab" id="plat-tab-constellation" href="#plat-panel-constellation" aria-selected="false" aria-controls="plat-panel-constellation" data-plat-tab="constellation">The map</a>
+            <a class="plat-tab" role="tab" id="plat-tab-action" href="#plat-panel-action" aria-selected="false" aria-controls="plat-panel-action" data-plat-tab="action">By action</a>
+          </div>
+          <p class="plat-count caption" data-plat-count>More platforms than any screen can show.</p>
+        </div>
+        <div class="plat-panel is-on" id="plat-panel-category" role="tabpanel" aria-labelledby="plat-tab-category" data-plat-panel="category"><ul class="plat-row">
+            <li>
+              <a class="platform" href="#cat-chrome">
+                <span class="ui">Your browser</span>
+                <span class="caption">See the list</span>
+              </a>
+            </li>
+            <li>
+              <a class="platform" href="#cat-api">
+                <span class="ui">Official APIs</span>
+                <span class="caption">See the list</span>
+              </a>
+            </li>
+            <li>
+              <a class="platform" href="#cat-rally">
+                <span class="ui">Rally, not posts</span>
+                <span class="caption">See the list</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="plat-panel" id="plat-panel-role" role="tabpanel" aria-labelledby="plat-tab-role" data-plat-panel="role">
+          <div class="plat-roles">
+            <div class="plat-role-picks" role="group" aria-label="Highlight platforms by role">
+              <button type="button" class="plat-role is-on" data-plat-role="devrel" aria-pressed="true">DevRel</button>
+              <button type="button" class="plat-role" data-plat-role="marketing" aria-pressed="false">Marketing managers</button>
+              <button type="button" class="plat-role" data-plat-role="founders" aria-pressed="false">Founders</button>
+              <button type="button" class="plat-role" data-plat-role="open-source" aria-pressed="false">Open source maintainers</button>
+              <button type="button" class="plat-role" data-plat-role="community" aria-pressed="false">Community managers</button>
+              <button type="button" class="plat-role" data-plat-role="agencies" aria-pressed="false">Agencies and consultants</button>
+              <button type="button" class="plat-role" data-plat-role="social-media" aria-pressed="false">Social media managers</button>
+            </div>
+            <ul class="plat-row plat-row-roles">
+              <li data-plat-id="linkedin" data-plat-roles="devrel marketing founders open-source community agencies social-media">
+                <a class="platform" href="/docs/reference/platforms/linkedin/">
+                  <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                  <span class="ui">LinkedIn</span>
+                  <span class="caption">Your browser</span>
+                </a>
+              </li>
+              <li data-plat-id="x" data-plat-roles="devrel marketing founders open-source community agencies social-media">
+                <a class="platform" href="/docs/reference/platforms/x/">
+                  <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                  <span class="ui">X (Twitter)</span>
+                  <span class="caption">Your browser</span>
+                </a>
+              </li>
+              <li data-plat-id="reddit" data-plat-roles="devrel founders open-source community agencies social-media">
+                <a class="platform" href="/docs/reference/platforms/reddit/">
+                  <span class="logo-tile"><img src="/assets/platforms/reddit-logo.png" alt="" width="28" height="28"></span>
+                  <span class="ui">Reddit</span>
+                  <span class="caption">Your browser</span>
+                </a>
+              </li>
+              <li data-plat-id="hacker-news" data-plat-roles="devrel founders open-source agencies social-media">
+                <a class="platform" href="/docs/reference/platforms/hacker-news/">
+                  <span class="logo-tile"><img src="/assets/platforms/hacker-news-y18.svg" alt="" width="28" height="28"></span>
+                  <span class="ui">Hacker News</span>
+                  <span class="caption">Your browser</span>
+                </a>
+              </li>
+              <li data-plat-id="slack" data-plat-roles="devrel marketing founders open-source community agencies social-media">
+                <a class="platform" href="/docs/reference/platforms/slack/">
+                  <span class="logo-tile"><img src="/assets/platforms/slack-mark.svg" alt="" width="28" height="28"></span>
+                  <span class="ui">Slack</span>
+                  <span class="caption">Slack API</span>
+                </a>
+              </li>
+              <li data-plat-id="bluesky" data-plat-roles="devrel marketing founders open-source community agencies social-media">
+                <a class="platform" href="/docs/reference/platforms/bluesky/">
+                  <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                  <span class="ui">Bluesky</span>
+                  <span class="caption">Bluesky API</span>
+                </a>
+              </li>
+              <li data-plat-id="github" data-plat-roles="devrel founders open-source agencies social-media">
+                <a class="platform" href="/docs/reference/platforms/github/">
+                  <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                  <span class="ui">GitHub</span>
+                  <span class="caption">GitHub API</span>
+                </a>
+              </li>
+              <li data-plat-id="youtube" data-plat-roles="devrel marketing open-source social-media">
+                <a class="platform" href="/docs/reference/platforms/youtube/">
+                  <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                  <span class="ui">YouTube</span>
+                  <span class="caption">Your browser</span>
+                </a>
+              </li>
+              <li data-plat-id="instagram" data-plat-roles="marketing">
+                <a class="platform" href="/docs/reference/platforms/instagram/">
+                  <span class="logo-tile"><img src="/assets/platforms/instagram-simple-icons.svg" alt="" width="28" height="28"></span>
+                  <span class="ui">Instagram</span>
+                  <span class="caption">Your browser</span>
+                </a>
+              </li>
+              <li data-plat-id="tiktok" data-plat-roles="marketing">
+                <a class="platform" href="/docs/reference/platforms/tiktok/">
+                  <span class="logo-tile"><img src="/assets/platforms/tiktok-simple-icons.svg" alt="" width="28" height="28"></span>
+                  <span class="ui">TikTok</span>
+                  <span class="caption">Your browser</span>
+                </a>
+              </li>
+              <li data-plat-id="facebook" data-plat-roles="marketing">
+                <a class="platform" href="/docs/reference/platforms/facebook/">
+                  <span class="logo-tile"><img src="/assets/platforms/facebook-simple-icons.svg" alt="" width="28" height="28"></span>
+                  <span class="ui">Facebook</span>
+                  <span class="caption">Your browser</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="plat-panel" id="plat-panel-constellation" role="tabpanel" aria-labelledby="plat-tab-constellation" data-plat-panel="constellation">
+          <div class="constellation" data-constellation>
+            <p class="constellation-count">
+              <span class="constellation-num" data-count-activities>35</span>
+              <span class="constellation-label">actions</span>
+              <span class="caption muted">across more platforms than any screen can show</span>
+            </p>
+            <p class="constellation-ctl">
+              <button type="button" class="constellation-pause" data-constellation-pause aria-pressed="false">Pause motion</button>
+            </p>
+            <ul class="constellation-orbit" data-constellation-total="11">
+              <li class="constellation-item" data-n="0">
+                <a class="platform" href="/docs/reference/platforms/linkedin/">
+                  <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">LinkedIn</span>
+                </a>
+              </li>
+              <li class="constellation-item" data-n="1">
+                <a class="platform" href="/docs/reference/platforms/x/">
+                  <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">X (Twitter)</span>
+                </a>
+              </li>
+              <li class="constellation-item" data-n="2">
+                <a class="platform" href="/docs/reference/platforms/reddit/">
+                  <span class="logo-tile"><img src="/assets/platforms/reddit-logo.png" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">Reddit</span>
+                </a>
+              </li>
+              <li class="constellation-item" data-n="3">
+                <a class="platform" href="/docs/reference/platforms/hacker-news/">
+                  <span class="logo-tile"><img src="/assets/platforms/hacker-news-y18.svg" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">Hacker News</span>
+                </a>
+              </li>
+              <li class="constellation-item" data-n="4">
+                <a class="platform" href="/docs/reference/platforms/slack/">
+                  <span class="logo-tile"><img src="/assets/platforms/slack-mark.svg" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">Slack</span>
+                </a>
+              </li>
+              <li class="constellation-item" data-n="5">
+                <a class="platform" href="/docs/reference/platforms/bluesky/">
+                  <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">Bluesky</span>
+                </a>
+              </li>
+              <li class="constellation-item" data-n="6">
+                <a class="platform" href="/docs/reference/platforms/github/">
+                  <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">GitHub</span>
+                </a>
+              </li>
+              <li class="constellation-item" data-n="7">
+                <a class="platform" href="/docs/reference/platforms/youtube/">
+                  <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">YouTube</span>
+                </a>
+              </li>
+              <li class="constellation-item" data-n="8">
+                <a class="platform" href="/docs/reference/platforms/instagram/">
+                  <span class="logo-tile"><img src="/assets/platforms/instagram-simple-icons.svg" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">Instagram</span>
+                </a>
+              </li>
+              <li class="constellation-item" data-n="9">
+                <a class="platform" href="/docs/reference/platforms/tiktok/">
+                  <span class="logo-tile"><img src="/assets/platforms/tiktok-simple-icons.svg" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">TikTok</span>
+                </a>
+              </li>
+              <li class="constellation-item" data-n="10">
+                <a class="platform" href="/docs/reference/platforms/facebook/">
+                  <span class="logo-tile"><img src="/assets/platforms/facebook-simple-icons.svg" alt="" width="28" height="28"></span>
+                  <span class="visually-hidden">Facebook</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="plat-panel" id="plat-panel-action" role="tabpanel" aria-labelledby="plat-tab-action" data-plat-panel="action">
+          <div class="plat-actions" data-action-filter>
+            <nav class="plat-action-picks" aria-label="Show platforms by action">
+              <a class="plat-action" href="#views-action-post" data-action-chip="post">Post</a>
+              <a class="plat-action" href="#views-action-comment" data-action-chip="comment">Comment</a>
+              <a class="plat-action" href="#views-action-reply" data-action-chip="reply">Reply</a>
+              <a class="plat-action" href="#views-action-amplify" data-action-chip="amplify">Amplify</a>
+              <a class="plat-action" href="#views-action-react" data-action-chip="react">React</a>
+              <a class="plat-action" href="#views-action-star" data-action-chip="star">Star</a>
+              <a class="plat-action" href="#views-action-follow" data-action-chip="follow">Follow</a>
+              <a class="plat-action" href="#views-action-unfollow" data-action-chip="unfollow">Unfollow</a>
+              <a class="plat-action" href="#views-action-accept" data-action-chip="accept">Accept</a>
+              <a class="plat-action" href="#views-action-withdraw" data-action-chip="withdraw">Withdraw</a>
+              <a class="plat-action" href="#views-action-find" data-action-chip="find">Find</a>
+              <a class="plat-action" href="#views-action-analytics" data-action-chip="analytics">Analytics</a>
+            </nav>
+            <div class="action-group" id="views-action-post" data-action-group="post">
+              <h3 id="views-action-post-title" class="h3">Post</h3>
+              <p class="caption muted">Publish a message as you.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/linkedin/#action-post">
+                    <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                    <span class="ui">LinkedIn</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/x/#action-post">
+                    <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                    <span class="ui">X (Twitter)</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/reddit/#action-post">
+                    <span class="logo-tile"><img src="/assets/platforms/reddit-logo.png" alt="" width="28" height="28"></span>
+                    <span class="ui">Reddit</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/hacker-news/#action-post">
+                    <span class="logo-tile"><img src="/assets/platforms/hacker-news-y18.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Hacker News</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/slack/#action-post">
+                    <span class="logo-tile"><img src="/assets/platforms/slack-mark.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Slack</span>
+                    <span class="caption">Slack API</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/bluesky/#action-post">
+                    <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Bluesky</span>
+                    <span class="caption">Bluesky API</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/youtube/#action-post">
+                    <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">YouTube</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-comment" data-action-group="comment">
+              <h3 id="views-action-comment-title" class="h3">Comment</h3>
+              <p class="caption muted">Comment on an existing post.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/linkedin/#action-comment">
+                    <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                    <span class="ui">LinkedIn</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/reddit/#action-comment">
+                    <span class="logo-tile"><img src="/assets/platforms/reddit-logo.png" alt="" width="28" height="28"></span>
+                    <span class="ui">Reddit</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/hacker-news/#action-comment">
+                    <span class="logo-tile"><img src="/assets/platforms/hacker-news-y18.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Hacker News</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/youtube/#action-comment">
+                    <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">YouTube</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-reply" data-action-group="reply">
+              <h3 id="views-action-reply-title" class="h3">Reply</h3>
+              <p class="caption muted">Reply in a conversation or thread.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/x/#action-reply">
+                    <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                    <span class="ui">X (Twitter)</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/slack/#action-reply">
+                    <span class="logo-tile"><img src="/assets/platforms/slack-mark.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Slack</span>
+                    <span class="caption">Slack API</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/bluesky/#action-reply">
+                    <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Bluesky</span>
+                    <span class="caption">Bluesky API</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/youtube/#action-reply">
+                    <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">YouTube</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-amplify" data-action-group="amplify">
+              <h3 id="views-action-amplify-title" class="h3">Amplify</h3>
+              <p class="caption muted">Repost, retweet, quote, upvote, or like existing content from each of your profiles.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/linkedin/#action-amplify">
+                    <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                    <span class="ui">LinkedIn</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/x/#action-amplify">
+                    <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                    <span class="ui">X (Twitter)</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/reddit/#action-amplify">
+                    <span class="logo-tile"><img src="/assets/platforms/reddit-logo.png" alt="" width="28" height="28"></span>
+                    <span class="ui">Reddit</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/bluesky/#action-amplify">
+                    <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Bluesky</span>
+                    <span class="caption">Bluesky API</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/youtube/#action-amplify">
+                    <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">YouTube</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-react" data-action-group="react">
+              <h3 id="views-action-react-title" class="h3">React</h3>
+              <p class="caption muted">Add a reaction to a post or message.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/slack/#action-react">
+                    <span class="logo-tile"><img src="/assets/platforms/slack-mark.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Slack</span>
+                    <span class="caption">Slack API</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/github/#action-react">
+                    <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">GitHub</span>
+                    <span class="caption">GitHub API</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-star" data-action-group="star">
+              <h3 id="views-action-star-title" class="h3">Star</h3>
+              <p class="caption muted">Star repositories over the API.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/github/#action-star">
+                    <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">GitHub</span>
+                    <span class="caption">GitHub API</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-follow" data-action-group="follow">
+              <h3 id="views-action-follow-title" class="h3">Follow</h3>
+              <p class="caption muted">Name a target account. With --limit 0, follow that account, or several comma-separated. With a positive limit, follow up to that many of the target&#39;s followers, never the target itself.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/x/#action-follow">
+                    <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                    <span class="ui">X (Twitter)</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/bluesky/#action-follow">
+                    <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Bluesky</span>
+                    <span class="caption">Bluesky API</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/github/#action-follow">
+                    <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">GitHub</span>
+                    <span class="caption">GitHub API</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-unfollow" data-action-group="unfollow">
+              <h3 id="views-action-unfollow-title" class="h3">Unfollow</h3>
+              <p class="caption muted">Unfollow an account.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/bluesky/#action-unfollow">
+                    <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Bluesky</span>
+                    <span class="caption">Bluesky API</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-accept" data-action-group="accept">
+              <h3 id="views-action-accept-title" class="h3">Accept</h3>
+              <p class="caption muted">Accept inbound invitations.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/linkedin/#action-accept">
+                    <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                    <span class="ui">LinkedIn</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-withdraw" data-action-group="withdraw">
+              <h3 id="views-action-withdraw-title" class="h3">Withdraw</h3>
+              <p class="caption muted">Withdraw invitations you sent that have waited long enough.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/linkedin/#action-withdraw">
+                    <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                    <span class="ui">LinkedIn</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-find" data-action-group="find">
+              <h3 id="views-action-find-title" class="h3">Find</h3>
+              <p class="caption muted">Search posts or list people so you can choose whom to reach.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/bluesky/#action-find">
+                    <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Bluesky</span>
+                    <span class="caption">Bluesky API</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/github/#action-find">
+                    <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">GitHub</span>
+                    <span class="caption">GitHub API</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="action-group" id="views-action-analytics" data-action-group="analytics">
+              <h3 id="views-action-analytics-title" class="h3">Analytics</h3>
+              <p class="caption muted">Record reach figures so you can watch the trend.</p>
+              <ul class="plat-row">
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/linkedin/#action-analytics">
+                    <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                    <span class="ui">LinkedIn</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/x/#action-analytics">
+                    <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                    <span class="ui">X (Twitter)</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/bluesky/#action-analytics">
+                    <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">Bluesky</span>
+                    <span class="caption">Bluesky API</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="platform" href="/docs/reference/platforms/youtube/#action-analytics">
+                    <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                    <span class="ui">YouTube</span>
+                    <span class="caption">Your browser</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+        <div class="integrations-catalog" data-action-filter>
+        <nav id="action-filter" class="action-filter" aria-label="Filter by action">
+          <p class="label">By action</p>
+          <div class="action-filter-picks">
+            <a class="plat-action is-on" href="#integrations-title" data-action-chip="">All</a>
+            <a class="plat-action" href="#action-post" data-action-chip="post">Post</a>
+            <a class="plat-action" href="#action-comment" data-action-chip="comment">Comment</a>
+            <a class="plat-action" href="#action-reply" data-action-chip="reply">Reply</a>
+            <a class="plat-action" href="#action-amplify" data-action-chip="amplify">Amplify</a>
+            <a class="plat-action" href="#action-react" data-action-chip="react">React</a>
+            <a class="plat-action" href="#action-star" data-action-chip="star">Star</a>
+            <a class="plat-action" href="#action-follow" data-action-chip="follow">Follow</a>
+            <a class="plat-action" href="#action-unfollow" data-action-chip="unfollow">Unfollow</a>
+            <a class="plat-action" href="#action-accept" data-action-chip="accept">Accept</a>
+            <a class="plat-action" href="#action-withdraw" data-action-chip="withdraw">Withdraw</a>
+            <a class="plat-action" href="#action-find" data-action-chip="find">Find</a>
+            <a class="plat-action" href="#action-analytics" data-action-chip="analytics">Analytics</a>
+          </div>
+        </nav>
+        <section class="section" aria-labelledby="cat-chrome" data-action-catalog>
+          <div class="section-head">
+            <h2 id="cat-chrome" class="h2">Your browser</h2>
+            <p class="muted">Blowhorn types and clicks in your own signed-in browser.</p>
+          </div>
+          <ul class="grid grid-3 section-body" data-card-deal="card-field card-plain card-stamp card-dispatch card-field card-plain card-stamp card-dispatch">
+            <li class="card integration-card card-field" data-action-card data-actions="post comment amplify accept withdraw analytics" data-plat-id="linkedin">
+              <a class="integration-card-main" href="/docs/reference/platforms/linkedin/">
+                <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">LinkedIn</h3>
+                <p>Your browser</p>
+              </a>
+              <ul class="integration-actions">
+                <li><a href="/docs/reference/platforms/linkedin/#action-post">Post</a></li>
+                <li><a href="/docs/reference/platforms/linkedin/#action-comment">Comment</a></li>
+                <li><a href="/docs/reference/platforms/linkedin/#action-amplify">Amplify</a></li>
+                <li><a href="/docs/reference/platforms/linkedin/#action-accept">Accept</a></li>
+                <li><a href="/docs/reference/platforms/linkedin/#action-withdraw">Withdraw</a></li>
+                <li><a href="/docs/reference/platforms/linkedin/#action-analytics">Analytics</a></li>
+              </ul>
+            </li>
+            <li class="card integration-card card-plain" data-action-card data-actions="post reply amplify follow analytics" data-plat-id="x">
+              <a class="integration-card-main" href="/docs/reference/platforms/x/">
+                <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">X (Twitter)</h3>
+                <p>Your browser</p>
+              </a>
+              <ul class="integration-actions">
+                <li><a href="/docs/reference/platforms/x/#action-post">Post</a></li>
+                <li><a href="/docs/reference/platforms/x/#action-reply">Reply</a></li>
+                <li><a href="/docs/reference/platforms/x/#action-amplify">Amplify</a></li>
+                <li><a href="/docs/reference/platforms/x/#action-follow">Follow</a></li>
+                <li><a href="/docs/reference/platforms/x/#action-analytics">Analytics</a></li>
+              </ul>
+            </li>
+            <li class="card integration-card card-stamp" data-action-card data-actions="post comment amplify" data-plat-id="reddit">
+              <a class="integration-card-main" href="/docs/reference/platforms/reddit/">
+                <span class="logo-tile"><img src="/assets/platforms/reddit-logo.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">Reddit</h3>
+                <p>Your browser</p>
+              </a>
+              <ul class="integration-actions">
+                <li><a href="/docs/reference/platforms/reddit/#action-post">Post</a></li>
+                <li><a href="/docs/reference/platforms/reddit/#action-comment">Comment</a></li>
+                <li><a href="/docs/reference/platforms/reddit/#action-amplify">Amplify</a></li>
+              </ul>
+            </li>
+            <li class="card integration-card card-dispatch" data-action-card data-actions="post comment" data-plat-id="hacker-news">
+              <a class="integration-card-main" href="/docs/reference/platforms/hacker-news/">
+                <span class="logo-tile"><img src="/assets/platforms/hacker-news-y18.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Hacker News</h3>
+                <p>Your browser</p>
+              </a>
+              <ul class="integration-actions">
+                <li><a href="/docs/reference/platforms/hacker-news/#action-post">Post</a></li>
+                <li><a href="/docs/reference/platforms/hacker-news/#action-comment">Comment</a></li>
+              </ul>
+            </li>
+            <li class="card integration-card card-field" data-action-card data-actions="post comment reply amplify analytics" data-plat-id="youtube">
+              <a class="integration-card-main" href="/docs/reference/platforms/youtube/">
+                <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">YouTube</h3>
+                <p>Your browser</p>
+              </a>
+              <ul class="integration-actions">
+                <li><a href="/docs/reference/platforms/youtube/#action-post">Post</a></li>
+                <li><a href="/docs/reference/platforms/youtube/#action-comment">Comment</a></li>
+                <li><a href="/docs/reference/platforms/youtube/#action-reply">Reply</a></li>
+                <li><a href="/docs/reference/platforms/youtube/#action-amplify">Amplify</a></li>
+                <li><a href="/docs/reference/platforms/youtube/#action-analytics">Analytics</a></li>
+              </ul>
+            </li>
+            <li class="card integration-card card-plain" data-action-card data-actions="" data-plat-id="instagram">
+              <a class="integration-card-main" href="/docs/reference/platforms/instagram/">
+                <span class="logo-tile"><img src="/assets/platforms/instagram-simple-icons.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Instagram</h3>
+                <p>Your browser</p>
+              </a>
+            </li>
+            <li class="card integration-card card-stamp" data-action-card data-actions="" data-plat-id="tiktok">
+              <a class="integration-card-main" href="/docs/reference/platforms/tiktok/">
+                <span class="logo-tile"><img src="/assets/platforms/tiktok-simple-icons.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">TikTok</h3>
+                <p>Your browser</p>
+              </a>
+            </li>
+            <li class="card integration-card card-dispatch" data-action-card data-actions="" data-plat-id="facebook">
+              <a class="integration-card-main" href="/docs/reference/platforms/facebook/">
+                <span class="logo-tile"><img src="/assets/platforms/facebook-simple-icons.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Facebook</h3>
+                <p>Your browser</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section" aria-labelledby="cat-api" data-action-catalog>
+          <div class="section-head">
+            <h2 id="cat-api" class="h2">Official APIs</h2>
+            <p class="muted">Posted as you through the platform&#39;s own API, never a borrowed password.</p>
+          </div>
+          <ul class="grid grid-3 section-body" data-card-deal="card-field card-plain">
+            <li class="card integration-card card-field" data-action-card data-actions="post reply react" data-plat-id="slack">
+              <a class="integration-card-main" href="/docs/reference/platforms/slack/">
+                <span class="logo-tile"><img src="/assets/platforms/slack-mark.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Slack</h3>
+                <p>Slack API</p>
+              </a>
+              <ul class="integration-actions">
+                <li><a href="/docs/reference/platforms/slack/#action-post">Post</a></li>
+                <li><a href="/docs/reference/platforms/slack/#action-reply">Reply</a></li>
+                <li><a href="/docs/reference/platforms/slack/#action-react">React</a></li>
+              </ul>
+            </li>
+            <li class="card integration-card card-plain" data-action-card data-actions="post reply amplify follow unfollow find analytics" data-plat-id="bluesky">
+              <a class="integration-card-main" href="/docs/reference/platforms/bluesky/">
+                <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Bluesky</h3>
+                <p>Bluesky API</p>
+              </a>
+              <ul class="integration-actions">
+                <li><a href="/docs/reference/platforms/bluesky/#action-post">Post</a></li>
+                <li><a href="/docs/reference/platforms/bluesky/#action-reply">Reply</a></li>
+                <li><a href="/docs/reference/platforms/bluesky/#action-amplify">Amplify</a></li>
+                <li><a href="/docs/reference/platforms/bluesky/#action-follow">Follow</a></li>
+                <li><a href="/docs/reference/platforms/bluesky/#action-unfollow">Unfollow</a></li>
+                <li><a href="/docs/reference/platforms/bluesky/#action-find">Find</a></li>
+                <li><a href="/docs/reference/platforms/bluesky/#action-analytics">Analytics</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+        <section class="section" aria-labelledby="cat-rally" data-action-catalog>
+          <div class="section-head">
+            <h2 id="cat-rally" class="h2">Rally, not posts</h2>
+            <p class="muted">GitHub does not take a post. Blowhorn stars repositories and rallies reactions on issues and pull requests.</p>
+          </div>
+          <ul class="grid grid-3 section-body" data-card-deal="card-field">
+            <li class="card integration-card card-field" data-action-card data-actions="react star follow find" data-plat-id="github">
+              <a class="integration-card-main" href="/docs/reference/platforms/github/">
+                <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">GitHub</h3>
+                <p>GitHub API</p>
+              </a>
+              <ul class="integration-actions">
+                <li><a href="/docs/reference/platforms/github/#action-react">React</a></li>
+                <li><a href="/docs/reference/platforms/github/#action-star">Star</a></li>
+                <li><a href="/docs/reference/platforms/github/#action-follow">Follow</a></li>
+                <li><a href="/docs/reference/platforms/github/#action-find">Find</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-post" data-action-group="post" aria-labelledby="action-post-title">
+          <div class="section-head">
+            <h2 id="action-post-title" class="h2">Post</h2>
+            <p class="muted">Publish a message as you.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/linkedin/#action-post">
+                <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">LinkedIn</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Post</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-plain" href="/docs/reference/platforms/x/#action-post">
+                <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">X (Twitter)</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Post</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-stamp" href="/docs/reference/platforms/reddit/#action-post">
+                <span class="logo-tile"><img src="/assets/platforms/reddit-logo.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">Reddit</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Post</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-dispatch" href="/docs/reference/platforms/hacker-news/#action-post">
+                <span class="logo-tile"><img src="/assets/platforms/hacker-news-y18.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Hacker News</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Post</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/slack/#action-post">
+                <span class="logo-tile"><img src="/assets/platforms/slack-mark.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Slack</h3>
+                <p>Slack API</p>
+                <p class="caption muted">Post</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-plain" href="/docs/reference/platforms/bluesky/#action-post">
+                <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Bluesky</h3>
+                <p>Bluesky API</p>
+                <p class="caption muted">Post</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-stamp" href="/docs/reference/platforms/youtube/#action-post">
+                <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">YouTube</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Post</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-comment" data-action-group="comment" aria-labelledby="action-comment-title">
+          <div class="section-head">
+            <h2 id="action-comment-title" class="h2">Comment</h2>
+            <p class="muted">Comment on an existing post.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/linkedin/#action-comment">
+                <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">LinkedIn</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Comment</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-plain" href="/docs/reference/platforms/reddit/#action-comment">
+                <span class="logo-tile"><img src="/assets/platforms/reddit-logo.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">Reddit</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Comment</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-stamp" href="/docs/reference/platforms/hacker-news/#action-comment">
+                <span class="logo-tile"><img src="/assets/platforms/hacker-news-y18.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Hacker News</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Comment</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-dispatch" href="/docs/reference/platforms/youtube/#action-comment">
+                <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">YouTube</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Comment</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-reply" data-action-group="reply" aria-labelledby="action-reply-title">
+          <div class="section-head">
+            <h2 id="action-reply-title" class="h2">Reply</h2>
+            <p class="muted">Reply in a conversation or thread.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/x/#action-reply">
+                <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">X (Twitter)</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Reply</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-plain" href="/docs/reference/platforms/slack/#action-reply">
+                <span class="logo-tile"><img src="/assets/platforms/slack-mark.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Slack</h3>
+                <p>Slack API</p>
+                <p class="caption muted">Reply</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-stamp" href="/docs/reference/platforms/bluesky/#action-reply">
+                <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Bluesky</h3>
+                <p>Bluesky API</p>
+                <p class="caption muted">Reply</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-dispatch" href="/docs/reference/platforms/youtube/#action-reply">
+                <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">YouTube</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Reply</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-amplify" data-action-group="amplify" aria-labelledby="action-amplify-title">
+          <div class="section-head">
+            <h2 id="action-amplify-title" class="h2">Amplify</h2>
+            <p class="muted">Repost, retweet, quote, upvote, or like existing content from each of your profiles.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/linkedin/#action-amplify">
+                <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">LinkedIn</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Amplify</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-plain" href="/docs/reference/platforms/x/#action-amplify">
+                <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">X (Twitter)</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Amplify</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-stamp" href="/docs/reference/platforms/reddit/#action-amplify">
+                <span class="logo-tile"><img src="/assets/platforms/reddit-logo.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">Reddit</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Amplify</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-dispatch" href="/docs/reference/platforms/bluesky/#action-amplify">
+                <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Bluesky</h3>
+                <p>Bluesky API</p>
+                <p class="caption muted">Amplify</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/youtube/#action-amplify">
+                <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">YouTube</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Amplify</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-react" data-action-group="react" aria-labelledby="action-react-title">
+          <div class="section-head">
+            <h2 id="action-react-title" class="h2">React</h2>
+            <p class="muted">Add a reaction to a post or message.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/slack/#action-react">
+                <span class="logo-tile"><img src="/assets/platforms/slack-mark.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Slack</h3>
+                <p>Slack API</p>
+                <p class="caption muted">React</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-plain" href="/docs/reference/platforms/github/#action-react">
+                <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">GitHub</h3>
+                <p>GitHub API</p>
+                <p class="caption muted">React</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-star" data-action-group="star" aria-labelledby="action-star-title">
+          <div class="section-head">
+            <h2 id="action-star-title" class="h2">Star</h2>
+            <p class="muted">Star repositories over the API.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/github/#action-star">
+                <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">GitHub</h3>
+                <p>GitHub API</p>
+                <p class="caption muted">Star</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-follow" data-action-group="follow" aria-labelledby="action-follow-title">
+          <div class="section-head">
+            <h2 id="action-follow-title" class="h2">Follow</h2>
+            <p class="muted">Name a target account. With --limit 0, follow that account, or several comma-separated. With a positive limit, follow up to that many of the target&#39;s followers, never the target itself.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/x/#action-follow">
+                <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">X (Twitter)</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Follow</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-plain" href="/docs/reference/platforms/bluesky/#action-follow">
+                <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Bluesky</h3>
+                <p>Bluesky API</p>
+                <p class="caption muted">Follow</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-stamp" href="/docs/reference/platforms/github/#action-follow">
+                <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">GitHub</h3>
+                <p>GitHub API</p>
+                <p class="caption muted">Follow</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-unfollow" data-action-group="unfollow" aria-labelledby="action-unfollow-title">
+          <div class="section-head">
+            <h2 id="action-unfollow-title" class="h2">Unfollow</h2>
+            <p class="muted">Unfollow an account.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/bluesky/#action-unfollow">
+                <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Bluesky</h3>
+                <p>Bluesky API</p>
+                <p class="caption muted">Unfollow</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-accept" data-action-group="accept" aria-labelledby="action-accept-title">
+          <div class="section-head">
+            <h2 id="action-accept-title" class="h2">Accept</h2>
+            <p class="muted">Accept inbound invitations.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/linkedin/#action-accept">
+                <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">LinkedIn</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Accept</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-withdraw" data-action-group="withdraw" aria-labelledby="action-withdraw-title">
+          <div class="section-head">
+            <h2 id="action-withdraw-title" class="h2">Withdraw</h2>
+            <p class="muted">Withdraw invitations you sent that have waited long enough.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/linkedin/#action-withdraw">
+                <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">LinkedIn</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Withdraw</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-find" data-action-group="find" aria-labelledby="action-find-title">
+          <div class="section-head">
+            <h2 id="action-find-title" class="h2">Find</h2>
+            <p class="muted">Search posts or list people so you can choose whom to reach.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/bluesky/#action-find">
+                <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Bluesky</h3>
+                <p>Bluesky API</p>
+                <p class="caption muted">Find</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-plain" href="/docs/reference/platforms/github/#action-find">
+                <span class="logo-tile"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">GitHub</h3>
+                <p>GitHub API</p>
+                <p class="caption muted">Find</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        <section class="section action-group" id="action-analytics" data-action-group="analytics" aria-labelledby="action-analytics-title">
+          <div class="section-head">
+            <h2 id="action-analytics-title" class="h2">Analytics</h2>
+            <p class="muted">Record reach figures so you can watch the trend.</p>
+          </div>
+          <ul class="grid grid-3 section-body">
+            <li>
+              <a class="card card-link card-field" href="/docs/reference/platforms/linkedin/#action-analytics">
+                <span class="logo-tile"><img src="/assets/platforms/linkedin-in-bug.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">LinkedIn</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Analytics</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-plain" href="/docs/reference/platforms/x/#action-analytics">
+                <span class="logo-tile"><img src="/assets/platforms/x-logo-black.png" alt="" width="28" height="28"></span>
+                <h3 class="h3">X (Twitter)</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Analytics</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-stamp" href="/docs/reference/platforms/bluesky/#action-analytics">
+                <span class="logo-tile"><img src="/assets/platforms/bluesky-butterfly-blue.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Bluesky</h3>
+                <p>Bluesky API</p>
+                <p class="caption muted">Analytics</p>
+              </a>
+            </li>
+            <li>
+              <a class="card card-link card-dispatch" href="/docs/reference/platforms/youtube/#action-analytics">
+                <span class="logo-tile"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">YouTube</h3>
+                <p>Your browser</p>
+                <p class="caption muted">Analytics</p>
+              </a>
+            </li>
+          </ul>
+        </section>
+        </div>
+        <section class="section" aria-labelledby="cat-assistants">
+          <div class="section-head">
+            <h2 id="cat-assistants" class="h2">AI assistants</h2>
+            <p class="muted">Connect an assistant to ask about your Blowhorn schedule. Posting stays in the desktop app or CLI.</p>
+          </div>
+          <ul class="grid grid-3 section-body" data-card-deal="card-field">
+            <li class="card integration-card card-field">
+              <a class="integration-card-main" href="/agents/grok-bot/">
+                <span class="logo-tile"><img src="/agents/grok.svg" alt="" width="28" height="28"></span>
+                <h3 class="h3">Grok Bot</h3>
+                <p>Ask Grok Bot about your Blowhorn schedule.</p>
+              </a>
+              <ul class="integration-actions">
+                <li><a href="/docs/how-to/set-up/connect-mcp-client/#grok-bot">Read the setup guide</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-panel glass">
+          <div class="footer-top">
+            <div class="footer-brand">
+              <a class="footer-logo" href="/" aria-label="Blowhorn home">
+                <img class="logo-on-light" src="/assets/brand/logo/blowhorn-lockup-horizontal.svg" alt="Blowhorn" width="168" height="42">
+                <img class="logo-on-dark" src="/assets/brand/logo/blowhorn-lockup-horizontal-on-dark.svg" alt="" width="168" height="42">
+              </a>
+              <p class="footer-tagline">Your voice, at full volume.</p>
+              <nav class="footer-social" aria-label="Blowhorn on social media">
+                <ul>
+                  <li><a href="https://x.com/blowhorn_ai" target="_blank" rel="noopener noreferrer" aria-label="X"><img src="/assets/platforms/x-logo-black.png" alt="" width="20" height="20"></a></li>
+                  <li><a href="https://www.youtube.com/@blowhorn-ai" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="20" height="20"></a></li>
+                  <li><a href="https://www.facebook.com/BlowhornAI" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><img src="/assets/platforms/facebook-simple-icons.svg" alt="" width="20" height="20"></a></li>
+                  <li><a href="https://github.com/blowhorn-ai" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="20" height="20"></a></li>
+                </ul>
+              </nav>
+            </div>
+            <div class="footer-news">
+              <form class="newsletter" name="newsletter" method="post" action="https://api.blowhorn.ai/api/subscribe">
+              <label class="newsletter-label ui" for="newsletter-email">Subscribe to our newsletter</label>
+              <div class="newsletter-row">
+                <input type="email" id="newsletter-email" name="email" autocomplete="email" placeholder="Email address" required>
+                <button class="button button-primary" type="submit">Subscribe</button>
+              </div>
+              <input type="hidden" name="source_page" value="/integrations/">
+              <p class="signup-honeypot" aria-hidden="true">
+                <label for="newsletter-email-website">Website</label>
+                <input id="newsletter-email-website" name="website" type="text" tabindex="-1" autocomplete="off">
+              </p>
+            </form>
+
+            </div>
+          </div>
+          <nav class="footer-links" aria-label="Footer">
+            <ul>
+              <li><a href="/docs/">Docs</a></li>
+              <li><a href="/support/">Support</a></li>
+              <li><a href="/pricing/">Pricing</a></li>
+              <li><a href="/brand/">Brand</a></li>
+              <li><a href="/legal/">Trust Center</a></li>
+              <li><a class="status-link" href="https://layer5.statuspage.io" target="_blank" rel="noreferrer">Status <span class="pulse-icon" aria-hidden="true"></span></a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="footer-bottom caption">
+          <span>&copy; 2026 Layer5, Inc.</span>
+          <span>All product names are trademarks of their respective owners. Blowhorn is not affiliated with or endorsed by them.</span>
+        </div>
+      </div>
+    </footer>
+    <section id="consent" class="consent glass" aria-labelledby="consent-title" hidden>
+      <h2 id="consent-title" class="consent-title">Cookies</h2>
+      <p class="consent-text">Yes, we use cookies. Yes, you can eat them, if you can find them. Do you want us to <a href="/legal/privacy/#google-analytics">remember you</a> or pretend we've never met?</p>
+      <div class="consent-actions">
+        <button type="button" class="button button-primary consent-button" data-consent="granted">Accept</button>
+        <button type="button" class="button button-secondary consent-button" data-consent="denied">Decline</button>
+      </div>
+      <button type="button" class="consent-close" data-consent="denied" aria-label="Close and decline">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+    </section>
+
+
+<script src="/js/action-filter.bundle.min.6cbe9bfd5bdb82ccf3e70ae8f177e8a6dde8c5a54f69e0bcbd869c8903308604.js" defer></script>
+
+    <script src="/js/home-signal.min.67b1850755b9cfa0879e8bfec30f25db292c9aa716610a70cbdcc6150f0379a1.js" defer></script>
+
+    <script src="/js/code-card.min.681cde1d563b320da97fa3f2c094be9469b193e726a2734eb3eb264d3a5e33e4.js" defer></script>
+    <script type="application/json" id="docs-events">{"$schema":"../schemas/docs_events.schema.json","attribution_params":["first_source","first_medium","first_campaign","first_content","first_term","first_referrer_host","landing_guide","landing_page"],"clients":{"chatgpt":"ChatGPT","claude-code":"Claude Code","claude-desktop":"Claude Desktop","cline":"Cline","cursor":"Cursor","gemini-cli":"Gemini CLI","goose":"Goose","openai-codex-cli":"OpenAI Codex CLI","vs-code":"VS Code with GitHub Copilot","vs-code-with-github-copilot":"VS Code with GitHub Copilot","windsurf-devin-desktop":"Windsurf (Devin Desktop)","zed":"Zed"},"consent_event":"blowhorn:consent","consent_key":"blowhorn-consent","default_client":"general","events":{"docs_guide_view":{"description":"A tracked guide was viewed after consent: once per page load.","params":["page_path","guide","client"]},"docs_outbound_click":{"description":"A link to npm, an MCP registry or a Blowhorn download was followed.","params":["page_path","client","link_kind","link_url"]},"docs_snippet_copy":{"description":"The copy button on a code card was pressed. Never carries the copied text.","params":["page_path","client","snippet_kind","snippet_title"]}},"internal_hosts":["blowhorn.ai","www.blowhorn.ai"],"outbound":[{"hosts":["npmjs.com","www.npmjs.com","registry.npmjs.org"],"kind":"npm"},{"hosts":["registry.modelcontextprotocol.io"],"kind":"registry"},{"hosts":["github.com"],"kind":"registry","paths":["^/mcp(/|$)"]},{"hosts":["github.com"],"kind":"download","paths":["^/blowhorn-ai/[^/]+/releases(/|$)"]},{"hosts":["blowhorn.ai","www.blowhorn.ai"],"kind":"download","paths":["^/download/"]}],"pages":["/docs/how-to/set-up/connect-mcp-client/","/docs/reference/mcp-server/","/docs/reference/python-client/","/docs/tutorials/first-mcp-connection/","/docs/explanation/mcp-and-safety/","/ai/mcp/"],"snippet_kinds":{"bash":"shell","console":"shell","json":"json","sh":"shell","shell":"shell","text":"text","toml":"toml","yaml":"yaml","yml":"yaml","zsh":"shell"},"storage_key":"blowhorn-docs-attribution","utm_params":["utm_source","utm_medium","utm_campaign","utm_content","utm_term"]}</script>
+    <script src="/js/docs-attribution.min.1be585bb90d12fd1bc9a08fea053d087e031b32eced81aeba9f8f18390a7c3ad.js" integrity="sha256-G&#43;WFu5DRL9G8mgj&#43;oFPQh&#43;Axsy7O2Brrqfjxg5Cnw60=" crossorigin="anonymous" defer></script>
+  </body>
+</html>

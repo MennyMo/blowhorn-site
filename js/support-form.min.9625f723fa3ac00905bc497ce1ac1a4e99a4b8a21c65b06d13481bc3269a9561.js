@@ -1,0 +1,1 @@
+const form=document.querySelector('form[name="support"]');if(form){const t=form.elements.contact_preference,s=form.querySelector("[data-support-contact-fields]"),n=form.elements.email,o=form.elements.name,e=()=>{const e=t.value==="anonymous";s.hidden=e,n.disabled=e,o.disabled=e,n.required=!e};t.addEventListener("change",e),window.addEventListener("pageshow",e),e()}

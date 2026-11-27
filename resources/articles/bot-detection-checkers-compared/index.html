@@ -1,0 +1,1027 @@
+<!DOCTYPE html><html lang="en" data-theme="reveille">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><script>
+      (function () {
+        var allowed = ["signal","reveille"], param = "theme", q = null, i;
+        try { q = new URLSearchParams(window.location.search).get(param); } catch (e) {}
+        if (!q) return;
+        for (i = 0; i < allowed.length; i++) {
+          if (allowed[i] === q) {
+            document.documentElement.setAttribute('data-theme', q);
+            return;
+          }
+        }
+      })();
+    </script>
+
+    <title>What fingerprint and bot-detection checkers measure: Blowhorn</title>
+    <link rel="canonical" href="https://blowhorn.ai/resources/articles/bot-detection-checkers-compared/">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1E2117">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/assets/brand/logo/blowhorn-favicon-32.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/assets/brand/logo/blowhorn-apple-touch-icon-180.png">
+<link rel="stylesheet" href="/css/site.min.654c287476b6fc6826d41405468d3e38d1c30bee950af7aa22102c55bf87d2b5.css">
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied'
+      });
+      gtag('js', new Date());
+      gtag('config', 'G-2ZLYGVE3HN');
+    </script>
+    <script src="/js/consent.min.87a540c5c86603eab7872bd71d23e8f0460cec66cc2ab450f6ab59bd6a2839fe.js" data-ga-id="G-2ZLYGVE3HN" defer></script>
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Blowhorn">
+    <meta property="og:title" content="What fingerprint and bot-detection checkers measure: Blowhorn">
+    <meta property="og:description" content="Free fingerprint pages and commercial bot detectors publish different signals, and their popularity counts do not share one measure. This article lists the signal groups, two dated rankings, a coverage matrix that includes Blowhorn Tells, and the Tells gaps on the public backlog.">
+    <meta property="og:url" content="https://blowhorn.ai/resources/articles/bot-detection-checkers-compared/">
+    <meta property="article:published_time" content="2026-11-24T00:00:00Z">
+    <meta property="article:modified_time" content="2026-11-24T12:17:07-06:00">
+    <meta name="author" content="Blowhorn team">
+    <meta property="article:section" content="desk-of-the-general">
+    <meta property="article:tag" content="platform-rules">
+    <meta property="og:image" content="https://blowhorn.ai/assets/brand/marketing/blowhorn-og-1200x630.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="The Blowhorn logo: the Crowhorn icon beside the Blowhorn wordmark">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@blowhorn_ai">
+    <meta name="twitter:title" content="What fingerprint and bot-detection checkers measure: Blowhorn">
+    <meta name="twitter:description" content="Free fingerprint pages and commercial bot detectors publish different signals, and their popularity counts do not share one measure. This article lists the signal groups, two dated rankings, a coverage matrix that includes Blowhorn Tells, and the Tells gaps on the public backlog.">
+    <meta name="twitter:image" content="https://blowhorn.ai/assets/brand/marketing/blowhorn-og-1200x630.png">
+    <meta name="twitter:image:alt" content="The Blowhorn logo: the Crowhorn icon beside the Blowhorn wordmark">
+
+
+  </head>
+  <body>
+    <a class="skip-link ui" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/" aria-label="Blowhorn home" data-is-home="false">
+          <img class="logo-on-light" src="/assets/brand/logo/blowhorn-lockup-horizontal.svg" alt="Blowhorn" width="176" height="44">
+          <img class="logo-on-dark" src="/assets/brand/logo/blowhorn-lockup-horizontal-on-dark.svg" alt="" width="176" height="44">
+        </a>
+        <button type="button" class="mm-toggle" aria-expanded="false" aria-controls="site-menu" hidden>
+          <span class="mm-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="mm-toggle-text">Menu</span>
+        </button>
+        <nav class="site-nav" id="site-menu" aria-label="Primary">
+          <ul class="mm-list">
+            <li class="mm-item">
+              <button type="button" class="mm-trigger" aria-expanded="false" aria-controls="mm-product">Product<span class="mm-chev" aria-hidden="true"></span></button>
+              <div class="mm-panel mm-panel-cards" id="mm-product">
+                <ul class="mm-cards">
+                  <li><a class="mm-card card-stamp" href="https://chromewebstore.google.com/detail/fcflpiagmpcfifgknledeknedfopnapf">
+                    <span class="mm-card-art">
+                      <span class="iface-art iface-art-extension" aria-hidden="true"><span class="ia-panel ia-browser"><span class="ia-tabstrip">
+  <span class="ia-lights"><i></i><i></i><i></i></span>
+  <span class="ia-tab on"><svg class="ia-mark" viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8.3 10.6v6M12 16.6v-6M12 12.6c0-1.4 1-2.2 2.2-2.2 1.3 0 2.1.9 2.1 2.3v3.9"/><circle cx="8.3" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+<span class="ia-tab-title">Feed | LinkedIn</span><span class="ia-tab-x"></span>
+  </span>
+  <span class="ia-tab ia-tab-bg"><i class="ia-fav f-mail"></i><span class="ia-tab-title">Inbox</span></span>
+  <span class="ia-tab-new"></span>
+</span>
+<span class="ia-toolbar">
+  <svg class="ia-nav" viewBox="0 0 30 10" width="30" height="10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 2L2 5l3 3M2 5h6"/><path class="ia-nav-off" d="M14 2l3 3-3 3M17 5h-6"/><path d="M28 5a3 3 0 1 1-1-2.2M27.4 1.2v1.8h-1.8"/></svg>
+  <span class="ia-omni"><svg viewBox="0 0 10 10" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 3h4M7.5 3h1M1.5 7h1M4.5 7h4"/><circle cx="6.5" cy="3" r="1"/><circle cx="3.5" cy="7" r="1"/></svg><span class="ia-mono">linkedin.com/feed</span></span><img class="ia-pin" src="/assets/brand/logo/blowhorn-app-icon.svg" alt="" width="11" height="11"><span class="ia-avatar"></span>
+</span>
+<span class="ia-bookmarks"><span class="ia-bm"><i class="ia-fav f-docs"></i>Docs</span><span class="ia-bm"><i class="ia-fav f-cal"></i>Calendar</span><span class="ia-bm"><i class="ia-fav f-team"></i>Team</span></span>
+<span class="ia-page">
+      <span class="ia-card"><span class="ia-who"><i class="ia-face"></i><span class="ia-line w45"></span></span><span class="ia-line w75"></span><span class="ia-line w60"></span></span>
+      <span class="ia-row sweep"><span class="ia-line w50"></span><span class="ia-pill ok">Sent as you</span></span>
+    </span>
+  </span></span>
+
+                      <img class="mm-card-chrome" src="/assets/platforms/google-chrome-logo.svg" alt="" width="28" height="28">
+                    </span>
+                    <span class="mm-card-title">Browser extension</span>
+                    <span class="mm-card-desc">Blowhorn inside your own browser, where the work happens</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                  <li><a class="mm-card card-plain" href="https://cloud.blowhorn.ai">
+                    <span class="iface-art iface-art-web" aria-hidden="true"><span class="ia-panel ia-browser"><span class="ia-tabstrip">
+  <span class="ia-lights"><i></i><i></i><i></i></span>
+  <span class="ia-tab on"><img src="/assets/brand/logo/blowhorn-app-icon.svg" alt="" width="9" height="9"><span class="ia-tab-title">Blowhorn</span><span class="ia-tab-x"></span>
+  </span>
+  <span class="ia-tab ia-tab-bg"><i class="ia-fav f-mail"></i><span class="ia-tab-title">Inbox</span></span>
+  <span class="ia-tab-new"></span>
+</span>
+<span class="ia-toolbar">
+  <svg class="ia-nav" viewBox="0 0 30 10" width="30" height="10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 2L2 5l3 3M2 5h6"/><path class="ia-nav-off" d="M14 2l3 3-3 3M17 5h-6"/><path d="M28 5a3 3 0 1 1-1-2.2M27.4 1.2v1.8h-1.8"/></svg>
+  <span class="ia-omni"><svg viewBox="0 0 10 10" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 3h4M7.5 3h1M1.5 7h1M4.5 7h4"/><circle cx="6.5" cy="3" r="1"/><circle cx="3.5" cy="7" r="1"/></svg><span class="ia-mono">cloud.blowhorn.ai</span></span><span class="ia-avatar"></span>
+</span>
+<span class="ia-bookmarks"><span class="ia-bm"><i class="ia-fav f-docs"></i>Docs</span><span class="ia-bm"><i class="ia-fav f-cal"></i>Calendar</span><span class="ia-bm"><i class="ia-fav f-team"></i>Team</span></span>
+<span class="ia-page">
+      <span class="ia-page-head"><span class="ia-page-title">Activity</span><span class="ia-live"><i></i>Live</span></span>
+      <span class="ia-rows">
+        <span class="ia-row sweep"><svg class="ia-mark" viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8.3 10.6v6M12 16.6v-6M12 12.6c0-1.4 1-2.2 2.2-2.2 1.3 0 2.1.9 2.1 2.3v3.9"/><circle cx="8.3" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+<span class="ia-state live"><i></i>Ready</span><span class="ia-prev">Launch day, 9:30</span></span>
+        <span class="ia-row"><svg class="ia-mark" viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><ellipse cx="12" cy="14" rx="7.5" ry="5.5"/><path d="M12 8.5l1.2-4.5 3.3.9M9.5 16.5c1.5 1.2 3.5 1.2 5 0"/><circle cx="17.5" cy="5" r="1.2"/></svg>
+<span class="ia-state wait"><i></i>Needs you</span><span class="ia-prev">AMA thread</span></span>
+        <span class="ia-row"><svg class="ia-mark" viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3M15 21v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+<span class="ia-state done"><i></i>Sent</span><span class="ia-prev">v1.42 is out</span></span>
+      </span>
+    </span>
+  </span></span>
+
+                    <span class="mm-card-title">Web app</span>
+                    <span class="mm-card-desc">Your queue from any browser, at cloud.blowhorn.ai</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                  <li><a class="mm-card card-dispatch" href="/ai/blowhorn-axi/">
+                    <span class="iface-art iface-art-cli" aria-hidden="true"><span class="ia-panel ia-term">
+    <span class="ia-bar"><span class="ia-lights"><i></i><i></i><i></i></span><span class="ia-caption">zsh · blowhorn</span></span>
+    <span class="ia-code"><span class="ia-cline"><b>$</b> blowhorn post launch.md --dry-run</span><span class="ia-cline ok">✓ rehearsed · 3 voices, nothing sent</span><span class="ia-cline"><b>$</b> blowhorn post launch.md --go <span class="ia-cursor"></span></span></span>
+  </span></span>
+
+                    <span class="mm-card-title">Command line</span>
+                    <span class="mm-card-desc">Every action as a command: for you, scripts and agents</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                  <li><a class="mm-card card-field" href="/ai/mcp/">
+                    <span class="iface-art iface-art-mcp" aria-hidden="true"><span class="ia-panel ia-diagram">
+    <span class="ia-flow">
+      <span class="ia-chip"><span class="ia-chip-name">Claude</span><span class="ia-chip-sub">assistant</span></span>
+      <span class="ia-link"><i class="ia-pulse"></i></span>
+      <span class="ia-chip ia-chip-hub"><span class="ia-chip-name">MCP</span><span class="ia-chip-sub">tools/list</span></span>
+      <span class="ia-link"><i class="ia-pulse d2"></i></span>
+      <span class="ia-chip"><img src="/assets/brand/logo/blowhorn-app-icon.svg" alt="" width="14" height="14"><span class="ia-chip-sub">Blowhorn</span></span>
+    </span>
+    <span class="ia-mono ia-diagram-note">post · amplify · schedule · approval rules on</span>
+  </span></span>
+
+                    <span class="mm-card-title">MCP server</span>
+                    <span class="mm-card-desc">Plug Blowhorn into Claude and other AI assistants</span>
+                    <span class="mm-card-arrow" aria-hidden="true"></span>
+                  </a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="mm-item">
+              <button type="button" class="mm-trigger" aria-expanded="false" aria-controls="mm-solutions">Solutions<span class="mm-chev" aria-hidden="true"></span></button>
+              <div class="mm-panel mm-panel-wide" id="mm-solutions">
+                <div class="mm-group">
+                  <p class="mm-group-title"><a href="/for/">By role</a></p>
+                  <ul class="mm-links"><li><a class="mm-link" href="/for/devrel/"><span class="mm-link-title">DevRel</span></a></li><li><a class="mm-link" href="/for/marketing/"><span class="mm-link-title">Marketing managers</span></a></li><li><a class="mm-link" href="/for/founders/"><span class="mm-link-title">Founders</span></a></li><li><a class="mm-link" href="/for/open-source/"><span class="mm-link-title">Open source maintainers</span></a></li><li><a class="mm-link" href="/for/community/"><span class="mm-link-title">Community managers</span></a></li><li><a class="mm-link" href="/for/agencies/"><span class="mm-link-title">Agencies and consultants</span></a></li><li><a class="mm-link" href="/for/social-media/"><span class="mm-link-title">Social media managers</span></a></li>
+                  </ul>
+                </div>
+                <div class="mm-group">
+                  <p class="mm-group-title"><a href="/use-cases/">By use case</a></p>
+                  <ul class="mm-links"><li><a class="mm-link" href="/use-cases/launch-day/"><span class="mm-link-title">Launch day</span></a></li><li><a class="mm-link" href="/use-cases/open-source-release/"><span class="mm-link-title">Open source release</span></a></li><li><a class="mm-link" href="/use-cases/conference/"><span class="mm-link-title">Conference</span></a></li><li><a class="mm-link" href="/use-cases/linkedin-outreach/"><span class="mm-link-title">LinkedIn hygiene</span></a></li><li><a class="mm-link" href="/use-cases/team-amplification/"><span class="mm-link-title">Team amplification</span></a></li><li><a class="mm-link" href="/use-cases/agent-publishing/"><span class="mm-link-title">Agent publishing</span></a></li>
+                  </ul>
+                </div>
+                <div class="mm-group">
+                  <p class="mm-group-title"><a href="/solutions/">By category</a></p>
+                  <ul class="mm-links"><li><a class="mm-link" href="/solutions/developer-distribution/"><span class="mm-link-title">Developer distribution</span></a></li><li><a class="mm-link" href="/solutions/employee-advocacy/"><span class="mm-link-title">Employee advocacy</span></a></li><li><a class="mm-link" href="/solutions/distributed-teams/"><span class="mm-link-title">Distributed teams</span></a></li><li><a class="mm-link" href="/solutions/social-scheduling/"><span class="mm-link-title">Social scheduling</span></a></li><li><a class="mm-link" href="/solutions/linkedin-automation/"><span class="mm-link-title">LinkedIn automation</span></a></li><li><a class="mm-link" href="/solutions/multi-profile/"><span class="mm-link-title">Multi-profile</span></a></li>
+                  </ul>
+                </div>
+                <div class="mm-group">
+                  <p class="mm-group-title"><a href="/ai/">AI native</a></p>
+                  <ul class="mm-links"><li><a class="mm-link" href="/agents/"><span class="mm-link-title">Agentic AI marketing</span><span class="mm-link-desc">Let your AI agent run the launch</span></a></li>
+                  </ul>
+                </div>
+                <div class="mm-group">
+                  <p class="mm-group-title">Works with</p>
+                  <ul class="mm-links mm-compact"><li><a class="mm-link" href="/agents/claude-code/"><span class="mm-link-title">Claude Code</span></a></li><li><a class="mm-link" href="/agents/opencode/"><span class="mm-link-title">OpenCode</span></a></li><li><a class="mm-link" href="/agents/pi/"><span class="mm-link-title">Pi</span></a></li><li><a class="mm-link" href="/agents/codex/"><span class="mm-link-title">Codex</span></a></li><li><a class="mm-link" href="/agents/grok/"><span class="mm-link-title">Grok</span></a></li><li><a class="mm-link" href="/agents/grok-bot/"><span class="mm-link-title">Grok Bot</span></a></li><li><a class="mm-link" href="/agents/deepseek/"><span class="mm-link-title">DeepSeek</span></a></li><li><a class="mm-link" href="/agents/cli/"><span class="mm-link-title">CLI</span></a></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+            <li class="mm-item"><a class="mm-top" href="/integrations/">Integrations</a></li>
+            <li class="mm-item"><a class="mm-top" href="/compare/">Compare</a></li>
+            <li class="mm-item">
+              <button type="button" class="mm-trigger" aria-expanded="false" aria-controls="mm-resources">Resources<span class="mm-chev" aria-hidden="true"></span></button>
+              <div class="mm-panel mm-panel-links" id="mm-resources">
+                <ul class="mm-links mm-cols-3"><li><a class="mm-link" href="/docs/"><span class="mm-link-title">Docs</span><span class="mm-link-desc">Set up, how-to guides and reference</span></a></li><li><a class="mm-link" href="/resources/videos/"><span class="mm-link-title">Videos</span><span class="mm-link-desc">Short films and walkthroughs</span></a></li><li><a class="mm-link" href="/resources/articles/"><span class="mm-link-title">Articles</span><span class="mm-link-desc">Product intelligence and tips</span></a></li><li><a class="mm-link" href="/field-manual/"><span class="mm-link-title">Field Manual</span><span class="mm-link-desc">What each feed rewards and punishes</span></a></li><li><a class="mm-link" href="/docs/reference/support/"><span class="mm-link-title">Get help</span><span class="mm-link-desc">Support and troubleshooting</span></a></li><li><a class="mm-link" href="/support/"><span class="mm-link-title">Support</span><span class="mm-link-desc">Contact the team, or start with the docs</span></a></li><li><a class="mm-link" href="/major/"><span class="mm-link-title">Meet Major</span><span class="mm-link-desc">Our mascot and his troops</span></a></li><li><a class="mm-link" href="/brand/"><span class="mm-link-title">Brand</span><span class="mm-link-desc">Logo, colors and the brand kit</span></a></li><li><a class="mm-link" href="https://tells.blowhorn.ai/?utm_source=blowhorn.ai&amp;utm_medium=referral&amp;utm_campaign=tells&amp;utm_content=nav"><span class="mm-link-title">Am I a Bot?</span><span class="mm-link-desc">Free check: what sites can see about your browser</span></a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="mm-item"><a class="mm-top" href="/pricing/">Pricing</a></li>
+            <li class="mm-item mm-item-download"><a class="button button-secondary mm-download" href="/download/">Download</a></li>
+          </ul>
+        </nav>
+        <a class="button button-secondary site-cta" href="/download/">Download</a>
+      </div>
+    </header>
+    <script src="/js/nav.min.f9cb0a1cf5fb98c0ffc9bd2b8aff48c463061d31197aea2cfe97924da2a9a643.js" defer></script>
+
+<main id="main" class="page resources-page article-page">
+  <div class="wrap">
+    <p class="eyebrow"><a href="/resources/articles/">Articles</a></p>
+    <h1>What fingerprint and bot-detection checkers measure</h1>
+    <p class="article-meta">
+      <time datetime="2026-11-24">November 24, 2026</time>
+      <span aria-hidden="true">·</span> Blowhorn team<span aria-hidden="true">·</span> From the Desk of the General
+    </p>
+    <div class="tag-chips-row" role="group" aria-label="Tags">
+      <ul class="tag-chips"><li><a class="tag-chip" href="/tags/platform-rules/">Platform-Rules</a></li></ul>
+    </div>
+    <div class="article-body">
+      <p>Free pages and commercial bot products do not publish one shared checklist. They publish different readings of the same browser. The notes below use one set of signal groups so those readings can sit in one matrix. Every figure is the figure on the page that stated it. The pages were fetched on November 24, 2026.</p>
+<p>You can run Blowhorn's own reading at <a href="https://tells.blowhorn.ai/">Blowhorn Tells</a>. Tells scores what that page can read in the browser you opened. It does not reproduce a vendor's block decision.</p>
+<h2 id="signal-groups">Signal groups</h2><p>The groups are the ones used to compare Tells with the other tools. A later cell says whether a tool's fetched pages showed that group.</p>
+<ul>
+<li><strong>Automation and headless markers.</strong> Scripted-browser flags, such as a webdriver bit, a headless build, or a vendor's bot score.</li>
+<li><strong>Lies.</strong> Tampered prototypes and getters, where a browser API no longer behaves like the engine that claims to be running.</li>
+<li><strong>Navigator and client hints.</strong> The browser's own identity fields, including user-agent client hints.</li>
+<li><strong>Wire.</strong> Request headers, the order of those headers, TLS fingerprints (JA3 and JA4), and HTTP/2 fingerprints.</li>
+<li><strong>IP reputation.</strong> Datacenter, proxy, VPN, and Tor labels on the address.</li>
+<li><strong>DNS and WebRTC leaks.</strong> A DNS resolver or a WebRTC address that tells a different story than the request IP.</li>
+<li><strong>Timezone and locale against IP.</strong> The clock, the language, or the locale compared with the address.</li>
+<li><strong>Canvas, WebGL, and WebGPU.</strong> Drawing and GPU surfaces.</li>
+<li><strong>Audio.</strong> The audio stack as a signal.</li>
+<li><strong>Fonts.</strong> The font list.</li>
+<li><strong>Screen and window.</strong> Screen size, window size, and combinations that cannot occur on a real display.</li>
+<li><strong>Media and DRM.</strong> Cameras, microphones, codecs, and DRM or payment surfaces.</li>
+<li><strong>Permissions.</strong> Notification permission and the wider permissions list.</li>
+<li><strong>Storage.</strong> localStorage, sessionStorage, IndexedDB, and quotas.</li>
+<li><strong>Cross-context consistency.</strong> The same fact read from the page, a worker, a service worker, an iframe, and the request headers.</li>
+<li><strong>Behavior.</strong> Pointer, keys, scroll, and timing.</li>
+<li><strong>Challenges.</strong> Proof of work, a CAPTCHA, or a similar task the detector asks the browser to finish.</li>
+<li><strong>Uniqueness against a crowd.</strong> How rare each attribute is in that tool's own dataset, often stated in bits.</li>
+<li><strong>Stability across visits.</strong> Whether the same browser still looks like the same browser on a later day.</li>
+</ul>
+<h2 id="what-tells-records-today">What Tells records today</h2><p>The Tells check catalog read on November 24, 2026 is version 1.0.3, with 17 check rows. The README on that read still said catalog 1.0.2. The score is 0-100, computed on the server. The verdict is one of <code>likely_human</code>, <code>suspicious</code>, or <code>likely_bot</code>.</p>
+<p>JA3 and JA4 are shown and are not scored. The randomized-fingerprint flag is worth 0 points. Interaction checks warn only. A same-visit stability read is three samples in one visit. Tells does not store a visitor id. The compare page diffs two files the reader pastes.</p>
+<p>On that catalog, Tells covers automation flags, navigator and client hints, IP reputation, screen and window geometry, cross-context agreement, and behavior. The other groups are partial or absent. The matrix uses the letters below for that split. The open gaps are listed with the backlog issue that tracks each theme.</p>
+<h2 id="free-test-sites">Free test sites</h2><p>Do not sort these sites into one visit league. Semrush total visits, Similarweb visits, Ahrefs search traffic, and GitHub stars count different things. Semrush overview pages for pixelscan.net, browserscan.net, fingerprint.com, coveryourtracks.eff.org, and sannysoft.com returned HTTP 404 on November 24, 2026.</p>
+<h2 id="one-provider-semrush-total-visits-october-2026">One provider: Semrush total visits, October 2026</h2><p>These Semrush pages were fetched on November 24, 2026 and say &quot;Last updated: November 11, 2026.&quot;</p>
+
+<div class="table-scroll" tabindex="0" role="group" aria-label="Table">
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Order</th>
+      <th scope="col">Site</th>
+      <th scope="col">October 2026 total visits</th>
+      <th scope="col">Also on that page</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><a href="https://www.semrush.com/website/whoer.net/overview/">whoer.net</a></td>
+      <td>14.72M</td>
+      <td>September 15.43M, August 12.31M</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><a href="https://www.semrush.com/website/browserleaks.com/overview/">browserleaks.com</a></td>
+      <td>4.13M</td>
+      <td>September 3.7M</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><a href="https://www.semrush.com/website/ipleak.net/overview/">ipleak.net</a></td>
+      <td>2.32M</td>
+      <td>September 1.77M. An IP-leak suite, not a full fingerprint bench, so it is not a matrix column.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><a href="https://www.semrush.com/website/iphey.com/overview/">iphey.com</a></td>
+      <td>83.58K</td>
+      <td>September 64.18K, August 94.14K</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><a href="https://www.semrush.com/website/amiunique.org/overview/">amiunique.org</a></td>
+      <td>62.54K</td>
+      <td>September 58.54K, August 108.76K</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>whoer.com is a second domain. Semrush lists 2.91M total visits for it in October 2026. It is not treated as a separate tool.</p>
+<h2 id="other-public-counts">Other public counts</h2><p>Each row names its own measure. None of these is a Semrush total-visit rank.</p>
+
+<div class="table-scroll" tabindex="0" role="group" aria-label="Table">
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Site</th>
+      <th scope="col">Figure</th>
+      <th scope="col">What the figure is</th>
+      <th scope="col">Source</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>fingerprint.com</td>
+      <td>242,504 visits in October 2026, down 2% from the prior month</td>
+      <td>Similarweb, reprinted by AdLibrarySpy, read November 24, 2026</td>
+      <td><a href="https://adlibraryspy.com/answers/store/fingerprint.com">AdLibrarySpy</a></td>
+    </tr>
+    <tr>
+      <td>coveryourtracks.eff.org</td>
+      <td>233.2K &quot;last month&quot;, down 8.7%</td>
+      <td>websites-traffic.com. The month name is not on the page. Fetched November 24, 2026.</td>
+      <td><a href="https://websites-traffic.com/site/coveryourtracks.eff.org">websites-traffic.com</a></td>
+    </tr>
+    <tr>
+      <td>browserscan.net</td>
+      <td>89.6K search traffic in November 2026, down 46.7K from the prior month</td>
+      <td>Ahrefs search traffic via ahrefstop.com. Total visits were not on that page.</td>
+      <td><a href="https://ahrefstop.com/websites/browserscan.net">ahrefstop.com</a></td>
+    </tr>
+    <tr>
+      <td>pixelscan.net</td>
+      <td>No current-month visit count</td>
+      <td>The Semrush overview returned HTTP 404 on November 24, 2026. A third-party copy of an older Semrush page, last updated February 19, 2026, says 448.12K visits in January 2026. That figure is not used as a current rank.</td>
+      <td><a href="https://sem2.heaventechit.com/website/pixelscan.net/overview/">sem2.heaventechit.com</a></td>
+    </tr>
+    <tr>
+      <td>CreepJS</td>
+      <td>2,558 GitHub stars. Last push June 11, 2026.</td>
+      <td>No visit figure was retrieved. GitHub API, November 24, 2026.</td>
+      <td><a href="https://github.com/abrahamjuliot/creepjs">abrahamjuliot/creepjs</a></td>
+    </tr>
+    <tr>
+      <td>bot.sannysoft.com</td>
+      <td>No visit figure and no star count</td>
+      <td>The live page was fetched on November 24, 2026.</td>
+      <td><a href="https://bot.sannysoft.com/">bot.sannysoft.com</a></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>The matrix uses ten free tools, largest sourced audience first, with the measure named: whoer.net, BrowserLeaks, fingerprint.com (Similarweb), Cover Your Tracks (websites-traffic.com, month unnamed), iphey, BrowserScan (search traffic only), AmIUnique, Pixelscan (current visits unverified), CreepJS (stars), and sannysoft (no popularity figure).</p>
+<p>What each one reported on that fetch:</p>
+<ul>
+<li><strong>whoer.net</strong> showed IP, ISP, DNS, hostname, OS, browser, proxy, anonymizer, blacklist, and an anonymity percent. In that render, Flash, Java, DNT off, and ActiveX were each a -10% deduction. The full formula was not published.</li>
+<li><strong>BrowserLeaks</strong> is a suite of pages, with no single score on the homepage. The homepage lists IP (headers, a TCP/IP OS fingerprint, WebRTC, DNS, IPv6), JavaScript, canvas, WebGL, fonts, the Geolocation API, features, a TLS client test, and content filters. HTTP/2 was not in that homepage text.</li>
+<li><strong>fingerprint.com</strong> is the demo. FingerprintJS is MIT, npm <code>@fingerprintjs/fingerprintjs</code> 5.3.0 on November 24, 2026, 28,796 GitHub stars, and it returns a <code>visitorId</code>. BotD is MIT, npm <code>@fingerprintjs/botd</code> 2.0.0, 1,501 stars, and it returns a bot detection, not entropy. Pro bot detection is commercial. Its sample fields are <code>bot</code> of good, bad, or not_detected, plus IP and user agent. No public deployment-share figure was retrieved.</li>
+<li><strong>Cover Your Tracks</strong> describes an overview of the browser's most unique characteristics and says only anonymous data is collected. The page loads tracker-test iframes. A bit-level formula was not on the homepage.</li>
+<li><strong>iphey</strong> shows one MX Score and the categories Browser, Location, IP, Hardware, and Software, including VPN or proxy, bot, DNS leak, and an IP blacklist.</li>
+<li><strong>BrowserScan</strong> lists DNS leak, WebRTC leak, IP lookup, HTTP/2, SSL, TLS, client hints, plugins, bot detection, canvas, kernel versus user agent, WebGPU, media devices, timezone, and a port scan. A <a href="https://blog.browserscan.net/docs/browserscan-vs-browsercheck">blog post on November 15, 2026</a> also names an authenticity score and WebDriver and CDP checks.</li>
+<li><strong>AmIUnique</strong> compares the browser with contributors. The page says viewing a fingerprint stores it and sets a cookie for four months. Named attributes include browser and OS, screen, architecture, fonts, plugins, microphone, and camera. The result is uniqueness, not a bot verdict.</li>
+<li><strong>Pixelscan.</strong> The homepage fetch returned almost no text. A first-party signal list was not retrieved. A <a href="https://multime.app/blog/fingerprint-test-sites">secondary guide</a>, checked by its author on October 24, 2026, says the verdicts are consistent, unsure, or inconsistent, and that the site stores fingerprints and IPs. Layer agreement, such as WebRTC against IP, is that secondary claim. It is not a captured Pixelscan run, so the matrix leaves those cells unverified.</li>
+<li><strong>CreepJS</strong> is MIT. The README's only stated official deploy is the GitHub Pages site. The README lists tests that include canvas, text metrics, WebGL, GPU, fonts, voices, audio, screen, timezone, Math, CSS, and workers. The score on the page is a set of section percents. The README does not define one number.</li>
+<li><strong>bot.sannysoft.com</strong> is a pass or fail table: WebDriver, the Chrome object, permissions, plugins, languages, WebGL vendor and renderer, broken image dimensions, canvas reads, and screen fields. The page calls the set &quot;Antibot Intoli.com tests + additions.&quot; No license file for the site was retrieved.</li>
+</ul>
+<h2 id="commercial-detectors">Commercial detectors</h2><p>Two censuses count different denominators. Both put Cloudflare first, near three quarters of the things they count. They do not agree on the order under that.</p>
+<p><strong>Zyte, State of Web Access 2026, antibot page, fetched November 24, 2026.</strong> The page covers 11,100 landing pages and says antibot is on 18.5% of them. Of 2,054 sites with an identifiable antibot vendor: Cloudflare Bot Management 75.9%, Imperva (Incapsula) 9.1%, Akamai Bot Manager 7.7%, PerimeterX (HUMAN) 5%, DataDome 2%, Other 0.3%. Source: <a href="https://www.zyte.com/sowa/2026/barriers/antibot/">Zyte</a>.</p>
+<p><strong>WMTips bot-mitigation category, last calculated November 23, 2026, covering 4,048,507 websites.</strong> The shares below are the share of detected bot-mitigation tools, from the category page text retrieved through a search index on November 24, 2026. A direct fetch of the page returned HTTP 403 that day. Cloudflare's own WMTips product page, dated November 11, 2026, lists 245,083 sites. That site count is not 74.6% of the 4,048,507 websites. Sources: <a href="https://www.wmtips.com/technologies/bot-mitigation/">the category</a> and <a href="https://www.wmtips.com/technologies/bot-mitigation/cloudflare-bot-management/">the Cloudflare product page</a>.</p>
+
+<div class="table-scroll" tabindex="0" role="group" aria-label="Table">
+<table>
+  <thead>
+    <tr>
+      <th scope="col">WMTips rank</th>
+      <th scope="col">Product</th>
+      <th scope="col">WMTips share of detected tools</th>
+      <th scope="col">Zyte share of identifiable antibot</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Cloudflare Bot Management</td>
+      <td>74.6%</td>
+      <td>75.9%</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Akamai Bot Manager</td>
+      <td>7.1%</td>
+      <td>7.7%</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>F5 BIG-IP</td>
+      <td>6.3%</td>
+      <td>Not broken out</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Imperva, labeled Imperva WAF on WMTips</td>
+      <td>3%</td>
+      <td>9.1%, labeled Imperva (Incapsula)</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>DDoS Guard</td>
+      <td>2.9%</td>
+      <td>Not named</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>FortiWeb</td>
+      <td>1.5%</td>
+      <td>Not named</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>ClickCease</td>
+      <td>1.2%</td>
+      <td>Not named</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Fastly Bot Management</td>
+      <td>0.6%</td>
+      <td>Not named</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>Qrator</td>
+      <td>0.5%</td>
+      <td>Not named</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>HUMAN (PerimeterX), labeled Human on WMTips</td>
+      <td>0.5%</td>
+      <td>5%</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>DataDome ties HUMAN on WMTips at 0.5%, where WMTips spells it Datadome, and it ties Radware Bot Manager at that share. On Zyte, DataDome is 2%, fifth among named vendors. The matrix keeps DataDome because Zyte names it, and it leaves out F5, DDoS Guard, FortiWeb, ClickCease, Fastly Bot Management, and Qrator because no public signal list was retrieved for them.</p>
+<p>A third cut is not a web-wide share. The <a href="https://www.proxies.sx/anti-bot/dataset">proxies.sx census</a>, reviewed July 2026, page dated August 1, 2026, covers 93 sites: Akamai 45/93 (48%), Cloudflare 32/93 (34%), HUMAN 11/93 (12%), DataDome 8/93 (9%), Kasada 5/93 (5%), reCAPTCHA 3/93, hCaptcha 3/93, Queue-it 2/93, Imperva 1/93, AWS WAF 1/93.</p>
+<p><a href="https://www.w3techs.com/technologies/overview/proxy">W3Techs reverse proxies</a>, page dated November 24, 2026, is not bot management. It says Cloudflare is on 30.3% of websites, 86.7% of identified reverse proxies, with Akamai at 0.6% and Imperva at 0.1%. Those numbers are not ranks in the table above.</p>
+<p>The Panoramic URL <code>https://panoramic.al/technologies/bot-protection</code> returned HTTP 404 on November 24, 2026. Shares that depended on that page are not used here.</p>
+<p>Vendor docs fetched the same day, in short:</p>
+<ul>
+<li><strong>Cloudflare</strong> documents a bot score from 1 to 99, with 1 automated and 99 human. Enterprise plans see the number. Others see groupings. The doc, last updated August 26, 2026, names heuristics, machine learning, anomaly detection, JavaScript detections, and verified bots. Separate docs cover JA3 and JA4, and a signal for the HTTP/2 plus HTTP/3 share per JA4. A blog post on September 23, 2025 names HTTP/2 fingerprints and behavioral path analysis. Turnstile is a separate challenge product and is not enumerated on the bot-score page. IP reputation, canvas, and DNS were not stated on the pages fetched. Sources: <a href="https://developers.cloudflare.com/bots/concepts/bot-score/">bot score</a>, <a href="https://developers.cloudflare.com/bots/additional-configurations/ja3-ja4-fingerprint/">JA3/JA4</a>, <a href="https://developers.cloudflare.com/bots/additional-configurations/ja3-ja4-fingerprint/signals-intelligence/">Signals Intelligence</a>, <a href="https://blog.cloudflare.com/per-customer-bot-defenses/">per-customer defenses</a>.</li>
+<li><strong>Akamai.</strong> Akamai's own techdocs HTML was not retrieved. Secondary pages quote a behavior script and quote a TLS ClientHello patent and an HTTP/2 fingerprint talk. Canvas, audio, fonts, and sensor field lists stay unverified. The sourced groups are wire (TLS, HTTP/2, header order) and behavior. Sources: <a href="https://antibrow.com/blog/akamai-bot-manager-explained">antibrow.com, November 1, 2026</a> and <a href="https://www.coronium.io/blog/akamai-bot-manager">coronium.io, October 30, 2026</a>.</li>
+<li><strong>DataDome</strong> docs say signature models use a TLS fingerprint, a browser fingerprint, and HTTP headers. Behavioral models and reputation models cover IPs flagged as datacenter or residential proxy. Responses are Allow, Captcha, Block, and Device Check. Device Check collects screen size and resolution, codecs, plugins, browser type, CPU and GPU counts, and JavaScript consistency challenges. The product page adds a proof-of-work step and a slider. One model name is &quot;Headless Browser Forged Fingerprint,&quot; aimed at Puppeteer, Selenium, and Playwright. HTTP/2 was not in the fetched docs. Sources: <a href="https://docs.datadome.co/docs/ai-detection">AI detection</a>, <a href="https://docs.datadome.co/docs/device-check">Device Check</a>, <a href="https://datadome.co/products/datadome-device-check/">product page</a>.</li>
+<li><strong>HUMAN (PerimeterX)</strong> documents a sensor for DOM, BOM, and WASM signals, visual and audio rendering, plugins, and extensions, then a machine learning detector and a risk score from 0 to 100. Behavior docs name mouse, touch, cadence, and timing. Calibration mentions user agents and IP addresses. JA3 was not in the pages fetched. Sources: <a href="https://docs.humansecurity.com/applications/bd-faq-sensor">sensor FAQ</a>, <a href="https://docs.humansecurity.com/applications/bd-detection-overview">detection overview</a>, <a href="https://docs.humansecurity.com/applications/overview">product overview</a>.</li>
+<li><strong>Imperva.</strong> The <a href="https://www.imperva.com/products/bot-management/">product page</a> fetched on November 24, 2026 is a feature list. It does not enumerate signals.</li>
+<li><strong>Kasada.</strong> The <a href="https://www.kasada.io/bot-management/">bot-management page</a> names account-takeover and scraping use cases and does not list signals. Kasada is 5 of 93 sites in the proxies.sx set. It is not in the WMTips snippet above.</li>
+</ul>
+<h2 id="coverage-matrix">Coverage matrix</h2><p>Rows are the signal groups. Columns after Tells are the ten free tools, then the five vendors Zyte names. Cells:</p>
+<ul>
+<li><strong>Y</strong> - the fetched source shows that group.</li>
+<li><strong>P</strong> - part of the group, or collected and not fully scored.</li>
+<li><strong>N</strong> - the fetched pages or source files did not show that group.</li>
+<li><strong>U</strong> - unverified. This pass did not retrieve a first-party list for that cell. U stays U.</li>
+</ul>
+<p>Short headers: Leaks is BrowserLeaks. FP is fingerprint.com plus FingerprintJS and BotD. CYT is Cover Your Tracks. Scan is BrowserScan. AmIU is AmIUnique. Pixel is Pixelscan. Creep is CreepJS. sanny is bot.sannysoft.com. CF is Cloudflare Bot Management. Akam is Akamai Bot Manager. DD is DataDome. Imp is Imperva.</p>
+
+<div class="table-scroll" tabindex="0" role="group" aria-label="Table">
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Group</th>
+      <th scope="col">Tells</th>
+      <th scope="col">whoer</th>
+      <th scope="col">Leaks</th>
+      <th scope="col">FP</th>
+      <th scope="col">CYT</th>
+      <th scope="col">iphey</th>
+      <th scope="col">Scan</th>
+      <th scope="col">AmIU</th>
+      <th scope="col">Pixel</th>
+      <th scope="col">Creep</th>
+      <th scope="col">sanny</th>
+      <th scope="col">CF</th>
+      <th scope="col">Akam</th>
+      <th scope="col">DD</th>
+      <th scope="col">HUMAN</th>
+      <th scope="col">Imp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Automation / headless</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Lies (prototypes, getters)</td>
+      <td>P</td>
+      <td>N</td>
+      <td>N</td>
+      <td>P</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>N</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>U</td>
+      <td>U</td>
+      <td>P</td>
+      <td>U</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Navigator and client hints</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>P</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Wire: headers, order, TLS, HTTP/2</td>
+      <td>P</td>
+      <td>P</td>
+      <td>P</td>
+      <td>N</td>
+      <td>N</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>U</td>
+      <td>N</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>U</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>IP reputation</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>P</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>U</td>
+      <td>N</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>DNS and WebRTC</td>
+      <td>P</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>U</td>
+      <td>P</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Timezone / locale vs IP</td>
+      <td>P</td>
+      <td>P</td>
+      <td>P</td>
+      <td>P</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>U</td>
+      <td>P</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Canvas, WebGL, WebGPU</td>
+      <td>P</td>
+      <td>U</td>
+      <td>P</td>
+      <td>P</td>
+      <td>U</td>
+      <td>P</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>U</td>
+      <td>U</td>
+      <td>P</td>
+      <td>P</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Audio</td>
+      <td>P</td>
+      <td>N</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>N</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Fonts</td>
+      <td>P</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Screen / window</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>P</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Media / DRM</td>
+      <td>P</td>
+      <td>N</td>
+      <td>N</td>
+      <td>P</td>
+      <td>N</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>U</td>
+      <td>P</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>P</td>
+      <td>U</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Permissions</td>
+      <td>P</td>
+      <td>N</td>
+      <td>P</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>U</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td>P</td>
+      <td>N</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>U</td>
+      <td>N</td>
+      <td>N</td>
+      <td>U</td>
+      <td>N</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Cross-context</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+      <td>U</td>
+      <td>P</td>
+      <td>N</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Behavior</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>N</td>
+      <td>U</td>
+      <td>N</td>
+      <td>N</td>
+      <td>P</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Challenges (proof of work, CAPTCHA)</td>
+      <td>P</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+      <td>U</td>
+      <td>N</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Uniqueness vs crowd</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+      <td>P</td>
+      <td>Y</td>
+      <td>P</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>U</td>
+      <td>N</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>N</td>
+      <td>P</td>
+      <td>U</td>
+    </tr>
+    <tr>
+      <td>Stability across visits</td>
+      <td>P</td>
+      <td>N</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>N</td>
+      <td>U</td>
+      <td>N</td>
+      <td>P</td>
+      <td>U</td>
+      <td>N</td>
+      <td>N</td>
+      <td>U</td>
+      <td>U</td>
+      <td>U</td>
+      <td>P</td>
+      <td>U</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>Three cells need a narrower reading than the letter alone. The FP uniqueness cell is a persistent <code>visitorId</code>, not entropy bits. The AmIUnique stability cell is the four-month cookie and a history page, not a published revisit score. CreepJS has a WebRTC module in the repo. DNS was not in the CreepJS README test list.</p>
+<p>Akamai's Y cells for wire and behavior come from the secondary pages dated November 1, 2026 and October 30, 2026. Akamai's own manual was not fetched, so the other Akamai cells stay U. Pixelscan stays U for the same reason as the homepage fetch.</p>
+<h2 id="where-tells-is-behind">Where Tells is behind</h2><p>The gaps below are the places Tells is N or partial and another tool's fetched evidence shows the missing piece. Each theme is an open issue on the Tells backlog. Nothing in this list is a ship date.</p>
+<p><strong>Automation tells.</strong> <a href="https://github.com/blowhorn-ai/tells/issues/96">Issue 96</a>. sannysoft still has rows Tells does not score as their own checks: a missing <code>chrome</code> object, the PluginArray type, broken image dimensions, and canvas inside a sandboxed iframe. BotD detectors with no Tells reason on this read include eval length, error trace, <code>Function.prototype.bind</code>, <code>productSub</code>, <code>window.external</code>, a <code>process</code> global, and mime-type consistency. BrowserScan publishes a kernel-versus-user-agent check. Tells already compares the user agent with client hints. It does not have an engine-versus-user-agent row.</p>
+<p><strong>Challenges and forged-fingerprint models.</strong> <a href="https://github.com/blowhorn-ai/tells/issues/97">Issue 97</a>. Tells can ask the reader to type a phrase. It has no proof of work and no CAPTCHA result. DataDome's Device Check adds codec and plugin consistency, CPU and GPU counts, JavaScript challenges, a proof-of-work step, and a slider CAPTCHA. DataDome also names a &quot;Headless Browser Forged Fingerprint&quot; model for Playwright, Puppeteer, and Selenium after the obvious flags are patched. HUMAN's docs describe a risk score that compares mouse and touch cadence, plus audio and visual rendering, with a library of bad actors. Tells scores behavior and audio stability separately and has no such library.</p>
+<p><strong>Crowd uniqueness, a visitor id, opt-in.</strong> <a href="https://github.com/blowhorn-ai/tells/issues/98">Issue 98</a>. AmIUnique and Cover Your Tracks report uniqueness against a crowd. FingerprintJS returns a <code>visitorId</code> that is meant to last across days. Tells has no crowd dataset and no stored visitor id. The backlog item is an opt-in dataset, with the reader choosing to contribute.</p>
+<p><strong>A deeper lie scan, including Math.</strong> <a href="https://github.com/blowhorn-ai/tells/issues/99">Issue 99</a>. Tells checks native getters, <code>Function.prototype.toString</code>, a webdriver patch, and a prototype mismatch across the page, the iframe, the worker, and the service worker. CreepJS goes further: Math, audio, canvas, CSS computed style, DomRect, emoji, error stacks, and contentWindow. FingerprintJS and CreepJS both treat Math as its own fingerprint. That wider scan is the gap.</p>
+<p><strong>Score more surfaces.</strong> <a href="https://github.com/blowhorn-ai/tells/issues/100">Issue 100</a>. Tells collects several surfaces and does not score them as identity. The gap is WebGPU as a scored surface (BrowserScan), audio as an identity hash rather than a same-session stability class (FingerprintJS, CreepJS, and the HUMAN sensor), the font list (BrowserLeaks, FingerprintJS, AmIUnique, CreepJS), speech voices (CreepJS; Tells collects them), media-device counts (BrowserScan, and microphone and camera on the AmIUnique homepage), storage beyond an unscored <code>localStorage</code> probe (FingerprintJS also reads sessionStorage and IndexedDB), and DRM or Apple Pay presence (FingerprintJS). Tells already files DRM under surfaces it reports and does not score.</p>
+<p><strong>Tracker blocking.</strong> <a href="https://github.com/blowhorn-ai/tells/issues/101">Issue 101</a>. Cover Your Tracks loads tracker-test iframes. whoer deducts points when DNT is off. Tells does not report whether third-party trackers were blocked.</p>
+<p><strong>Network leaks.</strong> <a href="https://github.com/blowhorn-ai/tells/issues/102">Issue 102</a>. whoer, BrowserLeaks, BrowserScan, and iphey test DNS leaks. Tells compares the WebRTC public IP with the request IP and has no DNS leak test. BrowserLeaks also shows an IPv6 reading and a TCP/IP OS fingerprint as their own results. BrowserLeaks links a Geolocation API test. Tells compares the browser timezone with the IP timezone. It does not read the Geolocation API position.</p>
+<p><strong>Locale, IP country, and blacklists.</strong> <a href="https://github.com/blowhorn-ai/tells/issues/103">Issue 103</a>. iphey has a Location category, and BrowserScan has a timezone tool. Tells flags a timezone mismatch and an Accept-Language mismatch against the browser. It does not check that the language matches the IP country. whoer has a blacklist line, and iphey has an IP blacklist test, separate from the VPN, proxy, Tor, and datacenter flags Tells already scores.</p>
+<p><strong>Wire fingerprints.</strong> <a href="https://github.com/blowhorn-ai/tells/issues/104">Issue 104</a>. Tells checks the header set, a missing Accept or Accept-Language, and the user agent against <code>navigator</code>. It displays JA3 and JA4 and does not score them. It does not check header order. It does not fingerprint HTTP/2. BrowserScan publishes an HTTP/2, SSL, and TLS test. Cloudflare publishes JA3 and JA4 and an HTTP/2 plus HTTP/3 share. The Akamai header-order claim is the secondary write-up, because Akamai's own page was not fetched.</p>
+<p>Imperva, Kasada, F5, Fastly Bot Management, FortiWeb, ClickCease, Qrator, and DDoS Guard had no public signal list on this pass, so no extra gap line was taken from them.</p>
+<h2 id="a-published-stealth-benchmark">A published stealth benchmark</h2><p>One public stealth benchmark of hosted browser providers was retrieved on November 24, 2026. The numbers below are what that publisher reports. They are not a Blowhorn measurement. No Tells report was captured for any of these products on that pass, and this article does not add a Blowhorn score beside them.</p>
+<p><strong>Browser Use, &quot;We Stealth Benchmarked Every Major Cloud Browser Provider,&quot; published March 21, 2026.</strong> <a href="https://browser-use.com/posts/stealth-benchmark">The post</a> says the set is 71 sites drawn from 300,000 production security-check events. The vendor mix is Cloudflare 23, PerimeterX 18, DataDome 13, Akamai 8, reCAPTCHA 6, and other (including Kasada and Shape) 3. That mix is a block list, not a market share.</p>
+<p>The task is 3 steps, with no login. The judge is gemini-2.5-flash, blocked or not. A page-load failure counts as a block. The same agent and model, bu-2-0, runs on every provider. Controls on a GitHub Actions datacenter IP: headless Chromium 2%, headful Chromium 50%. Provider pass rates in the post: Browser Use Cloud 81%, Anchor 77%, Kernel 67% (the post spells it kernel), Steel 47%, Browserbase 42%, Hyperbrowser 40%. Browser Use Cloud by vendor, only the three rates the post publishes: Cloudflare 93%, Akamai 85%, PerimeterX 81%.</p>
+<p>The same post reports Halluminate BrowserBench, 296 tasks, which it describes as less focused on hard sites: Browser Use Cloud 84.8%, Hyperbrowser 76.4%, Anchor 76.0%, Steel 73.3%, Browserbase 70.3%. The post says proxy quality and site configuration move the numbers. The post links <a href="https://github.com/browser-use/benchmark">browser-use/benchmark</a>. That repository was not re-read on November 24, 2026.</p>
+<p>No other public stealth benchmark of this product list was retrieved on that pass. Anti-detect roundups were not re-fetched as benchmark results.</p>
+<h2 id="how-to-read-a-checker">How to read a checker</h2><p>Open <a href="https://tells.blowhorn.ai/">Blowhorn Tells</a> in the browser you want to understand. Read the verdict beside the separate checks. A single anonymity percent on another site is that site's formula.</p>
+<p>When you quote a ranking, keep the provider, the month, and the link. Semrush total visits, Similarweb visits, and Ahrefs search traffic answer different questions. When you quote a pass rate, keep the date, the site set, and who ran it. The March 21, 2026 Browser Use figures are Browser Use's own runs.</p>
+<p>A commercial detector's score is that vendor's score. The matrix records which signal groups their public docs name. It is not a claim that any one checker blocks a given browser.</p>
+<p>For one platform block where the vendor never published the detector, see <a href="/resources/articles/how-amazon-detects-muse/">Amazon blocked Meta's Muse</a>.</p>
+<h2 id="sources">Sources</h2><p>Fetched November 24, 2026 unless the line names another date.</p>
+<ul>
+<li>Semrush overviews, last updated November 11, 2026: <a href="https://www.semrush.com/website/whoer.net/overview/">whoer.net</a>, <a href="https://www.semrush.com/website/browserleaks.com/overview/">browserleaks.com</a>, <a href="https://www.semrush.com/website/ipleak.net/overview/">ipleak.net</a>, <a href="https://www.semrush.com/website/iphey.com/overview/">iphey.com</a>, <a href="https://www.semrush.com/website/amiunique.org/overview/">amiunique.org</a></li>
+<li><a href="https://adlibraryspy.com/answers/store/fingerprint.com">AdLibrarySpy on fingerprint.com</a>, read November 24, 2026</li>
+<li><a href="https://websites-traffic.com/site/coveryourtracks.eff.org">websites-traffic.com on Cover Your Tracks</a></li>
+<li><a href="https://ahrefstop.com/websites/browserscan.net">ahrefstop.com on browserscan.net</a></li>
+<li><a href="https://www.zyte.com/sowa/2026/barriers/antibot/">Zyte, State of Web Access 2026, antibot</a></li>
+<li><a href="https://www.wmtips.com/technologies/bot-mitigation/">WMTips bot mitigation</a>, last calculated November 23, 2026</li>
+<li><a href="https://www.proxies.sx/anti-bot/dataset">proxies.sx anti-bot dataset</a>, page dated August 1, 2026</li>
+<li><a href="https://browser-use.com/posts/stealth-benchmark">Browser Use stealth benchmark</a>, March 21, 2026</li>
+<li><a href="https://developers.cloudflare.com/bots/concepts/bot-score/">Cloudflare bot score</a>, doc updated August 26, 2026</li>
+<li><a href="https://docs.datadome.co/docs/device-check">DataDome device check</a> and <a href="https://docs.datadome.co/docs/ai-detection">AI detection</a></li>
+<li><a href="https://docs.humansecurity.com/applications/overview">HUMAN Bot Defender overview</a></li>
+<li>Live checkers: <a href="https://whoer.net/">whoer.net</a>, <a href="https://browserleaks.com/">BrowserLeaks</a>, <a href="https://coveryourtracks.eff.org/">Cover Your Tracks</a>, <a href="https://iphey.com/">iphey</a>, <a href="https://www.browserscan.net/">BrowserScan</a>, <a href="https://amiunique.org/">AmIUnique</a>, <a href="https://abrahamjuliot.github.io/creepjs">CreepJS</a>, <a href="https://bot.sannysoft.com/">bot.sannysoft.com</a></li>
+<li><a href="https://tells.blowhorn.ai/">Blowhorn Tells</a>, catalog 1.0.3 read November 24, 2026</li>
+</ul>
+
+    </div>
+    <section class="video-related" aria-labelledby="article-related-title">
+      <h2 id="article-related-title">Keep reading</h2>
+      <div class="articles-list">
+<article class="article-card card-field" data-card data-tags="in-product-intelligence platform-rules column:desk-of-the-general" data-column="desk-of-the-general" data-search="amazon blocked meta&#39;s muse. here is how it knew. twelve days after meta launched muse, amazon cut it off. amazon never said how it spots the agent, but the evidence points to datacenter traffic, identical browser fingerprints, and behavior, and the chrome extension changes which signals are left. in-product-intelligence platform-rules from the desk of the general">
+  <p class="article-card-kicker">
+    Article
+    <span aria-hidden="true">·</span>
+    <time datetime="2026-11-18">Nov 18, 2026</time>
+    <span aria-hidden="true">·</span>
+    <span class="article-card-column">From the Desk of the General</span>
+  </p>
+  <h3 class="article-card-title"><a href="/resources/articles/how-amazon-detects-muse/">Amazon blocked Meta&#39;s Muse. Here is how it knew.</a></h3>
+  <p class="article-card-summary">Twelve days after Meta launched Muse, Amazon cut it off. Amazon never said how it spots the agent, but the evidence points to datacenter traffic, identical browser fingerprints, and behavior, and the Chrome extension changes which signals are left.</p>
+  <div class="tag-chips-row" role="group" aria-label="Tags">
+    <ul class="tag-chips">
+      <li><a class="tag-chip" href="/tags/in-product-intelligence/">In-Product-Intelligence</a></li><li><a class="tag-chip" href="/tags/platform-rules/">Platform-Rules</a></li>
+    </ul>
+  </div>
+</article>
+
+<article class="article-card card-plain" data-card data-tags="in-product-intelligence platform-rules column:desk-of-the-general" data-column="desk-of-the-general" data-search="the open web is closing. show up where your audience is. ai answers now reuse reddit&#39;s posts without sending the click, and reddit is answering with logins and its app. here is what that shift means for anyone who builds an audience in public, and how to keep showing up in your own voice. in-product-intelligence platform-rules from the desk of the general">
+  <p class="article-card-kicker">
+    Article
+    <span aria-hidden="true">·</span>
+    <time datetime="2026-10-31">Oct 31, 2026</time>
+    <span aria-hidden="true">·</span>
+    <span class="article-card-column">From the Desk of the General</span>
+  </p>
+  <h3 class="article-card-title"><a href="/resources/articles/the-open-web-is-closing/">The open web is closing. Show up where your audience is.</a></h3>
+  <p class="article-card-summary">AI answers now reuse Reddit&#39;s posts without sending the click, and Reddit is answering with logins and its app. Here is what that shift means for anyone who builds an audience in public, and how to keep showing up in your own voice.</p>
+  <div class="tag-chips-row" role="group" aria-label="Tags">
+    <ul class="tag-chips">
+      <li><a class="tag-chip" href="/tags/in-product-intelligence/">In-Product-Intelligence</a></li><li><a class="tag-chip" href="/tags/platform-rules/">Platform-Rules</a></li>
+    </ul>
+  </div>
+</article>
+
+<article class="article-card card-field" data-card data-tags="in-product-intelligence platform-rules column:from-the-field" data-column="from-the-field" data-search="when a platform changes the rules posting limits shrink, formats change, and yesterday&#39;s healthy schedule starts failing. here is how rule changes show up in your activity, how blowhorn responds, and the three moves to make on your side. in-product-intelligence platform-rules from the field">
+  <p class="article-card-kicker">
+    Article
+    <span aria-hidden="true">·</span>
+    <time datetime="2026-10-28">Oct 28, 2026</time>
+    <span aria-hidden="true">·</span>
+    <span class="article-card-column">From the Field</span>
+  </p>
+  <h3 class="article-card-title"><a href="/resources/articles/when-a-platform-changes-the-rules/">When a platform changes the rules</a></h3>
+  <p class="article-card-summary">Posting limits shrink, formats change, and yesterday&#39;s healthy schedule starts failing. Here is how rule changes show up in your activity, how Blowhorn responds, and the three moves to make on your side.</p>
+  <div class="tag-chips-row" role="group" aria-label="Tags">
+    <ul class="tag-chips">
+      <li><a class="tag-chip" href="/tags/in-product-intelligence/">In-Product-Intelligence</a></li><li><a class="tag-chip" href="/tags/platform-rules/">Platform-Rules</a></li>
+    </ul>
+  </div>
+</article>
+
+      </div>
+    </section>
+  </div>
+</main>
+
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-panel glass">
+          <div class="footer-top">
+            <div class="footer-brand">
+              <a class="footer-logo" href="/" aria-label="Blowhorn home">
+                <img class="logo-on-light" src="/assets/brand/logo/blowhorn-lockup-horizontal.svg" alt="Blowhorn" width="168" height="42">
+                <img class="logo-on-dark" src="/assets/brand/logo/blowhorn-lockup-horizontal-on-dark.svg" alt="" width="168" height="42">
+              </a>
+              <p class="footer-tagline">Your voice, at full volume.</p>
+              <nav class="footer-social" aria-label="Blowhorn on social media">
+                <ul>
+                  <li><a href="https://x.com/blowhorn_ai" target="_blank" rel="noopener noreferrer" aria-label="X"><img src="/assets/platforms/x-logo-black.png" alt="" width="20" height="20"></a></li>
+                  <li><a href="https://www.youtube.com/@blowhorn-ai" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img src="/assets/platforms/youtube-simple-icons.svg" alt="" width="20" height="20"></a></li>
+                  <li><a href="https://www.facebook.com/BlowhornAI" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><img src="/assets/platforms/facebook-simple-icons.svg" alt="" width="20" height="20"></a></li>
+                  <li><a href="https://github.com/blowhorn-ai" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><img src="/assets/platforms/github-invertocat-black.svg" alt="" width="20" height="20"></a></li>
+                </ul>
+              </nav>
+            </div>
+            <div class="footer-news">
+              <form class="newsletter" name="newsletter" method="post" action="https://api.blowhorn.ai/api/subscribe">
+              <label class="newsletter-label ui" for="newsletter-email">Subscribe to our newsletter</label>
+              <div class="newsletter-row">
+                <input type="email" id="newsletter-email" name="email" autocomplete="email" placeholder="Email address" required>
+                <button class="button button-primary" type="submit">Subscribe</button>
+              </div>
+              <input type="hidden" name="source_page" value="/resources/articles/bot-detection-checkers-compared/">
+              <p class="signup-honeypot" aria-hidden="true">
+                <label for="newsletter-email-website">Website</label>
+                <input id="newsletter-email-website" name="website" type="text" tabindex="-1" autocomplete="off">
+              </p>
+            </form>
+
+            </div>
+          </div>
+          <nav class="footer-links" aria-label="Footer">
+            <ul>
+              <li><a href="/docs/">Docs</a></li>
+              <li><a href="/support/">Support</a></li>
+              <li><a href="/pricing/">Pricing</a></li>
+              <li><a href="/brand/">Brand</a></li>
+              <li><a href="/legal/">Trust Center</a></li>
+              <li><a class="status-link" href="https://layer5.statuspage.io" target="_blank" rel="noreferrer">Status <span class="pulse-icon" aria-hidden="true"></span></a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="footer-bottom caption">
+          <span>&copy; 2026 Layer5, Inc.</span>
+          <span>All product names are trademarks of their respective owners. Blowhorn is not affiliated with or endorsed by them.</span>
+        </div>
+      </div>
+    </footer>
+    <section id="consent" class="consent glass" aria-labelledby="consent-title" hidden>
+      <h2 id="consent-title" class="consent-title">Cookies</h2>
+      <p class="consent-text">Yes, we use cookies. Yes, you can eat them, if you can find them. Do you want us to <a href="/legal/privacy/#google-analytics">remember you</a> or pretend we've never met?</p>
+      <div class="consent-actions">
+        <button type="button" class="button button-primary consent-button" data-consent="granted">Accept</button>
+        <button type="button" class="button button-secondary consent-button" data-consent="denied">Decline</button>
+      </div>
+      <button type="button" class="consent-close" data-consent="denied" aria-label="Close and decline">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+    </section>
+
+
+    <script src="/js/code-card.min.681cde1d563b320da97fa3f2c094be9469b193e726a2734eb3eb264d3a5e33e4.js" defer></script>
+    <script type="application/json" id="docs-events">{"$schema":"../schemas/docs_events.schema.json","attribution_params":["first_source","first_medium","first_campaign","first_content","first_term","first_referrer_host","landing_guide","landing_page"],"clients":{"chatgpt":"ChatGPT","claude-code":"Claude Code","claude-desktop":"Claude Desktop","cline":"Cline","cursor":"Cursor","gemini-cli":"Gemini CLI","goose":"Goose","openai-codex-cli":"OpenAI Codex CLI","vs-code":"VS Code with GitHub Copilot","vs-code-with-github-copilot":"VS Code with GitHub Copilot","windsurf-devin-desktop":"Windsurf (Devin Desktop)","zed":"Zed"},"consent_event":"blowhorn:consent","consent_key":"blowhorn-consent","default_client":"general","events":{"docs_guide_view":{"description":"A tracked guide was viewed after consent: once per page load.","params":["page_path","guide","client"]},"docs_outbound_click":{"description":"A link to npm, an MCP registry or a Blowhorn download was followed.","params":["page_path","client","link_kind","link_url"]},"docs_snippet_copy":{"description":"The copy button on a code card was pressed. Never carries the copied text.","params":["page_path","client","snippet_kind","snippet_title"]}},"internal_hosts":["blowhorn.ai","www.blowhorn.ai"],"outbound":[{"hosts":["npmjs.com","www.npmjs.com","registry.npmjs.org"],"kind":"npm"},{"hosts":["registry.modelcontextprotocol.io"],"kind":"registry"},{"hosts":["github.com"],"kind":"registry","paths":["^/mcp(/|$)"]},{"hosts":["github.com"],"kind":"download","paths":["^/blowhorn-ai/[^/]+/releases(/|$)"]},{"hosts":["blowhorn.ai","www.blowhorn.ai"],"kind":"download","paths":["^/download/"]}],"pages":["/docs/how-to/set-up/connect-mcp-client/","/docs/reference/mcp-server/","/docs/reference/python-client/","/docs/tutorials/first-mcp-connection/","/docs/explanation/mcp-and-safety/","/ai/mcp/"],"snippet_kinds":{"bash":"shell","console":"shell","json":"json","sh":"shell","shell":"shell","text":"text","toml":"toml","yaml":"yaml","yml":"yaml","zsh":"shell"},"storage_key":"blowhorn-docs-attribution","utm_params":["utm_source","utm_medium","utm_campaign","utm_content","utm_term"]}</script>
+    <script src="/js/docs-attribution.min.1be585bb90d12fd1bc9a08fea053d087e031b32eced81aeba9f8f18390a7c3ad.js" integrity="sha256-G&#43;WFu5DRL9G8mgj&#43;oFPQh&#43;Axsy7O2Brrqfjxg5Cnw60=" crossorigin="anonymous" defer></script>
+  </body>
+</html>
