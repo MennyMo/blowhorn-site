@@ -76,6 +76,13 @@ jobs:
           Say "engine in the package" ($engine -ne $null)
           Say "extension folder in the package" ((Get-ChildItem -Path $installed.InstallLocation -Recurse -Filter manifest.json -ErrorAction SilentlyContinue | Where-Object { $_.FullName -like "*\engine\extension\*" } | Select-Object -First 1) -ne $null)
 
+          # What the installed package's own manifest says (not what the build was asked for).
+          $manifest = Get-AppxPackageManifest $installed
+          $text = $manifest.OuterXml
+          Say "manifest disables registry virtualization" ($text -match "RegistryWriteVirtualization>disabled")
+          Say "manifest disables file virtualization" ($text -match "FileSystemWriteVirtualization>disabled")
+          Say "manifest holds unvirtualizedResources" ($text -match "unvirtualizedResources")
+
           $key = "HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.blowhorn.chrome_extension"
           Remove-Item $key -ErrorAction SilentlyContinue
 
