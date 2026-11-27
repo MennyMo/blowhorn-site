@@ -31,23 +31,18 @@
         {{- range $data.treatments }}
         <div class="plat-panel{{ if eq .id $data.defaultTreatment }} is-on{{ end }}" id="plat-panel-{{ .id }}" role="tabpanel" aria-labelledby="plat-tab-{{ .id }}" data-plat-panel="{{ .id }}">
           {{- if eq .kind "category" }}
-          <ul class="plat-cats">
+          {{- /* The catalog below already lists every category with its
+            heading and cards (layouts/integrations.html, #cat-<id>), so this
+            panel only points at those sections. Repeating the headings and
+            platforms here showed "Your browser" and its cards twice (#784);
+            check_theme.py fails that. */ -}}
+          <ul class="plat-row">
             {{- range $data.categories }}
-            <li class="plat-cat">
-              <h3 class="h3">{{ .name }}</h3>
-              <p class="caption muted">{{ .summary }}</p>
-              <ul class="plat-row">
-                {{- range .platforms }}
-                {{- $p := index $byId . }}
-                <li>
-                  <a class="platform" href="{{ $p.docs | relURL }}">
-                    <span class="logo-tile"><img src="{{ $p.logo | relURL }}" alt="" width="28" height="28"></span>
-                    <span class="ui">{{ $p.name }}</span>
-                    <span class="caption">{{ $p.viaLabel }}</span>
-                  </a>
-                </li>
-                {{- end }}
-              </ul>
+            <li>
+              <a class="platform" href="#cat-{{ .id }}">
+                <span class="ui">{{ .name }}</span>
+                <span class="caption">See the list</span>
+              </a>
             </li>
             {{- end }}
           </ul>

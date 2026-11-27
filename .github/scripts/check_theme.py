@@ -19,6 +19,9 @@ figure must be wrapped in a data-count-* span. The home page and
 home page links to /integrations/, which holds the platform map. That section
 must ship JS that calls selectTab with defaultPlatTab when the URL has no
 matching hash, so JS enhancement cannot leave all four panels stacked.
+/integrations/ shows each category heading and each of its platform cards
+once (catalog_duplicate_problems, #784): the map's By type panel points at
+the catalog's sections instead of listing them again.
 
 No platform-availability "Coming soon" label may return: the catalog, the
 action matrix, the docs platform pages and the docs all-actions table are
@@ -475,6 +478,35 @@ def check_home_soon_split(build_dir: Path, root: Path) -> list[str]:
     return problems
 
 
+CATALOG_CARD_RE = re.compile(
+    r'<li\b[^>]*\bclass="card integration-card\b[^"]*"[^>]*\bdata-plat-id="([^"]+)"', re.I
+)
+
+
+def catalog_duplicate_problems(html: str, categories: list) -> list[str]:
+    """Issue #784: /integrations/ shows each category heading ("Your
+    browser") and each of its platform cards once. The map's By type panel
+    points at the catalog's sections; it must not list them a second time,
+    and data/integrations.json must not list a category or platform twice."""
+    problems = []
+    cleaned = SCRIPT_STYLE_RE.sub("", html)
+    headings = [" ".join(plain_text(m.group(2)).split()) for m in HEADING_RE.finditer(cleaned)]
+    cards = CATALOG_CARD_RE.findall(cleaned)
+    for group in categories:
+        found = headings.count(group["name"])
+        if found != 1:
+            problems.append(
+                f"/integrations/index.html has {found} {group['name']!r} headings, want 1"
+            )
+        for pid in group["platforms"]:
+            found = cards.count(pid)
+            if found != 1:
+                problems.append(
+                    f"/integrations/index.html has {found} {pid!r} catalog cards, want 1"
+                )
+    return problems
+
+
 NUMBER_WORDS = (
     "two three four five six seven eight nine ten eleven twelve thirteen "
     "fourteen fifteen sixteen"
@@ -699,6 +731,8 @@ def main(root: Path) -> int:
         panels = html.count('data-plat-panel="')
         if panels != 4:
             problems.append(f"/integrations/index.html has {panels} platform panels, want 4")
+        integrations = json.loads((ROOT / "data/integrations.json").read_text(encoding="utf-8"))
+        problems.extend(catalog_duplicate_problems(html, integrations["categories"]))
         problems.extend(platforms_default_problems())
 
     problems.extend(check_platform_labels(root, ROOT))

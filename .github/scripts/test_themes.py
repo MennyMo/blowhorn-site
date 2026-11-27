@@ -692,5 +692,88 @@ class PlatformSoonCopyTest(unittest.TestCase):
         self.assertEqual(self.check.check_platform_soon_copy(self.root), [])
 
 
+class IntegrationsCatalogOnceTest(unittest.TestCase):
+    """Issue #784: /integrations/ showed the "Your browser" heading and its
+    platforms twice, once in the map's By type panel and once in the catalog.
+    Each category heading and each catalog card must appear once."""
+
+    def setUp(self):
+        import check_theme as check
+
+        self.check = check
+        payload = json.loads((ROOT / "data/integrations.json").read_text(encoding="utf-8"))
+        self.categories = payload["categories"]
+
+    def catalog(self, categories):
+        """The catalog sections as layouts/integrations.html renders them."""
+        parts = []
+        for group in categories:
+            parts.append(f'<section class="section" aria-labelledby="cat-{group["id"]}" data-action-catalog>')
+            parts.append(f'<h2 id="cat-{group["id"]}" class="h2">{group["name"]}</h2>')
+            parts.append(f'<p class="muted">{group["summary"]}</p><ul class="grid grid-3 section-body">')
+            for pid in group["platforms"]:
+                parts.append(
+                    f'<li class="card integration-card card-a" data-action-card data-actions="post" '
+                    f'data-plat-id="{pid}"><a class="integration-card-main" href="/docs/{pid}/">'
+                    f'<h3 class="h3">{pid}</h3><p>Your browser</p></a></li>'
+                )
+            parts.append("</ul></section>")
+        return "".join(parts)
+
+    def by_type_index(self, categories):
+        """The By type panel as it is now: links to the catalog's sections."""
+        links = "".join(
+            f'<li><a class="platform" href="#cat-{g["id"]}"><span class="ui">{g["name"]}</span>'
+            '<span class="caption">See the list</span></a></li>'
+            for g in categories
+        )
+        return f'<div class="plat-panel is-on" id="plat-panel-category"><ul class="plat-row">{links}</ul></div>'
+
+    def by_type_repeat(self, categories):
+        """The By type panel before the fix: every heading and platform again."""
+        parts = ['<div class="plat-panel is-on" id="plat-panel-category"><ul class="plat-cats">']
+        for group in categories:
+            parts.append(f'<li class="plat-cat"><h3 class="h3">{group["name"]}</h3><ul class="plat-row">')
+            for pid in group["platforms"]:
+                parts.append(f'<li><a class="platform" href="/docs/{pid}/"><span class="ui">{pid}</span></a></li>')
+            parts.append("</ul></li>")
+        parts.append("</ul></div>")
+        return "".join(parts)
+
+    def page(self, panel, catalog):
+        return f"<html><body><main>{panel}{catalog}</main></body></html>"
+
+    def test_index_panel_and_catalog_pass(self):
+        html = self.page(self.by_type_index(self.categories), self.catalog(self.categories))
+        self.assertEqual(self.check.catalog_duplicate_problems(html, self.categories), [])
+
+    def test_repeated_by_type_panel_fails(self):
+        html = self.page(self.by_type_repeat(self.categories), self.catalog(self.categories))
+        found = self.check.catalog_duplicate_problems(html, self.categories)
+        self.assertIn("/integrations/index.html has 2 'Your browser' headings, want 1", found)
+        self.assertEqual(len(found), len(self.categories), found)
+
+    def test_category_listed_twice_in_data_fails(self):
+        chrome = next(g for g in self.categories if g["id"] == "chrome")
+        doubled = self.categories + [chrome]
+        html = self.page(self.by_type_index(self.categories), self.catalog(doubled))
+        found = self.check.catalog_duplicate_problems(html, self.categories)
+        self.assertIn("/integrations/index.html has 2 'Your browser' headings, want 1", found)
+        self.assertIn("/integrations/index.html has 2 'linkedin' catalog cards, want 1", found)
+
+    def test_missing_catalog_section_fails(self):
+        rest = [g for g in self.categories if g["id"] != "chrome"]
+        html = self.page(self.by_type_index(rest), self.catalog(rest))
+        found = self.check.catalog_duplicate_problems(html, self.categories)
+        self.assertIn("/integrations/index.html has 0 'Your browser' headings, want 1", found)
+
+    def test_heading_text_in_script_is_ignored(self):
+        html = self.page(
+            "<script>var h='<h2>Your browser</h2>'</script>" + self.by_type_index(self.categories),
+            self.catalog(self.categories),
+        )
+        self.assertEqual(self.check.catalog_duplicate_problems(html, self.categories), [])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -943,8 +943,6 @@ html.hero-film-locked, html.hero-film-locked body { overflow: hidden; }
 .platforms-signal:not(.is-plat-enhanced) #plat-panel-action:has(:target) { display: block; }
 .platforms-signal:not(.is-plat-enhanced):has(.plat-panel:target) .plat-panel.is-on:not(:target) { display: none; }
 .platforms-signal:not(.is-plat-enhanced):has(#plat-panel-action :target) .plat-panel.is-on:not(#plat-panel-action) { display: none; }
-.plat-cats { display: grid; gap: var(--space-8); }
-.plat-cat .h3 { margin-bottom: var(--space-2); }
 .plat-row {
   display: grid;
   gap: var(--space-3);
