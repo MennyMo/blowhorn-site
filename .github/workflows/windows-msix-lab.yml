@@ -129,6 +129,8 @@ jobs:
           # it has resolved its engine, about twenty seconds in.
           Start-Process "shell:AppsFolder\$family!Blowhorn"
           $real = $false
+          Start-Sleep -Seconds 15
+          Say "packaged app process running" ($null -ne (Get-Process -Name Blowhorn -ErrorAction SilentlyContinue))
           for ($i = 0; $i -lt 60 -and -not $real; $i++) { Start-Sleep -Seconds 3; $real = Test-Path $key }
           Say "host registration reached the real HKCU" $real "virtualized or not reached"
 
