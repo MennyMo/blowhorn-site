@@ -117,6 +117,24 @@ def main(installer):
     ok &= say("extension folder shipped", (extension / "manifest.json").is_file())
     if not (ok and engine.is_file()):
         return 1
+    # The installed app on its own: does it register the native host by itself shortly after it starts?
+    # (Before any explicit registration, so only the app can have written the key.)
+    app_exe = next(iter(app.glob("Blowhorn.exe")), None)
+    if app_exe is not None:
+        run(["reg", "delete", HOST_KEY, "/f"])
+        launched = subprocess.Popen([str(app_exe)], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        key_seen = False
+        deadline = time.monotonic() + 120
+        while time.monotonic() < deadline and not key_seen:
+            time.sleep(4)
+            done = run(["reg", "query", HOST_KEY, "/ve"])
+            key_seen = bool(done and done.returncode == 0)
+        say("the app registered the native host by itself", key_seen)
+        run(["taskkill", "/F", "/T", "/PID", str(launched.pid)])
+        run(["taskkill", "/F", "/IM", "Blowhorn.exe", "/T"])
+        run(["reg", "delete", HOST_KEY, "/f"])
+    else:
+        say("app executable found", False)
     registered = run([str(engine), "chrome", "extension-install", "--json"])
     ok &= say("host registration", bool(registered and registered.returncode == 0))
     pipe = None
