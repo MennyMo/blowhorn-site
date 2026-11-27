@@ -1,0 +1,57 @@
+name: Windows Chrome lab
+
+# Does the Blowhorn Chrome extension reach its native host on Windows? Downloads a PUBLISHED Windows
+# preview from this repository's releases, installs it on a free windows-latest runner and drives
+# installed Google Chrome on a throwaway profile (never a website, never a sign-in): the
+# extension is loaded over the DevTools pipe and the job looks for the native host Chrome starts.
+# Dispatch-only; no secrets, no private checkout: it reads a public release.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag of a published Windows preview (for example v0.0.1-preview.2)"
+        required: true
+        type: string
+
+run-name: Windows Chrome lab ${{ inputs.tag }}
+
+permissions:
+  contents: read
+
+jobs:
+  lab:
+    name: Chrome lab
+    runs-on: windows-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download the published installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          case "$TAG" in
+            v[0-9]*) ;;
+            *) echo "tag must look like v0.0.1-preview.2"; exit 1 ;;
+          esac
+          mkdir -p dist
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "Blowhorn-*-x64-setup.exe" --dir dist
+          shopt -s nullglob
+          installers=(dist/Blowhorn-*-x64-setup.exe)
+          test "${#installers[@]}" -eq 1
+          echo "lab: installer downloaded"
+
+      - name: Install, load the extension in Chrome, look for the host
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          installers=(dist/Blowhorn-*-x64-setup.exe)
+          python .github/scripts/build-windows/chrome_lab.py "${installers[0]}"
