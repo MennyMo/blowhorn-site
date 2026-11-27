@@ -72,8 +72,9 @@ jobs:
           $installed = Get-AppxPackage -Name "Layer5.Blowhorn"
           $family = $installed.PackageFamilyName
           Say "package found" ($installed -ne $null)
-          $engine = Join-Path $installed.InstallLocation "resources\engine\bin\blowhorn.exe"
-          Say "engine in the package" (Test-Path $engine)
+          $engine = Get-ChildItem -Path $installed.InstallLocation -Recurse -Filter blowhorn.exe -ErrorAction SilentlyContinue | Where-Object { $_.FullName -like "*\engine\bin\*" } | Select-Object -First 1
+          Say "engine in the package" ($engine -ne $null)
+          Say "extension folder in the package" ((Get-ChildItem -Path $installed.InstallLocation -Recurse -Filter manifest.json -ErrorAction SilentlyContinue | Where-Object { $_.FullName -like "*\engine\extension\*" } | Select-Object -First 1) -ne $null)
 
           $key = "HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.blowhorn.chrome_extension"
           Remove-Item $key -ErrorAction SilentlyContinue
