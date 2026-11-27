@@ -83,6 +83,24 @@ jobs:
           Say "manifest disables file virtualization" ($text -match "FileSystemWriteVirtualization>disabled")
           Say "manifest holds unvirtualizedResources" ($text -match "unvirtualizedResources")
 
+          # A probe run inside the package's identity, apart from the app: it writes one registry value
+          # and one file, and the job then looks for each outside the package. This tells what the
+          # manifest's virtualization settings do on their own.
+          $probeKey = "HKCU:\Software\BlowhornMsixProbe"
+          $probeFile = Join-Path $env:LOCALAPPDATA "BlowhornMsixProbe.txt"
+          Remove-Item $probeKey, $probeFile -ErrorAction SilentlyContinue
+          try {
+            Invoke-CommandInDesktopPackage -PackageFamilyName $family -AppId Blowhorn -PreventBreakaway -Command "cmd.exe" -Args '/c reg add HKCU\Software\BlowhornMsixProbe /v probe /d 1 /f && echo probe> "%LOCALAPPDATA%\BlowhornMsixProbe.txt"'
+            Say "probe ran in the package" $true
+          } catch {
+            Say "probe ran in the package" $false $_.Exception.GetType().Name
+          }
+          Start-Sleep -Seconds 10
+          Say "probe registry value in the real HKCU" (Test-Path $probeKey)
+          Say "probe file in the real profile" (Test-Path $probeFile)
+          Say "probe file in the package's private cache" (Test-Path (Join-Path $env:LOCALAPPDATA "Packages\$family\LocalCache\Local\BlowhornMsixProbe.txt"))
+          Remove-Item $probeKey, $probeFile -ErrorAction SilentlyContinue
+
           $key = "HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.blowhorn.chrome_extension"
           Remove-Item $key -ErrorAction SilentlyContinue
 
