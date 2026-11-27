@@ -193,6 +193,9 @@ jobs:
   smoke-windows:
     name: Windows smoke
     needs: build-windows
+    # A skipped ancestor (the Linux gates, when skipped on request) skips a job with the default
+    # condition; this one needs only the installer.
+    if: ${{ !cancelled() && needs.build-windows.result == 'success' }}
     runs-on: windows-latest
     timeout-minutes: 30
     defaults:
