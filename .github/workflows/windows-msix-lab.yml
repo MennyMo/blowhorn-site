@@ -1,0 +1,98 @@
+name: Windows MSIX lab
+
+# The #2776 spike's questions 2 and 4, on a free windows-latest runner: install the MSIX that a
+# build-windows run (target appx) produced, start the packaged app, and see (2) whether the app's
+# native host registration reaches the real HKEY_CURRENT_USER or stays inside the package, and (4)
+# where its files land. Dispatch-only; reads a run's artifact of this repository (actions: read);
+# no secrets, no private checkout. The package is signed with the public preview certificate, which
+# is trusted for the job from the package's own signature. Output is fixed labels only.
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "The build-windows run (target appx) whose artifact to install"
+        required: true
+        type: string
+
+run-name: Windows MSIX lab ${{ inputs.run_id }}
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  lab:
+    name: MSIX lab
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download the appx artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.run_id }}
+        run: |
+          set -euo pipefail
+          case "$RUN_ID" in
+            ''|*[!0-9]*) echo "run_id must be digits"; exit 1 ;;
+          esac
+          mkdir -p dist
+          gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --name blowhorn-windows-preview --dir dist
+          shopt -s nullglob
+          packages=(dist/*.appx)
+          test "${#packages[@]}" -eq 1
+          echo "msix: artifact downloaded"
+
+      - name: Install the package and start the packaged app
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $package = (Get-ChildItem dist -Filter *.appx | Select-Object -First 1).FullName
+          function Say($label, $ok, $why = "") { if ($ok) { Write-Host "msix: ${label}: ok" } else { Write-Host "msix: ${label}: failed ($why)" } }
+
+          # Trust the package's own signer for this job (a throwaway runner, never a person's machine).
+          $signature = Get-AuthenticodeSignature $package
+          Say "package signed" ($signature.SignerCertificate -ne $null) "$($signature.Status)"
+          $cer = Join-Path $env:RUNNER_TEMP "signer.cer"
+          Export-Certificate -Cert $signature.SignerCertificate -FilePath $cer | Out-Null
+          Import-Certificate -FilePath $cer -CertStoreLocation Cert:\LocalMachine\TrustedPeople | Out-Null
+
+          try {
+            Add-AppxPackage -Path $package
+            Say "package installed" $true
+          } catch {
+            Say "package installed" $false $_.Exception.GetType().Name
+            exit 1
+          }
+          $installed = Get-AppxPackage -Name "Layer5.Blowhorn"
+          $family = $installed.PackageFamilyName
+          Say "package found" ($installed -ne $null)
+          $engine = Join-Path $installed.InstallLocation "resources\engine\bin\blowhorn.exe"
+          Say "engine in the package" (Test-Path $engine)
+
+          $key = "HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.blowhorn.chrome_extension"
+          Remove-Item $key -ErrorAction SilentlyContinue
+
+          # Start the packaged app by its application id (Blowhorn): the app registers the host after
+          # it has resolved its engine, about twenty seconds in.
+          Start-Process "shell:AppsFolder\$family!Blowhorn"
+          $real = $false
+          for ($i = 0; $i -lt 60 -and -not $real; $i++) { Start-Sleep -Seconds 3; $real = Test-Path $key }
+          Say "host registration reached the real HKCU" $real "virtualized or not reached"
+
+          # Where a file the app wrote under its own profile landed: the real %LOCALAPPDATA%\Blowhorn, or
+          # the package's private LocalCache.
+          $realFolder = Test-Path (Join-Path $env:LOCALAPPDATA "Blowhorn")
+          $private = Test-Path (Join-Path $env:LOCALAPPDATA "Packages\$family\LocalCache\Local\Blowhorn")
+          Say "manifest folder in the real profile" $realFolder
+          Say "manifest folder in the package's private cache" $private
+
+          Get-Process -Name Blowhorn -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+          Remove-Item $key -ErrorAction SilentlyContinue
+          Remove-AppxPackage -Package $installed.PackageFullName
+          Write-Host "msix: done"
