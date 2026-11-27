@@ -49,9 +49,10 @@ class BuildWindowsWorkflowTest(unittest.TestCase):
     def test_the_smoke_script_prints_labels_never_program_output(self):
         script = (WORKFLOW.parents[1] / "scripts" / "build-windows" / "smoke.py").read_text()
         self.assertIn("capture_output=True", script)
-        self.assertNotIn("done.stdout)", script.replace("json.loads(done.stdout)", ""))
+        self.assertNotIn("done.stdout)", script.replace("json.loads(done.stdout)", "").replace("handover_line(done.stdout)", ""))
         # The program's stderr is read only through the strict handover filter, and never printed whole.
         self.assertEqual(script.count("done.stderr"), script.count("handover_line(done.stderr)"))
+        self.assertEqual(script.count("done.stdout"), script.count("handover_line(done.stdout)") + script.count("json.loads(done.stdout)"))
         self.assertNotIn("print(done", script)
 
     def test_build_output_goes_to_a_log_never_printed(self):

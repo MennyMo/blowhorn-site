@@ -23,10 +23,15 @@ import tempfile
 from pathlib import Path
 
 TIMEOUT = 300
+# The native messaging host's registry key under HKEY_CURRENT_USER (Chrome reads it on Windows).
+HOST_KEY = r"HKCU\Software\Google\Chrome\NativeMessagingHosts\com.blowhorn.chrome_extension"
 # The one line of the engine's own the smoke may repeat: the front door's fixed trace sentence saying
 # why it handed a command to Python ("blowhorn: <words> goes to Python: <why>"), switched on by
 # BLOWHORN_FRONT_DOOR_TRACE. Nothing else the program prints is ever shown.
-HANDOVER = re.compile(r"^blowhorn: [a-z ]{1,40} goes to Python: [A-Za-z0-9 ,.'()=_-]{1,160}$")
+HANDOVER = re.compile(
+    r"^(blowhorn: [a-z ]{1,40} goes to Python: [A-Za-z0-9 ,.'()=_-]{1,160}"
+    r"|The native host was not registered: [A-Za-z0-9 ,.'():_\\/-]{1,200})$"
+)
 
 
 def handover_line(text):
@@ -42,7 +47,7 @@ def run(label, argv, env=None, want_json=False):
         )
         ok = done.returncode == 0
         why = f"exit {done.returncode & 0xFFFFFFFF:#x}"
-        handover = handover_line(done.stderr)
+        handover = handover_line(done.stderr) or handover_line(done.stdout)
         if handover and not ok:
             why += f"; {handover}"
         if ok and want_json:
@@ -81,6 +86,11 @@ def main(installer):
         results.append(run("engine --version", [str(engine), "--version"], env))
         results.append(run("config show", [str(engine), "config", "show"], env))
         results.append(run("platforms capabilities", [str(engine), "platforms", "capabilities", "--json"], env, True))
+        # The native host registration: write it, read the registry value back, and remove it so the
+        # runner's profile is left as found. The key names a throwaway manifest under the smoke's own folder.
+        results.append(run("host registration", [str(engine), "chrome", "extension-install", "--json"], env, True))
+        results.append(run("host registry value", ["reg", "query", HOST_KEY, "/ve"], env))
+        run("host registry cleanup", ["reg", "delete", HOST_KEY, "/f"], env)
     uninstaller = next(iter(sorted(app.glob("Uninstall*.exe"))), None)
     if uninstaller is None:
         print("smoke: uninstall: failed")
