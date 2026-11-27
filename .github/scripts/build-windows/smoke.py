@@ -88,7 +88,8 @@ def main(installer):
         results.append(run("platforms capabilities", [str(engine), "platforms", "capabilities", "--json"], env, True))
         # The native host registration: write it, read the registry value back, and remove it so the
         # runner's profile is left as found. The key names a throwaway manifest under the smoke's own folder.
-        results.append(run("host registration", [str(engine), "chrome", "extension-install", "--json"], env, True))
+        # Called as the desktop app calls it: with the runner's own --json --tee-stdout and --log-dir.
+        results.append(run("host registration", [str(engine), "chrome", "extension-install", "--json", "--tee-stdout", "--log-dir", str(root / "logs")], env, True))
         results.append(run("host registry value", ["reg", "query", HOST_KEY, "/ve"], env))
         run("host registry cleanup", ["reg", "delete", HOST_KEY, "/f"], env)
     uninstaller = next(iter(sorted(app.glob("Uninstall*.exe"))), None)
