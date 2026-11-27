@@ -16,12 +16,22 @@ Usage: smoke.py <installer.exe>
 
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
 TIMEOUT = 300
+# The one line of the engine's own the smoke may repeat: the front door's fixed trace sentence saying
+# why it handed a command to Python ("blowhorn: <words> goes to Python: <why>"), switched on by
+# BLOWHORN_FRONT_DOOR_TRACE. Nothing else the program prints is ever shown.
+HANDOVER = re.compile(r"^blowhorn: [a-z ]{1,40} goes to Python: [A-Za-z0-9 ,.'()=_-]{1,160}$")
+
+
+def handover_line(text):
+    """The program's one fixed handover sentence, when it printed one; nothing else of `text` leaves here."""
+    return next((line.strip() for line in text.splitlines() if HANDOVER.match(line.strip())), None)
 
 
 def run(label, argv, env=None, want_json=False):
@@ -32,6 +42,9 @@ def run(label, argv, env=None, want_json=False):
         )
         ok = done.returncode == 0
         why = f"exit {done.returncode & 0xFFFFFFFF:#x}"
+        handover = handover_line(done.stderr)
+        if handover and not ok:
+            why += f"; {handover}"
         if ok and want_json:
             json.loads(done.stdout)
     except (OSError, subprocess.TimeoutExpired, ValueError) as error:
@@ -55,6 +68,7 @@ def main(installer):
         APPDATA=str(home / "AppData" / "Roaming"),
         LOCALAPPDATA=str(home / "AppData" / "Local"),
         BLOWHORN_CLOUD_CONFIG_DIR=str(home / "cloud"),
+        BLOWHORN_FRONT_DOOR_TRACE="1",
     )
     results = []
     # NSIS: /S is silent and /D= (last, unquoted) is the install folder.
