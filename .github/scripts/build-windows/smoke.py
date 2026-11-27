@@ -31,11 +31,14 @@ def run(label, argv, env=None, want_json=False):
             argv, env=env, capture_output=True, text=True, timeout=TIMEOUT, check=False, stdin=subprocess.DEVNULL
         )
         ok = done.returncode == 0
+        why = f"exit {done.returncode & 0xFFFFFFFF:#x}"
         if ok and want_json:
             json.loads(done.stdout)
-    except (OSError, subprocess.TimeoutExpired, ValueError):
+    except (OSError, subprocess.TimeoutExpired, ValueError) as error:
         ok = False
-    print(f"smoke: {label}: {'ok' if ok else 'failed'}")
+        why = type(error).__name__
+    # Only the exit status or the exception's class: never what the program printed.
+    print(f"smoke: {label}: {'ok' if ok else f'failed ({why})'}")
     return ok
 
 
